@@ -30,11 +30,12 @@
 #include <box2d/b2_fixture.h>
 #include <unordered_set>
 #include <vector>
-#include "PFInput.h"
-#include "PFBullet.h"
-#include "PFDudeModel.h"
-#include "PFRopeBridge.h"
-#include "PFSpinner.h"
+#include "../controllers/InputController.h"
+#include "../objects/Bullet.h"
+#include "../objects/DudeModel.h"
+#include "../objects/RopeBridge.h"
+#include "../objects/Spinner.h"
+#include "../controllers/CollisionController.h"
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -51,6 +52,9 @@ protected:
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
     PlatformInput _input;
+
+    /** Controller for collision */
+    CollisionController _collision;
     
     // VIEW
     /** Reference to the physics root of the scene graph */

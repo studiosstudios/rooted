@@ -41,7 +41,7 @@
 //  Author: Walker White and Anthony Perello
 //  Version:  2/9/17
 //
-#include "PFDudeModel.h"
+#include "DudeModel.h"
 #include <cugl/scene2/graph/CUPolygonNode.h>
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>

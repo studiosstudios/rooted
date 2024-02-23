@@ -11,6 +11,8 @@ icon:   icon.png
 orientation: landscape              # The orientation for mobile devices
 
 sources:                            # The list of the source code files
+    - source/*/*.cpp
+    - source/*/*.h
     - source/*.cpp
     - source/*.h
 

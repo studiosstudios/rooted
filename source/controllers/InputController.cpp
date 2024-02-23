@@ -12,7 +12,7 @@
 //  Author:  Walker White and Anthony Perello
 //  Version: 2/9/21
 //
-#include "PFInput.h"
+#include "InputController.h"
 
 using namespace cugl;
 

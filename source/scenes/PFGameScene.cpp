@@ -23,10 +23,10 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
-#include "PFDudeModel.h"
-#include "PFSpinner.h"
-#include "PFRopeBridge.h"
-#include "PFBullet.h"
+#include "../objects/DudeModel.h"
+#include "../objects/Spinner.h"
+#include "../objects/RopeBridge.h"
+#include "../objects/Bullet.h"
 
 #include <ctime>
 #include <string>

@@ -1,9 +1,11 @@
 //
-//  PFSpinner.cpp
+//  PFRopeBridge.cpp
 //  PlatformerDemo
 //
-//  This class provides a spinning rectangle on a fixed pin, as ComplexObstacles
-//  always make joint management easier.
+//  This module provides the connected ropebridge from 3152. This time it is fully
+//  assembled for you.  Note that this module handles its own scene graph management.
+//  As a ComplexObstacle owns all of its child obstacles, it is natural for it to
+//  own the corresponding scene graph.
 //
 //  WARNING: There are a lot of shortcuts in this design that will do not adapt
 //  well to data driven design. This demo has a lot of simplifications to make
@@ -17,61 +19,96 @@
 //  Author: Walker White and Anthony Perello
 //  Version:  2/9/24
 //
-#include "PFSpinner.h"
+#include "RopeBridge.h"
+
 #include <cugl/cugl.h>
 #include <box2d/b2_revolute_joint.h>
 #include <box2d/b2_world.h>
 
+using namespace cugl;
+
 #pragma mark -
 #pragma mark Physics Constants
-
-/** The radius of the central pin */
-#define SPIN_PIN_RADIUS 0.1f
-/** The density for the spinning barrier */
-#define HEAVY_DENSITY  10.0f
-/** The density for the central pin */
-#define LIGHT_DENSITY   1.0f
-/** The dimensions of the spinner */
+/** The radius of each anchor pin */
+#define BRIDGE_PIN_RADIUS   0.1f
+/** The density of each plank in the bridge */
+#define BASIC_DENSITY       1.0f
 
 #pragma mark -
-#pragma mark Initializers
+#pragma mark Contructors
 /**
- * Initializes a new spinner at the given position.
- *
- * The spinner is sized according to the given drawing scale. The spinner
- * is centered on its position.
+ * Initializes a new RopeBridge with the given start and end positions, and drawing scale.
  *
  * The scene graph is completely decoupled from the physics system.
  * The node does not have to be the same size as the physics body. We
  * only guarantee that the scene graph node is positioned correctly
  * according to the drawing scale.
  *
- * @param pos   Initial position in world coordinates
- * @param size  The spinner size in world units
+ * @param start The starting position of the bridge, in world coordinates
+ * @param end   The ending position of the bridge, in world coordinates
+ * @param psize The size of a single plank, in world units
  * @param scale The drawing scale (world to screen)
  *
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
-bool Spinner::init(const cugl::Vec2 pos, const cugl::Vec2 size, float scale) {
-    _name = SPINNER_NAME;
-	_drawScale = scale;
-    
-	// Create the barrier
-	std::shared_ptr<physics2::Obstacle> body = physics2::BoxObstacle::alloc(pos,size);
-	body->setName(BARRIER_NAME);
-	body->setDensity(HEAVY_DENSITY);
+bool RopeBridge::init(const cugl::Vec2& start, const cugl::Vec2& end, const cugl::Size& psize, float scale) {
+
+    _name = BRIDGE_NAME;
+    _drawScale = scale;
+
+	_linksize = psize.width;
+	float spacing;
+
+	// Compute the bridge length
+	Vec2 dimen = end-start;
+	float length = dimen.length();
+	Vec2 norm = dimen;
+	norm.normalize();
+
+	// If too small, only make one plank.
+	int nLinks = (int)(length / _linksize);
+	if (nLinks <= 1) {
+		nLinks = 1;
+		_linksize = length;
+		spacing = 0;
+	} else {
+		spacing = length - nLinks * _linksize;
+		spacing /= (nLinks-1);
+	}
+
+	// Create the first pin
+	std::shared_ptr<physics2::Obstacle> body = physics2::WheelObstacle::alloc(start,BRIDGE_PIN_RADIUS);
+	body->setName(BRIDGE_PIN_NAME+strtool::to_string(0));
+	body->setDensity(BASIC_DENSITY);
+	body->setBodyType(b2_staticBody);
 	_obstacles.push_back(body);
 
-	// Create the pin
-	body = physics2::WheelObstacle::alloc(pos,SPIN_PIN_RADIUS);
-	body->setName(SPIN_PIN_NAME);
-	body->setDensity(LIGHT_DENSITY);
+	// Create the planks
+    Size planksize = psize;
+	planksize.width = _linksize;
+	for (int ii = 0; ii < nLinks; ii++) {
+		float t = ii*(_linksize+spacing) + _linksize/2.0f;
+		Vec2 pos = norm*t+start;
+		std::shared_ptr<physics2::BoxObstacle> plank = physics2::BoxObstacle::alloc(pos, planksize);
+		body->setName(PLANK_NAME+strtool::to_string(ii));
+		plank->setDensity(BASIC_DENSITY);
+        _obstacles.push_back(plank);
+	}
+
+	// Create the last pin
+	body = physics2::WheelObstacle::alloc(end,BRIDGE_PIN_RADIUS);
+	body->setName(BRIDGE_PIN_NAME+strtool::to_string(1));
+	body->setDensity(BASIC_DENSITY);
 	body->setBodyType(b2_staticBody);
     _obstacles.push_back(body);
     createJoints();
+
 	return true;
 }
 
+
+#pragma mark -
+#pragma mark Physics Methods
 /**
  * Activates all of the obstacles in this model.
  *
@@ -80,7 +117,7 @@ bool Spinner::init(const cugl::Vec2 pos, const cugl::Vec2 size, float scale) {
  *
  * @param world    The associated obstacle world
  */
-void Spinner::activate(const std::shared_ptr<physics2::ObstacleWorld>& world) {
+void RopeBridge::activate(const std::shared_ptr<physics2::ObstacleWorld>& world) {
     for(auto it = _obstacles.begin(); it != _obstacles.end(); ++it) {
         world->addObstacle(*it);
     }
@@ -95,7 +132,7 @@ void Spinner::activate(const std::shared_ptr<physics2::ObstacleWorld>& world) {
  *
  * @param world    The associated obstacle world
  */
-void Spinner::deactivate(const std::shared_ptr<physics2::ObstacleWorld>& world) {
+void RopeBridge::deactivate(const std::shared_ptr<physics2::ObstacleWorld>& world) {
     for(auto it = _obstacles.begin(); it != _obstacles.end(); ++it) {
         world->removeObstacle(*it);
     }
@@ -112,25 +149,50 @@ void Spinner::deactivate(const std::shared_ptr<physics2::ObstacleWorld>& world) 
  *
  * @return true if object allocation succeeded
  */
-bool Spinner::createJoints() {
+bool RopeBridge::createJoints() {
+	Vec2 anchor1(0,0);
+	Vec2 anchor2(-_linksize/2.0f,0);
+
     std::shared_ptr<physics2::RevoluteJoint> joint;
 
     joint = physics2::RevoluteJoint::allocWithObstacles(_obstacles[0],
                                                         _obstacles[1]);
-    joint->setLocalAnchorA(Vec2::ZERO);
-    joint->setLocalAnchorB(Vec2::ZERO);
+    joint->setLocalAnchorA(anchor1);
+    joint->setLocalAnchorB(anchor2);
+    joint->setCollideConnected(false);
+	_joints.push_back(joint);
+
+	// Planks together
+	anchor1.x = _linksize / 2;
+	for (int ii = 1; ii < _obstacles.size()-2; ii++) {
+        joint = physics2::RevoluteJoint::allocWithObstacles(_obstacles[ii],
+                                                            _obstacles[ii+1]);
+        joint->setLocalAnchorA(anchor1);
+        joint->setLocalAnchorB(anchor2);
+        joint->setCollideConnected(false);
+        _joints.push_back(joint);
+	}
+
+	// Final joint
+	anchor2.x = 0;
+	int ii = (int)_obstacles.size();
+    joint = physics2::RevoluteJoint::allocWithObstacles(_obstacles[ii-2],
+                                                        _obstacles[ii-1]);
+    joint->setLocalAnchorA(anchor1);
+    joint->setLocalAnchorB(anchor2);
+    joint->setCollideConnected(false);
     _joints.push_back(joint);
 
 	return true;
 }
 
 /**
- * Disposes all resources and assets of this Spinner
+ * Disposes all resources and assets of this RopeBridge
  *
  * Any assets owned by this object will be immediately released.  Once
- * disposed, a Spinner may not be used until it is initialized again.
+ * disposed, a RopeBridge may not be used until it is initialized again.
  */
-void Spinner::dispose() {
+void RopeBridge::dispose() {
 	_node = nullptr;
 	_image = nullptr;
 	_obstacles.clear();
@@ -147,13 +209,21 @@ void Spinner::dispose() {
  *
  * @param texture   The plank texture
  */
-void Spinner::setTexture(const std::shared_ptr<cugl::Texture>& texture) {
+void RopeBridge::setTexture(const std::shared_ptr<cugl::Texture>& texture) {
     _image = texture;
-    if (_node != nullptr) {
+    if (_node == nullptr) {
+        return;
+    }
+    
+    // Do not add nodes for the beginning and end bodies
+    _node->removeAllChildren();
+    for(int ii = 1; ii+1 < _obstacles.size(); ii++) {
         std::shared_ptr<scene2::PolygonNode> sprite = scene2::PolygonNode::allocWithTexture(_image);
+        sprite->setPosition(_obstacles[ii]->getPosition() * _drawScale);
         _node->addChild(sprite);
     }
 }
+
 
 /**
  * Performs any necessary additions to the scene graph node.
@@ -161,13 +231,18 @@ void Spinner::setTexture(const std::shared_ptr<cugl::Texture>& texture) {
  * This method is necessary for custom physics objects that are composed
  * of multiple scene graph nodes.
  */
-void Spinner::setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+void RopeBridge::setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
 	_node = node;
-    if (_image != nullptr) {
-        std::shared_ptr<scene2::PolygonNode> sprite = scene2::PolygonNode::allocWithTexture(_image);
-        _node->addChild(sprite);
+    if (_image == nullptr) {
+        return;
     }
-	// Spinner is invisible
+
+	// Do not add nodes for the beginning and end bodies
+	for(int ii = 1; ii+1 < _obstacles.size(); ii++) {
+		std::shared_ptr<scene2::PolygonNode> sprite = scene2::PolygonNode::allocWithTexture(_image);
+		sprite->setPosition(_obstacles[ii]->getPosition() * _drawScale);
+		_node->addChild(sprite);
+	}
 }
 
 /**
@@ -186,7 +261,7 @@ void Spinner::setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node)
  *
  * @param node  he parent scene graph node for the debug wireframe
  */
-void Spinner::setDebugScene(const std::shared_ptr<scene2::SceneNode>& node) {
+void RopeBridge::setDebugScene(const std::shared_ptr<scene2::SceneNode>& node) {
     for(auto it = _obstacles.begin(); it != _obstacles.end(); it++) {
         (*it)->setDebugScene(node);
     }
@@ -200,7 +275,7 @@ void Spinner::setDebugScene(const std::shared_ptr<scene2::SceneNode>& node) {
  *
  * @param color the color of the debug wireframe.
  */
-void Spinner::setDebugColor(Color4 color) {
+void RopeBridge::setDebugColor(Color4 color) {
     for(auto it = _obstacles.begin(); it!= _obstacles.end(); ++it) {
         (*it)->setDebugColor(color);
     }
@@ -218,7 +293,7 @@ void Spinner::setDebugColor(Color4 color) {
  *
  * @param scale The ratio of the Ragdoll sprite to the physics body
  */
-void Spinner::setDrawScale(float scale) {
+void RopeBridge::setDrawScale(float scale) {
     _drawScale = scale;
 }
 
@@ -233,13 +308,16 @@ void Spinner::setDrawScale(float scale) {
  *
  * @param delta The time since the last physics simulation call
  */
-void Spinner::update(float delta) {
+void RopeBridge::update(float delta) {
 	if (_node != nullptr) {
 		std::vector<std::shared_ptr<scene2::SceneNode>> children = _node->getChildren();
-		int ii = 0;
+		//begin at index 1 since body 0 does not correspond to a node
+		//given how we populate the children in setSceneNode
+        int ii = 1;
 
-        // Update the nodes of the attached bodies
-        for (auto it = children.begin(); it != children.end(); ++it) {
+		// Update the nodes of the attached bodies
+		for (auto it = children.begin(); it != children.end(); ++it) {
+            // This interpolates
             Vec2 pos = _obstacles[ii]->getPosition();
             pos += _obstacles[ii]->getLinearVelocity()*delta;
             (*it)->setPosition(pos*_drawScale);
@@ -247,9 +325,7 @@ void Spinner::update(float delta) {
             float angle = _obstacles[ii]->getAngle();
             angle += _obstacles[ii]->getAngularVelocity()*delta;
             (*it)->setAngle(angle);
-
-            ii++;
-        }
-        
+			ii++;
+		}
 	}
 }

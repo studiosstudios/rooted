@@ -14,8 +14,8 @@
 #ifndef __PF_APP_H__
 #define __PF_APP_H__
 #include <cugl/cugl.h>
-#include "PFGameScene.h"
-#include "PFLoadingScene.h"
+#include "scenes/PFGameScene.h"
+#include "scenes/PFLoadingScene.h"
 
 /**
  * This class represents the application root for the platform demo.

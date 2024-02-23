@@ -9,7 +9,7 @@
 //  Author:  Walker White and Anthony Perello
 //  Version: 2/9/21
 //
-#include "PFBullet.h"
+#include "Bullet.h"
 #include <cugl/scene2/graph/CUPolygonNode.h>
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>

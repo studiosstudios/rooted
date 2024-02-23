@@ -1,7 +1,7 @@
 ---
-name:   Platform Demo               # The application display name
-short:  Platformer                  # A shortened name for reference
-appid:  edu.cornell.gdiac.physics2  # Application identifier for Mac, iOS, Android
+name:   Rooted Gameplay             # The application display name
+short:  Rooted                      # A shortened name for reference
+appid:  edu.cornell.gdiac.rooted    # Application identifier for Mac, iOS, Android
 suffix: G94D1D8D
 
 build:  build                       # The build directory (targets are each a subdirectory)

@@ -12,13 +12,13 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
-#include "../objects/Level.h"
+#include "../objects/Map.h"
 
 
 class CollisionController {
 protected:
 //  MARK: - Properties
-    std::shared_ptr<Level> _level;
+    std::shared_ptr<Map> _map;
 
 public:
 
@@ -37,12 +37,12 @@ public:
     /**
      * Disposes of all resources in this instance of Collision Controller
      */
-    void dispose() { _level = nullptr; }
+    void dispose() { _map = nullptr; }
 
     /**
      * Initializes a Collision Controller
      */
-    bool init(const std::shared_ptr<Level> level);
+    bool init(const std::shared_ptr<Map> level);
 
 
 //  MARK: - Callbacks

@@ -5,6 +5,7 @@
 #ifndef ROOTED_AICONTROLLER_H
 #define ROOTED_AICONTROLLER_H
 
+#include <cugl/cugl.h>
 
 class AIController {
 

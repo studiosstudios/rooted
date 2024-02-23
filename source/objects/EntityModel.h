@@ -75,10 +75,10 @@
 * experience, using a rectangular shape for a character will regularly snag
 * on a platform.  The round shapes on the end caps lead to smoother movement.
 */
-class DudeModel : public cugl::physics2::CapsuleObstacle {
+class EntityModel : public cugl::physics2::CapsuleObstacle {
 private:
 	/** This macro disables the copy constructor (not allowed on physics objects) */
-	CU_DISALLOW_COPY_AND_ASSIGN(DudeModel);
+	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
 
 protected:
 	/** The current horizontal movement of the character */
@@ -125,12 +125,12 @@ public:
      * This constructor does not initialize any of the dude values beyond
      * the defaults.  To use a DudeModel, you must call init().
      */
-    DudeModel() : CapsuleObstacle(), _sensorName(SENSOR_NAME) { }
+    EntityModel() : CapsuleObstacle(), _sensorName(SENSOR_NAME) { }
     
     /**
      * Destroys this DudeModel, releasing all resources.
      */
-    virtual ~DudeModel(void) { dispose(); }
+    virtual ~EntityModel(void) { dispose(); }
     
     /**
      * Disposes all resources and assets of this DudeModel
@@ -222,8 +222,8 @@ public:
 	 *
 	 * @return  A newly allocated DudeModel at the origin
 	 */
-	static std::shared_ptr<DudeModel> alloc() {
-		std::shared_ptr<DudeModel> result = std::make_shared<DudeModel>();
+	static std::shared_ptr<EntityModel> alloc() {
+		std::shared_ptr<EntityModel> result = std::make_shared<EntityModel>();
 		return (result->init() ? result : nullptr);
 	}
 
@@ -241,8 +241,8 @@ public:
 	 *
 	 * @return  A newly allocated DudeModel at the given position
 	 */
-	static std::shared_ptr<DudeModel> alloc(const cugl::Vec2& pos) {
-		std::shared_ptr<DudeModel> result = std::make_shared<DudeModel>();
+	static std::shared_ptr<EntityModel> alloc(const cugl::Vec2& pos) {
+		std::shared_ptr<EntityModel> result = std::make_shared<EntityModel>();
 		return (result->init(pos) ? result : nullptr);
 	}
 
@@ -261,8 +261,8 @@ public:
 	 *
 	 * @return  A newly allocated DudeModel at the given position with the given scale
 	 */
-	static std::shared_ptr<DudeModel> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
-		std::shared_ptr<DudeModel> result = std::make_shared<DudeModel>();
+	static std::shared_ptr<EntityModel> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
+		std::shared_ptr<EntityModel> result = std::make_shared<EntityModel>();
 		return (result->init(pos, size) ? result : nullptr);
 	}
 
@@ -282,8 +282,8 @@ public:
 	 *
 	 * @return  A newly allocated DudeModel at the given position with the given scale
 	 */
-	static std::shared_ptr<DudeModel> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
-		std::shared_ptr<DudeModel> result = std::make_shared<DudeModel>();
+	static std::shared_ptr<EntityModel> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+		std::shared_ptr<EntityModel> result = std::make_shared<EntityModel>();
 		return (result->init(pos, size, scale) ? result : nullptr);
 	}
     

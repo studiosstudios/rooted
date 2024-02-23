@@ -41,7 +41,7 @@
 //  Author: Walker White and Anthony Perello
 //  Version:  2/9/17
 //
-#include "DudeModel.h"
+#include "EntityModel.h"
 #include <cugl/scene2/graph/CUPolygonNode.h>
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
@@ -91,7 +91,7 @@ using namespace cugl;
  *
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
-bool DudeModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     Size nsize = size;
     nsize.width  *= DUDE_HSHRINK;
     nsize.height *= DUDE_VSHRINK;
@@ -126,7 +126,7 @@ bool DudeModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scale)
  *
  * @param value left/right movement of this character.
  */
-void DudeModel::setMovement(float value) {
+void EntityModel::setMovement(float value) {
     _movement = value;
     bool face = _movement > 0;
     if (_movement == 0 || _faceRight == face) {
@@ -149,7 +149,7 @@ void DudeModel::setMovement(float value) {
  *
  * This is the primary method to override for custom physics objects
  */
-void DudeModel::createFixtures() {
+void EntityModel::createFixtures() {
     if (_body == nullptr) {
         return;
     }
@@ -183,7 +183,7 @@ void DudeModel::createFixtures() {
  *
  * This is the primary method to override for custom physics objects.
  */
-void DudeModel::releaseFixtures() {
+void EntityModel::releaseFixtures() {
     if (_body != nullptr) {
         return;
     }
@@ -201,7 +201,7 @@ void DudeModel::releaseFixtures() {
  * Any assets owned by this object will be immediately released.  Once
  * disposed, a DudeModel may not be used until it is initialized again.
  */
-void DudeModel::dispose() {
+void EntityModel::dispose() {
     _core = nullptr;
     _node = nullptr;
     _sensorNode = nullptr;
@@ -212,7 +212,7 @@ void DudeModel::dispose() {
  *
  * This method should be called after the force attribute is set.
  */
-void DudeModel::applyForce() {
+void EntityModel::applyForce() {
     if (!isEnabled()) {
         return;
     }
@@ -253,7 +253,7 @@ void DudeModel::applyForce() {
  *
  * @param delta Number of seconds since last animation frame
  */
-void DudeModel::update(float dt) {
+void EntityModel::update(float dt) {
     // Apply cooldowns
     if (isJumping()) {
         _jumpCooldown = JUMP_COOLDOWN;
@@ -286,7 +286,7 @@ void DudeModel::update(float dt) {
  * This is very useful when the fixtures have a very different shape than
  * the texture (e.g. a circular shape attached to a square texture).
  */
-void DudeModel::resetDebug() {
+void EntityModel::resetDebug() {
     CapsuleObstacle::resetDebug();
     float w = DUDE_SSHRINK*_dimension.width;
     float h = SENSOR_HEIGHT;

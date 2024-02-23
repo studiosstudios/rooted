@@ -5,8 +5,27 @@
 #ifndef ROOTED_FARMER_H
 #define ROOTED_FARMER_H
 
+#include <cugl/cugl.h>
+#include "EntityModel.h"
 
-class Farmer {
+using namespace cugl;
+
+class Farmer : EntityModel {
+
+private:
+    bool _isHoldingCarrot;
+
+public:
+
+    Farmer() {};
+
+    ~Farmer() {};
+
+    bool isHoldingCarrot(){ return _isHoldingCarrot; }
+
+    void grabCarrot();
+
+    void rootCarrot();
 
 };
 

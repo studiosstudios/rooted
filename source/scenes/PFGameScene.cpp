@@ -23,7 +23,7 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
-#include "../objects/DudeModel.h"
+#include "../objects/EntityModel.h"
 #include "../objects/Spinner.h"
 #include "../objects/RopeBridge.h"
 #include "../objects/Bullet.h"
@@ -499,7 +499,7 @@ void GameScene::populate() {
 	Vec2 dudePos = DUDE_POS;
 	node = scene2::SceneNode::alloc();
     image = _assets->get<Texture>(DUDE_TEXTURE);
-	_avatar = DudeModel::alloc(dudePos,image->getSize()/_scale,_scale);
+	_avatar = EntityModel::alloc(dudePos, image->getSize() / _scale, _scale);
 	sprite = scene2::PolygonNode::allocWithTexture(image);
 	_avatar->setSceneNode(sprite);
 	_avatar->setDebugColor(DEBUG_COLOR);
@@ -568,7 +568,7 @@ void GameScene::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj
  *
  * @param dt    The amount of time (in seconds) since the last frame
  */
-void GameScene::preUpdate(float dt) {
+void GameScene::preUppreUpdate(float dt) {
 	_input.update(dt);
 
 	// Process the toggled key commands

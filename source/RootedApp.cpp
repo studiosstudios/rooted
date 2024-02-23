@@ -2,7 +2,7 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#include "RootedApp.hpp"
+#include "RootedApp.h"
 
 using namespace cugl;
 
@@ -226,4 +226,5 @@ void RootedApp::draw() {
         _gameplay.render(_batch);
     }
 }
+
 

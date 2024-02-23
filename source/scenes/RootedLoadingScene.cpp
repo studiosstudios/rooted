@@ -1,20 +1,11 @@
 //
-//  PFLoadingScene.cpp
-//  Platform Demo
+//  Created by Kimmy Lin on 2/23/24.
 //
-//  This module provides a very barebones loading screen.  Most of the time you
-//  will not need a loading screen, because the assets will load so fast.  But
-//  just in case, this is a simple example you can use in your games.
-//
-//  We know from 3152 that you all like to customize this screen.  Therefore,
-//  we have kept it as simple as possible so that it is easy to modify.
-//
-//  Author: Walker White and Anthony Perello
-//  Version:  2/9/17
-//
-#include "PFLoadingScene.h"
+
+#include "RootedLoadingScene.h"
 
 using namespace cugl;
+
 
 /** This is the ideal size of the logo */
 #define SCENE_SIZE  1024
@@ -114,5 +105,3 @@ void LoadingScene::update(float progress) {
 bool LoadingScene::isPending( ) const {
     return _button != nullptr && _button->isVisible();
 }
-
-

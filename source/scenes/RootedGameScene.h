@@ -1,30 +1,10 @@
 //
-//  PFGameScene.h
-//  PlatformDemo
+//  Created by Kimmy Lin on 2/23/24.
 //
-//  This is the most important class in this demo.  This class manages the gameplay
-//  for this demo.  It also handles collision detection. There is not much to do for
-//  collisions; our WorldController class takes care of all of that for us.  This
-//  controller mainly transforms input into gameplay.
-//
-//  You will notice that we do not use a Scene asset this time.  While we could
-//  have done this, we wanted to highlight the issues of connecting physics
-//  objects to scene graph objects.  Hence we include all of the API calls.
-//
-//  WARNING: There are a lot of shortcuts in this design that will do not adapt 
-//  well to data driven design. This demo has a lot of simplifications to make
-//  it a bit easier to see how everything fits together. However, the model
-//  classes and how they are initialized will need to be changed if you add
-//  dynamic level loading.
-//
-//  This file is based on the CS 3152 PhysicsDemo Lab by Don Holden (2007).
-//  This file has been refactored to support the physics changes in CUGL 2.5.
-//
-//  Author: Walker White and Anthony Perello
-//  Version:  2/9/24
-//
-#ifndef __PF_GAME_SCENE_H__
-#define __PF_GAME_SCENE_H__
+
+#ifndef RootedGameScene_h
+#define RootedGameScene_h
+
 #include <cugl/cugl.h>
 #include <box2d/b2_world_callbacks.h>
 #include <box2d/b2_fixture.h>
@@ -79,11 +59,11 @@ protected:
     /** Reference to the goalDoor (for collision detection) */
     std::shared_ptr<cugl::physics2::BoxObstacle>    _goalDoor;
     /** Reference to the player avatar */
-    std::shared_ptr<EntityModel>			  _avatar;
+    std::shared_ptr<EntityModel>              _avatar;
     /** Reference to the spinning barrier */
-    std::shared_ptr<Spinner>			  _spinner;
+    std::shared_ptr<Spinner>              _spinner;
     /** Reference to the rope bridge */
-    std::shared_ptr<RopeBridge>			  _ropebridge;
+    std::shared_ptr<RopeBridge>              _ropebridge;
 
     /** Whether we have completed this "game" */
     bool _complete;
@@ -191,7 +171,7 @@ public:
      *
      * @return  true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, 
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               const cugl::Rect& rect);
     
     /**
@@ -211,7 +191,7 @@ public:
      *
      * @return  true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, 
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               const cugl::Rect& rect, const cugl::Vec2& gravity);
     
     
@@ -251,48 +231,48 @@ public:
      *
      * @param value whether the level is completed.
      */
-	void setComplete(bool value);
+    void setComplete(bool value);
 
-	/**
-	* Returns true if the level is failed.
-	*
-	* If true, the level will reset after a countdown
-	*
-	* @return true if the level is failed.
-	*/
-	bool isFailure() const { return _failed; }
+    /**
+    * Returns true if the level is failed.
+    *
+    * If true, the level will reset after a countdown
+    *
+    * @return true if the level is failed.
+    */
+    bool isFailure() const { return _failed; }
 
-	/**
-	* Sets whether the level is failed.
-	*
-	* If true, the level will reset after a countdown
-	*
-	* @param value whether the level is failed.
-	*/
-	void setFailure(bool value);
+    /**
+    * Sets whether the level is failed.
+    *
+    * If true, the level will reset after a countdown
+    *
+    * @param value whether the level is failed.
+    */
+    void setFailure(bool value);
     
 #pragma mark -
 #pragma mark Collision Handling
-	/**
-	* Processes the start of a collision
-	*
-	* This method is called when we first get a collision between two objects.  We use
-	* this method to test if it is the "right" kind of collision.  In particular, we
-	* use it to test if we make it to the win door.  We also us it to eliminate bullets.
-	*
-	* @param  contact  The two bodies that collided
-	*/
-	void beginContact(b2Contact* contact);
+    /**
+    * Processes the start of a collision
+    *
+    * This method is called when we first get a collision between two objects.  We use
+    * this method to test if it is the "right" kind of collision.  In particular, we
+    * use it to test if we make it to the win door.  We also us it to eliminate bullets.
+    *
+    * @param  contact  The two bodies that collided
+    */
+    void beginContact(b2Contact* contact);
 
-	/**
-	* Processes the end of a collision
-	*
-	* This method is called when we no longer have a collision between two objects.  
-	* We use this method allow the character to jump again.
-	*
-	* @param  contact  The two bodies that collided
-	*/
-	void endContact(b2Contact* contact);
+    /**
+    * Processes the end of a collision
+    *
+    * This method is called when we no longer have a collision between two objects.
+    * We use this method allow the character to jump again.
+    *
+    * @param  contact  The two bodies that collided
+    */
+    void endContact(b2Contact* contact);
 
 #pragma mark -
 #pragma mark Gameplay Handling
@@ -389,5 +369,4 @@ public:
     void removeBullet(Bullet* bullet);
 
   };
-
-#endif /* __PF_GAME_SCENE_H__ */
+#endif /* RootedGameScene_h */

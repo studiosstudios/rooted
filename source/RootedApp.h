@@ -1,26 +1,15 @@
 //
-//  PFApp.h
-//  Platform Demo
-//  This is the root class for your game.  The file main.cpp accesses this class
-//  to run the application.  While you could put most of your game logic in
-//  this class, we prefer to break the game up into player modes and have a
-//  class for each mode.
+//  Created by Kimmy Lin on 2/23/24.
 //
-//  This file is based on the CS 3152 PhysicsDemo Lab by Don Holden, 2007
-//
-//  Author: Walker White and Anthony Perello
-//  Version: 2/9/17
-//
-#ifndef __PF_APP_H__
-#define __PF_APP_H__
-#include <cugl/cugl.h>
-#include "scenes/PFGameScene.h"
-#include "scenes/PFLoadingScene.h"
 
-/**
- * This class represents the application root for the platform demo.
- */
-class PlatformApp : public cugl::Application {
+#ifndef RootedApp_h
+#define RootedApp_h
+
+#include <cugl/cugl.h>
+#include "scenes/RootedGameScene.h"
+#include "scenes/RootedLoadingScene.h"
+
+class RootedApp : public cugl::Application{
 protected:
     /** The global sprite batch for drawing (only want one of these) */
     std::shared_ptr<cugl::SpriteBatch> _batch;
@@ -47,7 +36,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    PlatformApp() : cugl::Application(), _loaded(false) {}
+    RootedApp() : cugl::Application(), _loaded(false) {}
     
     /**
      * Disposes of this application, releasing all resources.
@@ -56,7 +45,7 @@ public:
      * It simply calls the dispose() method in Application.  There is nothing
      * special to do here.
      */
-    ~PlatformApp() { }
+    ~RootedApp() { }
     
     
 #pragma mark Application State
@@ -207,4 +196,4 @@ public:
      */
     virtual void draw() override;
 };
-#endif /* __PF_APP_H__ */
+#endif /* RootedApp_h */

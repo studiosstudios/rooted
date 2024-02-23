@@ -568,7 +568,7 @@ void GameScene::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj
  *
  * @param dt    The amount of time (in seconds) since the last frame
  */
-void GameScene::preUppreUpdate(float dt) {
+void GameScene::preUpdate(float dt) {
 	_input.update(dt);
 
 	// Process the toggled key commands

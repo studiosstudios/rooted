@@ -226,5 +226,3 @@ void RootedApp::draw() {
         _gameplay.render(_batch);
     }
 }
-
-

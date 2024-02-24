@@ -33,6 +33,8 @@ using namespace cugl;
 #define DEFAULT_WIDTH   32.0f
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
+/** Zoom of camera relative to scene */
+#define CAMERA_ZOOM 1.5
 
 // Since these appear only once, we do not care about the magic numbers.
 // In an actual game, this information would go in a data file.
@@ -294,6 +296,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets,
     addChild(_rightnode);
 
     populate();
+    _camera->setZoom(CAMERA_ZOOM);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -301,6 +304,20 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets,
     // XNA nostalgia
     Application::get()->setClearColor(Color4f::CORNFLOWER);
     return true;
+}
+
+/**
+ * Moves the camera to focus the avatar
+ */
+void GameScene::moveCamera(){
+    if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
+         _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
+        _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
+    }
+    if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
+        _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
+        _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
+    }
 }
 
 /**
@@ -621,6 +638,8 @@ void GameScene::preUpdate(float dt) {
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _world->update(step);
+    moveCamera();
+    _camera->update();
 }
     
 /**

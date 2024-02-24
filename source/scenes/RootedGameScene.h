@@ -78,6 +78,10 @@ protected:
     std::unordered_set<b2Fixture*> _sensorFixtures;
 
 #pragma mark Internal Object Management
+    
+    /** Moves the camera to focus the avatar */
+    void moveCamera();
+    
     /**
      * Lays out the game geography.
      *
@@ -369,4 +373,5 @@ public:
     void removeBullet(Bullet* bullet);
 
   };
+
 #endif /* RootedGameScene_h */

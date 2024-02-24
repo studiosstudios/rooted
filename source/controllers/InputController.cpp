@@ -24,10 +24,6 @@ using namespace cugl;
 #define DEBUG_KEY KeyCode::D
 /** The key for exitting the game */
 #define EXIT_KEY  KeyCode::ESCAPE
-/** The key for firing a bullet */
-#define FIRE_KEY KeyCode::SPACE
-/** The key for jumping up */
-#define JUMP_KEY KeyCode::ARROW_UP
 
 /** How close we need to be for a multi touch */
 #define NEAR_TOUCH      100
@@ -74,16 +70,12 @@ _active(false),
 _resetPressed(false),
 _debugPressed(false),
 _exitPressed(false),
-_firePressed(false),
-_jumpPressed(false),
-_keyJump(false),
-_keyFire(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
 _keyLeft(false),
 _keyRight(false),
-_horizontal(0.0f),
+_movement(Vec2(0,0)),
 _joystick(false),
 _hasJumped(false) {
 }
@@ -167,35 +159,38 @@ void InputController::update(float dt) {
     _keyReset  = keys->keyPressed(RESET_KEY);
     _keyDebug  = keys->keyPressed(DEBUG_KEY);
     _keyExit   = keys->keyPressed(EXIT_KEY);
-    _keyFire   = keys->keyPressed(FIRE_KEY);
-    _keyJump   = keys->keyPressed(JUMP_KEY);
 
     _keyLeft = keys->keyDown(KeyCode::ARROW_LEFT);
     _keyRight = keys->keyDown(KeyCode::ARROW_RIGHT);
+    _keyUp = keys->keyDown(KeyCode::ARROW_UP);
+    _keyDown = keys->keyDown(KeyCode::ARROW_DOWN);
 #endif
 
     _resetPressed = _keyReset;
     _debugPressed = _keyDebug;
     _exitPressed  = _keyExit;
-	_firePressed  = _keyFire;
-	_jumpPressed  = _keyJump;
 
 	// Directional controls
-	_horizontal = 0.0f;
+	_movement.x = 0.0f;
+    _movement.y = 0.0f;
 	if (_keyRight) {
-		_horizontal += 1.0f;
+		_movement.x += 1.0f;
 	}
 	if (_keyLeft) {
-		_horizontal -= 1.0f;
+		_movement.x -= 1.0f;
 	}
+    if (_keyUp) {
+        _movement.y += 1.0f;
+    }
+    if (_keyDown) {
+        _movement.y -= 1.0f;
+    }
 
 // If it does not support keyboard, we must reset "virtual" keyboard
 #ifdef CU_TOUCH_SCREEN
     _keyExit = false;
     _keyReset = false;
     _keyDebug = false;
-    _keyJump  = false;
-    _keyFire  = false;
 #endif
 }
 
@@ -206,9 +201,6 @@ void InputController::clear() {
     _resetPressed = false;
     _debugPressed = false;
     _exitPressed  = false;
-    _jumpPressed = false;
-    _firePressed = false;
-    
 }
 
 #pragma mark -
@@ -365,7 +357,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
             // Only process if no touch in zone
             if (_rtouch.touchids.empty()) {
                 // Right is jump AND fire controls
-                _keyFire = (event.timestamp.ellapsedMillis(_rtime) <= DOUBLE_CLICK);
                 _rtouch.position = event.position;
                 _rtouch.timestamp.mark();
                 _rtouch.touchids.insert(event.touch);
@@ -439,7 +430,6 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
     } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         if (!_hasJumped) {
             if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
-                _keyJump = true;
                 _hasJumped = true;
             }
         }

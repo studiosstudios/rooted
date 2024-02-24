@@ -20,7 +20,7 @@ public:
 
     Carrot() {};
     
-    ~Carrot() {};
+    ~Carrot() { dispose(); };
 
     bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
 

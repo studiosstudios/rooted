@@ -4,9 +4,6 @@
 
 #include "Map.h"
 #include "../objects/EntityModel.h"
-#include "../objects/Spinner.h"
-#include "../objects/RopeBridge.h"
-#include "../objects/Bullet.h"
 
 // TODO: put all constants into JSON
 

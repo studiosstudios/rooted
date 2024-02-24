@@ -23,10 +23,6 @@ protected:
 
     bool _isComplete;
 
-    /** Mark set to handle more sophisticated collision callbacks
-     *  TODO: This is leftover from platformer demo (only used to check ground) - DELETE*/
-    std::unordered_set<b2Fixture*> _sensorFixtures;
-
 public:
 
 //  MARK: - Constructors

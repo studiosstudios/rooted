@@ -41,14 +41,6 @@ void CollisionController::beginContact(b2Contact* contact) {
 
     auto avatar = _map->getCarrots().at(0);
 
-    // See if we have landed on the ground.
-    if ((avatar->getSensorName() == fd2 && avatar.get() != bd1) ||
-        (avatar->getSensorName() == fd1 && avatar.get() != bd2)) {
-        avatar->setGrounded(true);
-        // Could have more than one ground
-        _sensorFixtures.emplace(avatar.get() == bd1 ? fix2 : fix1);
-    }
-
     // If we hit the "win" door, we are done
     if((bd1 == avatar.get()   && bd2 == _map->getGoalDoor().get()) ||
        (bd1 == _map->getGoalDoor().get() && bd2 == avatar.get())) {
@@ -76,15 +68,6 @@ void CollisionController::endContact(b2Contact* contact) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
-    auto avatar = _map->getCarrots().at(0);
-
-    if ((avatar->getSensorName() == fd2 && avatar.get() != bd1) ||
-        (avatar->getSensorName() == fd1 && avatar.get() != bd2)) {
-        _sensorFixtures.erase(avatar.get() == bd1 ? fix2 : fix1);
-        if (_sensorFixtures.empty()) {
-            avatar->setGrounded(false);
-        }
-    }
 }
 
 /** for now everything collides with everything*/

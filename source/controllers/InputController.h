@@ -43,10 +43,6 @@ private:
     /** Whether or not this input is active */
     bool _active;
     // KEYBOARD EMULATION
-    /** Whether the jump key is down */
-    bool  _keyJump;
-    /** Whether the fire key is down */
-    bool  _keyFire;
     /** Whether the reset key is down */
     bool  _keyReset;
     /** Whether the debug key is down */
@@ -57,6 +53,10 @@ private:
     bool  _keyLeft;
     /** Whether the right arrow key is down */
     bool  _keyRight;
+    /** Whether the up arrow key is down */
+    bool  _keyUp;
+    /** Whether the down arrow key is down */
+    bool  _keyDown;
   
 protected:
     // INPUT RESULTS
@@ -66,12 +66,8 @@ protected:
     bool _debugPressed;
     /** Whether the exit action was chosen. */
     bool _exitPressed;
-    /** Whether the fire action was chosen. */
-    bool _firePressed;
-    /** Whether the jump action was chosen. */
-    bool _jumpPressed;
-    /** How much did we move horizontally? */
-    float _horizontal;
+    /** Movement vector */
+    cugl::Vec2 _movement;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -268,21 +264,7 @@ public:
      *
      * @return the amount of sideways movement.
      */
-	float getHorizontal() const { return _horizontal; }
-
-    /**
-     * Returns if the jump button was pressed.
-     *
-     * @return if the jump button was pressed.
-     */
-	float didJump() const { return _jumpPressed; }
-
-    /**
-     * Returns true if the fire button was pressed.
-     *
-     * @return true if the fire button was pressed.
-     */
-	bool didFire() const { return _firePressed; }
+	cugl::Vec2 getMovement() const { return _movement; }
 
     /**
      * Returns true if the reset button was pressed.

@@ -14,10 +14,18 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
 }
 
 void ActionController::preUpdate(float dt) {
-    auto avatar = _map->getCarrots().at(0);
-    avatar->setMovement(_input->getHorizontal() * avatar->getForce());
-    avatar->setJumping(_input->didJump());
-    avatar->applyForce();
+    for (auto carrot : _map->getCarrots()) {
+        carrot->setMovement(_input->getMovement() * carrot ->getForce());
+        carrot->applyForce();
+    }
+
+    for (auto farmer : _map->getFarmers()) {
+
+    }
+
+    for (auto babyCarrot : _map->getBabyCarrots()) {
+//        _ai.update(babyCarrot);
+    }
 }
 
 void ActionController::postUpdate(float dt) {

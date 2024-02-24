@@ -52,8 +52,6 @@
 #pragma mark Drawing Constants
 /** The texture for the character avatar */
 #define DUDE_TEXTURE    "dude"
-/** Identifier to allow us to track the sensor in ContactListener */
-#define SENSOR_NAME     "dudesensor"
 
 
 #pragma mark -
@@ -75,32 +73,16 @@
 * experience, using a rectangular shape for a character will regularly snag
 * on a platform.  The round shapes on the end caps lead to smoother movement.
 */
-class EntityModel : public cugl::physics2::CapsuleObstacle {
+class EntityModel : public cugl::physics2::BoxObstacle {
 private:
 	/** This macro disables the copy constructor (not allowed on physics objects) */
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
 
 protected:
 	/** The current horizontal movement of the character */
-	float _movement;
+	cugl::Vec2 _movement;
 	/** Which direction is the character facing */
 	bool _faceRight;
-	/** How long until we can jump again */
-	int  _jumpCooldown;
-	/** Whether we are actively jumping */
-	bool _isJumping;
-	/** How long until we can shoot again */
-	int  _shootCooldown;
-	/** Whether our feet are on the ground */
-	bool _isGrounded;
-	/** Whether we are actively shooting */
-	bool _isShooting;
-	/** Ground sensor to represent our feet */
-	b2Fixture*  _sensorFixture;
-	/** Reference to the sensor name (since a constant cannot have a pointer) */
-	std::string _sensorName;
-	/** The node for debugging the sensor */
-	std::shared_ptr<cugl::scene2::WireNode> _sensorNode;
 
 	/** The scene graph node for the Dude. */
 	std::shared_ptr<cugl::scene2::SceneNode> _node;
@@ -125,7 +107,7 @@ public:
      * This constructor does not initialize any of the dude values beyond
      * the defaults.  To use a DudeModel, you must call init().
      */
-    EntityModel() : CapsuleObstacle(), _sensorName(SENSOR_NAME) { }
+    EntityModel() : BoxObstacle() { }
     
     /**
      * Destroys this DudeModel, releasing all resources.
@@ -328,13 +310,13 @@ public:
 #pragma mark -
 #pragma mark Attribute Properties
     /**
-     * Returns left/right movement of this character.
+     * Returns movement of this character.
      *
      * This is the result of input times dude force.
      *
-     * @return left/right movement of this character.
+     * @return movement of this character.
      */
-    float getMovement() const { return _movement; }
+    cugl::Vec2 getMovement() const { return _movement; }
     
     /**
      * Sets left/right movement of this character.
@@ -343,49 +325,7 @@ public:
      *
      * @param value left/right movement of this character.
      */
-    void setMovement(float value);
-    
-    /**
-     * Returns true if the dude is actively firing.
-     *
-     * @return true if the dude is actively firing.
-     */
-    bool isShooting() const { return _isShooting && _shootCooldown <= 0; }
-    
-    /**
-     * Sets whether the dude is actively firing.
-     *
-     * @param value whether the dude is actively firing.
-     */
-    void setShooting(bool value) { _isShooting = value; }
-    
-    /**
-     * Returns true if the dude is actively jumping.
-     *
-     * @return true if the dude is actively jumping.
-     */
-    bool isJumping() const { return _isJumping && _jumpCooldown <= 0; }
-    
-    /**
-     * Sets whether the dude is actively jumping.
-     *
-     * @param value whether the dude is actively jumping.
-     */
-    void setJumping(bool value) { _isJumping = value; }
-    
-    /**
-     * Returns true if the dude is on the ground.
-     *
-     * @return true if the dude is on the ground.
-     */
-    bool isGrounded() const { return _isGrounded; }
-    
-    /**
-     * Sets whether the dude is on the ground.
-     *
-     * @param value whether the dude is on the ground.
-     */
-    void setGrounded(bool value) { _isGrounded = value; }
+    void setMovement(cugl::Vec2 value);
     
     /**
      * Returns how much force to apply to get the dude moving
@@ -411,15 +351,6 @@ public:
      * @return the upper limit on dude left-right movement.
      */
     float getMaxSpeed() const { return DUDE_MAXSPEED; }
-    
-    /**
-     * Returns the name of the ground sensor
-     *
-     * This is used by ContactListener
-     *
-     * @return the name of the ground sensor
-     */
-    std::string* getSensorName() { return &_sensorName; }
     
     /**
      * Returns true if this character is facing right

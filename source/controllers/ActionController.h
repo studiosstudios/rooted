@@ -8,6 +8,7 @@
 #include <cugl/cugl.h>
 #include "../objects/Map.h"
 #include "InputController.h"
+#include "AIController.h"
 
 class ActionController {
 private:
@@ -16,6 +17,8 @@ private:
     std::shared_ptr<InputController> _input;
 
     std::shared_ptr<Map> _map;
+
+    AIController _ai;
 public:
 
     /**

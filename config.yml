@@ -1,5 +1,5 @@
 ---
-name:   rooted gameplay            # The application display name
+name:   rooted!                     # The application display name
 short:  rooted                      # A shortened name for reference
 appid:  edu.cornell.gdiac.rooted    # Application identifier for Mac, iOS, Android
 suffix: G94D1D8D

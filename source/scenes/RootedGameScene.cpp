@@ -7,9 +7,6 @@
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
 #include "../objects/EntityModel.h"
-#include "../objects/Spinner.h"
-#include "../objects/RopeBridge.h"
-#include "../objects/Bullet.h"
 
 #include <ctime>
 #include <string>
@@ -36,8 +33,8 @@ using namespace cugl;
 
 #pragma mark -
 #pragma mark Physics Constants
-/** The new heavier gravity for this world (so it is not so floaty) */
-#define DEFAULT_GRAVITY -28.9f
+/** No gravity because we are top down */
+#define DEFAULT_GRAVITY 0.0f
 /** The number of frame to wait before reinitializing the game */
 #define EXIT_COUNT      240
 
@@ -315,10 +312,10 @@ void GameScene::preUpdate(float dt) {
 
     // Process the movement
     if (_input->withJoystick()) {
-        if (_input->getHorizontal() < 0) {
+        if (_input->getMovement().x < 0) {
             _leftnode->setVisible(true);
             _rightnode->setVisible(false);
-        } else if (_input->getHorizontal() > 0) {
+        } else if (_input->getMovement().x > 0) {
             _leftnode->setVisible(false);
             _rightnode->setVisible(true);
         } else {
@@ -333,13 +330,6 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
-
-    auto avatar = _map->getCarrots().at(0);
-
-    if (avatar->isJumping() && avatar->isGrounded()) {
-        std::shared_ptr<Sound> source = _assets->get<Sound>(JUMP_EFFECT);
-        AudioEngine::get()->play(JUMP_EFFECT, source, false, EFFECT_VOLUME);
-    }
 
 }
 

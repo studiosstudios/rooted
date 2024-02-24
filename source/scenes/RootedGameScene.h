@@ -11,10 +11,7 @@
 #include <unordered_set>
 #include <vector>
 #include "../controllers/InputController.h"
-#include "../objects/Bullet.h"
 #include "../objects/EntityModel.h"
-#include "../objects/RopeBridge.h"
-#include "../objects/Spinner.h"
 #include "../controllers/CollisionController.h"
 #include "../controllers/ActionController.h"
 #include "../objects/Map.h"

@@ -16,6 +16,7 @@
 #include "../objects/RopeBridge.h"
 #include "../objects/Spinner.h"
 #include "../controllers/CollisionController.h"
+#include "../objects/Map.h"
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -33,7 +34,7 @@ protected:
     /** Controller for abstracting out input across multiple platforms */
     PlatformInput _input;
 
-    /** Controller for collision */
+    /** Controller for Box2D collisions */
     CollisionController _collision;
     
     // VIEW
@@ -55,15 +56,8 @@ protected:
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _scale;
 
-    // Physics objects for the game
-    /** Reference to the goalDoor (for collision detection) */
-    std::shared_ptr<cugl::physics2::BoxObstacle>    _goalDoor;
-    /** Reference to the player avatar */
-    std::shared_ptr<EntityModel>              _avatar;
-    /** Reference to the spinning barrier */
-    std::shared_ptr<Spinner>              _spinner;
-    /** Reference to the rope bridge */
-    std::shared_ptr<RopeBridge>              _ropebridge;
+    /** Reference to the map */
+    std::shared_ptr<Map>  _map;
 
     /** Whether we have completed this "game" */
     bool _complete;
@@ -355,18 +349,6 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
-
-    /**
-    * Adds a new bullet to the world and sends it in the right direction.
-    */
-    void createBullet();
-
-    /**
-    * Removes the input Bullet from the world.
-    *
-    * @param  bullet   the bullet to remove
-    */
-    void removeBullet(Bullet* bullet);
 
   };
 #endif /* RootedGameScene_h */

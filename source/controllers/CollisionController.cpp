@@ -6,3 +6,7 @@
 //
 
 #include "CollisionController.h"
+
+using namespace cugl;
+
+

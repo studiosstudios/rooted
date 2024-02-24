@@ -160,7 +160,6 @@ GameScene::GameScene() : Scene2(),
     _worldnode(nullptr),
     _debugnode(nullptr),
     _world(nullptr),
-    _avatar(nullptr),
     _complete(false),
     _debug(false)
 {
@@ -293,7 +292,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets,
     addChild(_leftnode);
     addChild(_rightnode);
 
-    populate();
+//    populate();
+    _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -318,6 +318,7 @@ void GameScene::dispose() {
         _rightnode = nullptr;
         _complete = false;
         _debug = false;
+        _map->dispose();
         Scene2::dispose();
     }
 }
@@ -335,198 +336,194 @@ void GameScene::reset() {
     _world->clear();
     _worldnode->removeAllChildren();
     _debugnode->removeAllChildren();
-    _avatar = nullptr;
-    _goalDoor = nullptr;
-    _spinner = nullptr;
-    _ropebridge = nullptr;
       
     setFailure(false);
     setComplete(false);
-    populate();
+//    populate();
+    _map->init(_assets, _world, _worldnode, _debugnode, _scale);
 }
+//
+///**
+// * Lays out the game geography.
+// *
+// * Pay close attention to how we attach physics objects to a scene graph.
+// * The simplest way is to make a subclass, like we do for the Dude.  However,
+// * for simple objects you can just use a callback function to lightly couple
+// * them.  This is what we do with the crates.
+// *
+// * This method is really, really long.  In practice, you would replace this
+// * with your serialization loader, which would process a level file.
+// */
+//void GameScene::populate() {
+//
+//
+//#pragma mark : Goal door
+//    std::shared_ptr<Texture> image = _assets->get<Texture>(GOAL_TEXTURE);
+//    std::shared_ptr<scene2::PolygonNode> sprite;
+//    std::shared_ptr<scene2::WireNode> draw;
+//
+//    // Create obstacle
+//    Vec2 goalPos = GOAL_POS;
+//    Size goalSize(image->getSize().width/_scale,
+//    image->getSize().height/_scale);
+//    _goalDoor = physics2::BoxObstacle::alloc(goalPos,goalSize);
+//
+//    // Set the physics attributes
+//    _goalDoor->setBodyType(b2_staticBody);
+//    _goalDoor->setDensity(0.0f);
+//    _goalDoor->setFriction(0.0f);
+//    _goalDoor->setRestitution(0.0f);
+//    _goalDoor->setSensor(true);
+//
+//    // Add the scene graph nodes to this object
+//    sprite = scene2::PolygonNode::allocWithTexture(image);
+//    _goalDoor->setDebugColor(DEBUG_COLOR);
+//    addObstacle(_goalDoor, sprite);
+//
+//#pragma mark : Walls
+//    // All walls and platforms share the same texture
+//    image  = _assets->get<Texture>(EARTH_TEXTURE);
+//    std::string wname = "wall";
+//    for (int ii = 0; ii < WALL_COUNT; ii++) {
+//        std::shared_ptr<physics2::PolygonObstacle> wallobj;
+//
+//        Poly2 wall(reinterpret_cast<Vec2*>(WALL[ii]),WALL_VERTS/2);
+//        // Call this on a polygon to get a solid shape
+//        EarclipTriangulator triangulator;
+//        triangulator.set(wall.vertices);
+//        triangulator.calculate();
+//        wall.setIndices(triangulator.getTriangulation());
+//        triangulator.clear();
+//
+//        wallobj = physics2::PolygonObstacle::allocWithAnchor(wall,Vec2::ANCHOR_CENTER);
+//        // You cannot add constant "".  Must stringify
+//        wallobj->setName(std::string(WALL_NAME)+cugl::strtool::to_string(ii));
+//        wallobj->setName(wname);
+//
+//        // Set the physics attributes
+//        wallobj->setBodyType(b2_staticBody);
+//        wallobj->setDensity(BASIC_DENSITY);
+//        wallobj->setFriction(BASIC_FRICTION);
+//        wallobj->setRestitution(BASIC_RESTITUTION);
+//        wallobj->setDebugColor(DEBUG_COLOR);
+//
+//        wall *= _scale;
+//        sprite = scene2::PolygonNode::allocWithTexture(image,wall);
+//        addObstacle(wallobj,sprite,1);  // All walls share the same texture
+//    }
+//
+//#pragma mark : Platforms
+//    for (int ii = 0; ii < PLATFORM_COUNT; ii++) {
+//        std::shared_ptr<physics2::PolygonObstacle> platobj;
+//        Poly2 platform(reinterpret_cast<Vec2*>(PLATFORMS[ii]),4);
+//
+//        EarclipTriangulator triangulator;
+//        triangulator.set(platform.vertices);
+//        triangulator.calculate();
+//        platform.setIndices(triangulator.getTriangulation());
+//        triangulator.clear();
+//
+//        platobj = physics2::PolygonObstacle::allocWithAnchor(platform,Vec2::ANCHOR_CENTER);
+//        // You cannot add constant "".  Must stringify
+//        platobj->setName(std::string(PLATFORM_NAME)+cugl::strtool::to_string(ii));
+//
+//        // Set the physics attributes
+//        platobj->setBodyType(b2_staticBody);
+//        platobj->setDensity(BASIC_DENSITY);
+//        platobj->setFriction(BASIC_FRICTION);
+//        platobj->setRestitution(BASIC_RESTITUTION);
+//        platobj->setDebugColor(DEBUG_COLOR);
+//
+//        platform *= _scale;
+//        sprite = scene2::PolygonNode::allocWithTexture(image,platform);
+//        addObstacle(platobj,sprite,1);
+//    }
+//
+//#pragma mark : Spinner
+//    Vec2 spinPos = SPIN_POS;
+//    image = _assets->get<Texture>(SPINNER_TEXTURE);
+//    _spinner = Spinner::alloc(spinPos,image->getSize()/_scale,_scale);
+//    _spinner->setTexture(image);
+//    std::shared_ptr<scene2::SceneNode> node = scene2::SceneNode::alloc();
+//
+//    // With refactor, must be added manually
+//    // Add the node to the world before calling setSceneNode,
+//    _worldnode->addChild(node);
+//    _spinner->setSceneNode(node);
+//
+//    _spinner->setDrawScale(_scale);
+//    _spinner->setDebugColor(DEBUG_COLOR);
+//    _spinner->setDebugScene(_debugnode);
+//    _spinner->activate(_world);
+//
+//#pragma mark : Rope Bridge
+//    Vec2 bridgeStart = BRIDGE_POS;
+//    Vec2 bridgeEnd   = bridgeStart;
+//    bridgeEnd.x += BRIDGE_WIDTH;
+//    image = _assets->get<Texture>(BRIDGE_TEXTURE);
+//
+//    _ropebridge = RopeBridge::alloc(bridgeStart,bridgeEnd,image->getSize()/_scale,_scale);
+//    _ropebridge->setTexture(image);
+//    node = scene2::SceneNode::alloc();
+//
+//    // With refactor, must be added manually
+//    // Add the node to the world before calling setSceneNode,
+//    _worldnode->addChild(node);
+//    _ropebridge->setSceneNode(node);
+//
+//    _ropebridge->setDrawScale(_scale);
+//    _ropebridge->setDebugColor(DEBUG_COLOR);
+//    _ropebridge->setDebugScene(_debugnode);
+//    _ropebridge->activate(_world);
+//
+//#pragma mark : Dude
+//    Vec2 dudePos = DUDE_POS;
+//    image = _assets->get<Texture>(DUDE_TEXTURE);
+//    _avatar = EntityModel::alloc(dudePos, image->getSize() / _scale, _scale);
+//    sprite = scene2::PolygonNode::allocWithTexture(image);
+//    _avatar->setSceneNode(sprite);
+//    _avatar->setDebugColor(DEBUG_COLOR);
+//    addObstacle(_avatar,sprite); // Put this at the very front
+//
+//    // Play the background music on a loop.
+//    std::shared_ptr<Sound> source = _assets->get<Sound>(GAME_MUSIC);
+//    AudioEngine::get()->getMusicQueue()->play(source, true, MUSIC_VOLUME);
+//}
 
-/**
- * Lays out the game geography.
- *
- * Pay close attention to how we attach physics objects to a scene graph.
- * The simplest way is to make a subclass, like we do for the Dude.  However,
- * for simple objects you can just use a callback function to lightly couple
- * them.  This is what we do with the crates.
- *
- * This method is really, really long.  In practice, you would replace this
- * with your serialization loader, which would process a level file.
- */
-void GameScene::populate() {
-    
-    
-#pragma mark : Goal door
-    std::shared_ptr<Texture> image = _assets->get<Texture>(GOAL_TEXTURE);
-    std::shared_ptr<scene2::PolygonNode> sprite;
-    std::shared_ptr<scene2::WireNode> draw;
-
-    // Create obstacle
-    Vec2 goalPos = GOAL_POS;
-    Size goalSize(image->getSize().width/_scale,
-    image->getSize().height/_scale);
-    _goalDoor = physics2::BoxObstacle::alloc(goalPos,goalSize);
-    
-    // Set the physics attributes
-    _goalDoor->setBodyType(b2_staticBody);
-    _goalDoor->setDensity(0.0f);
-    _goalDoor->setFriction(0.0f);
-    _goalDoor->setRestitution(0.0f);
-    _goalDoor->setSensor(true);
-
-    // Add the scene graph nodes to this object
-    sprite = scene2::PolygonNode::allocWithTexture(image);
-    _goalDoor->setDebugColor(DEBUG_COLOR);
-    addObstacle(_goalDoor, sprite);
-
-#pragma mark : Walls
-    // All walls and platforms share the same texture
-    image  = _assets->get<Texture>(EARTH_TEXTURE);
-    std::string wname = "wall";
-    for (int ii = 0; ii < WALL_COUNT; ii++) {
-        std::shared_ptr<physics2::PolygonObstacle> wallobj;
-
-        Poly2 wall(reinterpret_cast<Vec2*>(WALL[ii]),WALL_VERTS/2);
-        // Call this on a polygon to get a solid shape
-        EarclipTriangulator triangulator;
-        triangulator.set(wall.vertices);
-        triangulator.calculate();
-        wall.setIndices(triangulator.getTriangulation());
-        triangulator.clear();
-
-        wallobj = physics2::PolygonObstacle::allocWithAnchor(wall,Vec2::ANCHOR_CENTER);
-        // You cannot add constant "".  Must stringify
-        wallobj->setName(std::string(WALL_NAME)+cugl::strtool::to_string(ii));
-        wallobj->setName(wname);
-
-        // Set the physics attributes
-        wallobj->setBodyType(b2_staticBody);
-        wallobj->setDensity(BASIC_DENSITY);
-        wallobj->setFriction(BASIC_FRICTION);
-        wallobj->setRestitution(BASIC_RESTITUTION);
-        wallobj->setDebugColor(DEBUG_COLOR);
-
-        wall *= _scale;
-        sprite = scene2::PolygonNode::allocWithTexture(image,wall);
-        addObstacle(wallobj,sprite,1);  // All walls share the same texture
-    }
-
-#pragma mark : Platforms
-    for (int ii = 0; ii < PLATFORM_COUNT; ii++) {
-        std::shared_ptr<physics2::PolygonObstacle> platobj;
-        Poly2 platform(reinterpret_cast<Vec2*>(PLATFORMS[ii]),4);
-
-        EarclipTriangulator triangulator;
-        triangulator.set(platform.vertices);
-        triangulator.calculate();
-        platform.setIndices(triangulator.getTriangulation());
-        triangulator.clear();
-
-        platobj = physics2::PolygonObstacle::allocWithAnchor(platform,Vec2::ANCHOR_CENTER);
-        // You cannot add constant "".  Must stringify
-        platobj->setName(std::string(PLATFORM_NAME)+cugl::strtool::to_string(ii));
-
-        // Set the physics attributes
-        platobj->setBodyType(b2_staticBody);
-        platobj->setDensity(BASIC_DENSITY);
-        platobj->setFriction(BASIC_FRICTION);
-        platobj->setRestitution(BASIC_RESTITUTION);
-        platobj->setDebugColor(DEBUG_COLOR);
-
-        platform *= _scale;
-        sprite = scene2::PolygonNode::allocWithTexture(image,platform);
-        addObstacle(platobj,sprite,1);
-    }
-
-#pragma mark : Spinner
-    Vec2 spinPos = SPIN_POS;
-    image = _assets->get<Texture>(SPINNER_TEXTURE);
-    _spinner = Spinner::alloc(spinPos,image->getSize()/_scale,_scale);
-    _spinner->setTexture(image);
-    std::shared_ptr<scene2::SceneNode> node = scene2::SceneNode::alloc();
-    
-    // With refactor, must be added manually
-    // Add the node to the world before calling setSceneNode,
-    _worldnode->addChild(node);
-    _spinner->setSceneNode(node);
-
-    _spinner->setDrawScale(_scale);
-    _spinner->setDebugColor(DEBUG_COLOR);
-    _spinner->setDebugScene(_debugnode);
-    _spinner->activate(_world);
-
-#pragma mark : Rope Bridge
-    Vec2 bridgeStart = BRIDGE_POS;
-    Vec2 bridgeEnd   = bridgeStart;
-    bridgeEnd.x += BRIDGE_WIDTH;
-    image = _assets->get<Texture>(BRIDGE_TEXTURE);
-    
-    _ropebridge = RopeBridge::alloc(bridgeStart,bridgeEnd,image->getSize()/_scale,_scale);
-    _ropebridge->setTexture(image);
-    node = scene2::SceneNode::alloc();
-
-    // With refactor, must be added manually
-    // Add the node to the world before calling setSceneNode,
-    _worldnode->addChild(node);
-    _ropebridge->setSceneNode(node);
-    
-    _ropebridge->setDrawScale(_scale);
-    _ropebridge->setDebugColor(DEBUG_COLOR);
-    _ropebridge->setDebugScene(_debugnode);
-    _ropebridge->activate(_world);
-
-#pragma mark : Dude
-    Vec2 dudePos = DUDE_POS;
-    node = scene2::SceneNode::alloc();
-    image = _assets->get<Texture>(DUDE_TEXTURE);
-    _avatar = EntityModel::alloc(dudePos, image->getSize() / _scale, _scale);
-    sprite = scene2::PolygonNode::allocWithTexture(image);
-    _avatar->setSceneNode(sprite);
-    _avatar->setDebugColor(DEBUG_COLOR);
-    addObstacle(_avatar,sprite); // Put this at the very front
-
-    // Play the background music on a loop.
-    std::shared_ptr<Sound> source = _assets->get<Sound>(GAME_MUSIC);
-    AudioEngine::get()->getMusicQueue()->play(source, true, MUSIC_VOLUME);
-}
-
-/**
- * Adds the physics object to the physics world and loosely couples it to the scene graph
- *
- * There are two ways to link a physics object to a scene graph node on the
- * screen.  One way is to make a subclass of a physics object, like we did
- * with dude.  The other is to use callback functions to loosely couple
- * the two.  This function is an example of the latter.
- *
- * @param obj             The physics object to add
- * @param node            The scene graph node to attach it to
- * @param zOrder          The drawing order
- * @param useObjPosition  Whether to update the node's position to be at the object's position
- */
-void GameScene::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
-                            const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                            bool useObjPosition) {
-    _world->addObstacle(obj);
-    obj->setDebugScene(_debugnode);
-    
-    // Position the scene graph node (enough for static objects)
-      if (useObjPosition) {
-          node->setPosition(obj->getPosition()*_scale);
-      }
-      _worldnode->addChild(node);
-    
-    // Dynamic objects need constant updating
-    if (obj->getBodyType() == b2_dynamicBody) {
-        scene2::SceneNode* weak = node.get(); // No need for smart pointer in callback
-        obj->setListener([=](physics2::Obstacle* obs){
-            weak->setPosition(obs->getPosition()*_scale);
-            weak->setAngle(obs->getAngle());
-        });
-    }
-}
+///**
+// * Adds the physics object to the physics world and loosely couples it to the scene graph
+// *
+// * There are two ways to link a physics object to a scene graph node on the
+// * screen.  One way is to make a subclass of a physics object, like we did
+// * with dude.  The other is to use callback functions to loosely couple
+// * the two.  This function is an example of the latter.
+// *
+// * @param obj             The physics object to add
+// * @param node            The scene graph node to attach it to
+// * @param zOrder          The drawing order
+// * @param useObjPosition  Whether to update the node's position to be at the object's position
+// */
+//void GameScene::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
+//                            const std::shared_ptr<cugl::scene2::SceneNode>& node,
+//                            bool useObjPosition) {
+//    _world->addObstacle(obj);
+//    obj->setDebugScene(_debugnode);
+//
+//    // Position the scene graph node (enough for static objects)
+//      if (useObjPosition) {
+//          node->setPosition(obj->getPosition()*_scale);
+//      }
+//      _worldnode->addChild(node);
+//
+//    // Dynamic objects need constant updating
+//    if (obj->getBodyType() == b2_dynamicBody) {
+//        scene2::SceneNode* weak = node.get(); // No need for smart pointer in callback
+//        obj->setListener([=](physics2::Obstacle* obs){
+//            weak->setPosition(obs->getPosition()*_scale);
+//            weak->setAngle(obs->getAngle());
+//        });
+//    }
+//}
 
 
 #pragma mark -
@@ -580,12 +577,13 @@ void GameScene::preUpdate(float dt) {
         _leftnode->setVisible(false);
         _rightnode->setVisible(false);
     }
-    
-    _avatar->setMovement(_input.getHorizontal()*_avatar->getForce());
-    _avatar->setJumping( _input.didJump());
-    _avatar->applyForce();
 
-    if (_avatar->isJumping() && _avatar->isGrounded()) {
+    auto avatar = _map->getCarrots().at(0);
+    avatar->setMovement(_input.getHorizontal()*avatar->getForce());
+    avatar->setJumping( _input.didJump());
+    avatar->applyForce();
+
+    if (avatar->isJumping() && avatar->isGrounded()) {
         std::shared_ptr<Sound> source = _assets->get<Sound>(JUMP_EFFECT);
         AudioEngine::get()->play(JUMP_EFFECT,source,false,EFFECT_VOLUME);
     }
@@ -650,19 +648,14 @@ void GameScene::postUpdate(float remain) {
     _world->garbageCollect();
     
     // TODO: Update this demo to support interpolation
-    // We can interpolate the rope bridge and spinner as we have the data structures
-    _spinner->update(remain);
-    _ropebridge->update(remain);
 
     // Add a bullet AFTER physics allows it to hang in front
     // Otherwise, it looks like bullet appears far away
-    _avatar->setShooting(_input.didFire());
-    if (_avatar->isShooting()) {
-        createBullet();
-    }
+    auto avatar = _map->getCarrots().at(0);
+    avatar->setShooting(_input.didFire());
 
     // Record failure if necessary.
-    if (!_failed && _avatar->getY() < 0) {
+    if (!_failed && avatar->getY() < 0) {
         setFailure(true);
     }
 
@@ -716,57 +709,6 @@ void GameScene::setFailure(bool value) {
     }
 }
 
-
-/**
- * Add a new bullet to the world and send it in the right direction.
- */
-void GameScene::createBullet() {
-    float offset = BULLET_OFFSET;
-    Vec2 pos = _avatar->getPosition();
-    pos.x += (_avatar->isFacingRight() ? offset : -offset);
-
-    std::shared_ptr<Texture> image = _assets->get<Texture>(BULLET_TEXTURE);
-    float radius = 0.5f*image->getSize().width/_scale;
-
-    std::shared_ptr<Bullet> bullet = Bullet::alloc(pos, radius);
-    bullet->setName(BULLET_NAME);
-    bullet->setDensity(HEAVY_DENSITY);
-    bullet->setBullet(true);
-    bullet->setGravityScale(0);
-    bullet->setDebugColor(DEBUG_COLOR);
-    bullet->setDrawScale(_scale);
-
-    std::shared_ptr<scene2::PolygonNode> sprite = scene2::PolygonNode::allocWithTexture(image);
-    bullet->setSceneNode(sprite);
-
-    // Compute position and velocity
-    float speed  = (_avatar->isFacingRight() ? BULLET_SPEED : -BULLET_SPEED);
-    bullet->setVX(speed);
-    addObstacle(bullet, sprite, 5);
-
-    std::shared_ptr<Sound> source = _assets->get<Sound>(PEW_EFFECT);
-    AudioEngine::get()->play(PEW_EFFECT,source, false, EFFECT_VOLUME, true);
-}
-
-/**
- * Removes a new bullet from the world.
- *
- * @param  bullet   the bullet to remove
- */
-void GameScene::removeBullet(Bullet* bullet) {
-  // do not attempt to remove a bullet that has already been removed
-    if (bullet->isRemoved()) {
-        return;
-    }
-    _worldnode->removeChild(bullet->getSceneNode());
-    bullet->setDebugScene(nullptr);
-    bullet->markRemoved(true);
-
-    std::shared_ptr<Sound> source = _assets->get<Sound>(POP_EFFECT);
-    AudioEngine::get()->play(POP_EFFECT,source,false,EFFECT_VOLUME, true);
-}
-
-
 #pragma mark -
 #pragma mark Collision Handling
 /**
@@ -790,25 +732,20 @@ void GameScene::beginContact(b2Contact* contact) {
 
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-    
-    // Test bullet collision with world
-    if (bd1->getName() == BULLET_NAME && bd2 != _avatar.get()) {
-        removeBullet((Bullet*)bd1);
-    } else if (bd2->getName() == BULLET_NAME && bd1 != _avatar.get()) {
-        removeBullet((Bullet*)bd2);
-    }
+
+    auto avatar = _map->getCarrots().at(0);
 
     // See if we have landed on the ground.
-    if ((_avatar->getSensorName() == fd2 && _avatar.get() != bd1) ||
-        (_avatar->getSensorName() == fd1 && _avatar.get() != bd2)) {
-        _avatar->setGrounded(true);
+    if ((avatar->getSensorName() == fd2 && avatar.get() != bd1) ||
+        (avatar->getSensorName() == fd1 && avatar.get() != bd2)) {
+        avatar->setGrounded(true);
         // Could have more than one ground
-        _sensorFixtures.emplace(_avatar.get() == bd1 ? fix2 : fix1);
+        _sensorFixtures.emplace(avatar.get() == bd1 ? fix2 : fix1);
     }
 
     // If we hit the "win" door, we are done
-    if((bd1 == _avatar.get()   && bd2 == _goalDoor.get()) ||
-        (bd1 == _goalDoor.get() && bd2 == _avatar.get())) {
+    if((bd1 == avatar.get()   && bd2 == _map->getGoalDoor().get()) ||
+        (bd1 == _map->getGoalDoor().get() && bd2 == avatar.get())) {
         setComplete(true);
     }
 }
@@ -833,11 +770,13 @@ void GameScene::endContact(b2Contact* contact) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
-    if ((_avatar->getSensorName() == fd2 && _avatar.get() != bd1) ||
-        (_avatar->getSensorName() == fd1 && _avatar.get() != bd2)) {
-        _sensorFixtures.erase(_avatar.get() == bd1 ? fix2 : fix1);
+    auto avatar = _map->getCarrots().at(0);
+
+    if ((avatar->getSensorName() == fd2 && avatar.get() != bd1) ||
+        (avatar->getSensorName() == fd1 && avatar.get() != bd2)) {
+        _sensorFixtures.erase(avatar.get() == bd1 ? fix2 : fix1);
         if (_sensorFixtures.empty()) {
-            _avatar->setGrounded(false);
+            avatar->setGrounded(false);
         }
     }
 }

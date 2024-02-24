@@ -18,7 +18,14 @@
 class CollisionController {
 protected:
 //  MARK: - Properties
+    /** reference to the map */
     std::shared_ptr<Map> _map;
+
+    bool _isComplete;
+
+    /** Mark set to handle more sophisticated collision callbacks
+     *  TODO: This is leftover from platformer demo (only used to check ground) - DELETE*/
+    std::unordered_set<b2Fixture*> _sensorFixtures;
 
 public:
 
@@ -42,8 +49,14 @@ public:
     /**
      * Initializes a Collision Controller
      */
-    bool init(const std::shared_ptr<Map> level);
+    bool init(std::shared_ptr<Map> &map);
 
+    static std::shared_ptr<CollisionController> alloc(std::shared_ptr<Map> &map) {
+        std::shared_ptr<CollisionController> result = std::make_shared<CollisionController>();
+        return (result->init(map) ? result : nullptr);
+    }
+
+    bool isComplete() { return _isComplete; }
 
 //  MARK: - Callbacks
 

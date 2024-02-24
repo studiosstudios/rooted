@@ -12,19 +12,6 @@
 
 #pragma mark -
 #pragma mark Level Geography
-
-/** This is adjusted by screen aspect ratio to get the height */
-#define SCENE_WIDTH 1024
-#define SCENE_HEIGHT 576
-
-/** This is the aspect ratio for physics */
-#define SCENE_ASPECT 9.0/16.0
-
-/** Width of the game world in Box2d units */
-#define DEFAULT_WIDTH   32.0f
-/** Height of the game world in Box2d units */
-#define DEFAULT_HEIGHT  18.0f
-
 // Since these appear only once, we do not care about the magic numbers.
 // In an actual game, this information would go in a data file.
 // IMPORTANT: Note that Box2D units do not equal drawing units
@@ -32,7 +19,7 @@
 #define WALL_VERTS 12
 #define WALL_COUNT  2
 
-float M_WALL[WALL_COUNT][WALL_VERTS] = {
+float WALL[WALL_COUNT][WALL_VERTS] = {
         {16.0f, 18.0f, 0.0f,  18.0f, 0.0f,  0.0f,
                 1.0f,  0.0f,  1.0f,  17.0f, 16.0f, 17.0f},
         {32.0f, 18.0f, 16.0f, 18.0f, 16.0f, 17.0f,
@@ -44,7 +31,7 @@ float M_WALL[WALL_COUNT][WALL_VERTS] = {
 #define PLATFORM_COUNT  10
 
 /** The outlines of all of the platforms */
-float M_PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
+float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
         {1.0f,  3.0f,  1.0f,  2.5f,  6.0f,  2.5f,  6.0f,  3.0f},
         {6.0f,  4.0f,  6.0f,  2.5f,  9.0f,  2.5f,  9.0f,  4.0f},
         {23.0f, 4.0f,  23.0f, 2.5f,  31.0f, 2.5f,  31.0f, 4.0f},
@@ -57,81 +44,26 @@ float M_PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
         {1.0f,  12.5f, 1.0f,  12.0f, 7.0f,  12.0f, 7.0f,  12.5f}
 };
 
-/** The goal door position */
-float M_GOAL_POS[] = {4.0f, 14.0f};
-/** The position of the spinning barrier */
-float M_SPIN_POS[] = {13.0f, 12.5f};
 /** The initial position of the dude */
-float M_DUDE_POS[] = {2.5f, 5.0f};
-/** The position of the rope bridge */
-float M_BRIDGE_POS[] = {9.0f, 3.8f};
+float DUDE_POS[] = {2.5f, 5.0f};
 
 #pragma mark -
 #pragma mark Physics Constants
-/** The new heavier gravity for this world (so it is not so floaty) */
-#define DEFAULT_GRAVITY -28.9f
 /** The density for most physics objects */
 #define BASIC_DENSITY   0.0f
-/** The density for a bullet */
-#define HEAVY_DENSITY   10.0f
 /** Friction of most platforms */
 #define BASIC_FRICTION  0.4f
 /** The restitution for all physics objects */
 #define BASIC_RESTITUTION   0.1f
-/** The width of the rope bridge */
-#define BRIDGE_WIDTH    14.0f
-/** Offset for bullet when firing */
-#define BULLET_OFFSET   0.5f
-/** The speed of the bullet after firing */
-#define BULLET_SPEED   20.0f
-/** The number of frame to wait before reinitializing the game */
-#define EXIT_COUNT      240
-
 
 #pragma mark -
 #pragma mark Asset Constants
 /** The key for the earth texture in the asset manager */
 #define EARTH_TEXTURE   "earth"
-/** The key for the win door texture in the asset manager */
-#define GOAL_TEXTURE    "goal"
-/** The key for the win door texture in the asset manager */
-#define BULLET_TEXTURE  "bullet"
-/** The name of a bullet (for object identification) */
-#define BULLET_NAME     "bullet"
 /** The name of a wall (for object identification) */
 #define WALL_NAME       "wall"
 /** The name of a platform (for object identification) */
 #define PLATFORM_NAME   "platform"
-/** The font for victory/failure messages */
-#define MESSAGE_FONT    "retro"
-/** The message for winning the game */
-#define WIN_MESSAGE     "VICTORY!"
-/** The color of the win message */
-#define WIN_COLOR       Color4::YELLOW
-/** The message for losing the game */
-#define LOSE_MESSAGE    "FAILURE!"
-/** The color of the lose message */
-#define LOSE_COLOR      Color4::RED
-/** The key the basic game music */
-#define GAME_MUSIC      "game"
-/** The key the victory game music */
-#define WIN_MUSIC       "win"
-/** The key the failure game music */
-#define LOSE_MUSIC      "lose"
-/** The sound effect for firing a bullet */
-#define PEW_EFFECT      "pew"
-/** The sound effect for a bullet collision */
-#define POP_EFFECT      "pop"
-/** The sound effect for jumping */
-#define JUMP_EFFECT     "jump"
-/** The volume for the music */
-#define MUSIC_VOLUME    0.7f
-/** The volume for sound effects */
-#define EFFECT_VOLUME   0.8f
-/** The image for the left dpad/joystick */
-#define LEFT_IMAGE      "dpad_left"
-/** The image for the right dpad/joystick */
-#define RIGHT_IMAGE     "dpad_right"
 
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::YELLOW
@@ -162,7 +94,7 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
     for (int ii = 0; ii < WALL_COUNT; ii++) {
         std::shared_ptr<physics2::PolygonObstacle> wallobj;
 
-        Poly2 wall(reinterpret_cast<Vec2 *>(M_WALL[ii]), WALL_VERTS / 2);
+        Poly2 wall(reinterpret_cast<Vec2 *>(WALL[ii]), WALL_VERTS / 2);
         // Call this on a polygon to get a solid shape
         EarclipTriangulator triangulator;
         triangulator.set(wall.vertices);
@@ -190,7 +122,7 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
 #pragma mark : Platforms
     for (int ii = 0; ii < PLATFORM_COUNT; ii++) {
         std::shared_ptr<physics2::PolygonObstacle> platobj;
-        Poly2 platform(reinterpret_cast<Vec2 *>(M_PLATFORMS[ii]), 4);
+        Poly2 platform(reinterpret_cast<Vec2 *>(PLATFORMS[ii]), 4);
 
         EarclipTriangulator triangulator;
         triangulator.set(platform.vertices);
@@ -215,7 +147,7 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
     }
 
 #pragma mark : Dude
-    Vec2 dudePos = M_DUDE_POS;
+    Vec2 dudePos = DUDE_POS;
     image = assets->get<Texture>(DUDE_TEXTURE);
     auto avatar = Carrot::alloc(dudePos, image->getSize() / scale, scale);
     sprite = scene2::PolygonNode::allocWithTexture(image);

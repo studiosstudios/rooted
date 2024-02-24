@@ -35,7 +35,7 @@ protected:
     PlatformInput _input;
 
     /** Controller for Box2D collisions */
-    CollisionController _collision;
+    std::shared_ptr<CollisionController> _collision;
     
     // VIEW
     /** Reference to the physics root of the scene graph */
@@ -67,9 +67,6 @@ protected:
     bool _failed;
     /** Countdown active for winning or losing */
     int _countdown;
-      
-    /** Mark set to handle more sophisticated collision callbacks */
-    std::unordered_set<b2Fixture*> _sensorFixtures;
 
 #pragma mark Internal Object Management
     /**
@@ -244,29 +241,7 @@ public:
     * @param value whether the level is failed.
     */
     void setFailure(bool value);
-    
-#pragma mark -
-#pragma mark Collision Handling
-    /**
-    * Processes the start of a collision
-    *
-    * This method is called when we first get a collision between two objects.  We use
-    * this method to test if it is the "right" kind of collision.  In particular, we
-    * use it to test if we make it to the win door.  We also us it to eliminate bullets.
-    *
-    * @param  contact  The two bodies that collided
-    */
-    void beginContact(b2Contact* contact);
 
-    /**
-    * Processes the end of a collision
-    *
-    * This method is called when we no longer have a collision between two objects.
-    * We use this method allow the character to jump again.
-    *
-    * @param  contact  The two bodies that collided
-    */
-    void endContact(b2Contact* contact);
 
 #pragma mark -
 #pragma mark Gameplay Handling

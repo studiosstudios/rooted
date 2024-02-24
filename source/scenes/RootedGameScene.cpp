@@ -34,83 +34,16 @@ using namespace cugl;
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
 
-// Since these appear only once, we do not care about the magic numbers.
-// In an actual game, this information would go in a data file.
-// IMPORTANT: Note that Box2D units do not equal drawing units
-/** The wall vertices */
-#define WALL_VERTS 12
-#define WALL_COUNT  2
-
-float WALL[WALL_COUNT][WALL_VERTS] = {
-    {16.0f, 18.0f,  0.0f, 18.0f,  0.0f,  0.0f,
-      1.0f,  0.0f,  1.0f, 17.0f, 16.0f, 17.0f },
-    {32.0f, 18.0f, 16.0f, 18.0f, 16.0f, 17.0f,
-     31.0f, 17.0f, 31.0f,  0.0f, 32.0f,  0.0f }
-};
-
-/** The number of platforms */
-#define PLATFORM_VERTS  8
-#define PLATFORM_COUNT  10
-
-/** The outlines of all of the platforms */
-float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
-    { 1.0f, 3.0f, 1.0f, 2.5f, 6.0f, 2.5f, 6.0f, 3.0f},
-    { 6.0f, 4.0f, 6.0f, 2.5f, 9.0f, 2.5f, 9.0f, 4.0f},
-    {23.0f, 4.0f,23.0f, 2.5f,31.0f, 2.5f,31.0f, 4.0f},
-    {26.0f, 5.5f,26.0f, 5.0f,28.0f, 5.0f,28.0f, 5.5f},
-    {29.0f, 7.0f,29.0f, 6.5f,31.0f, 6.5f,31.0f, 7.0f},
-    {24.0f, 8.5f,24.0f, 8.0f,27.0f, 8.0f,27.0f, 8.5f},
-    {29.0f,10.0f,29.0f, 9.5f,31.0f, 9.5f,31.0f,10.0f},
-    {23.0f,11.5f,23.0f,11.0f,27.0f,11.0f,27.0f,11.5f},
-    {19.0f,12.5f,19.0f,12.0f,23.0f,12.0f,23.0f,12.5f},
-    { 1.0f,12.5f, 1.0f,12.0f, 7.0f,12.0f, 7.0f,12.5f}
-};
-
-/** The goal door position */
-float GOAL_POS[] = { 4.0f,14.0f};
-/** The position of the spinning barrier */
-float SPIN_POS[] = {13.0f,12.5f};
-/** The initial position of the dude */
-float DUDE_POS[] = { 2.5f, 5.0f};
-/** The position of the rope bridge */
-float BRIDGE_POS[] = {9.0f, 3.8f};
-
 #pragma mark -
 #pragma mark Physics Constants
 /** The new heavier gravity for this world (so it is not so floaty) */
 #define DEFAULT_GRAVITY -28.9f
-/** The density for most physics objects */
-#define BASIC_DENSITY   0.0f
-/** The density for a bullet */
-#define HEAVY_DENSITY   10.0f
-/** Friction of most platforms */
-#define BASIC_FRICTION  0.4f
-/** The restitution for all physics objects */
-#define BASIC_RESTITUTION   0.1f
-/** The width of the rope bridge */
-#define BRIDGE_WIDTH    14.0f
-/** Offset for bullet when firing */
-#define BULLET_OFFSET   0.5f
-/** The speed of the bullet after firing */
-#define BULLET_SPEED   20.0f
 /** The number of frame to wait before reinitializing the game */
 #define EXIT_COUNT      240
 
 
 #pragma mark -
 #pragma mark Asset Constants
-/** The key for the earth texture in the asset manager */
-#define EARTH_TEXTURE   "earth"
-/** The key for the win door texture in the asset manager */
-#define GOAL_TEXTURE    "goal"
-/** The key for the win door texture in the asset manager */
-#define BULLET_TEXTURE  "bullet"
-/** The name of a bullet (for object identification) */
-#define BULLET_NAME     "bullet"
-/** The name of a wall (for object identification) */
-#define WALL_NAME       "wall"
-/** The name of a platform (for object identification) */
-#define PLATFORM_NAME   "platform"
 /** The font for victory/failure messages */
 #define MESSAGE_FONT    "retro"
 /** The message for winning the game */
@@ -150,6 +83,7 @@ float BRIDGE_POS[] = {9.0f, 3.8f};
 
 #pragma mark -
 #pragma mark Constructors
+
 /**
  * Creates a new game world with the default values.
  *
@@ -157,12 +91,11 @@ float BRIDGE_POS[] = {9.0f, 3.8f};
  * This allows us to use a controller without a heap pointer.
  */
 GameScene::GameScene() : Scene2(),
-    _worldnode(nullptr),
-    _debugnode(nullptr),
-    _world(nullptr),
-    _complete(false),
-    _debug(false)
-{
+                         _worldnode(nullptr),
+                         _debugnode(nullptr),
+                         _world(nullptr),
+                         _complete(false),
+                         _debug(false) {
 }
 
 /**
@@ -179,8 +112,8 @@ GameScene::GameScene() : Scene2(),
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool GameScene::init(const std::shared_ptr<AssetManager>& assets) {
-    return init(assets,Rect(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT),Vec2(0,DEFAULT_GRAVITY));
+bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
+    return init(assets, Rect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT), Vec2(0, DEFAULT_GRAVITY));
 }
 
 /**
@@ -199,8 +132,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets) {
  *
  * @return  true if the controller is initialized properly, false otherwise.
  */
-bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const Rect& rect) {
-    return init(assets,rect,Vec2(0,DEFAULT_GRAVITY));
+bool GameScene::init(const std::shared_ptr<AssetManager> &assets, const Rect &rect) {
+    return init(assets, rect, Vec2(0, DEFAULT_GRAVITY));
 }
 
 /**
@@ -220,8 +153,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const Rect& re
  *
  * @return  true if the controller is initialized properly, false otherwise.
  */
-bool GameScene::init(const std::shared_ptr<AssetManager>& assets,
-                     const Rect& rect, const Vec2& gravity) {
+bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
+                     const Rect &rect, const Vec2 &gravity) {
     // Initialize the scene to a locked height (iPhone X is narrow, but wide)
     Size dimen = computeActiveSize();
 
@@ -230,26 +163,27 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets,
     } else if (!Scene2::init(dimen)) {
         return false;
     }
-    
+
     // Start up the input handler
     _assets = assets;
     _input.init(getBounds());
-    
+
     // Create the world and attach the listeners.
-    _world = physics2::ObstacleWorld::alloc(rect,gravity);
+    _world = physics2::ObstacleWorld::alloc(rect, gravity);
     _world->activateCollisionCallbacks(true);
-    _world->onBeginContact = [this](b2Contact* contact) {
-      beginContact(contact);
+    _world->onBeginContact = [this](b2Contact *contact) {
+        _collision->beginContact(contact);
     };
-    _world->onEndContact = [this](b2Contact* contact) {
-      endContact(contact);
+    _world->onEndContact = [this](b2Contact *contact) {
+        _collision->endContact(contact);
     };
-  
+
     // IMPORTANT: SCALING MUST BE UNIFORM
     // This means that we cannot change the aspect ratio of the physics world
     // Shift to center if a bad fit
-    _scale = dimen.width == SCENE_WIDTH ? dimen.width/rect.size.width : dimen.height/rect.size.height;
-    Vec2 offset((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width / rect.size.width : dimen.height /
+                                                                          rect.size.height;
+    Vec2 offset((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
     // Create the scene graph
     std::shared_ptr<Texture> image;
@@ -264,17 +198,17 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets,
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _winnode->setPosition(dimen.width/2.0f,dimen.height/2.0f);
+    _winnode->setPosition(dimen.width / 2.0f, dimen.height / 2.0f);
     _winnode->setForeground(WIN_COLOR);
     setComplete(false);
 
     _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _losenode->setAnchor(Vec2::ANCHOR_CENTER);
-    _losenode->setPosition(dimen.width/2.0f,dimen.height/2.0f);
+    _losenode->setPosition(dimen.width / 2.0f, dimen.height / 2.0f);
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
-    
+
     _leftnode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(LEFT_IMAGE));
     _leftnode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_MIDDLE_RIGHT);
     _leftnode->setScale(0.35f);
@@ -292,12 +226,12 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets,
     addChild(_leftnode);
     addChild(_rightnode);
 
-//    populate();
     _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
+    _collision = CollisionController::alloc(_map);
     _active = true;
     _complete = false;
     setDebug(false);
-    
+
     // XNA nostalgia
     Application::get()->setClearColor(Color4f::CORNFLOWER);
     return true;
@@ -316,6 +250,7 @@ void GameScene::dispose() {
         _losenode = nullptr;
         _leftnode = nullptr;
         _rightnode = nullptr;
+        _collision = nullptr;
         _complete = false;
         _debug = false;
         _map->dispose();
@@ -336,198 +271,15 @@ void GameScene::reset() {
     _world->clear();
     _worldnode->removeAllChildren();
     _debugnode->removeAllChildren();
-      
+
     setFailure(false);
     setComplete(false);
-//    populate();
     _map->init(_assets, _world, _worldnode, _debugnode, _scale);
 }
-//
-///**
-// * Lays out the game geography.
-// *
-// * Pay close attention to how we attach physics objects to a scene graph.
-// * The simplest way is to make a subclass, like we do for the Dude.  However,
-// * for simple objects you can just use a callback function to lightly couple
-// * them.  This is what we do with the crates.
-// *
-// * This method is really, really long.  In practice, you would replace this
-// * with your serialization loader, which would process a level file.
-// */
-//void GameScene::populate() {
-//
-//
-//#pragma mark : Goal door
-//    std::shared_ptr<Texture> image = _assets->get<Texture>(GOAL_TEXTURE);
-//    std::shared_ptr<scene2::PolygonNode> sprite;
-//    std::shared_ptr<scene2::WireNode> draw;
-//
-//    // Create obstacle
-//    Vec2 goalPos = GOAL_POS;
-//    Size goalSize(image->getSize().width/_scale,
-//    image->getSize().height/_scale);
-//    _goalDoor = physics2::BoxObstacle::alloc(goalPos,goalSize);
-//
-//    // Set the physics attributes
-//    _goalDoor->setBodyType(b2_staticBody);
-//    _goalDoor->setDensity(0.0f);
-//    _goalDoor->setFriction(0.0f);
-//    _goalDoor->setRestitution(0.0f);
-//    _goalDoor->setSensor(true);
-//
-//    // Add the scene graph nodes to this object
-//    sprite = scene2::PolygonNode::allocWithTexture(image);
-//    _goalDoor->setDebugColor(DEBUG_COLOR);
-//    addObstacle(_goalDoor, sprite);
-//
-//#pragma mark : Walls
-//    // All walls and platforms share the same texture
-//    image  = _assets->get<Texture>(EARTH_TEXTURE);
-//    std::string wname = "wall";
-//    for (int ii = 0; ii < WALL_COUNT; ii++) {
-//        std::shared_ptr<physics2::PolygonObstacle> wallobj;
-//
-//        Poly2 wall(reinterpret_cast<Vec2*>(WALL[ii]),WALL_VERTS/2);
-//        // Call this on a polygon to get a solid shape
-//        EarclipTriangulator triangulator;
-//        triangulator.set(wall.vertices);
-//        triangulator.calculate();
-//        wall.setIndices(triangulator.getTriangulation());
-//        triangulator.clear();
-//
-//        wallobj = physics2::PolygonObstacle::allocWithAnchor(wall,Vec2::ANCHOR_CENTER);
-//        // You cannot add constant "".  Must stringify
-//        wallobj->setName(std::string(WALL_NAME)+cugl::strtool::to_string(ii));
-//        wallobj->setName(wname);
-//
-//        // Set the physics attributes
-//        wallobj->setBodyType(b2_staticBody);
-//        wallobj->setDensity(BASIC_DENSITY);
-//        wallobj->setFriction(BASIC_FRICTION);
-//        wallobj->setRestitution(BASIC_RESTITUTION);
-//        wallobj->setDebugColor(DEBUG_COLOR);
-//
-//        wall *= _scale;
-//        sprite = scene2::PolygonNode::allocWithTexture(image,wall);
-//        addObstacle(wallobj,sprite,1);  // All walls share the same texture
-//    }
-//
-//#pragma mark : Platforms
-//    for (int ii = 0; ii < PLATFORM_COUNT; ii++) {
-//        std::shared_ptr<physics2::PolygonObstacle> platobj;
-//        Poly2 platform(reinterpret_cast<Vec2*>(PLATFORMS[ii]),4);
-//
-//        EarclipTriangulator triangulator;
-//        triangulator.set(platform.vertices);
-//        triangulator.calculate();
-//        platform.setIndices(triangulator.getTriangulation());
-//        triangulator.clear();
-//
-//        platobj = physics2::PolygonObstacle::allocWithAnchor(platform,Vec2::ANCHOR_CENTER);
-//        // You cannot add constant "".  Must stringify
-//        platobj->setName(std::string(PLATFORM_NAME)+cugl::strtool::to_string(ii));
-//
-//        // Set the physics attributes
-//        platobj->setBodyType(b2_staticBody);
-//        platobj->setDensity(BASIC_DENSITY);
-//        platobj->setFriction(BASIC_FRICTION);
-//        platobj->setRestitution(BASIC_RESTITUTION);
-//        platobj->setDebugColor(DEBUG_COLOR);
-//
-//        platform *= _scale;
-//        sprite = scene2::PolygonNode::allocWithTexture(image,platform);
-//        addObstacle(platobj,sprite,1);
-//    }
-//
-//#pragma mark : Spinner
-//    Vec2 spinPos = SPIN_POS;
-//    image = _assets->get<Texture>(SPINNER_TEXTURE);
-//    _spinner = Spinner::alloc(spinPos,image->getSize()/_scale,_scale);
-//    _spinner->setTexture(image);
-//    std::shared_ptr<scene2::SceneNode> node = scene2::SceneNode::alloc();
-//
-//    // With refactor, must be added manually
-//    // Add the node to the world before calling setSceneNode,
-//    _worldnode->addChild(node);
-//    _spinner->setSceneNode(node);
-//
-//    _spinner->setDrawScale(_scale);
-//    _spinner->setDebugColor(DEBUG_COLOR);
-//    _spinner->setDebugScene(_debugnode);
-//    _spinner->activate(_world);
-//
-//#pragma mark : Rope Bridge
-//    Vec2 bridgeStart = BRIDGE_POS;
-//    Vec2 bridgeEnd   = bridgeStart;
-//    bridgeEnd.x += BRIDGE_WIDTH;
-//    image = _assets->get<Texture>(BRIDGE_TEXTURE);
-//
-//    _ropebridge = RopeBridge::alloc(bridgeStart,bridgeEnd,image->getSize()/_scale,_scale);
-//    _ropebridge->setTexture(image);
-//    node = scene2::SceneNode::alloc();
-//
-//    // With refactor, must be added manually
-//    // Add the node to the world before calling setSceneNode,
-//    _worldnode->addChild(node);
-//    _ropebridge->setSceneNode(node);
-//
-//    _ropebridge->setDrawScale(_scale);
-//    _ropebridge->setDebugColor(DEBUG_COLOR);
-//    _ropebridge->setDebugScene(_debugnode);
-//    _ropebridge->activate(_world);
-//
-//#pragma mark : Dude
-//    Vec2 dudePos = DUDE_POS;
-//    image = _assets->get<Texture>(DUDE_TEXTURE);
-//    _avatar = EntityModel::alloc(dudePos, image->getSize() / _scale, _scale);
-//    sprite = scene2::PolygonNode::allocWithTexture(image);
-//    _avatar->setSceneNode(sprite);
-//    _avatar->setDebugColor(DEBUG_COLOR);
-//    addObstacle(_avatar,sprite); // Put this at the very front
-//
-//    // Play the background music on a loop.
-//    std::shared_ptr<Sound> source = _assets->get<Sound>(GAME_MUSIC);
-//    AudioEngine::get()->getMusicQueue()->play(source, true, MUSIC_VOLUME);
-//}
-
-///**
-// * Adds the physics object to the physics world and loosely couples it to the scene graph
-// *
-// * There are two ways to link a physics object to a scene graph node on the
-// * screen.  One way is to make a subclass of a physics object, like we did
-// * with dude.  The other is to use callback functions to loosely couple
-// * the two.  This function is an example of the latter.
-// *
-// * @param obj             The physics object to add
-// * @param node            The scene graph node to attach it to
-// * @param zOrder          The drawing order
-// * @param useObjPosition  Whether to update the node's position to be at the object's position
-// */
-//void GameScene::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
-//                            const std::shared_ptr<cugl::scene2::SceneNode>& node,
-//                            bool useObjPosition) {
-//    _world->addObstacle(obj);
-//    obj->setDebugScene(_debugnode);
-//
-//    // Position the scene graph node (enough for static objects)
-//      if (useObjPosition) {
-//          node->setPosition(obj->getPosition()*_scale);
-//      }
-//      _worldnode->addChild(node);
-//
-//    // Dynamic objects need constant updating
-//    if (obj->getBodyType() == b2_dynamicBody) {
-//        scene2::SceneNode* weak = node.get(); // No need for smart pointer in callback
-//        obj->setListener([=](physics2::Obstacle* obs){
-//            weak->setPosition(obs->getPosition()*_scale);
-//            weak->setAngle(obs->getAngle());
-//        });
-//    }
-//}
-
 
 #pragma mark -
 #pragma mark Physics Handling
+
 /**
  * The method called to indicate the start of a deterministic loop.
  *
@@ -554,7 +306,7 @@ void GameScene::preUpdate(float dt) {
     // Process the toggled key commands
     if (_input.didDebug()) { setDebug(!isDebug()); }
     if (_input.didReset()) { reset(); }
-    if (_input.didExit())  {
+    if (_input.didExit()) {
         CULog("Shutting down");
         Application::get()->quit();
     }
@@ -579,13 +331,13 @@ void GameScene::preUpdate(float dt) {
     }
 
     auto avatar = _map->getCarrots().at(0);
-    avatar->setMovement(_input.getHorizontal()*avatar->getForce());
-    avatar->setJumping( _input.didJump());
+    avatar->setMovement(_input.getHorizontal() * avatar->getForce());
+    avatar->setJumping(_input.didJump());
     avatar->applyForce();
 
     if (avatar->isJumping() && avatar->isGrounded()) {
         std::shared_ptr<Sound> source = _assets->get<Sound>(JUMP_EFFECT);
-        AudioEngine::get()->play(JUMP_EFFECT,source,false,EFFECT_VOLUME);
+        AudioEngine::get()->play(JUMP_EFFECT, source, false, EFFECT_VOLUME);
     }
 
 }
@@ -620,7 +372,7 @@ void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _world->update(step);
 }
-    
+
 /**
  * The method called to indicate the end of a deterministic loop.
  *
@@ -646,7 +398,7 @@ void GameScene::fixedUpdate(float step) {
 void GameScene::postUpdate(float remain) {
     // Since items may be deleted, garbage collect
     _world->garbageCollect();
-    
+
     // TODO: Update this demo to support interpolation
 
     // Add a bullet AFTER physics allows it to hang in front
@@ -657,6 +409,11 @@ void GameScene::postUpdate(float remain) {
     // Record failure if necessary.
     if (!_failed && avatar->getY() < 0) {
         setFailure(true);
+    }
+
+    // Check if goal was reached
+    if (_collision->isComplete()) {
+        setComplete(true);
     }
 
     // Reset the game if we win or lose.
@@ -709,78 +466,6 @@ void GameScene::setFailure(bool value) {
     }
 }
 
-#pragma mark -
-#pragma mark Collision Handling
-/**
- * Processes the start of a collision
- *
- * This method is called when we first get a collision between two objects.  We use
- * this method to test if it is the "right" kind of collision.  In particular, we
- * use it to test if we make it to the win door.
- *
- * @param  contact  The two bodies that collided
- */
-void GameScene::beginContact(b2Contact* contact) {
-    b2Fixture* fix1 = contact->GetFixtureA();
-    b2Fixture* fix2 = contact->GetFixtureB();
-
-    b2Body* body1 = fix1->GetBody();
-    b2Body* body2 = fix2->GetBody();
-
-    std::string* fd1 = reinterpret_cast<std::string*>(fix1->GetUserData().pointer);
-    std::string* fd2 = reinterpret_cast<std::string*>(fix2->GetUserData().pointer);
-
-    physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
-    physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-
-    auto avatar = _map->getCarrots().at(0);
-
-    // See if we have landed on the ground.
-    if ((avatar->getSensorName() == fd2 && avatar.get() != bd1) ||
-        (avatar->getSensorName() == fd1 && avatar.get() != bd2)) {
-        avatar->setGrounded(true);
-        // Could have more than one ground
-        _sensorFixtures.emplace(avatar.get() == bd1 ? fix2 : fix1);
-    }
-
-    // If we hit the "win" door, we are done
-    if((bd1 == avatar.get()   && bd2 == _map->getGoalDoor().get()) ||
-        (bd1 == _map->getGoalDoor().get() && bd2 == avatar.get())) {
-        setComplete(true);
-    }
-}
-
-/**
- * Callback method for the start of a collision
- *
- * This method is called when two objects cease to touch.  The main use of this method
- * is to determine when the characer is NOT on the ground.  This is how we prevent
- * double jumping.
- */
-void GameScene::endContact(b2Contact* contact) {
-    b2Fixture* fix1 = contact->GetFixtureA();
-    b2Fixture* fix2 = contact->GetFixtureB();
-
-    b2Body* body1 = fix1->GetBody();
-    b2Body* body2 = fix2->GetBody();
-
-    std::string* fd1 = reinterpret_cast<std::string*>(fix1->GetUserData().pointer);
-    std::string* fd2 = reinterpret_cast<std::string*>(fix2->GetUserData().pointer);
-
-    physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
-    physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-
-    auto avatar = _map->getCarrots().at(0);
-
-    if ((avatar->getSensorName() == fd2 && avatar.get() != bd1) ||
-        (avatar->getSensorName() == fd1 && avatar.get() != bd2)) {
-        _sensorFixtures.erase(avatar.get() == bd1 ? fix2 : fix1);
-        if (_sensorFixtures.empty()) {
-            avatar->setGrounded(false);
-        }
-    }
-}
-
 /**
  * Returns the active screen size of this scene.
  *
@@ -789,12 +474,12 @@ void GameScene::endContact(b2Contact* contact) {
  */
 Size GameScene::computeActiveSize() const {
     Size dimen = Application::get()->getDisplaySize();
-    float ratio1 = dimen.width/dimen.height;
-    float ratio2 = ((float)SCENE_WIDTH)/((float)SCENE_HEIGHT);
+    float ratio1 = dimen.width / dimen.height;
+    float ratio2 = ((float) SCENE_WIDTH) / ((float) SCENE_HEIGHT);
     if (ratio1 < ratio2) {
-        dimen *= SCENE_WIDTH/dimen.width;
+        dimen *= SCENE_WIDTH / dimen.width;
     } else {
-        dimen *= SCENE_HEIGHT/dimen.height;
+        dimen *= SCENE_HEIGHT / dimen.height;
     }
     return dimen;
 }

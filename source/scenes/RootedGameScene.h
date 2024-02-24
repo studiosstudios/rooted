@@ -33,11 +33,11 @@ protected:
     
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
-    PlatformInput _input;
+    std::shared_ptr<InputController> _input;
     /** Controller for Box2D collisions */
     CollisionController _collision;
     /** Controller for updating objects */
-    std::shared_ptr<ActionController> _action;
+    ActionController _action;
     
     // VIEW
     /** Reference to the physics root of the scene graph */

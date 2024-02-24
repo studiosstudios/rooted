@@ -166,7 +166,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
 
     // Start up the input handler
     _assets = assets;
-    _input.init(getBounds());
+    _input = InputController::alloc(getBounds());
 
     // Create the world and attach the listeners.
     _world = physics2::ObstacleWorld::alloc(rect, gravity);
@@ -228,6 +228,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
 
     _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
     _collision.init(_map);
+    _action.init(_map, _input);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -242,7 +243,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
  */
 void GameScene::dispose() {
     if (_active) {
-        _input.dispose();
+        _input = nullptr;
         _world = nullptr;
         _worldnode = nullptr;
         _debugnode = nullptr;
@@ -251,6 +252,7 @@ void GameScene::dispose() {
         _leftnode = nullptr;
         _rightnode = nullptr;
         _collision.dispose();
+        _action.dispose();
         _complete = false;
         _debug = false;
         _map->dispose();
@@ -301,39 +303,38 @@ void GameScene::reset() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void GameScene::preUpdate(float dt) {
-    _input.update(dt);
+    _input->update(dt);
 
     // Process the toggled key commands
-    if (_input.didDebug()) { setDebug(!isDebug()); }
-    if (_input.didReset()) { reset(); }
-    if (_input.didExit()) {
+    if (_input->didDebug()) { setDebug(!isDebug()); }
+    if (_input->didReset()) { reset(); }
+    if (_input->didExit()) {
         CULog("Shutting down");
         Application::get()->quit();
     }
 
     // Process the movement
-    if (_input.withJoystick()) {
-        if (_input.getHorizontal() < 0) {
+    if (_input->withJoystick()) {
+        if (_input->getHorizontal() < 0) {
             _leftnode->setVisible(true);
             _rightnode->setVisible(false);
-        } else if (_input.getHorizontal() > 0) {
+        } else if (_input->getHorizontal() > 0) {
             _leftnode->setVisible(false);
             _rightnode->setVisible(true);
         } else {
             _leftnode->setVisible(false);
             _rightnode->setVisible(false);
         }
-        _leftnode->setPosition(_input.getJoystick());
-        _rightnode->setPosition(_input.getJoystick());
+        _leftnode->setPosition(_input->getJoystick());
+        _rightnode->setPosition(_input->getJoystick());
     } else {
         _leftnode->setVisible(false);
         _rightnode->setVisible(false);
     }
 
+    _action.preUpdate(dt);
+
     auto avatar = _map->getCarrots().at(0);
-    avatar->setMovement(_input.getHorizontal() * avatar->getForce());
-    avatar->setJumping(_input.didJump());
-    avatar->applyForce();
 
     if (avatar->isJumping() && avatar->isGrounded()) {
         std::shared_ptr<Sound> source = _assets->get<Sound>(JUMP_EFFECT);
@@ -399,12 +400,9 @@ void GameScene::postUpdate(float remain) {
     // Since items may be deleted, garbage collect
     _world->garbageCollect();
 
-    // TODO: Update this demo to support interpolation
+    _action.postUpdate(remain);
 
-    // Add a bullet AFTER physics allows it to hang in front
-    // Otherwise, it looks like bullet appears far away
     auto avatar = _map->getCarrots().at(0);
-    avatar->setShooting(_input.didFire());
 
     // Record failure if necessary.
     if (!_failed && avatar->getY() < 0) {

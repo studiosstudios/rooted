@@ -63,6 +63,8 @@ public:
 
     std::vector<std::shared_ptr<Wheat>> getWheat() { return _wheat; }
 
+    std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
+
     std::shared_ptr<cugl::physics2::BoxObstacle> getGoalDoor() { return _goalDoor; }
 
     void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,

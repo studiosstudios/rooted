@@ -38,7 +38,7 @@
  * until later. This is one of the main reasons we like to avoid initialization
  * in the constructor.
  */
-class PlatformInput {
+class InputController {
 private:
     /** Whether or not this input is active */
     bool _active;
@@ -200,12 +200,12 @@ public:
      * This constructor does NOT do any initialzation.  It simply allocates the
      * object. This makes it safe to use this class without a pointer.
      */
-    PlatformInput(); // Don't initialize.  Allow stack based
+    InputController(); // Don't initialize.  Allow stack based
     
     /**
      * Disposes of this input controller, releasing all listeners.
      */
-    ~PlatformInput() { dispose(); }
+    ~InputController() { dispose(); }
     
     /**
      * Deactivates this input controller, releasing all listeners.
@@ -227,6 +227,11 @@ public:
      * @return true if the controller was initialized successfully
      */
     bool init(const cugl::Rect bounds);
+
+    static std::shared_ptr<InputController> alloc(const cugl::Rect bounds) {
+        std::shared_ptr<InputController> result = std::make_shared<InputController>();
+        return (result->init(bounds) ? result : nullptr);
+    }
     
 #pragma mark -
 #pragma mark Input Detection

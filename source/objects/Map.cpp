@@ -76,7 +76,6 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
                const std::shared_ptr<cugl::scene2::SceneNode> &debugnode,
                float scale) {
 
-
     _world = world;
     _scale = scale;
 
@@ -143,7 +142,7 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
 
         platform *= scale;
         sprite = scene2::PolygonNode::allocWithTexture(image, platform);
-        addObstacle(platobj, sprite, worldnode, debugnode,1);
+        addObstacle(platobj, sprite, worldnode, debugnode, 1);
     }
 
 #pragma mark : Dude

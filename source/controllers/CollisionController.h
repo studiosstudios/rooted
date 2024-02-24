@@ -51,10 +51,6 @@ public:
      */
     bool init(std::shared_ptr<Map> &map);
 
-    static std::shared_ptr<CollisionController> alloc(std::shared_ptr<Map> &map) {
-        std::shared_ptr<CollisionController> result = std::make_shared<CollisionController>();
-        return (result->init(map) ? result : nullptr);
-    }
 
     bool isComplete() { return _isComplete; }
 

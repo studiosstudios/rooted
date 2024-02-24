@@ -16,6 +16,7 @@
 #include "../objects/RopeBridge.h"
 #include "../objects/Spinner.h"
 #include "../controllers/CollisionController.h"
+#include "../controllers/ActionController.h"
 #include "../objects/Map.h"
 
 /**
@@ -33,9 +34,10 @@ protected:
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
     PlatformInput _input;
-
     /** Controller for Box2D collisions */
-    std::shared_ptr<CollisionController> _collision;
+    CollisionController _collision;
+    /** Controller for updating objects */
+    std::shared_ptr<ActionController> _action;
     
     // VIEW
     /** Reference to the physics root of the scene graph */
@@ -69,35 +71,6 @@ protected:
     int _countdown;
 
 #pragma mark Internal Object Management
-    /**
-     * Lays out the game geography.
-     *
-     * Pay close attention to how we attach physics objects to a scene graph.
-     * The simplest way is to make a subclass, like we do for the dude.  However,
-     * for simple objects you can just use a callback function to lightly couple
-     * them.  This is what we do with the crates.
-     *
-     * This method is really, really long.  In practice, you would replace this
-     * with your serialization loader, which would process a level file.
-     */
-    void populate();
-    
-    /**
-     * Adds the physics object to the physics world and loosely couples it to the scene graph
-     *
-     * There are two ways to link a physics object to a scene graph node on the
-     * screen.  One way is to make a subclass of a physics object, like we did
-     * with dude.  The other is to use callback functions to loosely couple
-     * the two.  This function is an example of the latter.
-     *
-     * @param obj    The physics object to add
-     * @param node   The scene graph node to attach it to
-     * @param useObjPosition  Whether to update the node's position to be at the object's position
-     */
-    void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
-                     const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                     bool useObjPosition=true);
-
     /**
      * Returns the active screen size of this scene.
      *

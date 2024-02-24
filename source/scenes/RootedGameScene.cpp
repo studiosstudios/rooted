@@ -172,10 +172,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _world = physics2::ObstacleWorld::alloc(rect, gravity);
     _world->activateCollisionCallbacks(true);
     _world->onBeginContact = [this](b2Contact *contact) {
-        _collision->beginContact(contact);
+        _collision.beginContact(contact);
     };
     _world->onEndContact = [this](b2Contact *contact) {
-        _collision->endContact(contact);
+        _collision.endContact(contact);
     };
 
     // IMPORTANT: SCALING MUST BE UNIFORM
@@ -227,7 +227,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     addChild(_rightnode);
 
     _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
-    _collision = CollisionController::alloc(_map);
+    _collision.init(_map);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -250,7 +250,7 @@ void GameScene::dispose() {
         _losenode = nullptr;
         _leftnode = nullptr;
         _rightnode = nullptr;
-        _collision = nullptr;
+        _collision.dispose();
         _complete = false;
         _debug = false;
         _map->dispose();
@@ -412,7 +412,7 @@ void GameScene::postUpdate(float remain) {
     }
 
     // Check if goal was reached
-    if (_collision->isComplete()) {
+    if (_collision.isComplete()) {
         setComplete(true);
     }
 

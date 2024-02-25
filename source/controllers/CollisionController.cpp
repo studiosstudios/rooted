@@ -11,7 +11,7 @@ using namespace cugl;
 
 bool CollisionController::init(std::shared_ptr<Map> &map) {
     _map = map;
-    _isComplete = false;
+//    _isComplete = false;
     return true;
 }
 
@@ -41,11 +41,11 @@ void CollisionController::beginContact(b2Contact* contact) {
 
     auto avatar = _map->getCarrots().at(0);
 
-    // If we hit the "win" door, we are done
-    if((bd1 == avatar.get()   && bd2 == _map->getGoalDoor().get()) ||
-       (bd1 == _map->getGoalDoor().get() && bd2 == avatar.get())) {
-        _isComplete = true;
-    }
+//    // If we hit the "win" door, we are done
+//    if((bd1 == avatar.get()   && bd2 == _map->getGoalDoor().get()) ||
+//       (bd1 == _map->getGoalDoor().get() && bd2 == avatar.get())) {
+//        _isComplete = true;
+//    }
 }
 
 /**

@@ -64,9 +64,20 @@ float DUDE_POS[] = {2.5f, 5.0f};
 
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::YELLOW
-/** Opacity of the physics outlines */
-#define DEBUG_OPACITY   192
 
+
+/**
+ * Initializes the Map. The map contains and owns all game objects, and also has a reference to
+ * the Box2D world, but DOES NOT own the world. The world is owned by the GameScene.
+ *
+ * @param assets        AssetManager for loading textures for the game objects
+ * @param world         Box2D world
+ * @param worldnode     Box2D world scene graph node
+ * @param debugnode     Debug scene graph node
+ * @param scale         The scale between the physics world and the screen (MUST BE UNIFORM)
+ *
+ * @return true if initialization succeeded
+ */
 bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
                std::shared_ptr<cugl::physics2::ObstacleWorld> &world,
                const std::shared_ptr<cugl::scene2::SceneNode> &worldnode,

@@ -29,7 +29,8 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     
     // CONTROLLERS
-    /** Controller for abstracting out input across multiple platforms */
+    /** Controller for abstracting out input across multiple platforms. We use a shared pointer
+     * because the ActionController also needs a reference. */
     std::shared_ptr<InputController> _input;
     /** Controller for Box2D collisions */
     CollisionController _collision;

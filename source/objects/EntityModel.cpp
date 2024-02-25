@@ -97,19 +97,13 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
     
-    if (CapsuleObstacle::init(pos,nsize)) {
+    if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
         setFriction(0.0f);      // HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true); // OTHERWISE, HE IS A WEEBLE WOBBLE
         
         // Gameplay attributes
-        _isGrounded = false;
-        _isShooting = false;
-        _isJumping  = false;
         _faceRight  = true;
-        
-        _shootCooldown = 0;
-        _jumpCooldown  = 0;
         return true;
     }
     return false;
@@ -126,10 +120,11 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
  *
  * @param value left/right movement of this character.
  */
-void EntityModel::setMovement(float value) {
-    _movement = value;
-    bool face = _movement > 0;
-    if (_movement == 0 || _faceRight == face) {
+void EntityModel::setMovement(Vec2 movement) {
+
+    _movement = movement;
+    bool face = _movement.x > 0;
+    if (_movement.x == 0 || _faceRight == face) {
         return;
     }
     
@@ -153,29 +148,7 @@ void EntityModel::createFixtures() {
     if (_body == nullptr) {
         return;
     }
-    
-    CapsuleObstacle::createFixtures();
-    b2FixtureDef sensorDef;
-    sensorDef.density = DUDE_DENSITY;
-    sensorDef.isSensor = true;
-    
-    // Sensor dimensions
-    b2Vec2 corners[4];
-    corners[0].x = -DUDE_SSHRINK*getWidth()/2.0f;
-    corners[0].y = (-getHeight()+SENSOR_HEIGHT)/2.0f;
-    corners[1].x = -DUDE_SSHRINK*getWidth()/2.0f;
-    corners[1].y = (-getHeight()-SENSOR_HEIGHT)/2.0f;
-    corners[2].x =  DUDE_SSHRINK*getWidth()/2.0f;
-    corners[2].y = (-getHeight()-SENSOR_HEIGHT)/2.0f;
-    corners[3].x =  DUDE_SSHRINK*getWidth()/2.0f;
-    corners[3].y = (-getHeight()+SENSOR_HEIGHT)/2.0f;
-    
-    b2PolygonShape sensorShape;
-    sensorShape.Set(corners,4);
-    
-    sensorDef.shape = &sensorShape;
-    sensorDef.userData.pointer = reinterpret_cast<uintptr_t>(getSensorName());
-    _sensorFixture = _body->CreateFixture(&sensorDef);
+    BoxObstacle::createFixtures();
 }
 
 /**
@@ -188,11 +161,7 @@ void EntityModel::releaseFixtures() {
         return;
     }
     
-    CapsuleObstacle::releaseFixtures();
-    if (_sensorFixture != nullptr) {
-        _body->DestroyFixture(_sensorFixture);
-        _sensorFixture = nullptr;
-    }
+    BoxObstacle::releaseFixtures();
 }
 
 /**
@@ -202,9 +171,8 @@ void EntityModel::releaseFixtures() {
  * disposed, a DudeModel may not be used until it is initialized again.
  */
 void EntityModel::dispose() {
-    _core = nullptr;
     _node = nullptr;
-    _sensorNode = nullptr;
+    _geometry = nullptr;
 }
 
 /**
@@ -218,32 +186,17 @@ void EntityModel::applyForce() {
     }
     
     // Don't want to be moving. Damp out player motion
-    if (getMovement() == 0.0f) {
-        if (isGrounded()) {
-            // Instant friction on the ground
-            b2Vec2 vel = _body->GetLinearVelocity();
-            vel.x = 0; // If you set y, you will stop a jump in place
-            _body->SetLinearVelocity(vel);
-        } else {
-            // Damping factor in the air
-            b2Vec2 force(-getDamping()*getVX(),0);
-            _body->ApplyForce(force,_body->GetPosition(),true);
-        }
-    }
-    
-    // Velocity too high, clamp it
-    if (fabs(getVX()) >= getMaxSpeed()) {
-        setVX(SIGNUM(getVX())*getMaxSpeed());
-    } else {
-        b2Vec2 force(getMovement(),0);
+    if (getMovement().x == 0.0f && getMovement().y == 0.0f) {
+        b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
         _body->ApplyForce(force,_body->GetPosition(),true);
     }
-    
-    // Jump!
-    if (isJumping() && isGrounded()) {
-        b2Vec2 force(0, DUDE_JUMP);
-        _body->ApplyLinearImpulse(force,_body->GetPosition(),true);
+
+    // Velocity too high, clamp it
+    if (getLinearVelocity().length() >= getMaxSpeed()) {
+        setLinearVelocity(getLinearVelocity().normalize() * getMaxSpeed());
     }
+    b2Vec2 force(getMovement().x, getMovement().y);
+    _body->ApplyForce(force,_body->GetPosition(),true);
 }
 
 /**
@@ -254,21 +207,8 @@ void EntityModel::applyForce() {
  * @param delta Number of seconds since last animation frame
  */
 void EntityModel::update(float dt) {
-    // Apply cooldowns
-    if (isJumping()) {
-        _jumpCooldown = JUMP_COOLDOWN;
-    } else {
-        // Only cooldown while grounded
-        _jumpCooldown = (_jumpCooldown > 0 ? _jumpCooldown-1 : 0);
-    }
-    
-    if (isShooting()) {
-        _shootCooldown = SHOOT_COOLDOWN;
-    } else {
-        _shootCooldown = (_shootCooldown > 0 ? _shootCooldown-1 : 0);
-    }
-    
-    CapsuleObstacle::update(dt);
+
+    BoxObstacle::update(dt);
     
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
@@ -287,15 +227,10 @@ void EntityModel::update(float dt) {
  * the texture (e.g. a circular shape attached to a square texture).
  */
 void EntityModel::resetDebug() {
-    CapsuleObstacle::resetDebug();
+    BoxObstacle::resetDebug();
     float w = DUDE_SSHRINK*_dimension.width;
     float h = SENSOR_HEIGHT;
     Poly2 poly(Rect(-w/2.0f,-h/2.0f,w,h));
-
-    _sensorNode = scene2::WireNode::allocWithTraversal(poly, poly2::Traversal::INTERIOR);
-    _sensorNode->setColor(DEBUG_COLOR);
-    _sensorNode->setPosition(Vec2(_debug->getContentSize().width/2.0f, 0.0f));
-    _debug->addChild(_sensorNode);
 }
 
 

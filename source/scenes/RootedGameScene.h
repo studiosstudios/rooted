@@ -11,11 +11,10 @@
 #include <unordered_set>
 #include <vector>
 #include "../controllers/InputController.h"
-#include "../objects/Bullet.h"
 #include "../objects/EntityModel.h"
-#include "../objects/RopeBridge.h"
-#include "../objects/Spinner.h"
 #include "../controllers/CollisionController.h"
+#include "../controllers/ActionController.h"
+#include "../objects/Map.h"
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -31,10 +30,11 @@ protected:
     
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
-    PlatformInput _input;
-
-    /** Controller for collision */
+    std::shared_ptr<InputController> _input;
+    /** Controller for Box2D collisions */
     CollisionController _collision;
+    /** Controller for updating objects */
+    ActionController _action;
     
     // VIEW
     /** Reference to the physics root of the scene graph */
@@ -55,15 +55,8 @@ protected:
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _scale;
 
-    // Physics objects for the game
-    /** Reference to the goalDoor (for collision detection) */
-    std::shared_ptr<cugl::physics2::BoxObstacle>    _goalDoor;
-    /** Reference to the player avatar */
-    std::shared_ptr<EntityModel>              _avatar;
-    /** Reference to the spinning barrier */
-    std::shared_ptr<Spinner>              _spinner;
-    /** Reference to the rope bridge */
-    std::shared_ptr<RopeBridge>              _ropebridge;
+    /** Reference to the map */
+    std::shared_ptr<Map>  _map;
 
     /** Whether we have completed this "game" */
     bool _complete;
@@ -73,44 +66,12 @@ protected:
     bool _failed;
     /** Countdown active for winning or losing */
     int _countdown;
-      
-    /** Mark set to handle more sophisticated collision callbacks */
-    std::unordered_set<b2Fixture*> _sensorFixtures;
 
 #pragma mark Internal Object Management
     
     /** Moves the camera to focus the avatar */
     void moveCamera();
     
-    /**
-     * Lays out the game geography.
-     *
-     * Pay close attention to how we attach physics objects to a scene graph.
-     * The simplest way is to make a subclass, like we do for the dude.  However,
-     * for simple objects you can just use a callback function to lightly couple
-     * them.  This is what we do with the crates.
-     *
-     * This method is really, really long.  In practice, you would replace this
-     * with your serialization loader, which would process a level file.
-     */
-    void populate();
-    
-    /**
-     * Adds the physics object to the physics world and loosely couples it to the scene graph
-     *
-     * There are two ways to link a physics object to a scene graph node on the
-     * screen.  One way is to make a subclass of a physics object, like we did
-     * with dude.  The other is to use callback functions to loosely couple
-     * the two.  This function is an example of the latter.
-     *
-     * @param obj    The physics object to add
-     * @param node   The scene graph node to attach it to
-     * @param useObjPosition  Whether to update the node's position to be at the object's position
-     */
-    void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
-                     const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                     bool useObjPosition=true);
-
     /**
      * Returns the active screen size of this scene.
      *
@@ -254,29 +215,7 @@ public:
     * @param value whether the level is failed.
     */
     void setFailure(bool value);
-    
-#pragma mark -
-#pragma mark Collision Handling
-    /**
-    * Processes the start of a collision
-    *
-    * This method is called when we first get a collision between two objects.  We use
-    * this method to test if it is the "right" kind of collision.  In particular, we
-    * use it to test if we make it to the win door.  We also us it to eliminate bullets.
-    *
-    * @param  contact  The two bodies that collided
-    */
-    void beginContact(b2Contact* contact);
 
-    /**
-    * Processes the end of a collision
-    *
-    * This method is called when we no longer have a collision between two objects.
-    * We use this method allow the character to jump again.
-    *
-    * @param  contact  The two bodies that collided
-    */
-    void endContact(b2Contact* contact);
 
 #pragma mark -
 #pragma mark Gameplay Handling
@@ -359,18 +298,6 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
-
-    /**
-    * Adds a new bullet to the world and sends it in the right direction.
-    */
-    void createBullet();
-
-    /**
-    * Removes the input Bullet from the world.
-    *
-    * @param  bullet   the bullet to remove
-    */
-    void removeBullet(Bullet* bullet);
 
   };
 

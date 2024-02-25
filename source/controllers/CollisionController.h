@@ -18,7 +18,10 @@
 class CollisionController {
 protected:
 //  MARK: - Properties
+    /** reference to the map */
     std::shared_ptr<Map> _map;
+
+    bool _isComplete;
 
 public:
 
@@ -42,8 +45,10 @@ public:
     /**
      * Initializes a Collision Controller
      */
-    bool init(const std::shared_ptr<Map> level);
+    bool init(std::shared_ptr<Map> &map);
 
+
+    bool isComplete() { return _isComplete; }
 
 //  MARK: - Callbacks
 

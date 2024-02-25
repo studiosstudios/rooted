@@ -24,10 +24,6 @@ using namespace cugl;
 #define DEBUG_KEY KeyCode::D
 /** The key for exitting the game */
 #define EXIT_KEY  KeyCode::ESCAPE
-/** The key for firing a bullet */
-#define FIRE_KEY KeyCode::SPACE
-/** The key for jumping up */
-#define JUMP_KEY KeyCode::ARROW_UP
 
 /** How close we need to be for a multi touch */
 #define NEAR_TOUCH      100
@@ -69,21 +65,17 @@ using namespace cugl;
  * This constructor does NOT do any initialzation.  It simply allocates the
  * object. This makes it safe to use this class without a pointer.
  */
-PlatformInput::PlatformInput() :
+InputController::InputController() :
 _active(false),
 _resetPressed(false),
 _debugPressed(false),
 _exitPressed(false),
-_firePressed(false),
-_jumpPressed(false),
-_keyJump(false),
-_keyFire(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
 _keyLeft(false),
 _keyRight(false),
-_horizontal(0.0f),
+_movement(Vec2(0,0)),
 _joystick(false),
 _hasJumped(false) {
 }
@@ -94,7 +86,7 @@ _hasJumped(false) {
  * This method will not dispose of the input controller. It can be reused
  * once it is reinitialized.
  */
-void PlatformInput::dispose() {
+void InputController::dispose() {
     if (_active) {
 #ifndef CU_TOUCH_SCREEN
         Input::deactivate<Keyboard>();
@@ -118,7 +110,7 @@ void PlatformInput::dispose() {
  *
  * @return true if the controller was initialized successfully
  */
-bool PlatformInput::init(const Rect bounds) {
+bool InputController::init(const Rect bounds) {
     bool success = true;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
@@ -158,7 +150,7 @@ bool PlatformInput::init(const Rect bounds) {
  * the OS, we may see multiple updates of the same touch in a single animation
  * frame, so we need to accumulate all of the data together.
  */
-void PlatformInput::update(float dt) {
+void InputController::update(float dt) {
 #ifndef CU_TOUCH_SCREEN
     // DESKTOP CONTROLS
     Keyboard* keys = Input::get<Keyboard>();
@@ -167,48 +159,48 @@ void PlatformInput::update(float dt) {
     _keyReset  = keys->keyPressed(RESET_KEY);
     _keyDebug  = keys->keyPressed(DEBUG_KEY);
     _keyExit   = keys->keyPressed(EXIT_KEY);
-    _keyFire   = keys->keyPressed(FIRE_KEY);
-    _keyJump   = keys->keyPressed(JUMP_KEY);
 
     _keyLeft = keys->keyDown(KeyCode::ARROW_LEFT);
     _keyRight = keys->keyDown(KeyCode::ARROW_RIGHT);
+    _keyUp = keys->keyDown(KeyCode::ARROW_UP);
+    _keyDown = keys->keyDown(KeyCode::ARROW_DOWN);
 #endif
 
     _resetPressed = _keyReset;
     _debugPressed = _keyDebug;
     _exitPressed  = _keyExit;
-	_firePressed  = _keyFire;
-	_jumpPressed  = _keyJump;
 
 	// Directional controls
-	_horizontal = 0.0f;
+	_movement.x = 0.0f;
+    _movement.y = 0.0f;
 	if (_keyRight) {
-		_horizontal += 1.0f;
+		_movement.x += 1.0f;
 	}
 	if (_keyLeft) {
-		_horizontal -= 1.0f;
+		_movement.x -= 1.0f;
 	}
+    if (_keyUp) {
+        _movement.y += 1.0f;
+    }
+    if (_keyDown) {
+        _movement.y -= 1.0f;
+    }
 
 // If it does not support keyboard, we must reset "virtual" keyboard
 #ifdef CU_TOUCH_SCREEN
     _keyExit = false;
     _keyReset = false;
     _keyDebug = false;
-    _keyJump  = false;
-    _keyFire  = false;
 #endif
 }
 
 /**
  * Clears any buffered inputs so that we may start fresh.
  */
-void PlatformInput::clear() {
+void InputController::clear() {
     _resetPressed = false;
     _debugPressed = false;
     _exitPressed  = false;
-    _jumpPressed = false;
-    _firePressed = false;
-    
 }
 
 #pragma mark -
@@ -217,7 +209,7 @@ void PlatformInput::clear() {
 /**
  * Defines the zone boundaries, so we can quickly categorize touches.
  */
-void PlatformInput::createZones() {
+void InputController::createZones() {
 	_lzone = _tbounds;
 	_lzone.size.width *= LEFT_ZONE;
 	_rzone = _tbounds;
@@ -228,7 +220,7 @@ void PlatformInput::createZones() {
 /**
  * Populates the initial values of the input TouchInstance
  */
-void PlatformInput::clearTouchInstance(TouchInstance& touchInstance) {
+void InputController::clearTouchInstance(TouchInstance& touchInstance) {
     touchInstance.touchids.clear();
     touchInstance.position = Vec2::ZERO;
 }
@@ -243,7 +235,7 @@ void PlatformInput::clearTouchInstance(TouchInstance& touchInstance) {
  *
  * @return the correct zone for the given position.
  */
-PlatformInput::Zone PlatformInput::getZone(const Vec2 pos) const {
+InputController::Zone InputController::getZone(const Vec2 pos) const {
 	if (_lzone.contains(pos)) {
 		return Zone::LEFT;
 	} else if (_rzone.contains(pos)) {
@@ -263,7 +255,7 @@ PlatformInput::Zone PlatformInput::getZone(const Vec2 pos) const {
  *
  * @return the scene location of a touch
  */
-Vec2 PlatformInput::touch2Screen(const Vec2 pos) const {
+Vec2 InputController::touch2Screen(const Vec2 pos) const {
     float px = pos.x/_tbounds.size.width -_tbounds.origin.x;
     float py = pos.y/_tbounds.size.height-_tbounds.origin.y;
     Vec2 result;
@@ -281,7 +273,7 @@ Vec2 PlatformInput::touch2Screen(const Vec2 pos) const {
  *
  * @param  pos  the current joystick position
  */
-void PlatformInput::processJoystick(const cugl::Vec2 pos) {
+void InputController::processJoystick(const cugl::Vec2 pos) {
     Vec2 diff =  _ltouch.position-pos;
 
     // Reset the anchor if we drifted too far
@@ -321,7 +313,7 @@ void PlatformInput::processJoystick(const cugl::Vec2 pos) {
  *
  * @return a nonzero value if this is a quick left or right swipe
  */
-int PlatformInput::processSwipe(const Vec2 start, const Vec2 stop, Timestamp current) {
+int InputController::processSwipe(const Vec2 start, const Vec2 stop, Timestamp current) {
 	// Look for swipes up that are "long enough"
 	float xdiff = (stop.x-start.x);
     float thresh = SWIPE_LENGTH;
@@ -343,7 +335,7 @@ int PlatformInput::processSwipe(const Vec2 start, const Vec2 stop, Timestamp cur
  * @param event The associated event
  * @param focus	Whether the listener currently has focus
  */
-void PlatformInput::touchBeganCB(const TouchEvent& event, bool focus) {
+void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     //CULog("Touch began %lld", event.touch);
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
@@ -365,7 +357,6 @@ void PlatformInput::touchBeganCB(const TouchEvent& event, bool focus) {
             // Only process if no touch in zone
             if (_rtouch.touchids.empty()) {
                 // Right is jump AND fire controls
-                _keyFire = (event.timestamp.ellapsedMillis(_rtime) <= DOUBLE_CLICK);
                 _rtouch.position = event.position;
                 _rtouch.timestamp.mark();
                 _rtouch.touchids.insert(event.touch);
@@ -402,7 +393,7 @@ void PlatformInput::touchBeganCB(const TouchEvent& event, bool focus) {
  * @param event The associated event
  * @param focus	Whether the listener currently has focus
  */
-void PlatformInput::touchEndedCB(const TouchEvent& event, bool focus) {
+void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     // Reset all keys that might have been set
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
@@ -431,7 +422,7 @@ void PlatformInput::touchEndedCB(const TouchEvent& event, bool focus) {
  * @param previous The previous position of the touch
  * @param focus	Whether the listener currently has focus
  */
-void PlatformInput::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
+void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
     Vec2 pos = event.position;
     // Only check for swipes in the main zone if there is more than one finger.
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
@@ -439,7 +430,6 @@ void PlatformInput::touchesMovedCB(const TouchEvent& event, const Vec2& previous
     } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         if (!_hasJumped) {
             if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
-                _keyJump = true;
                 _hasJumped = true;
             }
         }

@@ -327,6 +327,13 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
+    
+    // Test out wheat rustling via a key
+    if (_input->didRustle()) {
+        for (auto w : _map->getWheat()) {
+            w->rustle(4);
+        }
+    }
 
     // Process the movement
     if (_input->withJoystick()) {

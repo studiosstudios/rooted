@@ -11,14 +11,21 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Drawing Constants
 /** The texture for the character avatar */
-#define WHEAT_TEXTURE    "wheat"
+#define WHEAT_TEXTURE       "wheat"
+
+#define RECOVERY            0.01f
+#define SNEAK_TRANSPARENCY  0.9f
+#define WALK_INTENSITY      3
+#define WALK_TRANSPARENCY   0.75f
+#define DASH_INTENSITY      5
+#define DASH_TRANSPARENCY   0.5f
 
 class Wheat : public cugl::physics2::BoxObstacle {
 
 private:
     /** The current color of the Wheat */
     Color4 _color;
-    /** Fadeout time when rustling */
+    /** Transparency when rustling */
     float _fadeout;
     /** The scene graph node for the Wheat. */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
@@ -114,9 +121,7 @@ public:
     /**
     * Updates the object's physics state (NOT GAME LOGIC).
     *
-    * We use this method to reset cooldowns.
-    *
-    * @param delta Number of seconds since last animation frame
+    * @param dt Number of seconds since last animation frame
     */
     void update(float dt) override;
     
@@ -124,10 +129,11 @@ public:
 #pragma mark -
 #pragma mark Attribute Properties
 
-    /** Rustle this wheat, in this case, make the  */
+    /** Rustle this wheat, changing different values depending on the input value
+     *
+     *  @param amount The amount to rustle, usually the velocity of the entity passing through the wheat
+     */
     void rustle(float amount);
-    
-    void reset();
     
 };
 

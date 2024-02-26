@@ -8,16 +8,22 @@
 
 using namespace cugl;
 
+#pragma mark -
+#pragma mark Drawing Constants
+/** The texture for the character avatar */
+#define WHEAT_TEXTURE    "wheat"
+
 class Wheat : public cugl::physics2::BoxObstacle {
 
 private:
+    /** The current color of the Wheat */
     Color4 _color;
-    
+    /** Fadeout time when rustling */
+    float _fadeout;
     /** The scene graph node for the Wheat. */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _drawScale;
-    
     /** This macro disables the copy constructor (not allowed on physics objects) */
     CU_DISALLOW_COPY_AND_ASSIGN(Wheat);
     
@@ -37,13 +43,13 @@ public:
     virtual ~Wheat(void) { dispose(); }
     
     /**
-     * Disposes all resources and assets of this Wheat
+     * Disposes all resources and assets of this Wehat
      *
      * Any assets owned by this object will be immediately released.  Once
      * disposed, a Wheat may not be used until it is initialized again.
      */
-    
-    
+    void dispose();
+        
 #pragma mark -
 #pragma mark Static Constructors
     /**
@@ -64,11 +70,7 @@ public:
         std::shared_ptr<Wheat> result = std::make_shared<Wheat>();
         return (result->init(pos, size) ? result : nullptr);
     }
-    
-    void dispose();
-    
-    void rustle(float amount);
-    
+            
 #pragma mark Animation
     /**
      * Returns the scene graph node representing this Wheat.
@@ -107,7 +109,6 @@ public:
         _drawScale = scale;
     }
     
-    
 #pragma mark -
 #pragma mark Physics Methods
     /**
@@ -119,7 +120,15 @@ public:
     */
     void update(float dt) override;
     
-};
+    
+#pragma mark -
+#pragma mark Attribute Properties
 
+    /** Rustle this wheat, in this case, make the  */
+    void rustle(float amount);
+    
+    void reset();
+    
+};
 
 #endif //ROOTED_WHEAT_H

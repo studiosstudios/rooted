@@ -44,6 +44,9 @@ float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
 /** The initial position of the dude */
 float DUDE_POS[] = {2.5f, 5.0f};
 
+/** Positions of all of the wheat, is a single one for now */
+float WHEAT_POS[] = {7.0f, 7.0f};
+
 #pragma mark -
 #pragma mark Physics Constants
 /** The density for most physics objects */
@@ -154,6 +157,21 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
 
     _carrots.push_back(avatar);
 
+#pragma mark : Wheat
+    Vec2 wheatPos = WHEAT_POS;
+    image = assets->get<Texture>(WHEAT_TEXTURE);
+    
+    auto single_wheat = Wheat::alloc(wheatPos, image->getSize() / scale);
+    
+    // set sensor to allow for overlapping detection but no collision response
+    single_wheat->setSensor(true);
+    
+    sprite = scene2::PolygonNode::allocWithTexture(image);
+    single_wheat->setSceneNode(sprite);
+    addObstacle(single_wheat, sprite, worldnode, debugnode);
+    
+    _wheat.push_back(single_wheat);
+    
     return true;
 }
 

@@ -56,6 +56,11 @@ public:
      * disposed, a Wheat may not be used until it is initialized again.
      */
     void dispose();
+    
+    /**
+     * Standard constructor
+     */
+    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
         
 #pragma mark -
 #pragma mark Static Constructors
@@ -73,9 +78,9 @@ public:
      *
      * @return  A newly allocated Wheat at the given position, with the given radius
      */
-    static std::shared_ptr<Wheat> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
+    static std::shared_ptr<Wheat> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
         std::shared_ptr<Wheat> result = std::make_shared<Wheat>();
-        return (result->init(pos, size) ? result : nullptr);
+        return (result->init(pos, size, scale) ? result : nullptr);
     }
             
 #pragma mark Animation

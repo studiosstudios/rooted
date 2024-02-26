@@ -161,10 +161,7 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
     Vec2 wheatPos = WHEAT_POS;
     image = assets->get<Texture>(WHEAT_TEXTURE);
     
-    auto single_wheat = Wheat::alloc(wheatPos, image->getSize() / scale);
-    
-    // set sensor to allow for overlapping detection but no collision response
-    single_wheat->setSensor(true);
+    auto single_wheat = Wheat::alloc(wheatPos, image->getSize() / scale, scale);
     
     sprite = scene2::PolygonNode::allocWithTexture(image);
     single_wheat->setSceneNode(sprite);

@@ -245,6 +245,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _collision.init(_map);
     _action.init(_map, _input);
     _camera->setZoom(CAMERA_ZOOM);
+    _initCamera = _camera->getPosition();
     _active = true;
     _complete = false;
     setDebug(false);
@@ -252,7 +253,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _ui.init(_uinode, _offset);
 
     // XNA nostalgia
-    Application::get()->setClearColor(Color4f::CORNFLOWER);
+    Application::get()->setClearColor(Color4(142,114,78,255));
     return true;
 }
 
@@ -269,6 +270,7 @@ void GameScene::moveCamera(){
         _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
         _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
     }
+    _camera->update();
 }
 
 /**
@@ -321,6 +323,8 @@ void GameScene::reset() {
     setFailure(false);
     setComplete(false);
     _map->init(_assets, _world, _worldnode, _debugnode, _scale);
+    auto _avatar = _map->getCarrots().at(0);
+    _camera->setPosition(_initCamera);
 }
 
 #pragma mark -
@@ -356,15 +360,18 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
+    if(_input->getMovement().length() > 0){
+        _map->rustleWheats(3);
+    }
     
     // Test out wheat rustling via a key
     if (_input->didRustle()) {
-        CULog("rustling");
+//        CULog("rustling");
         for (auto w : _map->getWheat()) {
-            // Initialize random number generator
+            // Random number generator for testing
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
+            std::uniform_int_distribution<> dis(1, 5);
 
             // Generate and print random number
             int randomNumber = dis(gen);
@@ -392,7 +399,6 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
-
 }
 
 /**
@@ -458,6 +464,7 @@ void GameScene::postUpdate(float remain) {
     _action.postUpdate(remain);
 
     auto avatar = _map->getCarrots().at(0);
+    auto baby = _map->getBabyCarrots().at(0);
 
     // Record failure if necessary.
     if (!_failed && avatar->getY() < 0) {

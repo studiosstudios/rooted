@@ -79,6 +79,9 @@ protected:
     bool _failed;
     /** Countdown active for winning or losing */
     int _countdown;
+    
+    /** Initial camera position */
+    Vec3 _initCamera;
 
 #pragma mark Internal Object Management
     

@@ -7,9 +7,30 @@
 
 #include "EntityModel.h"
 
-class BabyCarrot : EntityModel {
+using namespace cugl;
 
+class BabyCarrot : public EntityModel {
+    
+private:
+    bool _isCaptured;
+    
+public:
+    
+
+    BabyCarrot() {};
+    
+    ~BabyCarrot() { dispose(); };
+
+    bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
+
+    static std::shared_ptr<BabyCarrot> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+        std::shared_ptr<BabyCarrot> result = std::make_shared<BabyCarrot>();
+        return (result->init(pos, size, scale) ? result : nullptr);
+    }
+    
+    void gotCaptured();
+    
+    bool isCaptured() { return _isCaptured; };
 };
-
 
 #endif //ROOTED_BABYCARROT_H

@@ -26,7 +26,7 @@ void Wheat::dispose() {
 void Wheat::update(float dt) {
     // fade out the transparency
     if (_fadeout < 1) {
-        _fadeout = (_fadeout < 1 ? _fadeout+RECOVERY : 1);
+        _fadeout = (_fadeout+RECOVERY < 1 ? _fadeout+RECOVERY : 1);
     } else {
         _fadeout = 1;
     }

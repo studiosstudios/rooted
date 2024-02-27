@@ -40,7 +40,6 @@ void CollisionController::beginContact(b2Contact* contact) {
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
     auto avatar = _map->getCarrots().at(0);
-
     auto babycarrot = _map->getBabyCarrots().at(0);
     
     // TODO: generalize for all players other stuff
@@ -121,7 +120,6 @@ void CollisionController::endContact(b2Contact* contact) {
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
     
     auto avatar = _map->getCarrots().at(0);
-    
     auto babycarrot = _map->getBabyCarrots().at(0);
     
     // TODO: generalize for all players other stuff
@@ -182,14 +180,11 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
     
     auto avatar = _map->getCarrots().at(0);
-    
     auto babycarrot = _map->getBabyCarrots().at(0);
     
     // Twice to swap
     for (int i = 0; i < 2; i++) {
-        
-        Wheat* wheat = static_cast<Wheat*>(bd2);
-        
+                
         if (bd1 == avatar.get()) {
             
             // Carrot with Baby Carrot

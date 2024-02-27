@@ -49,14 +49,6 @@ private:
     bool  _keyDebug;
     /** Whether the exit key is down */
     bool  _keyExit;
-    /** Whether the left arrow key is down */
-    bool  _keyLeft;
-    /** Whether the right arrow key is down */
-    bool  _keyRight;
-    /** Whether the up arrow key is down */
-    bool  _keyUp;
-    /** Whether the down arrow key is down */
-    bool  _keyDown;
     
     // FOR TESTING RUSTLING
     bool _keyRustle;

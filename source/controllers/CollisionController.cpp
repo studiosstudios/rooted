@@ -48,12 +48,10 @@ void CollisionController::beginContact(b2Contact* contact) {
     // Twice to swap
     for (int i = 0; i < 2; i++) {
         
-//        BabyCarrot* babycarrot = static_cast<BabyCarrot*>(bd1);
-
+        Wheat* wheat = static_cast<Wheat*>(bd2);
+        
         // Player collisions:
         if (bd1 == avatar.get()) {
-            
-            Wheat* wheat = static_cast<Wheat*>(bd2);
             
             // TODO: this ain't it, it is very jank sorry I will fix later
             if (fix2->IsSensor() && wheat) {
@@ -67,7 +65,6 @@ void CollisionController::beginContact(b2Contact* contact) {
                 wheat->rustle(randomNumber);
             }
             
-//            if (typeid(bd2) == typeid(BabyCarrot)) {
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
                 // TODO: baby carrot stuff
                 printf("player collided with baby carrot");
@@ -80,7 +77,6 @@ void CollisionController::beginContact(b2Contact* contact) {
         // Baby Carrot collisions:
         if (bd1 == babycarrot.get()) {
 //            printf("baby carrot collision");
-            Wheat* wheat = static_cast<Wheat*>(bd2);
             
             if (fix2->IsSensor() && wheat) {
                 // Initialize random number generator
@@ -142,17 +138,33 @@ void CollisionController::endContact(b2Contact* contact) {
     
     auto avatar = _map->getCarrots().at(0);
     
+    auto babycarrot = _map->getBabyCarrots().at(0);
     
+    // TODO: generalize for all players other stuff
+    
+    // Twice to swap
     for (int i = 0; i < 2; i++) {
-
+        
+        Wheat* wheat = static_cast<Wheat*>(bd2);
+        
         // Player collisions:
         if (bd1 == avatar.get()) {
-            if (typeid(bd2) == typeid(Wheat::BoxObstacle)) {
-                // TODO: wheat stuff
+            
+            // TODO: this ain't it, it is very jank sorry I will fix later
+            if (fix2->IsSensor() && wheat) {
+                // Initialize random number generator
+                wheat->rustle(0);
             }
             
-            if (typeid(bd2) == typeid(BabyCarrot)) {
-                // TODO: baby carrot stuff
+            if (bd2 == _map->getBabyCarrots().at(0).get()) {
+//                _map->getBabyCarrots().erase(_map->getBabyCarrots().begin() + 0);
+            }
+        }
+        
+        // Baby Carrot collisions:
+        if (bd1 == babycarrot.get()) {
+            if (fix2->IsSensor() && wheat) {
+                wheat->rustle(0);
             }
         }
    
@@ -173,7 +185,6 @@ void CollisionController::endContact(b2Contact* contact) {
         bd1 = bd2;
         bd2 = bdTemp;
     }
-
 }
 
 /** for now everything collides with everything*/
@@ -187,17 +198,35 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
     
+    auto avatar = _map->getCarrots().at(0);
+    
+    auto babycarrot = _map->getBabyCarrots().at(0);
+    
+    // Twice to swap
     for (int i = 0; i < 2; i++) {
         
-        // TODO: this actually is not doing anything rn oop
-        if (typeid(bd1) == typeid(Carrot) && typeid(bd2) == typeid(Wheat::BoxObstacle)) {
-            return false;
+        Wheat* wheat = static_cast<Wheat*>(bd2);
+        
+        if (bd1 == avatar.get()) {
+            
+            // Carrot with wheat
+            if (f2->IsSensor() && wheat) {
+                return false;
+            }
+            
+            // Carrot with Baby Carrot
+            if (bd2 == _map->getBabyCarrots().at(0).get()) {
+                return true;
+            }
         }
         
-        if (typeid(bd1) == typeid(Carrot) && typeid(bd2) == typeid(BabyCarrot)) {
-            return false;
+        // Baby Carrot with wheat
+        if (bd1 == babycarrot.get()) {
+            if (f2->IsSensor() && wheat) {
+                return false;
+            }
         }
-        
+   
         // Swap everything
         b2Fixture* fixTemp = f1;
         f1 = f2;
@@ -214,7 +243,6 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         physics2::Obstacle* bdTemp = bd1;
         bd1 = bd2;
         bd2 = bdTemp;
-        
     }
     return true;
 }

@@ -68,6 +68,10 @@ protected:
     int _countdown;
 
 #pragma mark Internal Object Management
+    
+    /** Moves the camera to focus the avatar */
+    void moveCamera();
+    
     /**
      * Returns the active screen size of this scene.
      *
@@ -296,4 +300,5 @@ public:
     void reset();
 
   };
+
 #endif /* RootedGameScene_h */

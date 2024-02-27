@@ -57,6 +57,9 @@ private:
     bool  _keyUp;
     /** Whether the down arrow key is down */
     bool  _keyDown;
+    
+    // FOR TESTING RUSTLING
+    bool _keyRustle;
   
 protected:
     // INPUT RESULTS
@@ -68,6 +71,9 @@ protected:
     bool _exitPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
+    
+    // CAN REMOVE THIS, THIS IS JUST FOR TESTING
+    bool _rustlePressed;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -300,6 +306,9 @@ public:
      * @return the scene graph position of the virtual joystick
      */
     cugl::Vec2 getJoystick() const { return _joycenter; }
+    
+    // CAN DELETE THIS
+    bool didRustle() const { return _rustlePressed; }
 
 #pragma mark -
 #pragma mark Touch and Mouse Callbacks

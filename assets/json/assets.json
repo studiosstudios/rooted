@@ -8,6 +8,9 @@
         "dude": {
             "file":     "textures/dude.png"
         },
+        "wheat": {
+            "file":     "textures/wheatsprite.png"
+        },
         "spinner": {
             "file":     "textures/barrier.png"
         },

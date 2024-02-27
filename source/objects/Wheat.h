@@ -8,16 +8,34 @@
 
 using namespace cugl;
 
+#pragma mark -
+#pragma mark Drawing Constants
+/** The texture for the character avatar */
+#define WHEAT_TEXTURE       "wheat"
+#define FIRE_FRAMES     7
+
+#define RECOVERY            0.01f
+#define SNEAK_TRANSPARENCY  0.9f
+#define WALK_INTENSITY      3
+#define WALK_TRANSPARENCY   0.75f
+#define DASH_INTENSITY      5
+#define DASH_TRANSPARENCY   0.5f
+
+
 class Wheat : public cugl::physics2::BoxObstacle {
 
 private:
+    /** The current color of the Wheat */
     Color4 _color;
-    
+    /** Transparency when rustling */
+    float _fadeout;
     /** The scene graph node for the Wheat. */
-    std::shared_ptr<cugl::scene2::SceneNode> _node;
+    std::shared_ptr<cugl::scene2::SpriteNode> _node;
+    
+    /** The animation phase for the main afterburner */
+    bool _cycle;
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _drawScale;
-    
     /** This macro disables the copy constructor (not allowed on physics objects) */
     CU_DISALLOW_COPY_AND_ASSIGN(Wheat);
     
@@ -37,13 +55,18 @@ public:
     virtual ~Wheat(void) { dispose(); }
     
     /**
-     * Disposes all resources and assets of this Wheat
+     * Disposes all resources and assets of this Wehat
      *
      * Any assets owned by this object will be immediately released.  Once
      * disposed, a Wheat may not be used until it is initialized again.
      */
+    void dispose();
     
-    
+    /**
+     * Standard constructor
+     */
+    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
+        
 #pragma mark -
 #pragma mark Static Constructors
     /**
@@ -60,15 +83,11 @@ public:
      *
      * @return  A newly allocated Wheat at the given position, with the given radius
      */
-    static std::shared_ptr<Wheat> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
+    static std::shared_ptr<Wheat> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
         std::shared_ptr<Wheat> result = std::make_shared<Wheat>();
-        return (result->init(pos, size) ? result : nullptr);
+        return (result->init(pos, size, scale) ? result : nullptr);
     }
-    
-    void dispose();
-    
-    void rustle(float amount);
-    
+            
 #pragma mark Animation
     /**
      * Returns the scene graph node representing this Wheat.
@@ -79,7 +98,7 @@ public:
      *
      * @return the scene graph node representing this Wheat.
      */
-    const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+    const std::shared_ptr<cugl::scene2::SpriteNode>& getSceneNode() const { return _node; }
     
     /**
      * Sets the scene graph node representing this Wheat.
@@ -87,9 +106,19 @@ public:
      * @param node  The scene graph node representing this Wheat, which has
      *              been added to the world node already.
      */
-    void setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+    void setSceneNode(const std::shared_ptr<cugl::scene2::SpriteNode>& node) {
         _node = node;
     }
+    
+    /**
+     * Animates wheat.
+     *
+     * If the animation is not active, it will reset to the initial animation frame.
+     *
+     * @param burner    The reference to the wheat
+     * @param on        Whether the animation is active
+     */
+    void animateWheat(bool on);
     
     /**
      * Sets the ratio of the Wheat sprite to the physics body
@@ -107,19 +136,25 @@ public:
         _drawScale = scale;
     }
     
-    
 #pragma mark -
 #pragma mark Physics Methods
     /**
     * Updates the object's physics state (NOT GAME LOGIC).
     *
-    * We use this method to reset cooldowns.
-    *
-    * @param delta Number of seconds since last animation frame
+    * @param dt Number of seconds since last animation frame
     */
     void update(float dt) override;
     
-};
+    
+#pragma mark -
+#pragma mark Attribute Properties
 
+    /** Rustle this wheat, changing different values depending on the input value
+     *
+     *  @param amount The amount to rustle, usually the velocity of the entity passing through the wheat
+     */
+    void rustle(float amount);
+    
+};
 
 #endif //ROOTED_WHEAT_H

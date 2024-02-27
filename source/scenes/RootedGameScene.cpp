@@ -30,6 +30,8 @@ using namespace cugl;
 #define DEFAULT_WIDTH   32.0f
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
+/** Zoom of camera relative to scene */
+#define CAMERA_ZOOM 1.5
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -226,6 +228,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
     _collision.init(_map);
     _action.init(_map, _input);
+    _camera->setZoom(CAMERA_ZOOM);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -233,6 +236,21 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     // XNA nostalgia
     Application::get()->setClearColor(Color4f::CORNFLOWER);
     return true;
+}
+
+/**
+ * Moves the camera to focus the avatar
+ */
+void GameScene::moveCamera(){
+    auto _avatar = _map->getCarrots().at(0);
+    if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
+         _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
+        _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
+    }
+    if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
+        _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
+        _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
+    }
 }
 
 /**
@@ -309,6 +327,26 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
+    
+    // Test out wheat rustling via a key
+    if (_input->didRustle()) {
+        CULog("rustling");
+        for (auto w : _map->getWheat()) {
+            // Initialize random number generator
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
+
+            // Generate and print random number
+            int randomNumber = dis(gen);
+            w->animateWheat(true);
+            w->rustle(randomNumber);
+        }
+    }
+    
+    for (auto w : _map->getWheat()) {
+        w->animateWheat(true);
+    }
 
     // Process the movement
     if (_input->withJoystick()) {
@@ -362,6 +400,8 @@ void GameScene::preUpdate(float dt) {
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _world->update(step);
+    moveCamera();
+    _camera->update();
 }
 
 /**

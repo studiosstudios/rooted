@@ -70,11 +70,13 @@ _active(false),
 _resetPressed(false),
 _debugPressed(false),
 _exitPressed(false),
+_rustlePressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
 _keyLeft(false),
 _keyRight(false),
+_keyRustle(false),
 _movement(Vec2(0,0)),
 _joystick(false),
 _hasJumped(false) {
@@ -159,6 +161,7 @@ void InputController::update(float dt) {
     _keyReset  = keys->keyPressed(RESET_KEY);
     _keyDebug  = keys->keyPressed(DEBUG_KEY);
     _keyExit   = keys->keyPressed(EXIT_KEY);
+    _keyRustle = keys->keyPressed(KeyCode::M);
 
     _keyLeft = keys->keyDown(KeyCode::ARROW_LEFT);
     _keyRight = keys->keyDown(KeyCode::ARROW_RIGHT);
@@ -169,6 +172,8 @@ void InputController::update(float dt) {
     _resetPressed = _keyReset;
     _debugPressed = _keyDebug;
     _exitPressed  = _keyExit;
+    // for testing rustling
+    _rustlePressed = _keyRustle;
 
 	// Directional controls
 	_movement.x = 0.0f;

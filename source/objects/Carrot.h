@@ -33,7 +33,7 @@ public:
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
     
-    void captureBabyCarrot();
+    void captureBabyCarrot() { _numBabyCarrots++; };
     
     void gotCaptured();
     

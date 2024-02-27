@@ -12,7 +12,6 @@ using namespace cugl;
 class BabyCarrot : public EntityModel {
     
 private:
-    bool _isCaptured;
     
 public:
     
@@ -28,14 +27,7 @@ public:
         return (result->init(pos, size, scale) ? result : nullptr);
     }
     
-    bool isCaptured() { return _isCaptured; };
-    
-    
-    
-//    void gotCaptured();
-    
-    
+    void gotCaptured();
 };
-
 
 #endif //ROOTED_BABYCARROT_H

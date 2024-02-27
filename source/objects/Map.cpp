@@ -220,6 +220,18 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
         sprite = scene2::PolygonNode::allocWithTexture(image, platform);
         addObstacle(platobj, sprite, worldnode, debugnode, 1);
     }
+    
+#pragma mark : Baby Carrots
+    Vec2 babyPos = BABY_CARROT_POS;
+    image = assets->get<Texture>(DUDE_TEXTURE);
+    auto baby = BabyCarrot::alloc(babyPos, image->getSize() / scale, scale);
+    sprite = scene2::PolygonNode::allocWithTexture(image);
+    sprite->setColor(Color4::BLUE);
+    baby->setSceneNode(sprite);
+    baby->setDebugColor(DEBUG_COLOR);
+    addObstacle(baby, sprite, worldnode, debugnode); // Put this at the very front
+    
+    _babies.push_back(baby);
 
 #pragma mark : Dude
     Vec2 dudePos = DUDE_POS;
@@ -232,24 +244,13 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
     addObstacle(avatar, sprite, worldnode, debugnode); // Put this at the very front
 
     _carrots.push_back(avatar);
-
-#pragma mark : Baby Carrots
-    Vec2 babycarrotPos = BABY_CARROT_POS;
-    auto babyimage = assets->get<Texture>(DUDE_TEXTURE);
-    auto babycarrot = BabyCarrot::alloc(babycarrotPos, babyimage->getSize() / scale, scale);
-    auto babysprite = scene2::PolygonNode::allocWithTexture(babyimage);
-    babysprite->setColor(Color4::BLUE);
-    babycarrot->setSceneNode(babysprite);
-    babycarrot->setDebugColor(DEBUG_COLOR);
-    addObstacle(babycarrot, babysprite, worldnode, debugnode); // Put this at the very front
-    _babies.push_back(babycarrot);
     
 #pragma mark : Wheat
 //    image = assets->get<Texture>(WHEAT_TEXTURE);
     for (int ii = 0; ii < WHEAT_COUNT; ii++) {
         Vec2 wheatPos = WHEAT_POS[ii];
         auto spriteImage = scene2::SpriteNode::allocWithSheet(assets->get<Texture>(WHEAT_TEXTURE),
-                                                      1, 8, WHEAT_FRAMES);
+                                                      1, WHEAT_FRAMES, WHEAT_FRAMES);
         auto singleWheat = Wheat::alloc(wheatPos, spriteImage->getSize() / scale, scale);
         
         singleWheat->setSceneNode(spriteImage);

@@ -5,9 +5,9 @@
 #include "BabyCarrot.h"
 
 /**
- * Initializes a new dude at the given position.
+ * Initializes a new baby carrot at the given position.
  *
- * The dude is sized according to the given drawing scale.
+ * The baby carrot is sized according to the given drawing scale.
  *
  * The scene graph is completely decoupled from the physics system.
  * The node does not have to be the same size as the physics body. We
@@ -22,4 +22,8 @@
  */
 bool BabyCarrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     return EntityModel::init(pos, size, scale);
+}
+
+void BabyCarrot::gotCaptured() {
+    
 }

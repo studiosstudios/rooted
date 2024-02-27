@@ -12,15 +12,15 @@ using namespace cugl;
 #pragma mark Drawing Constants
 /** The texture for the character avatar */
 #define WHEAT_TEXTURE       "wheat"
-#define WHEAT_FRAMES     7
+#define WHEAT_FRAMES    1
 #define WHEAT_ANIMATION_SPEED     0.5f
 
 #define RECOVERY            0.01f
-#define SNEAK_TRANSPARENCY  1
+#define SNEAK_TRANSPARENCY  0.9f
 #define WALK_INTENSITY      3
-#define WALK_TRANSPARENCY   0.8f
+#define WALK_TRANSPARENCY   0.75f
 #define DASH_INTENSITY      5
-#define DASH_TRANSPARENCY   0.55f
+#define DASH_TRANSPARENCY   0.5f
 
 
 class Wheat : public cugl::physics2::BoxObstacle {

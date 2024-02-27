@@ -339,8 +339,13 @@ void GameScene::preUpdate(float dt) {
 
             // Generate and print random number
             int randomNumber = dis(gen);
+            w->animateWheat(true);
             w->rustle(randomNumber);
         }
+    }
+    
+    for (auto w : _map->getWheat()) {
+        w->animateWheat(true);
     }
 
     // Process the movement

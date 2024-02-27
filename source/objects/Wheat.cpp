@@ -39,16 +39,15 @@ void Wheat::update(float dt) {
 }
 
 void Wheat::animateWheat(bool on) {
-    scene2::SpriteNode* node = _node.get();
-    if (on) {
+    if (_fadeout != 1) {
         // Increment and loop
-        if (node->getFrame() == node->getSpan()-1) {
-            node->setFrame(node->getFrame()+1);
+        if (_node->getFrame() != _node->getSpan()-1) {
+            _node->setFrame(_node->getFrame()+1);
         } else {
-            node->setFrame(0);
+            _node->setFrame(0);
         }
     } else {
-        node->setFrame(0);
+        _node->setFrame(0);
     }
 }
 

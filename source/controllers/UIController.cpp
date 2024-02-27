@@ -14,17 +14,20 @@ void UIController::dispose() {
 }
 
 void UIController::initJoystickNodes() {
-    _joynode = scene2::SceneNode::alloc();
+    _joynode = scene2::SceneNode::allocWithBounds(Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5) + _offset);
     
     _joyback = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2(0,0), 32));
-    _joyback->setAnchor(Vec2::ANCHOR_CENTER);
+    _joyback->setPosition(_joynode->getWidth()/2, _joynode->getHeight()/2);
     _joynode->addChild(_joyback);
+    std::cout << _joynode->getPositionX() << " " << _joynode->getPositionY();
     
     _uinode->addChild(_joynode);
 }
 
-bool UIController::init(const std::shared_ptr<cugl::scene2::SceneNode> uinode) {
+bool UIController::init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
+                        Vec2 offset) {
     _uinode = uinode;
+    _offset = offset;
     
     initJoystickNodes();
     return true;

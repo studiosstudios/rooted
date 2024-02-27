@@ -199,7 +199,15 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _debugnode->setPosition(_offset);
     
     _uinode = scene2::SceneNode::alloc();
-    _uinode->setPosition(_offset);
+    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _uinode->setPosition(-_offset);
+    
+    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5) + _offset));
+    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _debugjoynode->setColor(Color4(Vec4(0, 0, 0, 0.25)));
+    _uinode->setPosition(-_offset);
+    _debugjoynode->setVisible(true);
+    _uinode->addChild(_debugjoynode);
     
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
@@ -224,11 +232,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _rightnode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_MIDDLE_LEFT);
     _rightnode->setScale(0.35f);
     _rightnode->setVisible(false);
-    
-//    _joyback = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(JOY_BACK));
-//    _joyback->SceneNode::setAnchor(cugl::Vec2::ANCHOR_CENTER);
-//    _joyback->setVisible(true);
-    
 
     addChild(_worldnode);
     addChild(_debugnode);
@@ -237,8 +240,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     addChild(_losenode);
     addChild(_leftnode);
     addChild(_rightnode);
-    
-//    addChild(_joyback);
 
     _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
     _collision.init(_map);
@@ -248,7 +249,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _complete = false;
     setDebug(false);
     
-    _ui.init(_uinode);
+    _ui.init(_uinode, _offset);
 
     // XNA nostalgia
     Application::get()->setClearColor(Color4f::CORNFLOWER);
@@ -424,8 +425,7 @@ void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _world->update(step);
     moveCamera();
-    // Update UI location
-    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/4);
+    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/CAMERA_ZOOM - _offset);
     _camera->update();
 }
 

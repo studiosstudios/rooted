@@ -58,6 +58,8 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _joyback;
     /** Reference to the foreground joystick circle **/
     std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
+    
+    std::shared_ptr<cugl::scene2::PolygonNode> _debugjoynode;
 
     /** The Box2D world */
     std::shared_ptr<cugl::physics2::ObstacleWorld> _world;

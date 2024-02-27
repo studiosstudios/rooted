@@ -23,6 +23,8 @@ private:
     std::shared_ptr<cugl::scene2::PolygonNode> _joyback;
     std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
     
+    cugl::Vec2 _offset;
+    
 public:
     UIController() {};
     
@@ -32,7 +34,8 @@ public:
     
     void initJoystickNodes();
     
-    bool init(const std::shared_ptr<cugl::scene2::SceneNode> uinode);
+    bool init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
+              cugl::Vec2 offset);
     
     void updateJoystick();
     

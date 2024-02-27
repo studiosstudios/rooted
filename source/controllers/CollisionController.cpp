@@ -11,7 +11,6 @@ using namespace cugl;
 
 bool CollisionController::init(std::shared_ptr<Map> &map) {
     _map = map;
-//    _isComplete = false;
     return true;
 }
 
@@ -38,14 +37,6 @@ void CollisionController::beginContact(b2Contact* contact) {
 
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-
-    auto avatar = _map->getCarrots().at(0);
-
-//    // If we hit the "win" door, we are done
-//    if((bd1 == avatar.get()   && bd2 == _map->getGoalDoor().get()) ||
-//       (bd1 == _map->getGoalDoor().get() && bd2 == avatar.get())) {
-//        _isComplete = true;
-//    }
 }
 
 /**

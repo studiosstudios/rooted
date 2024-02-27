@@ -10,7 +10,7 @@
 
 using namespace cugl;
 
-class Farmer : EntityModel {
+class Farmer : public EntityModel {
 
 private:
     bool _isHoldingCarrot;

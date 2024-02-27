@@ -7,7 +7,7 @@
 
 #include "EntityModel.h"
 
-class BabyCarrot : EntityModel {
+class BabyCarrot : public EntityModel {
 
 };
 

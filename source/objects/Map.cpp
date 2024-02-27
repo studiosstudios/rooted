@@ -46,9 +46,21 @@ float DUDE_POS[] = {2.5f, 5.0f};
 
 float BABY_CARROT_POS[] = {2.5f, 10.0f};
 
-#define WHEAT_COUNT     60
+#define WHEAT_COUNT     72
 /** Positions of all of the wheat, is a single one for now */
 float WHEAT_POS[WHEAT_COUNT][2] = {
+    {4.0f, 6.0f},
+    {5.0f, 6.0f},
+    {6.0f, 6.0f},
+    {7.0f, 6.0f},
+    {8.0f, 6.0f},
+    {9.0f, 6.0f},
+    {10.0f, 6.0f},
+    {11.0f, 6.0f},
+    {12.0f, 6.0f},
+    {13.0f, 6.0f},
+    {14.0f, 6.0f},
+    {15.0f, 6.0f},
     {4.0f, 7.0f},
     {5.0f, 7.0f},
     {6.0f, 7.0f},

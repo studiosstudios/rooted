@@ -43,7 +43,7 @@ void CollisionController::beginContact(b2Contact* contact) {
     
     auto babycarrot = _map->getBabyCarrots().at(0);
     
-    // TODO: generalize for all players
+    // TODO: generalize for all players other stuff
     
     // Twice to swap
     for (int i = 0; i < 2; i++) {
@@ -55,6 +55,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             
             Wheat* wheat = static_cast<Wheat*>(bd2);
             
+            // TODO: this ain't it, it is very jank sorry I will fix later
             if (fix2->IsSensor() && wheat) {
                 // Initialize random number generator
                 std::random_device rd;
@@ -67,6 +68,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
             
             if (typeid(bd2) == typeid(BabyCarrot)) {
+                // TODO: baby carrot stuff
                 printf("player collided with baby carrot");
             }
         }
@@ -183,6 +185,7 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
     
     for (int i = 0; i < 2; i++) {
         
+        // TODO: this actually is not doing anything rn oop
         if (typeid(bd1) == typeid(Carrot) && typeid(bd2) == typeid(Wheat::BoxObstacle)) {
             return false;
         }

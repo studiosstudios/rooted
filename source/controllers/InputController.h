@@ -337,7 +337,8 @@ public:
      * @param focus	Whether the listener currently has focus
      */
     void touchesMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus);
-  
+
+    int signum(int num);
 };
 
 #endif /* __PF_INPUT_H__ */

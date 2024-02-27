@@ -170,7 +170,7 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
     for (int ii = 0; ii < WHEAT_COUNT; ii++) {
         Vec2 wheatPos = WHEAT_POS[ii];
         auto spriteImage = scene2::SpriteNode::allocWithSheet(assets->get<Texture>(WHEAT_TEXTURE),
-                                                      1, 8, WHEAT_FRAMES);
+                                                      1, WHEAT_FRAMES, WHEAT_FRAMES);
         auto singleWheat = Wheat::alloc(wheatPos, spriteImage->getSize() / scale, scale);
         
         singleWheat->setSceneNode(spriteImage);

@@ -48,8 +48,28 @@ void CollisionController::beginContact(b2Contact* contact) {
 
         // Player collisions:
         if (bd1 == avatar.get()) {
-            if (typeid(bd2) == typeid(Wheat::BoxObstacle)) {
+            
+            // TODO: this ain't it but just for now don't worry
+            if (fix2->IsSensor()) {
+//                if (fix2->GetUserData().pointer)
+//                if (fd2 != nullptr) {
+//                    std::cout << "Value of fd2: " << *fd2 << std::endl;
+//                } else {
+//                    std::cout << "fd2 is nullptr" << std::endl;
+//                }
+//            if (typeid(bd2) == typeid(Wheat::BoxObstacle)) {
                 printf("player collided with wheat");
+                for (auto w : _map->getWheat()) {
+                    // Initialize random number generator
+                    std::random_device rd;
+                    std::mt19937 gen(rd());
+                    std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
+
+                    // Generate and print random number
+                    int randomNumber = dis(gen);
+                    w->animateWheat(true);
+                    w->rustle(randomNumber);
+                }
             }
             
             if (typeid(bd2) == typeid(BabyCarrot)) {

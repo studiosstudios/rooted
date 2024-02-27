@@ -331,10 +331,13 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
+    if(_input->getMovement().length() > 0){
+        _map->rustleWheats(3);
+    }
     
     // Test out wheat rustling via a key
     if (_input->didRustle()) {
-        CULog("rustling");
+//        CULog("rustling");
         for (auto w : _map->getWheat()) {
             // Initialize random number generator
             std::random_device rd;

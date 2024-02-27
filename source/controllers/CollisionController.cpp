@@ -40,6 +40,15 @@ void CollisionController::beginContact(b2Contact* contact) {
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
     auto avatar = _map->getCarrots().at(0);
+    auto wheats = _map->getWheat();
+    
+    for(auto w : wheats){
+        if(bd1 == avatar.get() && bd2 == w.get()){
+            // Generate and print random number
+            w->setRustling(true);
+            w->rustle(3);
+        }
+    }
 
     // If we hit the "win" door, we are done
     if((bd1 == avatar.get()   && bd2 == _map->getGoalDoor().get()) ||
@@ -67,7 +76,16 @@ void CollisionController::endContact(b2Contact* contact) {
 
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-
+    
+    auto avatar = _map->getCarrots().at(0);
+    auto wheats = _map->getWheat();
+    
+    for(auto w : wheats){
+        if(bd1 == avatar.get() && bd2 == w.get()){
+            // Generate and print random number
+            w->setRustling(false);
+        }
+    }
 }
 
 /** for now everything collides with everything*/

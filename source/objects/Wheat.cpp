@@ -38,6 +38,20 @@ void Wheat::update(float dt) {
     }
 }
 
+void Wheat::animateWheat(bool on) {
+    scene2::SpriteNode* node = _node.get();
+    if (on) {
+        // Increment and loop
+        if (node->getFrame() == node->getSpan()-1) {
+            node->setFrame(node->getFrame()+1);
+        } else {
+            node->setFrame(0);
+        }
+    } else {
+        node->setFrame(0);
+    }
+}
+
 void Wheat::rustle(float amount) {
     if (amount == 0) { return; }
     if (amount >= DASH_INTENSITY) {

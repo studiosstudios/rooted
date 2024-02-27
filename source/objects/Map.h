@@ -137,12 +137,12 @@ public:
     bool loadBabyCarrot(const std::shared_ptr<JsonValue>& json);
 
     /**
-     * Loads a single baby carrot
+     * Loads a single wheat
      *
-     * The baby carrot will be retained and stored in the vector _babies.  If the
-     * baby carrot fails to load, then it will not be added to _babies.
+     * The wheat will be retained and stored in the vector _wheat.  If the
+     * wheat fails to load, then it will not be added to _wheat.
      *
-     * @param  reader   a JSON reader with cursor ready to read the baby carrot
+     * @param  reader   a JSON reader with cursor ready to read the wheat
      *
      * @retain the baby carrot
      * @return true if the baby carrot was successfully loaded

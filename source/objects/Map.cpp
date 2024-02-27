@@ -366,6 +366,17 @@ void Map::unload() {
 #pragma mark -
 #pragma mark Individual Loaders
 
+/**
+ * Loads a single wall
+ *
+ * The crate will be retained and stored in the vector _walls.  If the
+ * wall fails to load, then it will not be added to _walls.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the wall
+ *
+ * @retain the wall
+ * @return true if the crate was successfully loaded
+ */
 bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
     bool success = true;
 
@@ -405,6 +416,17 @@ bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
 
 }
 
+/**
+ * Loads a single carrot
+ *
+ * The carrots will be retained and stored in the vector _carrots.  If the
+ * carrot fails to load, then it will not be added to _carrots.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the carrot
+ *
+ * @retain the carrot
+ * @return true if the carrot was successfully loaded
+ */
 bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     bool success = true;
 
@@ -422,6 +444,17 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
 
 }
 
+/**
+ * Loads a single wheat
+ *
+ * The wheat will be retained and stored in the vector _wheat.  If the
+ * wheat fails to load, then it will not be added to _wheat.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the wheat
+ *
+ * @retain the baby carrot
+ * @return true if the baby carrot was successfully loaded
+ */
 bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
 
     bool success = true;
@@ -433,6 +466,17 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
     return success;
 }
 
+/**
+ * Loads a single baby carrot
+ *
+ * The baby carrot will be retained and stored in the vector _babies.  If the
+ * baby carrot fails to load, then it will not be added to _babies.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the baby carrot
+ *
+ * @retain the baby carrot
+ * @return true if the baby carrot was successfully loaded
+ */
 bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
 
     bool success = true;
@@ -451,6 +495,17 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
 
 }
 
+/**
+ * Loads a single farmer
+ *
+ * The farmer will be retained and stored in the vector _farmers.  If the
+ * farmer fails to load, then it will not be added to _farmers.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the farmer
+ *
+ * @retain the farmer
+ * @return true if the crate was successfully loaded
+ */
 bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     bool success = true;
 

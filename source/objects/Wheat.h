@@ -12,6 +12,8 @@ using namespace cugl;
 #pragma mark Drawing Constants
 /** The texture for the character avatar */
 #define WHEAT_TEXTURE       "wheat"
+#define WHEAT_FRAMES    1
+#define WHEAT_ANIMATION_SPEED     0.5f
 
 #define RECOVERY            0.01f
 #define SNEAK_TRANSPARENCY  0.9f
@@ -20,6 +22,7 @@ using namespace cugl;
 #define DASH_INTENSITY      5
 #define DASH_TRANSPARENCY   0.5f
 
+
 class Wheat : public cugl::physics2::BoxObstacle {
 
 private:
@@ -27,8 +30,14 @@ private:
     Color4 _color;
     /** Transparency when rustling */
     float _fadeout;
+    /** The number of shakes that have happened */
+    int _numShakes;
+    /** Whether it is shaking */
+    int _isShaking;
     /** The scene graph node for the Wheat. */
-    std::shared_ptr<cugl::scene2::SceneNode> _node;
+    std::shared_ptr<cugl::scene2::SpriteNode> _node;
+    /** The current animation frame */
+    float _animframe;
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _drawScale;
     /** This macro disables the copy constructor (not allowed on physics objects) */
@@ -95,7 +104,7 @@ public:
      *
      * @return the scene graph node representing this Wheat.
      */
-    const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+    const std::shared_ptr<cugl::scene2::SpriteNode>& getSceneNode() const { return _node; }
     
     /**
      * Sets the scene graph node representing this Wheat.
@@ -103,9 +112,17 @@ public:
      * @param node  The scene graph node representing this Wheat, which has
      *              been added to the world node already.
      */
-    void setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+    void setSceneNode(const std::shared_ptr<cugl::scene2::SpriteNode>& node) {
         _node = node;
     }
+    
+    /**
+     * Animates wheat.
+     *
+     * If the animation is not active, it will reset to the initial animation frame.
+     *
+     */
+    void animateWheat();
     
     /**
      * Sets the ratio of the Wheat sprite to the physics body

@@ -339,10 +339,10 @@ void GameScene::preUpdate(float dt) {
     if (_input->didRustle()) {
 //        CULog("rustling");
         for (auto w : _map->getWheat()) {
-            // Initialize random number generator
+            // Random number generator for testing
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
+            std::uniform_int_distribution<> dis(1, 5);
 
             // Generate and print random number
             int randomNumber = dis(gen);
@@ -370,7 +370,6 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
-
 }
 
 /**

@@ -25,5 +25,7 @@ bool BabyCarrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale
 }
 
 void BabyCarrot::gotCaptured() {
-    
+    _isCaptured = true;
+//    this->~BabyCarrot();
+    this->markRemoved(true);
 }

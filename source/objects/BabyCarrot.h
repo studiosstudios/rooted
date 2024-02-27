@@ -12,6 +12,7 @@ using namespace cugl;
 class BabyCarrot : public EntityModel {
     
 private:
+    bool _isCaptured;
     
 public:
     
@@ -28,6 +29,8 @@ public:
     }
     
     void gotCaptured();
+    
+    bool isCaptured() { return _isCaptured; };
 };
 
 #endif //ROOTED_BABYCARROT_H

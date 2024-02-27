@@ -6,8 +6,23 @@
 #define ROOTED_AICONTROLLER_H
 
 #include <cugl/cugl.h>
+#include "BabyCarrot.h"
+#include "Map.h"
 
 class AIController {
+    
+protected:
+    std::shared_ptr<Map> _map;
+    
+public:
+    AIController() {};
+
+    ~AIController() {};
+    
+    bool init(std::shared_ptr<Map> &map);
+    
+    void updateBabyCarrot(const std::shared_ptr<BabyCarrot> &baby);
+    
 
 };
 

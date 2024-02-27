@@ -67,9 +67,13 @@ void CollisionController::beginContact(b2Contact* contact) {
                 wheat->rustle(randomNumber);
             }
             
-            if (typeid(bd2) == typeid(BabyCarrot)) {
+//            if (typeid(bd2) == typeid(BabyCarrot)) {
+            if (bd2 == _map->getBabyCarrots().at(0).get()) {
                 // TODO: baby carrot stuff
                 printf("player collided with baby carrot");
+                avatar->captureBabyCarrot();
+                babycarrot->gotCaptured();
+//                _map->getBabyCarrots().erase(_map->getBabyCarrots().begin() + 0);
             }
         }
         

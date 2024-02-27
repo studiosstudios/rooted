@@ -47,6 +47,9 @@ float WALL[WALL_COUNT][WALL_VERTS] = {
 float DUDE_POS[] = {2.5f, 2.5f};
 
 #define WHEAT_COUNT     366
+/** The initial position of a baby carrot (FOR TESTING) */
+float BABY_POS[] = {5.0f, 5.0f};
+
 /** Positions of all of the wheat, is a single one for now */
 float WHEAT_POS[WHEAT_COUNT][2] = {
     {5.0f, 1.0f},
@@ -494,33 +497,18 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
         sprite = scene2::PolygonNode::allocWithTexture(image, wall);
         addObstacle(wallobj, sprite, worldnode, debugnode, 1);  // All walls share the same texture
     }
-
-//#pragma mark : Platforms
-//    for (int ii = 0; ii < PLATFORM_COUNT; ii++) {
-//        std::shared_ptr<physics2::PolygonObstacle> platobj;
-//        Poly2 platform(reinterpret_cast<Vec2 *>(PLATFORMS[ii]), 4);
-//
-//        EarclipTriangulator triangulator;
-//        triangulator.set(platform.vertices);
-//        triangulator.calculate();
-//        platform.setIndices(triangulator.getTriangulation());
-//        triangulator.clear();
-//
-//        platobj = physics2::PolygonObstacle::allocWithAnchor(platform, Vec2::ANCHOR_CENTER);
-//        // You cannot add constant "".  Must stringify
-//        platobj->setName(std::string(PLATFORM_NAME) + cugl::strtool::to_string(ii));
-//
-//        // Set the physics attributes
-//        platobj->setBodyType(b2_staticBody);
-//        platobj->setDensity(BASIC_DENSITY);
-//        platobj->setFriction(BASIC_FRICTION);
-//        platobj->setRestitution(BASIC_RESTITUTION);
-//        platobj->setDebugColor(DEBUG_COLOR);
-//
-//        platform *= scale;
-//        sprite = scene2::PolygonNode::allocWithTexture(image, platform);
-//        addObstacle(platobj, sprite, worldnode, debugnode, 1);
-//    }
+    
+#pragma mark : Baby
+    Vec2 babyPos = BABY_POS;
+    image = assets->get<Texture>(DUDE_TEXTURE);
+    auto baby = BabyCarrot::alloc(babyPos, image->getSize() / scale, scale);
+    sprite = scene2::PolygonNode::allocWithTexture(image);
+    sprite->setColor(Color4::BLUE);
+    baby->setSceneNode(sprite);
+    baby->setDebugColor(DEBUG_COLOR);
+    addObstacle(baby, sprite, worldnode, debugnode); // Put this at the very front
+    
+    _babies.push_back(baby);
 
 #pragma mark : Dude
     Vec2 dudePos = DUDE_POS;

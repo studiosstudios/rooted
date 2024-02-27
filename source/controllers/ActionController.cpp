@@ -24,6 +24,17 @@ void ActionController::preUpdate(float dt) {
     }
 
     for (auto babyCarrot : _map->getBabyCarrots()) {
+//        babyCarrot->setMovement(Vec2(1,0));
+        if (babyCarrot->getPosition().x >= 20) {
+            babyCarrot->setMovement(Vec2(0,0));
+            babyCarrot->setMovement(Vec2(-1,0));
+        }
+        else if (babyCarrot->getX() <= 10) {
+            babyCarrot->setMovement(Vec2(0,0));
+            babyCarrot->setMovement(Vec2(1,0));
+        }
+        babyCarrot->applyForce();
+        
 //        _ai.update(babyCarrot);
     }
 }

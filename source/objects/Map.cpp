@@ -44,15 +44,71 @@ float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
 /** The initial position of the dude */
 float DUDE_POS[] = {2.5f, 5.0f};
 
-#define WHEAT_COUNT     6
+float BABY_CARROT_POS[] = {2.5f, 10.0f};
+
+#define WHEAT_COUNT     60
 /** Positions of all of the wheat, is a single one for now */
 float WHEAT_POS[WHEAT_COUNT][2] = {
+    {4.0f, 7.0f},
+    {5.0f, 7.0f},
+    {6.0f, 7.0f},
     {7.0f, 7.0f},
     {8.0f, 7.0f},
     {9.0f, 7.0f},
+    {10.0f, 7.0f},
+    {11.0f, 7.0f},
+    {12.0f, 7.0f},
+    {13.0f, 7.0f},
+    {14.0f, 7.0f},
+    {15.0f, 7.0f},
+    {4.0f, 8.0f},
+    {5.0f, 8.0f},
+    {6.0f, 8.0f},
     {7.0f, 8.0f},
     {8.0f, 8.0f},
     {9.0f, 8.0f},
+    {10.0f, 8.0f},
+    {11.0f, 8.0f},
+    {12.0f, 8.0f},
+    {13.0f, 8.0f},
+    {14.0f, 8.0f},
+    {15.0f, 8.0f},
+    {4.0f, 9.0f},
+    {5.0f, 9.0f},
+    {6.0f, 9.0f},
+    {7.0f, 9.0f},
+    {8.0f, 9.0f},
+    {9.0f, 9.0f},
+    {10.0f, 9.0f},
+    {11.0f, 9.0f},
+    {12.0f, 9.0f},
+    {13.0f, 9.0f},
+    {14.0f, 9.0f},
+    {15.0f, 9.0f},
+    {4.0f, 10.0f},
+    {5.0f, 10.0f},
+    {6.0f, 10.0f},
+    {7.0f, 10.0f},
+    {8.0f, 10.0f},
+    {9.0f, 10.0f},
+    {10.0f, 10.0f},
+    {11.0f, 10.0f},
+    {12.0f, 10.0f},
+    {13.0f, 10.0f},
+    {14.0f, 10.0f},
+    {15.0f, 10.0f},
+    {4.0f, 11.0f},
+    {5.0f, 11.0f},
+    {6.0f, 11.0f},
+    {7.0f, 11.0f},
+    {8.0f, 11.0f},
+    {9.0f, 11.0f},
+    {10.0f, 11.0f},
+    {11.0f, 11.0f},
+    {12.0f, 11.0f},
+    {13.0f, 11.0f},
+    {14.0f, 11.0f},
+    {15.0f, 11.0f},
 };
 
 #pragma mark -
@@ -165,6 +221,17 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
 
     _carrots.push_back(avatar);
 
+#pragma mark : Baby Carrots
+    Vec2 babycarrotPos = BABY_CARROT_POS;
+    auto babyimage = assets->get<Texture>(DUDE_TEXTURE);
+    auto babycarrot = BabyCarrot::alloc(babycarrotPos, babyimage->getSize() / scale, scale);
+    auto babysprite = scene2::PolygonNode::allocWithTexture(babyimage);
+    babysprite->setColor(Color4::BLUE);
+    babycarrot->setSceneNode(babysprite);
+    babycarrot->setDebugColor(DEBUG_COLOR);
+    addObstacle(babycarrot, babysprite, worldnode, debugnode); // Put this at the very front
+    _babies.push_back(babycarrot);
+    
 #pragma mark : Wheat
 //    image = assets->get<Texture>(WHEAT_TEXTURE);
     for (int ii = 0; ii < WHEAT_COUNT; ii++) {

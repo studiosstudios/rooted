@@ -41,39 +41,50 @@ void CollisionController::beginContact(b2Contact* contact) {
 
     auto avatar = _map->getCarrots().at(0);
     
+    auto babycarrot = _map->getBabyCarrots().at(0);
+    
     // TODO: generalize for all players
     
     // Twice to swap
     for (int i = 0; i < 2; i++) {
+        
+//        BabyCarrot* babycarrot = static_cast<BabyCarrot*>(bd1);
 
         // Player collisions:
         if (bd1 == avatar.get()) {
             
-            // TODO: this ain't it but just for now don't worry
-            if (fix2->IsSensor()) {
-//                if (fix2->GetUserData().pointer)
-//                if (fd2 != nullptr) {
-//                    std::cout << "Value of fd2: " << *fd2 << std::endl;
-//                } else {
-//                    std::cout << "fd2 is nullptr" << std::endl;
-//                }
-//            if (typeid(bd2) == typeid(Wheat::BoxObstacle)) {
-                printf("player collided with wheat");
-                for (auto w : _map->getWheat()) {
-                    // Initialize random number generator
-                    std::random_device rd;
-                    std::mt19937 gen(rd());
-                    std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
-
-                    // Generate and print random number
-                    int randomNumber = dis(gen);
-                    w->animateWheat(true);
-                    w->rustle(randomNumber);
-                }
+            Wheat* wheat = static_cast<Wheat*>(bd2);
+            
+            if (fix2->IsSensor() && wheat) {
+                // Initialize random number generator
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
+                // Generate and print random number
+                int randomNumber = dis(gen);
+                wheat->animateWheat();
+                wheat->rustle(randomNumber);
             }
             
             if (typeid(bd2) == typeid(BabyCarrot)) {
                 printf("player collided with baby carrot");
+            }
+        }
+        
+        // Baby Carrot collisions:
+        if (bd1 == babycarrot.get()) {
+//            printf("baby carrot collision");
+            Wheat* wheat = static_cast<Wheat*>(bd2);
+            
+            if (fix2->IsSensor() && wheat) {
+                // Initialize random number generator
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
+                // Generate and print random number
+                int randomNumber = dis(gen);
+                wheat->animateWheat();
+                wheat->rustle(randomNumber);
             }
         }
    

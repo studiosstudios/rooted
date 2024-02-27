@@ -102,7 +102,7 @@ protected:
 		/** The touch was not inside the screen bounds */
 		UNDEFINED,
 		/** The touch was in the left zone (as shown above) */
-		LEFT,
+        JOY,
 		/** The touch was in the right zone (as shown above) */
 		RIGHT,
 		/** The touch was in the main zone (as shown above) */
@@ -113,14 +113,14 @@ protected:
     cugl::Rect _tbounds;
     /** The bounds of the entire game screen (in scene coordinates) */
 	cugl::Rect _sbounds;
-	/** The bounds of the left touch zone */
-	cugl::Rect _lzone;
+	/** The bounds of the joy touch zone */
+	cugl::Rect _jzone;
 	/** The bounds of the right touch zone */
 	cugl::Rect _rzone;
 
 	// Each zone can have only one touch
-	/** The current touch location for the left zone */
-	TouchInstance _ltouch;
+	/** The current touch location for the joy zone */
+	TouchInstance _jtouch;
 	/** The current touch location for the right zone */
 	TouchInstance _rtouch;
 	/** The current touch location for the bottom zone */

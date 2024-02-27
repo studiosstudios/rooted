@@ -35,25 +35,25 @@ using namespace cugl;
 /** This defines the joystick radial size (for reseting the anchor) */
 #define JSTICK_RADIUS    25
 /** How far to display the virtual joystick above the finger */
-#define JSTICK_OFFSET    80
+#define JSTICK_OFFSET    0
 /** How far we must swipe up for a jump gesture */
 #define SWIPE_LENGTH    50
 /** How fast a double click must be in milliseconds */
 #define DOUBLE_CLICK    400
 
-// The screen is divided into four zones: Left, Bottom, Right and Main/
-// These are all shown in the diagram below.
+// The screen is divided into three zones: Joy(stick), Main, and Right.
 //
 //   |---------------|
 //   |   |       |   |
-//   | L |   M   | R |
-//   |   |       |   |
+//   |---|   M   | R |
+//   | J |       |   |
 //   |---------------|
 //
 // The meaning of any touch depends on the zone it begins in.
 
 /** The portion of the screen used for the left zone */
-#define LEFT_ZONE       0.35f
+#define JOY_ZONE_WIDTH       0.35f
+#define JOY_ZONE_HEIGHT      0.5f
 /** The portion of the screen used for the right zone */
 #define RIGHT_ZONE      0.35f
 
@@ -118,7 +118,7 @@ bool InputController::init(const Rect bounds) {
     _tbounds = Application::get()->getDisplayBounds();
     
     createZones();
-    clearTouchInstance(_ltouch);
+    clearTouchInstance(_jtouch);
     clearTouchInstance(_rtouch);
     clearTouchInstance(_mtouch);
     
@@ -215,8 +215,10 @@ void InputController::clear() {
  * Defines the zone boundaries, so we can quickly categorize touches.
  */
 void InputController::createZones() {
-	_lzone = _tbounds;
-	_lzone.size.width *= LEFT_ZONE;
+	_jzone = _tbounds;
+	_jzone.size.width *= JOY_ZONE_WIDTH;
+    _jzone.size.height *= JOY_ZONE_HEIGHT;
+    _jzone.origin.y += _jzone.size.height; // We add to the origin because this is when coordinates still have y-origin in top-left
 	_rzone = _tbounds;
 	_rzone.size.width *= RIGHT_ZONE;
 	_rzone.origin.x = _tbounds.origin.x+_tbounds.size.width-_rzone.size.width;
@@ -233,7 +235,7 @@ void InputController::clearTouchInstance(TouchInstance& touchInstance) {
 
 /**
  * Returns the correct zone for the given position.
- *
+ *f
  * See the comments above for a description of how zones work.
  *
  * @param  pos  a position in screen coordinates
@@ -241,8 +243,8 @@ void InputController::clearTouchInstance(TouchInstance& touchInstance) {
  * @return the correct zone for the given position.
  */
 InputController::Zone InputController::getZone(const Vec2 pos) const {
-	if (_lzone.contains(pos)) {
-		return Zone::LEFT;
+	if (_jzone.contains(pos)) {
+		return Zone::JOY;
 	} else if (_rzone.contains(pos)) {
 		return Zone::RIGHT;
 	} else if (_tbounds.contains(pos)) {
@@ -279,16 +281,16 @@ Vec2 InputController::touch2Screen(const Vec2 pos) const {
  * @param  pos  the current joystick position
  */
 void InputController::processJoystick(const cugl::Vec2 pos) {
-    Vec2 diff =  _ltouch.position-pos;
+    Vec2 diff =  _jtouch.position-pos;
 
     // Reset the anchor if we drifted too far
     if (diff.lengthSquared() > JSTICK_RADIUS*JSTICK_RADIUS) {
         diff.normalize();
         diff *= (JSTICK_RADIUS+JSTICK_DEADZONE)/2;
-        _ltouch.position = pos+diff;
+        _jtouch.position = pos+diff;
     }
-    _ltouch.position.y = pos.y;
-    _joycenter = touch2Screen(_ltouch.position);
+    _jtouch.position.y = pos.y;
+    _joycenter = touch2Screen(_jtouch.position);
     _joycenter.y += JSTICK_OFFSET;
     
     if (std::fabsf(diff.x) > JSTICK_DEADZONE) {
@@ -345,13 +347,14 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
     switch (zone) {
-        case Zone::LEFT:
+        case Zone::JOY:
             // Only process if no touch in zone
-            if (_ltouch.touchids.empty()) {
+            std::cout << "joy\n";
+            if (_jtouch.touchids.empty()) {
                 // Left is the floating joystick
-                _ltouch.position = event.position;
-                _ltouch.timestamp.mark();
-                _ltouch.touchids.insert(event.touch);
+                _jtouch.position = event.position;
+                _jtouch.timestamp.mark();
+                _jtouch.touchids.insert(event.touch);
 
                 _joystick = true;
                 _joycenter = touch2Screen(event.position);
@@ -370,7 +373,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
             break;
         case Zone::MAIN:
             // Only check for double tap in Main if nothing else down
-            if (_ltouch.touchids.empty() && _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
+            if (_jtouch.touchids.empty() && _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
                 _keyDebug = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
             }
             
@@ -402,8 +405,8 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     // Reset all keys that might have been set
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
-    if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
-        _ltouch.touchids.clear();
+    if (_jtouch.touchids.find(event.touch) != _jtouch.touchids.end()) {
+        _jtouch.touchids.clear();
         _keyLeft = false;
         _keyRight = false;
         _joystick = false;
@@ -430,7 +433,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
 void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
     Vec2 pos = event.position;
     // Only check for swipes in the main zone if there is more than one finger.
-    if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
+    if (_jtouch.touchids.find(event.touch) != _jtouch.touchids.end()) {
         processJoystick(pos);
     } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         if (!_hasJumped) {

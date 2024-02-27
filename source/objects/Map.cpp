@@ -25,31 +25,13 @@ float WALL[WALL_COUNT][WALL_VERTS] = {
                 1.0f, 1.0f, 1.0f, 0.0f, 32.0f, 0.0f}
 };
 
-///** The number of platforms */
-//#define PLATFORM_VERTS  8
-//#define PLATFORM_COUNT  10
-//
-///** The outlines of all of the platforms */
-//float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
-//        {1.0f,  3.0f,  1.0f,  2.5f,  6.0f,  2.5f,  6.0f,  3.0f},
-//        {6.0f,  4.0f,  6.0f,  2.5f,  9.0f,  2.5f,  9.0f,  4.0f},
-//        {23.0f, 4.0f,  23.0f, 2.5f,  31.0f, 2.5f,  31.0f, 4.0f},
-//        {26.0f, 5.5f,  26.0f, 5.0f,  28.0f, 5.0f,  28.0f, 5.5f},
-//        {29.0f, 7.0f,  29.0f, 6.5f,  31.0f, 6.5f,  31.0f, 7.0f},
-//        {24.0f, 8.5f,  24.0f, 8.0f,  27.0f, 8.0f,  27.0f, 8.5f},
-//        {29.0f, 10.0f, 29.0f, 9.5f,  31.0f, 9.5f,  31.0f, 10.0f},
-//        {23.0f, 11.5f, 23.0f, 11.0f, 27.0f, 11.0f, 27.0f, 11.5f},
-//        {19.0f, 12.5f, 19.0f, 12.0f, 23.0f, 12.0f, 23.0f, 12.5f},
-//        {1.0f,  12.5f, 1.0f,  12.0f, 7.0f,  12.0f, 7.0f,  12.5f}
-//};
-
 /** The initial position of the dude */
 float DUDE_POS[] = {2.5f, 2.5f};
 
-#define WHEAT_COUNT     366
 /** The initial position of a baby carrot (FOR TESTING) */
 float BABY_POS[] = {5.0f, 5.0f};
 
+#define WHEAT_COUNT     366
 /** Positions of all of the wheat, is a single one for now */
 float WHEAT_POS[WHEAT_COUNT][2] = {
     {5.0f, 1.0f},

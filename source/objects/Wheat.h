@@ -12,14 +12,15 @@ using namespace cugl;
 #pragma mark Drawing Constants
 /** The texture for the character avatar */
 #define WHEAT_TEXTURE       "wheat"
-#define FIRE_FRAMES     7
+#define WHEAT_FRAMES     7
+#define WHEAT_ANIMATION_SPEED     0.5f
 
 #define RECOVERY            0.01f
-#define SNEAK_TRANSPARENCY  0.9f
+#define SNEAK_TRANSPARENCY  1
 #define WALK_INTENSITY      3
-#define WALK_TRANSPARENCY   0.75f
+#define WALK_TRANSPARENCY   0.8f
 #define DASH_INTENSITY      5
-#define DASH_TRANSPARENCY   0.5f
+#define DASH_TRANSPARENCY   0.55f
 
 
 class Wheat : public cugl::physics2::BoxObstacle {
@@ -29,11 +30,14 @@ private:
     Color4 _color;
     /** Transparency when rustling */
     float _fadeout;
+    /** The number of shakes that have happened */
+    int _numShakes;
+    /** Whether it is shaking */
+    int _isShaking;
     /** The scene graph node for the Wheat. */
     std::shared_ptr<cugl::scene2::SpriteNode> _node;
-    
-    /** The animation phase for the main afterburner */
-    bool _cycle;
+    /** The current animation frame */
+    float _animframe;
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _drawScale;
     /** This macro disables the copy constructor (not allowed on physics objects) */
@@ -115,10 +119,8 @@ public:
      *
      * If the animation is not active, it will reset to the initial animation frame.
      *
-     * @param burner    The reference to the wheat
-     * @param on        Whether the animation is active
      */
-    void animateWheat(bool on);
+    void animateWheat();
     
     /**
      * Sets the ratio of the Wheat sprite to the physics body

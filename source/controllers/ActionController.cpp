@@ -13,6 +13,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _map = map;
     _input = input;
     _world = _map->getWorld();
+    _ai.init(map);
     return true;
 }
 
@@ -33,8 +34,8 @@ void ActionController::preUpdate(float dt) {
 
     }
 
-    for (auto babyCarrot : _map->getBabyCarrots()) {
-//        _ai.update(babyCarrot);
+    for (auto babyCarrot : _map->getBabyCarrots()) {        
+        _ai.updateBabyCarrot(babyCarrot);
     }
 }
 

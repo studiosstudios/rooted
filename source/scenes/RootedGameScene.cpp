@@ -30,6 +30,8 @@ using namespace cugl;
 #define DEFAULT_WIDTH   32.0f
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
+/** Zoom of camera relative to scene */
+#define CAMERA_ZOOM 1.5
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -185,13 +187,31 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _input = InputController::alloc(_map->getBounds());
     _collision.init(_map);
     _action.init(_map, _input);
+    _camera->setZoom(CAMERA_ZOOM);
+    _initCamera = _camera->getPosition();
     _active = true;
     _complete = false;
     setDebug(false);
 
     // XNA nostalgia
-    Application::get()->setClearColor(Color4f::CORNFLOWER);
+    Application::get()->setClearColor(Color4(142,114,78,255));
     return true;
+}
+
+/**
+ * Moves the camera to focus the avatar
+ */
+void GameScene::moveCamera(){
+    auto _avatar = _map->getCarrots().at(0);
+    if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
+         _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
+        _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
+    }
+    if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
+        _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
+        _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
+    }
+    _camera->update();
 }
 
 /**
@@ -233,6 +253,8 @@ void GameScene::reset() {
     _loadnode->setVisible(true);
     _assets->load<Map>("map", "json/map.json");
     setComplete(false);
+    auto _avatar = _map->getCarrots().at(0);
+    _camera->setPosition(_initCamera);
 }
 
 #pragma mark -
@@ -301,6 +323,24 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
+    if(_input->getMovement().length() > 0){
+        _map->rustleWheats(3);
+    }
+    
+    // Test out wheat rustling via a key
+    if (_input->didRustle()) {
+//        CULog("rustling");
+        for (auto w : _map->getWheat()) {
+            // Random number generator for testing
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(1, 5);
+
+            // Generate and print random number
+            int randomNumber = dis(gen);
+            w->rustle(randomNumber);
+        }
+    }
 
     // Process the movement
     if (_input->withJoystick()) {
@@ -322,7 +362,6 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
-
 }
 
 /**
@@ -354,6 +393,7 @@ void GameScene::preUpdate(float dt) {
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _map->getWorld()->update(step);
+    moveCamera();
 }
 
 /**
@@ -385,6 +425,7 @@ void GameScene::postUpdate(float remain) {
     _action.postUpdate(remain);
 
     auto avatar = _map->getCarrots().at(0);
+    auto baby = _map->getBabyCarrots().at(0);
 
     // Record failure if necessary.
     if (!_failed && avatar->getY() < 0) {

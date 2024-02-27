@@ -66,7 +66,14 @@ protected:
     /** Countdown active for winning or losing */
     int _countdown;
 
+    /** Initial camera position */
+    Vec3 _initCamera;
+
 #pragma mark Internal Object Management
+
+    /** Moves the camera to focus the avatar */
+    void moveCamera();
+
 
     /**
      * Returns the active screen size of this scene.

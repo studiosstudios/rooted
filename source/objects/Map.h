@@ -137,6 +137,19 @@ public:
     bool loadBabyCarrot(const std::shared_ptr<JsonValue>& json);
 
     /**
+     * Loads a single baby carrot
+     *
+     * The baby carrot will be retained and stored in the vector _babies.  If the
+     * baby carrot fails to load, then it will not be added to _babies.
+     *
+     * @param  reader   a JSON reader with cursor ready to read the baby carrot
+     *
+     * @retain the baby carrot
+     * @return true if the baby carrot was successfully loaded
+     */
+    bool loadWheat(const std::shared_ptr<JsonValue>& json);
+
+    /**
      * Adds the physics object to the physics world and loosely couples it to the scene graph
      *
      * There are two ways to link a physics object to a scene graph node on the
@@ -282,6 +295,8 @@ public:
     std::vector<std::shared_ptr<Wheat>> getWheat() { return _wheat; }
 
     std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
+
+    void rustleWheats(float amount);
 
 };
 

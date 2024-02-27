@@ -80,10 +80,11 @@ public:
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
 
-
 #pragma mark -
 #pragma mark Interactions
-    void captureBabyCarrot();
+
+    
+    void captureBabyCarrot() { _numBabyCarrots++; };
     
     void gotCaptured();
     

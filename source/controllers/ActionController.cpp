@@ -24,9 +24,7 @@ void ActionController::preUpdate(float dt) {
 
     }
 
-    for (auto babyCarrot : _map->getBabyCarrots()) {
-//        babyCarrot->setMovement(Vec2(1,0));
-        
+    for (auto babyCarrot : _map->getBabyCarrots()) {        
         _ai.updateBabyCarrot(babyCarrot);
     }
 }

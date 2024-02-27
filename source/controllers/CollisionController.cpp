@@ -216,7 +216,7 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             
             // Carrot with Baby Carrot
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
-                return true;
+                return false;
             }
         }
         

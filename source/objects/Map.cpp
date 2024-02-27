@@ -44,6 +44,9 @@ float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
 /** The initial position of the dude */
 float DUDE_POS[] = {2.5f, 5.0f};
 
+/** The initial position of a baby carrot (FOR TESTING) */
+float BABY_POS[] = {5.0f, 5.0f};
+
 #define WHEAT_COUNT     6
 /** Positions of all of the wheat, is a single one for now */
 float WHEAT_POS[WHEAT_COUNT][2] = {
@@ -152,6 +155,18 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
         sprite = scene2::PolygonNode::allocWithTexture(image, platform);
         addObstacle(platobj, sprite, worldnode, debugnode, 1);
     }
+    
+#pragma mark : Baby
+    Vec2 babyPos = BABY_POS;
+    image = assets->get<Texture>(DUDE_TEXTURE);
+    auto baby = BabyCarrot::alloc(babyPos, image->getSize() / scale, scale);
+    sprite = scene2::PolygonNode::allocWithTexture(image);
+    sprite->setColor(Color4::BLUE);
+    baby->setSceneNode(sprite);
+    baby->setDebugColor(DEBUG_COLOR);
+    addObstacle(baby, sprite, worldnode, debugnode); // Put this at the very front
+    
+    _babies.push_back(baby);
 
 #pragma mark : Dude
     Vec2 dudePos = DUDE_POS;

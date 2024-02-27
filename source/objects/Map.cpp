@@ -14,32 +14,34 @@
 // IMPORTANT: Note that Box2D units do not equal drawing units
 /** The wall vertices */
 #define WALL_VERTS 12
-#define WALL_COUNT  2
+#define WALL_COUNT  3
 
 float WALL[WALL_COUNT][WALL_VERTS] = {
         {16.0f, 18.0f, 0.0f,  18.0f, 0.0f,  0.0f,
                 1.0f,  0.0f,  1.0f,  17.0f, 16.0f, 17.0f},
         {32.0f, 18.0f, 16.0f, 18.0f, 16.0f, 17.0f,
-                31.0f, 17.0f, 31.0f, 0.0f,  32.0f, 0.0f}
+                31.0f, 17.0f, 31.0f, 10.0f,  32.0f, 10.0f},
+        {32.0f, 10.0f, 31.0f, 10.0f, 31.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 0.0f, 32.0f, 0.0f}
 };
 
-/** The number of platforms */
-#define PLATFORM_VERTS  8
-#define PLATFORM_COUNT  10
-
-/** The outlines of all of the platforms */
-float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
-        {1.0f,  3.0f,  1.0f,  2.5f,  6.0f,  2.5f,  6.0f,  3.0f},
-        {6.0f,  4.0f,  6.0f,  2.5f,  9.0f,  2.5f,  9.0f,  4.0f},
-        {23.0f, 4.0f,  23.0f, 2.5f,  31.0f, 2.5f,  31.0f, 4.0f},
-        {26.0f, 5.5f,  26.0f, 5.0f,  28.0f, 5.0f,  28.0f, 5.5f},
-        {29.0f, 7.0f,  29.0f, 6.5f,  31.0f, 6.5f,  31.0f, 7.0f},
-        {24.0f, 8.5f,  24.0f, 8.0f,  27.0f, 8.0f,  27.0f, 8.5f},
-        {29.0f, 10.0f, 29.0f, 9.5f,  31.0f, 9.5f,  31.0f, 10.0f},
-        {23.0f, 11.5f, 23.0f, 11.0f, 27.0f, 11.0f, 27.0f, 11.5f},
-        {19.0f, 12.5f, 19.0f, 12.0f, 23.0f, 12.0f, 23.0f, 12.5f},
-        {1.0f,  12.5f, 1.0f,  12.0f, 7.0f,  12.0f, 7.0f,  12.5f}
-};
+///** The number of platforms */
+//#define PLATFORM_VERTS  8
+//#define PLATFORM_COUNT  10
+//
+///** The outlines of all of the platforms */
+//float PLATFORMS[PLATFORM_COUNT][PLATFORM_VERTS] = {
+//        {1.0f,  3.0f,  1.0f,  2.5f,  6.0f,  2.5f,  6.0f,  3.0f},
+//        {6.0f,  4.0f,  6.0f,  2.5f,  9.0f,  2.5f,  9.0f,  4.0f},
+//        {23.0f, 4.0f,  23.0f, 2.5f,  31.0f, 2.5f,  31.0f, 4.0f},
+//        {26.0f, 5.5f,  26.0f, 5.0f,  28.0f, 5.0f,  28.0f, 5.5f},
+//        {29.0f, 7.0f,  29.0f, 6.5f,  31.0f, 6.5f,  31.0f, 7.0f},
+//        {24.0f, 8.5f,  24.0f, 8.0f,  27.0f, 8.0f,  27.0f, 8.5f},
+//        {29.0f, 10.0f, 29.0f, 9.5f,  31.0f, 9.5f,  31.0f, 10.0f},
+//        {23.0f, 11.5f, 23.0f, 11.0f, 27.0f, 11.0f, 27.0f, 11.5f},
+//        {19.0f, 12.5f, 19.0f, 12.0f, 23.0f, 12.0f, 23.0f, 12.5f},
+//        {1.0f,  12.5f, 1.0f,  12.0f, 7.0f,  12.0f, 7.0f,  12.5f}
+//};
 
 /** The initial position of the dude */
 float DUDE_POS[] = {2.5f, 5.0f};
@@ -55,6 +57,7 @@ float DUDE_POS[] = {2.5f, 5.0f};
 
 #pragma mark -
 #pragma mark Asset Constants
+# define WHEAT_TEXTURE  "wheat"
 /** The key for the earth texture in the asset manager */
 #define EARTH_TEXTURE   "earth"
 /** The name of a wall (for object identification) */
@@ -115,32 +118,32 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
         addObstacle(wallobj, sprite, worldnode, debugnode, 1);  // All walls share the same texture
     }
 
-#pragma mark : Platforms
-    for (int ii = 0; ii < PLATFORM_COUNT; ii++) {
-        std::shared_ptr<physics2::PolygonObstacle> platobj;
-        Poly2 platform(reinterpret_cast<Vec2 *>(PLATFORMS[ii]), 4);
-
-        EarclipTriangulator triangulator;
-        triangulator.set(platform.vertices);
-        triangulator.calculate();
-        platform.setIndices(triangulator.getTriangulation());
-        triangulator.clear();
-
-        platobj = physics2::PolygonObstacle::allocWithAnchor(platform, Vec2::ANCHOR_CENTER);
-        // You cannot add constant "".  Must stringify
-        platobj->setName(std::string(PLATFORM_NAME) + cugl::strtool::to_string(ii));
-
-        // Set the physics attributes
-        platobj->setBodyType(b2_staticBody);
-        platobj->setDensity(BASIC_DENSITY);
-        platobj->setFriction(BASIC_FRICTION);
-        platobj->setRestitution(BASIC_RESTITUTION);
-        platobj->setDebugColor(DEBUG_COLOR);
-
-        platform *= scale;
-        sprite = scene2::PolygonNode::allocWithTexture(image, platform);
-        addObstacle(platobj, sprite, worldnode, debugnode, 1);
-    }
+//#pragma mark : Platforms
+//    for (int ii = 0; ii < PLATFORM_COUNT; ii++) {
+//        std::shared_ptr<physics2::PolygonObstacle> platobj;
+//        Poly2 platform(reinterpret_cast<Vec2 *>(PLATFORMS[ii]), 4);
+//
+//        EarclipTriangulator triangulator;
+//        triangulator.set(platform.vertices);
+//        triangulator.calculate();
+//        platform.setIndices(triangulator.getTriangulation());
+//        triangulator.clear();
+//
+//        platobj = physics2::PolygonObstacle::allocWithAnchor(platform, Vec2::ANCHOR_CENTER);
+//        // You cannot add constant "".  Must stringify
+//        platobj->setName(std::string(PLATFORM_NAME) + cugl::strtool::to_string(ii));
+//
+//        // Set the physics attributes
+//        platobj->setBodyType(b2_staticBody);
+//        platobj->setDensity(BASIC_DENSITY);
+//        platobj->setFriction(BASIC_FRICTION);
+//        platobj->setRestitution(BASIC_RESTITUTION);
+//        platobj->setDebugColor(DEBUG_COLOR);
+//
+//        platform *= scale;
+//        sprite = scene2::PolygonNode::allocWithTexture(image, platform);
+//        addObstacle(platobj, sprite, worldnode, debugnode, 1);
+//    }
 
 #pragma mark : Dude
     Vec2 dudePos = DUDE_POS;

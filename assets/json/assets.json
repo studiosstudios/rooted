@@ -1,5 +1,10 @@
 {
 	"textures": {
+        "wheat": {
+            "file":     "textures/wheat.png",
+            "wrapS":     "repeat",
+            "wrapT":     "repeat"
+        },
 		"earth": {
 			"file":     "textures/earthtile.png",
             "wrapS":    "repeat",

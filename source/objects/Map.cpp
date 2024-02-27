@@ -46,6 +46,17 @@ float WALL[WALL_COUNT][WALL_VERTS] = {
 /** The initial position of the dude */
 float DUDE_POS[] = {2.5f, 5.0f};
 
+#define WHEAT_COUNT     6
+/** Positions of all of the wheat, is a single one for now */
+float WHEAT_POS[WHEAT_COUNT][2] = {
+    {7.0f, 7.0f},
+    {8.0f, 7.0f},
+    {9.0f, 7.0f},
+    {7.0f, 8.0f},
+    {8.0f, 8.0f},
+    {9.0f, 8.0f},
+};
+
 #pragma mark -
 #pragma mark Physics Constants
 /** The density for most physics objects */
@@ -157,6 +168,20 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
 
     _carrots.push_back(avatar);
 
+#pragma mark : Wheat
+    image = assets->get<Texture>(WHEAT_TEXTURE);
+    
+    for (int ii = 0; ii < WHEAT_COUNT; ii++) {
+        Vec2 wheatPos = WHEAT_POS[ii];
+        auto single_wheat = Wheat::alloc(wheatPos, image->getSize() / scale, scale);
+        
+        sprite = scene2::PolygonNode::allocWithTexture(image);
+        single_wheat->setSceneNode(sprite);
+        addObstacle(single_wheat, sprite, worldnode, debugnode);
+        
+        _wheat.push_back(single_wheat);
+    }
+    
     return true;
 }
 

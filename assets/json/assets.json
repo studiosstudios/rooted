@@ -13,6 +13,9 @@
         "dude": {
             "file":     "textures/dude.png"
         },
+        "wheat": {
+            "file":     "textures/wheat.png"
+        },
         "spinner": {
             "file":     "textures/barrier.png"
         },

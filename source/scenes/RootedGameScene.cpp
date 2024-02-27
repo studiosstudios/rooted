@@ -331,6 +331,21 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
+    
+    // Test out wheat rustling via a key
+    if (_input->didRustle()) {
+        CULog("rustling");
+        for (auto w : _map->getWheat()) {
+            // Initialize random number generator
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
+
+            // Generate and print random number
+            int randomNumber = dis(gen);
+            w->rustle(randomNumber);
+        }
+    }
 
     // Process the movement
     if (_input->withJoystick()) {

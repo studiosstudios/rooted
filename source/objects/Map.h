@@ -72,8 +72,8 @@ public:
                      const std::shared_ptr<cugl::scene2::SceneNode> &worldnode,
                      const std::shared_ptr<cugl::scene2::SceneNode> &debugnode,
                      bool useObjPosition = true);
-
-
+    
+    void rustleWheats(float amount);
 
 };
 

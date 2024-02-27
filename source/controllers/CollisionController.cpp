@@ -40,7 +40,7 @@ void CollisionController::beginContact(b2Contact* contact) {
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
     auto avatar = _map->getCarrots().at(0);
-    
+
     auto babycarrot = _map->getBabyCarrots().at(0);
     
     // TODO: generalize for all players other stuff
@@ -55,14 +55,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             
             // TODO: this ain't it, it is very jank sorry I will fix later
             if (fix2->IsSensor() && wheat) {
-                // Initialize random number generator
-                std::random_device rd;
-                std::mt19937 gen(rd());
-                std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
-                // Generate and print random number
-                int randomNumber = dis(gen);
-                wheat->animateWheat();
-                wheat->rustle(randomNumber);
+                wheat->setRustling(true);
             }
             
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
@@ -76,17 +69,8 @@ void CollisionController::beginContact(b2Contact* contact) {
         
         // Baby Carrot collisions:
         if (bd1 == babycarrot.get()) {
-//            printf("baby carrot collision");
-            
             if (fix2->IsSensor() && wheat) {
-                // Initialize random number generator
-                std::random_device rd;
-                std::mt19937 gen(rd());
-                std::uniform_int_distribution<> dis(0, 5); // Range: [0, 5]
-                // Generate and print random number
-                int randomNumber = dis(gen);
-                wheat->animateWheat();
-                wheat->rustle(randomNumber);
+                wheat->setRustling(true);
             }
         }
    
@@ -152,8 +136,7 @@ void CollisionController::endContact(b2Contact* contact) {
             
             // TODO: this ain't it, it is very jank sorry I will fix later
             if (fix2->IsSensor() && wheat) {
-                // Initialize random number generator
-                wheat->rustle(0);
+                wheat->setRustling(false);
             }
             
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
@@ -164,7 +147,7 @@ void CollisionController::endContact(b2Contact* contact) {
         // Baby Carrot collisions:
         if (bd1 == babycarrot.get()) {
             if (fix2->IsSensor() && wheat) {
-                wheat->rustle(0);
+                wheat->setRustling(false);
             }
         }
    
@@ -209,23 +192,12 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         
         if (bd1 == avatar.get()) {
             
-            // Carrot with wheat
-            if (f2->IsSensor() && wheat) {
-                return false;
-            }
-            
             // Carrot with Baby Carrot
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
                 return false;
             }
         }
-        
-        // Baby Carrot with wheat
-        if (bd1 == babycarrot.get()) {
-            if (f2->IsSensor() && wheat) {
-                return false;
-            }
-        }
+
    
         // Swap everything
         b2Fixture* fixTemp = f1;

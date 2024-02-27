@@ -42,6 +42,8 @@ private:
     float _drawScale;
     /** This macro disables the copy constructor (not allowed on physics objects) */
     CU_DISALLOW_COPY_AND_ASSIGN(Wheat);
+    /** Whether this wheat is in contact with object */
+    bool isRustling;
     
 public:
 #pragma mark Constructors
@@ -157,6 +159,13 @@ public:
      */
     void rustle(float amount);
     
+    /** Whether this wheat is in contact with moving object */
+    bool getRustling() { return isRustling; };
+    
+    /** Sets whether this wheat is in contact with moving object
+     * @param b whether this wheat is in contact with moving object
+     */
+    void setRustling(bool b) { isRustling = b; };
 };
 
 #endif //ROOTED_WHEAT_H

@@ -14,13 +14,14 @@ using namespace cugl;
 #define WHEAT_TEXTURE       "wheat"
 #define WHEAT_FRAMES    8
 #define WHEAT_ANIMATION_SPEED     0.5f
+#define WHEAT_SENSOR_NAME     "wheatsensor"
 
 #define RECOVERY            0.01f
-#define SNEAK_TRANSPARENCY  0.9f
+#define SNEAK_TRANSPARENCY  0.95f
 #define WALK_INTENSITY      3
-#define WALK_TRANSPARENCY   0.75f
+#define WALK_TRANSPARENCY   0.85f
 #define DASH_INTENSITY      5
-#define DASH_TRANSPARENCY   0.5f
+#define DASH_TRANSPARENCY   0.75f
 
 
 class Wheat : public cugl::physics2::BoxObstacle {
@@ -72,6 +73,7 @@ public:
      * Standard constructor
      */
     virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
+    
         
 #pragma mark -
 #pragma mark Static Constructors

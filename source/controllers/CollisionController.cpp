@@ -53,7 +53,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             if (bd1 == carrot.get() && !_map->isFarmerPlaying()) {
                 if (wheat) {
 //                    printf("carrot collision with wheat \n");
-                    wheat->setRustling(true);
+                    wheat->rustle(bd1->getLinearVelocity().length());
                 }
                 
                 if (b2babycarrot) {
@@ -65,22 +65,21 @@ void CollisionController::beginContact(b2Contact* contact) {
                 if (b2farmer) {
                     // TODO: carrot gets rooted
                 }
-                
             }
         }
         
         for (auto babyCarrot : _map->getBabyCarrots()) {
             if (bd1 == babyCarrot.get()) {
                 if (wheat) {
-                    wheat->setRustling(true);
+                    wheat->rustle(bd1->getLinearVelocity().length());
                 }
             }
         }
-        
+
         for (auto farmer : _map->getFarmers()) {
             if (bd1 == farmer.get() && _map->isFarmerPlaying()) {
                 if (wheat) {
-                    wheat->setRustling(true);
+                    wheat->rustle(bd1->getLinearVelocity().length());
                 }
             }
         }
@@ -206,7 +205,6 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
               
             }
         }
-
 
         // Swap everything
         b2Fixture* fixTemp = f1;

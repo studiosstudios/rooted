@@ -52,6 +52,9 @@
 #pragma mark Drawing Constants
 /** The texture for the character avatar */
 #define DUDE_TEXTURE    "dude"
+#define CARROT_TEXTURE   "carrot"
+#define FARMER_TEXTURE   "farmer"
+#define BABY_TEXTURE   "baby"
 
 
 #pragma mark -

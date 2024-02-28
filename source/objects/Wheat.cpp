@@ -8,7 +8,7 @@
 #pragma mark Physics Constants
 
 /** The amount to shrink the fixture (horizontally) relative to the image */
-#define WHEAT_HSHRINK  0.25f
+#define WHEAT_HSHRINK  0.28f
 /** The amount to shrink the fixture (vertically) relative to the image */
 #define WHEAT_VSHRINK  0.15f
 

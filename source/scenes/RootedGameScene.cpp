@@ -200,15 +200,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _uinode->setPosition(-_offset);
     
-    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5) + _offset));
+    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
     _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugjoynode->setColor(Color4(Vec4(0, 0, 0, 0.25)));
-    _uinode->setPosition(-_offset);
-    _debugjoynode->setVisible(true);
     _uinode->addChild(_debugjoynode);
-    
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -222,24 +218,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
-
-    _leftnode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(LEFT_IMAGE));
-    _leftnode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_MIDDLE_RIGHT);
-    _leftnode->setScale(0.35f);
-    _leftnode->setVisible(false);
-
-    _rightnode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(RIGHT_IMAGE));
-    _rightnode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_MIDDLE_LEFT);
-    _rightnode->setScale(0.35f);
-    _rightnode->setVisible(false);
-
     addChild(_worldnode);
     addChild(_debugnode);
     addChild(_uinode);
     addChild(_winnode);
     addChild(_losenode);
-    addChild(_leftnode);
-    addChild(_rightnode);
 
     _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
     _collision.init(_map);
@@ -293,12 +276,12 @@ void GameScene::dispose() {
         _world = nullptr;
         _worldnode = nullptr;
         _debugnode = nullptr;
+        _uinode = nullptr;
         _winnode = nullptr;
         _losenode = nullptr;
-        _leftnode = nullptr;
-        _rightnode = nullptr;
         _collision.dispose();
         _action.dispose();
+        _ui.dispose();
         _complete = false;
         _debug = false;
         _map->dispose();
@@ -381,21 +364,7 @@ void GameScene::preUpdate(float dt) {
 
     // Process the movement
     if (_input->withJoystick()) {
-        if (_input->getMovement().x < 0) {
-            _leftnode->setVisible(true);
-            _rightnode->setVisible(false);
-        } else if (_input->getMovement().x > 0) {
-            _leftnode->setVisible(false);
-            _rightnode->setVisible(true);
-        } else {
-            _leftnode->setVisible(false);
-            _rightnode->setVisible(false);
-        }
-        _leftnode->setPosition(_input->getJoystick());
-        _rightnode->setPosition(_input->getJoystick());
-    } else {
-        _leftnode->setVisible(false);
-        _rightnode->setVisible(false);
+        // do something here
     }
 
     _action.preUpdate(dt);
@@ -431,7 +400,7 @@ void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _world->update(step);
     moveCamera();
-    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/CAMERA_ZOOM - _offset);
+    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/CAMERA_ZOOM);
     _camera->update();
 }
 

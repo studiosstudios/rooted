@@ -16,7 +16,7 @@ void UIController::dispose() {
 void UIController::initJoystickNodes() {
     _joynode = scene2::SceneNode::allocWithBounds(Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5) + _offset);
     
-    _joyback = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2(0,0), 32));
+    _joyback = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2(0,0), 64));
     _joyback->setPosition(_joynode->getWidth()/2, _joynode->getHeight()/2);
     _joynode->addChild(_joyback);
     std::cout << _joynode->getPositionX() << " " << _joynode->getPositionY();

@@ -434,8 +434,6 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
         int swipe = processSwipe(_mtouch.position, event.position, event.timestamp);
         if (swipe == 1) {
             _keyReset = true;
-        } else if (swipe == -1) {
-            _keyExit = true;
         }
     }
 }

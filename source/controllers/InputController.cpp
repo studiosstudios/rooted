@@ -71,6 +71,7 @@ _resetPressed(false),
 _debugPressed(false),
 _exitPressed(false),
 _rustlePressed(false),
+_switchPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
@@ -160,6 +161,7 @@ void InputController::update(float dt) {
     _keyDebug  = keys->keyPressed(DEBUG_KEY);
     _keyExit   = keys->keyPressed(EXIT_KEY);
     _keyRustle = keys->keyPressed(KeyCode::M);
+    _keySwitch = keys->keyPressed(KeyCode::S);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = 1.0f;
@@ -183,6 +185,7 @@ void InputController::update(float dt) {
     _exitPressed  = _keyExit;
     // for testing rustling
     _rustlePressed = _keyRustle;
+    _switchPressed = _keySwitch;
 
     // _movement is now updated directly in processJoystick
 

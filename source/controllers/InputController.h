@@ -52,6 +52,7 @@ private:
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
+    bool _keySwitch;
   
 protected:
     // INPUT RESULTS
@@ -66,6 +67,7 @@ protected:
     
     // CAN REMOVE THIS, THIS IS JUST FOR TESTING
     bool _rustlePressed;
+    bool _switchPressed;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -302,6 +304,8 @@ public:
     
     // CAN DELETE THIS
     bool didRustle() const { return _rustlePressed; }
+    
+    bool didSwitch() const { return _switchPressed; }
 
 #pragma mark -
 #pragma mark Touch and Mouse Callbacks

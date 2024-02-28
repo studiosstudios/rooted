@@ -20,6 +20,13 @@ public:
     Farmer() {};
 
     ~Farmer() {};
+    
+    bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
+    
+    static std::shared_ptr<Farmer> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+        std::shared_ptr<Farmer> result = std::make_shared<Farmer>();
+        return (result->init(pos, size, scale) ? result : nullptr);
+    }
 
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 

@@ -54,7 +54,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             // TODO: this ain't it, it is very jank sorry I will fix later
             // changed this so that you are only rustling when colliding
             if (fix2->IsSensor() && wheat) {
-                wheat->rustle(3);
+                wheat->rustle(bd1->getLinearVelocity().length());
             }
 
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
@@ -69,7 +69,7 @@ void CollisionController::beginContact(b2Contact* contact) {
         // Baby Carrot collisions:
         if (bd1 == babycarrot.get()) {
             if (fix2->IsSensor() && wheat) {
-                wheat->rustle(3);
+                wheat->rustle(bd1->getLinearVelocity().length());
             }
         }
 

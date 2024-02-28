@@ -148,14 +148,14 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setPosition(_offset);
 
     // Create the scene graph
-    
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     
-    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
-    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _debugjoynode->setColor(Color4(Vec4(0, 0, 0, 0.25)));
-    _uinode->addChild(_debugjoynode);
+    // To be changed -CJ
+//    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
+//    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+//    _debugjoynode->setColor(Color4(Vec4(0, 0, 0, 0.25)));
+//    _uinode->addChild(_debugjoynode);
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -269,8 +269,6 @@ void GameScene::reset() {
     _loadnode->setVisible(true);
     _assets->load<Map>("map", "json/map.json");
     setComplete(false);
-    auto _avatar = _map->getCarrots().at(0);
-    _camera->setPosition(_initCamera);
 }
 
 #pragma mark -
@@ -319,6 +317,8 @@ void GameScene::preUpdate(float dt) {
 
             _collision.init(_map);
             _action.init(_map, _input);
+
+            _camera->setPosition(_initCamera);
 
             _loadnode->setVisible(false);
         } else {
@@ -401,7 +401,7 @@ void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _map->getWorld()->update(step);
     moveCamera();
-    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/CAMERA_ZOOM);
+    _ui.update(step, _camera, _input->withJoystick(), _input->getJoystick());
     _camera->update();
 }
 

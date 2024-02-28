@@ -27,20 +27,21 @@ class GameScene : public cugl::Scene2 {
 protected:
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
-    
+
     // CONTROLLERS
-    /** Controller for abstracting out input across multiple platforms */
+    /** Controller for abstracting out input across multiple platforms. We use a shared pointer
+     * because the ActionController also needs a reference. */
     std::shared_ptr<InputController> _input;
     /** Controller for Box2D collisions */
     CollisionController _collision;
     /** Controller for updating objects */
     ActionController _action;
-    
+
     // VIEW
     /** Reference to the physics root of the scene graph */
-    std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
-    /** Reference to the debug root of the scene graph */
-    std::shared_ptr<cugl::scene2::SceneNode> _debugnode;
+    std::shared_ptr<cugl::scene2::SceneNode> _rootnode;
+    /** Reference to the reset message label */
+    std::shared_ptr<cugl::scene2::Label> _loadnode;
     /** Reference to the win message label */
     std::shared_ptr<cugl::scene2::Label> _winnode;
     /** Reference to the lose message label */
@@ -50,13 +51,11 @@ protected:
     /** Reference to the right joystick image */
     std::shared_ptr<cugl::scene2::PolygonNode> _rightnode;
 
-    /** The Box2D world */
-    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _scale;
 
     /** Reference to the map */
-    std::shared_ptr<Map>  _map;
+    std::shared_ptr<Map> _map;
 
     /** Whether we have completed this "game" */
     bool _complete;
@@ -66,15 +65,16 @@ protected:
     bool _failed;
     /** Countdown active for winning or losing */
     int _countdown;
-    
+
     /** Initial camera position */
     Vec3 _initCamera;
 
 #pragma mark Internal Object Management
-    
+
     /** Moves the camera to focus the avatar */
     void moveCamera();
-    
+
+
     /**
      * Returns the active screen size of this scene.
      *
@@ -82,10 +82,11 @@ protected:
      * ratios
      */
     cugl::Size computeActiveSize() const;
-    
+
 public:
 #pragma mark -
 #pragma mark Constructors
+
     /**
      * Creates a new game world with the default values.
      *
@@ -93,7 +94,7 @@ public:
      * This allows us to use a controller without a heap pointer.
      */
     GameScene();
-    
+
     /**
      * Disposes of all (non-static) resources allocated to this mode.
      *
@@ -101,12 +102,12 @@ public:
      * static resources, like the input controller.
      */
     ~GameScene() { dispose(); }
-    
+
     /**
      * Disposes of all (non-static) resources allocated to this mode.
      */
     void dispose();
-    
+
     /**
      * Initializes the controller contents, and starts the game
      *
@@ -121,50 +122,12 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets);
 
-    /**
-     * Initializes the controller contents, and starts the game
-     *
-     * The constructor does not allocate any objects or memory.  This allows
-     * us to have a non-pointer reference to this controller, reducing our
-     * memory allocation.  Instead, allocation happens in this method.
-     *
-     * The game world is scaled so that the screen coordinates do not agree
-     * with the Box2d coordinates.  The bounds are in terms of the Box2d
-     * world, not the screen.
-     *
-     * @param assets    The (loaded) assets for this game mode
-     * @param rect      The game bounds in Box2d coordinates
-     *
-     * @return  true if the controller is initialized properly, false otherwise.
-     */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
-              const cugl::Rect& rect);
-    
-    /**
-     * Initializes the controller contents, and starts the game
-     *
-     * The constructor does not allocate any objects or memory.  This allows
-     * us to have a non-pointer reference to this controller, reducing our
-     * memory allocation.  Instead, allocation happens in this method.
-     *
-     * The game world is scaled so that the screen coordinates do not agree
-     * with the Box2d coordinates.  The bounds are in terms of the Box2d
-     * world, not the screen.
-     *
-     * @param assets    The (loaded) assets for this game mode
-     * @param rect      The game bounds in Box2d coordinates
-     * @param gravity   The gravitational force on this Box2d world
-     *
-     * @return  true if the controller is initialized properly, false otherwise.
-     */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
-              const cugl::Rect& rect, const cugl::Vec2& gravity);
-    
-    
+
 #pragma mark -
 #pragma mark State Access
+
     /**
      * Returns true if debug mode is active.
      *
@@ -172,8 +135,8 @@ public:
      *
      * @return true if debug mode is active.
      */
-    bool isDebug( ) const { return _debug; }
-    
+    bool isDebug() const { return _debug; }
+
     /**
      * Sets whether debug mode is active.
      *
@@ -181,8 +144,11 @@ public:
      *
      * @param value whether debug mode is active.
      */
-    void setDebug(bool value) { _debug = value; _debugnode->setVisible(value); }
-    
+    void setDebug(bool value) {
+        _debug = value;
+        _map->showDebug(value);
+    }
+
     /**
      * Returns true if the level is completed.
      *
@@ -190,8 +156,8 @@ public:
      *
      * @return true if the level is completed.
      */
-    bool isComplete( ) const { return _complete; }
-    
+    bool isComplete() const { return _complete; }
+
     /**
      * Sets whether the level is completed.
      *
@@ -222,6 +188,7 @@ public:
 
 #pragma mark -
 #pragma mark Gameplay Handling
+
     /**
      * The method called to indicate the start of a deterministic loop.
      *
@@ -243,7 +210,7 @@ public:
      * @param dt    The amount of time (in seconds) since the last frame
      */
     void preUpdate(float dt);
-    
+
     /**
      * The method called to provide a deterministic application loop.
      *
@@ -296,12 +263,18 @@ public:
      */
     void postUpdate(float remain);
 
+    /**
+     * Activates world collision callbacks on the given physics world and sets the collision callbacks
+     *
+     * @param world the physics world to activate world collision callbacks on
+     */
+    void activateWorldCollisions(const std::shared_ptr<physics2::ObstacleWorld> &world);
 
     /**
      * Resets the status of the game so that we can play again.
      */
     void reset();
 
-  };
+};
 
 #endif /* RootedGameScene_h */

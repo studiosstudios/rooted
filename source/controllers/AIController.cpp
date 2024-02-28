@@ -3,7 +3,7 @@
 //
 
 #include "AIController.h"
-#include "BabyCarrot.h"
+#include "../objects/BabyCarrot.h"
 
 using namespace cugl;
 

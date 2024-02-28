@@ -21,8 +21,6 @@ protected:
     /** reference to the map */
     std::shared_ptr<Map> _map;
 
-    bool _isComplete;
-
 public:
 
 //  MARK: - Constructors
@@ -47,8 +45,6 @@ public:
      */
     bool init(std::shared_ptr<Map> &map);
 
-
-    bool isComplete() { return _isComplete; }
 
 //  MARK: - Callbacks
 

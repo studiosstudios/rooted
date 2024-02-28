@@ -86,7 +86,7 @@ protected:
 
 	/** The scene graph node for the Dude. */
 	std::shared_ptr<cugl::scene2::SceneNode> _node;
-	/** The scale between the physics world and the screen (MUST BE UNIFORM) */
+	/** The scale between the physics world and the screen */
 	float _drawScale;
 
 	/**
@@ -305,6 +305,20 @@ public:
         _node = node;
         _node->setPosition(getPosition() * _drawScale);
     }
+
+    /**
+     * Sets the ratio of the Dude sprite to the physics body
+     *
+     * The Dude needs this value to convert correctly between the physics
+     * coordinates and the drawing screen coordinates.  Otherwise it will
+     * interpret one Box2D unit as one pixel.
+     *
+     * All physics scaling must be uniform.  Rotation does weird things when
+     * attempting to scale physics by a non-uniform factor.
+     *
+     * @param scale The ratio of the Dude sprite to the physics body
+     */
+    void setDrawScale(float scale) { _drawScale = scale; };
 
     
 #pragma mark -

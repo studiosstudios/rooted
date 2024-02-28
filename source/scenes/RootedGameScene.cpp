@@ -78,6 +78,9 @@ using namespace cugl;
 /** The image for the right dpad/joystick */
 #define RIGHT_IMAGE     "dpad_right"
 
+#define JOY_MAIN        "joystick-main"
+#define JOY_BACK        "joystick-back"
+
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::YELLOW
 /** Opacity of the physics outlines */
@@ -138,12 +141,21 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // Shift to center if a bad fit
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
-    Vec2 offset((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-
-    // Create the scene graph
+    _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
+    
     _rootnode = scene2::SceneNode::alloc();
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _rootnode->setPosition(offset);
+    _rootnode->setPosition(_offset);
+
+    // Create the scene graph
+    
+    _uinode = scene2::SceneNode::alloc();
+    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    
+    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
+    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _debugjoynode->setColor(Color4(Vec4(0, 0, 0, 0.25)));
+    _uinode->addChild(_debugjoynode);
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -163,22 +175,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _loadnode->setForeground(RESET_COLOR);
     _loadnode->setVisible(false);
 
-    _leftnode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(LEFT_IMAGE));
-    _leftnode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_MIDDLE_RIGHT);
-    _leftnode->setScale(0.35f);
-    _leftnode->setVisible(false);
-
-    _rightnode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(RIGHT_IMAGE));
-    _rightnode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_MIDDLE_LEFT);
-    _rightnode->setScale(0.35f);
-    _rightnode->setVisible(false);
-
     addChild(_rootnode);
+    addChild(_uinode);
     addChild(_winnode);
     addChild(_loadnode);
     addChild(_losenode);
-    addChild(_leftnode);
-    addChild(_rightnode);
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
     _map->setAssets(_assets);
@@ -192,6 +193,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _active = true;
     _complete = false;
     setDebug(false);
+    
+    _ui.init(_uinode, _offset);
 
     // XNA nostalgia
     Application::get()->setClearColor(Color4(142,114,78,255));
@@ -223,12 +226,12 @@ void GameScene::dispose() {
         _rootnode = nullptr;
         _winnode = nullptr;
         _loadnode = nullptr;
+        _uinode = nullptr;
         _winnode = nullptr;
         _losenode = nullptr;
-        _leftnode = nullptr;
-        _rightnode = nullptr;
         _collision.dispose();
         _action.dispose();
+        _ui.dispose();
         _complete = false;
         _debug = false;
         _map = nullptr;
@@ -344,21 +347,7 @@ void GameScene::preUpdate(float dt) {
 
     // Process the movement
     if (_input->withJoystick()) {
-        if (_input->getMovement().x < 0) {
-            _leftnode->setVisible(true);
-            _rightnode->setVisible(false);
-        } else if (_input->getMovement().x > 0) {
-            _leftnode->setVisible(false);
-            _rightnode->setVisible(true);
-        } else {
-            _leftnode->setVisible(false);
-            _rightnode->setVisible(false);
-        }
-        _leftnode->setPosition(_input->getJoystick());
-        _rightnode->setPosition(_input->getJoystick());
-    } else {
-        _leftnode->setVisible(false);
-        _rightnode->setVisible(false);
+        // do something here
     }
 
     _action.preUpdate(dt);
@@ -394,6 +383,8 @@ void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _map->getWorld()->update(step);
     moveCamera();
+    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/CAMERA_ZOOM);
+    _camera->update();
 }
 
 /**
@@ -405,7 +396,7 @@ void GameScene::fixedUpdate(float step) {
  *
  * This method is the final portion of the update loop called before any
  * drawing occurs. As such, it should be used to implement any final
- * animation in response to the simulation provided by {@link #fixedUpdate}.
+ * animation in response to the simulation provided by {@link #fixedUpdate}.dpa
  * In particular, it should be used to interpolate any visual differences
  * between the the simulation timestep and the FPS.
  *

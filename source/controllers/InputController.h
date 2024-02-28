@@ -120,8 +120,10 @@ protected:
     
     /** Whether the virtual joystick is active */
     bool _joystick;
-    /** The position of the virtual joystick */
-    cugl::Vec2 _joycenter;
+    /** The position of the virtual joystick anchor */
+    cugl::Vec2 _joyAnchor;
+    /** The position of the virtual joystick dynamic */
+    cugl::Vec2 _joyCenter;
     /** Whether or not we have processed a jump for this swipe yet */
     bool _hasJumped;
     /** The timestamp for a double tap on the right */
@@ -298,7 +300,7 @@ public:
      *
      * @return the scene graph position of the virtual joystick
      */
-    cugl::Vec2 getJoystick() const { return _joycenter; }
+    std::pair<cugl::Vec2, cugl::Vec2> getJoystick() const { return std::pair(_joyAnchor, _joyCenter); }
     
     // CAN DELETE THIS
     bool didRustle() const { return _rustlePressed; }

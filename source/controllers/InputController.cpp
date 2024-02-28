@@ -279,7 +279,7 @@ Vec2 InputController::touch2Screen(const Vec2 pos) const {
  */
 void InputController::processJoystick(const cugl::Vec2 pos) {
     Vec2 diff =  pos - _jtouch.position;
-    _joycenter = touch2Screen(pos);
+    _joyCenter = touch2Screen(pos);
 
     // Max out the diff
     if (diff.lengthSquared() > JSTICK_RADIUS*JSTICK_RADIUS) {
@@ -346,7 +346,8 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _jtouch.timestamp.mark();
                 _jtouch.touchids.insert(event.touch);
 
-                _joycenter = touch2Screen(pos);
+                _joyCenter = touch2Screen(pos);
+                _joyAnchor = _joyCenter;
                 _joystick = true;
             }
             break;

@@ -41,6 +41,8 @@ using namespace cugl;
 /** How fast a double click must be in milliseconds */
 #define DOUBLE_CLICK    400
 
+#define SWITCH_SWIPE_LENGTH 125
+
 // The screen is divided into three zones: Joy(stick), Main, and Right.
 //
 //   |---------------|
@@ -444,8 +446,9 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
 //                std::cout << "Swiped!\n";
                 _keyDash = true;
             }
-            else if ((pos.y-_rtouch.position.y) > SWIPE_LENGTH) {
+            else if ((pos.y-_rtouch.position.y) > SWITCH_SWIPE_LENGTH) {
                 _keySwitch = true;
+                _rtouch.position = pos;
             }
         }
     } else if (_mtouch.touchids.size() > 1) {

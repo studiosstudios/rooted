@@ -162,17 +162,17 @@ void InputController::update(float dt) {
     _keyRustle = keys->keyPressed(KeyCode::M);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
-        _movement.x = 1.0f;
-    } else if (keys->keyDown(KeyCode::ARROW_RIGHT)) {
         _movement.x = -1.0f;
+    } else if (keys->keyDown(KeyCode::ARROW_RIGHT)) {
+        _movement.x = 1.0f;
     } else {
         _movement.x = 0;
     }
     
     if (keys->keyDown(KeyCode::ARROW_UP)) {
-        _movement.y = 1.0f;
-    } else if (keys->keyDown(KeyCode::ARROW_DOWN)) {
         _movement.y = -1.0f;
+    } else if (keys->keyDown(KeyCode::ARROW_DOWN)) {
+        _movement.y = 1.0f;
     } else {
         _movement.y = 0;
     }
@@ -279,6 +279,7 @@ Vec2 InputController::touch2Screen(const Vec2 pos) const {
  */
 void InputController::processJoystick(const cugl::Vec2 pos) {
     Vec2 diff =  pos - _jtouch.position;
+    _joycenter = touch2Screen(pos);
 
     // Max out the diff
     if (diff.lengthSquared() > JSTICK_RADIUS*JSTICK_RADIUS) {
@@ -287,14 +288,12 @@ void InputController::processJoystick(const cugl::Vec2 pos) {
     }
     
     if (std::fabsf(diff.x) > JSTICK_DEADZONE) {
-        _joystick = true;
         _movement.x = ((std::fabsf(diff.x) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE)) * signum(diff.x);
     } else {
         _movement.x = 0;
     }
     
     if (std::fabsf(diff.y) > JSTICK_DEADZONE) {
-        _joystick = true;
         _movement.y = ((std::fabsf(diff.y) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE)) * -signum(diff.y); // Negative here because of inverted y
     } else {
         _movement.y = 0;
@@ -347,6 +346,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _jtouch.timestamp.mark();
                 _jtouch.touchids.insert(event.touch);
 
+                _joycenter = touch2Screen(pos);
                 _joystick = true;
             }
             break;

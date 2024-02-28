@@ -6,8 +6,8 @@
 #define ROOTED_AICONTROLLER_H
 
 #include <cugl/cugl.h>
-#include "BabyCarrot.h"
-#include "Map.h"
+#include "../objects/BabyCarrot.h"
+#include "../objects/Map.h"
 
 class AIController {
     

@@ -12,406 +12,11 @@
 // Since these appear only once, we do not care about the magic numbers.
 // In an actual game, this information would go in a data file.
 // IMPORTANT: Note that Box2D units do not equal drawing units
-/** The wall vertices */
-#define WALL_VERTS 12
-#define WALL_COUNT  3
-
-float WALL[WALL_COUNT][WALL_VERTS] = {
-        {16.0f, 18.0f, 0.0f,  18.0f, 0.0f,  0.0f,
-                1.0f,  0.0f,  1.0f,  17.0f, 16.0f, 17.0f},
-        {32.0f, 18.0f, 16.0f, 18.0f, 16.0f, 17.0f,
-                31.0f, 17.0f, 31.0f, 10.0f,  32.0f, 10.0f},
-        {32.0f, 10.0f, 31.0f, 10.0f, 31.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 0.0f, 32.0f, 0.0f}
-};
 
 /** The initial position of the dude */
-float DUDE_POS[] = {2.5f, 2.5f};
+float DUDE_POS[2] = {2.5f, 2.5f};
 
-float BABY_CARROT_POS[] = {2.5f, 10.0f};
-
-#define WHEAT_COUNT     366
-/** Positions of all of the wheat, is a single one for now */
-float WHEAT_POS[WHEAT_COUNT][2] = {
-    {5.0f, 1.0f},
-    {6.0f, 1.0f},
-    {7.0f, 1.0f},
-    {8.0f, 1.0f},
-    {9.0f, 1.0f},
-    {10.0f, 1.0f},
-    {11.0f, 1.0f},
-    {5.0f, 2.0f},
-    {6.0f, 2.0f},
-    {7.0f, 2.0f},
-    {8.0f, 2.0f},
-    {9.0f, 2.0f},
-    {10.0f, 2.0f},
-    {11.0f, 2.0f},
-    {5.0f, 3.0f},
-    {6.0f, 3.0f},
-    {7.0f, 3.0f},
-    {8.0f, 3.0f},
-    {9.0f, 3.0f},
-    {10.0f, 3.0f},
-    {11.0f, 3.0f},
-    {5.0f, 4.0f},
-    {6.0f, 4.0f},
-    {7.0f, 4.0f},
-    {8.0f, 4.0f},
-    {9.0f, 4.0f},
-    {10.0f, 4.0f},
-    {11.0f, 4.0f},
-    {5.0f, 5.0f},
-    {6.0f, 5.0f},
-    {7.0f, 5.0f},
-    {8.0f, 5.0f},
-    {9.0f, 5.0f},
-    {10.0f, 5.0f},
-    {11.0f, 5.0f},
-    {5.0f, 6.0f},
-    {6.0f, 6.0f},
-    {7.0f, 6.0f},
-    {8.0f, 6.0f},
-    {9.0f, 6.0f},
-    {10.0f, 6.0f},
-    {11.0f, 6.0f},
-    {1.0f, 5.0f},
-    {2.0f, 5.0f},
-    {3.0f, 5.0f},
-    {4.0f, 5.0f},
-    {5.0f, 5.0f},
-    {6.0f, 5.0f},
-    {1.0f, 6.0f},
-    {2.0f, 6.0f},
-    {3.0f, 6.0f},
-    {4.0f, 6.0f},
-    {5.0f, 6.0f},
-    {6.0f, 6.0f},
-    {1.0f, 7.0f},
-    {2.0f, 7.0f},
-    {3.0f, 7.0f},
-    {4.0f, 7.0f},
-    {5.0f, 7.0f},
-    {6.0f, 7.0f},
-    {1.0f, 8.0f},
-    {2.0f, 8.0f},
-    {3.0f, 8.0f},
-    {4.0f, 8.0f},
-    {5.0f, 8.0f},
-    {6.0f, 8.0f},
-    {1.0f, 9.0f},
-    {2.0f, 9.0f},
-    {3.0f, 9.0f},
-    {4.0f, 9.0f},
-    {5.0f, 9.0f},
-    {6.0f, 9.0f},
-    {1.0f, 10.0f},
-    {2.0f, 10.0f},
-    {3.0f, 10.0f},
-    {4.0f, 10.0f},
-    {5.0f, 10.0f},
-    {6.0f, 10.0f},
-    
-    {7.0f, 7.0f},
-    {8.0f, 7.0f},
-    {9.0f, 7.0f},
-    {10.0f, 7.0f},
-    {11.0f, 7.0f},
-
-
-    {7.0f, 8.0f},
-    {8.0f, 8.0f},
-    {9.0f, 8.0f},
-    {10.0f, 8.0f},
-    {11.0f, 8.0f},
-
-    {7.0f, 9.0f},
-    {8.0f, 9.0f},
-    {9.0f, 9.0f},
-    {10.0f, 9.0f},
-    {11.0f, 9.0f},
-
-    {7.0f, 10.0f},
-    {8.0f, 10.0f},
-    {9.0f, 10.0f},
-    {10.0f, 10.0f},
-    {11.0f, 10.0f},
-
-    
-    {1.0f, 11.0f},
-    {2.0f, 11.0f},
-    {3.0f, 11.0f},
-    {4.0f, 11.0f},
-    {5.0f, 11.0f},
-    {6.0f, 11.0f},
-    {7.0f, 11.0f},
-    {8.0f, 11.0f},
-    {9.0f, 11.0f},
-    {10.0f, 11.0f},
-    {11.0f, 11.0f},
-
-    {1.0f, 12.0f},
-    {2.0f, 12.0f},
-    {3.0f, 12.0f},
-    {4.0f, 12.0f},
-    {5.0f, 12.0f},
-    {6.0f, 12.0f},
-    {7.0f, 12.0f},
-    {8.0f, 12.0f},
-    {9.0f, 12.0f},
-    {10.0f, 12.0f},
-    {11.0f, 12.0f},
-    {1.0f, 13.0f},
-    {2.0f, 13.0f},
-    {3.0f, 13.0f},
-    {4.0f, 13.0f},
-    {5.0f, 13.0f},
-    {6.0f, 13.0f},
-    {7.0f, 13.0f},
-    {1.0f, 14.0f},
-    {2.0f, 14.0f},
-    {3.0f, 14.0f},
-    {4.0f, 14.0f},
-    {5.0f, 14.0f},
-    {6.0f, 14.0f},
-    {7.0f, 14.0f},
-    {1.0f, 15.0f},
-    {2.0f, 15.0f},
-    {3.0f, 15.0f},
-    {4.0f, 15.0f},
-    {5.0f, 15.0f},
-    {6.0f, 15.0f},
-    {7.0f, 15.0f},
-    {1.0f, 16.0f},
-    {2.0f, 16.0f},
-    {3.0f, 16.0f},
-    {4.0f, 16.0f},
-    {5.0f, 16.0f},
-    {6.0f, 16.0f},
-    {7.0f, 16.0f},
-    
-    {12.0f, 1.0f},
-    {13.0f, 1.0f},
-    {14.0f, 1.0f},
-    {15.0f, 1.0f},
-    {16.0f, 1.0f},
-    {17.0f, 1.0f},
-    {18.0f, 1.0f},
-    {19.0f, 1.0f},
-    {20.0f, 1.0f},
-    {12.0f, 2.0f},
-    {13.0f, 2.0f},
-    {14.0f, 2.0f},
-    {15.0f, 2.0f},
-    {16.0f, 2.0f},
-    {17.0f, 2.0f},
-    {18.0f, 2.0f},
-    {19.0f, 2.0f},
-    {20.0f, 2.0f},
-    {12.0f, 3.0f},
-    {13.0f, 3.0f},
-    {14.0f, 3.0f},
-    {15.0f, 3.0f},
-    {16.0f, 3.0f},
-    {17.0f, 3.0f},
-    {18.0f, 3.0f},
-    {19.0f, 3.0f},
-    {20.0f, 3.0f},
-    {12.0f, 4.0f},
-    {13.0f, 4.0f},
-    {14.0f, 4.0f},
-    {15.0f, 4.0f},
-    {16.0f, 4.0f},
-    {17.0f, 4.0f},
-    {18.0f, 4.0f},
-    {19.0f, 4.0f},
-    {20.0f, 4.0f},
-    {12.0f, 5.0f},
-    {13.0f, 5.0f},
-    {14.0f, 5.0f},
-    {15.0f, 5.0f},
-    {16.0f, 5.0f},
-    {17.0f, 5.0f},
-    {18.0f, 5.0f},
-    {19.0f, 5.0f},
-    {20.0f, 5.0f},
-    
-    {12.0f, 6.0f},
-    {13.0f, 6.0f},
-    {14.0f, 6.0f},
-    {15.0f, 6.0f},
-    {16.0f, 6.0f},
-    {17.0f, 6.0f},
-    {18.0f, 6.0f},
-    {19.0f, 6.0f},
-    {20.0f, 6.0f},
-    {12.0f, 7.0f},
-    {13.0f, 7.0f},
-    {14.0f, 7.0f},
-    {15.0f, 7.0f},
-    {16.0f, 7.0f},
-    {17.0f, 7.0f},
-    {18.0f, 7.0f},
-    {19.0f, 7.0f},
-    {20.0f, 7.0f},
-    {12.0f, 8.0f},
-    {13.0f, 8.0f},
-    {14.0f, 8.0f},
-    {15.0f, 8.0f},
-    {16.0f, 8.0f},
-    {17.0f, 8.0f},
-    {18.0f, 8.0f},
-    {19.0f, 8.0f},
-    {20.0f, 8.0f},
-    {12.0f, 9.0f},
-    {13.0f, 9.0f},
-    {14.0f, 9.0f},
-    {15.0f, 9.0f},
-    {16.0f, 9.0f},
-    {17.0f, 9.0f},
-    {18.0f, 9.0f},
-    {19.0f, 9.0f},
-    {20.0f, 9.0f},
-    {12.0f, 10.0f},
-    {13.0f, 10.0f},
-    {14.0f, 10.0f},
-    {15.0f, 10.0f},
-    {16.0f, 10.0f},
-    {17.0f, 10.0f},
-    {18.0f, 10.0f},
-    {19.0f, 10.0f},
-    {20.0f, 10.0f},
-    {12.0f, 11.0f},
-    {13.0f, 11.0f},
-    {14.0f, 11.0f},
-    {15.0f, 11.0f},
-
-    {16.0f, 11.0f},
-    {17.0f, 11.0f},
-    {18.0f, 11.0f},
-    {19.0f, 11.0f},
-    {20.0f, 11.0f},
-    {12.0f, 12.0f},
-    {13.0f, 12.0f},
-    {14.0f, 12.0f},
-    {15.0f, 12.0f},
-    {16.0f, 12.0f},
-    {17.0f, 12.0f},
-    {18.0f, 12.0f},
-    {19.0f, 12.0f},
-    {20.0f, 12.0f},
-    
-    {21.0f, 6.0f},
-    {22.0f, 6.0f},
-    {23.0f, 6.0f},
-    {24.0f, 6.0f},
-    {25.0f, 6.0f},
-    {26.0f, 6.0f},
-    {27.0f, 6.0f},
-    {28.0f, 6.0f},
-    {29.0f, 6.0f},
-    {30.0f, 6.0f},
-    {21.0f, 7.0f},
-    {22.0f, 7.0f},
-    {23.0f, 7.0f},
-    {24.0f, 7.0f},
-    {25.0f, 7.0f},
-    {26.0f, 7.0f},
-    {27.0f, 7.0f},
-    {28.0f, 7.0f},
-    {29.0f, 7.0f},
-    {30.0f, 7.0f},
-    {21.0f, 8.0f},
-    {22.0f, 8.0f},
-    {23.0f, 8.0f},
-    {24.0f, 8.0f},
-    {25.0f, 8.0f},
-    {26.0f, 8.0f},
-    {27.0f, 8.0f},
-    {28.0f, 8.0f},
-    {29.0f, 8.0f},
-    {30.0f, 8.0f},
-    {21.0f, 9.0f},
-    {22.0f, 9.0f},
-    {23.0f, 9.0f},
-    {24.0f, 9.0f},
-    {25.0f, 9.0f},
-    {26.0f, 9.0f},
-    {27.0f, 9.0f},
-    {28.0f, 9.0f},
-    {29.0f, 9.0f},
-    {30.0f, 9.0f},
-    {21.0f, 10.0f},
-    {22.0f, 10.0f},
-    {23.0f, 10.0f},
-    {24.0f, 10.0f},
-    {25.0f, 10.0f},
-    {26.0f, 10.0f},
-    {27.0f, 10.0f},
-    {28.0f, 10.0f},
-    {29.0f, 10.0f},
-    {30.0f, 10.0f},
-    {21.0f, 11.0f},
-    {22.0f, 11.0f},
-    {23.0f, 11.0f},
-    {24.0f, 11.0f},
-    {25.0f, 11.0f},
-    {26.0f, 11.0f},
-    {27.0f, 11.0f},
-    {28.0f, 11.0f},
-    {29.0f, 11.0f},
-    {30.0f, 11.0f},
-    {21.0f, 12.0f},
-    {22.0f, 12.0f},
-    {23.0f, 12.0f},
-    {24.0f, 12.0f},
-    {25.0f, 12.0f},
-    {26.0f, 12.0f},
-    {27.0f, 12.0f},
-    {28.0f, 12.0f},
-    {29.0f, 12.0f},
-    {30.0f, 12.0f},
-    {21.0f, 13.0f},
-    {22.0f, 13.0f},
-    {23.0f, 13.0f},
-    {24.0f, 13.0f},
-    {25.0f, 13.0f},
-    {26.0f, 13.0f},
-    {27.0f, 13.0f},
-    {28.0f, 13.0f},
-    {29.0f, 13.0f},
-    {30.0f, 13.0f},
-    {21.0f, 14.0f},
-    {22.0f, 14.0f},
-    {23.0f, 14.0f},
-    {24.0f, 14.0f},
-    {25.0f, 14.0f},
-    {26.0f, 14.0f},
-    {27.0f, 14.0f},
-    {28.0f, 14.0f},
-    {29.0f, 14.0f},
-    {30.0f, 14.0f},
-    {21.0f, 15.0f},
-    {22.0f, 15.0f},
-    {23.0f, 15.0f},
-    {24.0f, 15.0f},
-    {25.0f, 15.0f},
-    {26.0f, 15.0f},
-    {27.0f, 15.0f},
-    {28.0f, 15.0f},
-    {29.0f, 15.0f},
-    {30.0f, 15.0f},
-    {21.0f, 16.0f},
-    {22.0f, 16.0f},
-    {23.0f, 16.0f},
-    {24.0f, 16.0f},
-    {25.0f, 16.0f},
-    {26.0f, 16.0f},
-    {27.0f, 16.0f},
-    {28.0f, 16.0f},
-    {29.0f, 16.0f},
-    {30.0f, 16.0f}
-};
+float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -431,101 +36,481 @@ float WHEAT_POS[WHEAT_COUNT][2] = {
 #define WALL_NAME       "wall"
 /** The name of a platform (for object identification) */
 #define PLATFORM_NAME   "platform"
+float CARROT_SIZE[2] = {1.0f, 1.0f}; //TODO: make json constants fil
+
+float WHEAT_SIZE[2] = {1.0f, 1.0f};
 
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::YELLOW
-/** Opacity of the physics outlines */
-#define DEBUG_OPACITY   192
 
-bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
-               std::shared_ptr<cugl::physics2::ObstacleWorld> &world,
-               const std::shared_ptr<cugl::scene2::SceneNode> &worldnode,
-               const std::shared_ptr<cugl::scene2::SceneNode> &debugnode,
-               float scale) {
+using namespace cugl;
 
-    _world = world;
-    _scale = scale;
+/**
+* Creates a new, empty Map.
+*/
+Map::Map(void) : Asset(),
+                 _root(nullptr),
+                 _world(nullptr),
+                 _worldnode(nullptr),
+                 _debugnode(nullptr) {
+    _bounds.size.set(1.0f, 1.0f);
+}
 
-    _carrots.clear();
-    _farmers.clear();
-    _babies.clear();
-    _wheat.clear();
+/**
+* Destroys this Map, releasing all resources.
+*/
+Map::~Map(void) {
+    unload();
+    clearRootNode();
+}
 
-#pragma mark : Walls
-    // All walls and platforms share the same texture
-    std::shared_ptr<Texture> image = assets->get<Texture>(EARTH_TEXTURE);
-    std::shared_ptr<scene2::PolygonNode> sprite;
-    std::shared_ptr<scene2::WireNode> draw;
-    std::string wname = "wall";
-    for (int ii = 0; ii < WALL_COUNT; ii++) {
-        std::shared_ptr<physics2::PolygonObstacle> wallobj;
+#pragma mark -
+#pragma mark Drawing Methods
 
-        Poly2 wall(reinterpret_cast<Vec2 *>(WALL[ii]), WALL_VERTS / 2);
-        // Call this on a polygon to get a solid shape
-        EarclipTriangulator triangulator;
-        triangulator.set(wall.vertices);
-        triangulator.calculate();
-        wall.setIndices(triangulator.getTriangulation());
-        triangulator.clear();
-
-        wallobj = physics2::PolygonObstacle::allocWithAnchor(wall, Vec2::ANCHOR_CENTER);
-        // You cannot add constant "".  Must stringify
-        wallobj->setName(std::string(WALL_NAME) + cugl::strtool::to_string(ii));
-        wallobj->setName(wname);
-
-        // Set the physics attributes
-        wallobj->setBodyType(b2_staticBody);
-        wallobj->setDensity(BASIC_DENSITY);
-        wallobj->setFriction(BASIC_FRICTION);
-        wallobj->setRestitution(BASIC_RESTITUTION);
-        wallobj->setDebugColor(DEBUG_COLOR);
-
-        wall *= scale;
-        sprite = scene2::PolygonNode::allocWithTexture(image, wall);
-        addObstacle(wallobj, sprite, worldnode, debugnode, 1);  // All walls share the same texture
+/**
+* Sets the drawing scale for this game level
+*
+* The drawing scale is the number of pixels to draw before Box2D unit. Because
+* mass is a function of area in Box2D, we typically want the physics objects
+* to be small.  So we decouple that scale from the physics object.  However,
+* we must track the scale difference to communicate with the scene graph.
+*
+* We allow for the scaling factor to be non-uniform.
+*
+* @param value  the drawing scale for this game level
+*/
+void Map::setDrawScale(float value) {
+    for (auto carrot: _carrots) {
+        carrot->setDrawScale(value);
     }
-    
-#pragma mark : Baby Carrots
-    Vec2 babyPos = BABY_CARROT_POS;
-    image = assets->get<Texture>(DUDE_TEXTURE);
-    auto baby = BabyCarrot::alloc(babyPos, image->getSize() / scale, scale);
-    sprite = scene2::PolygonNode::allocWithTexture(image);
-    sprite->setColor(Color4::BLUE);
-    baby->setSceneNode(sprite);
-    baby->setDebugColor(DEBUG_COLOR);
-    addObstacle(baby, sprite, worldnode, debugnode); // Put this at the very front
-    
+
+    for (auto baby: _babies) {
+        baby->setDrawScale(value);
+    }
+
+    for (auto farmer: _farmers) {
+        farmer->setDrawScale(value);
+    }
+
+    for (auto wheat: _wheat) {
+        wheat->setDrawScale(value);
+    }
+}
+
+/**
+* Clears the root scene graph node for this level
+*/
+void Map::clearRootNode() {
+    if (_root == nullptr) {
+        return;
+    }
+    _worldnode->removeFromParent();
+    _worldnode->removeAllChildren();
+    _worldnode = nullptr;
+
+    _debugnode->removeFromParent();
+    _debugnode->removeAllChildren();
+    _debugnode = nullptr;
+
+    _root = nullptr;
+}
+
+/**
+* Sets the scene graph node for drawing purposes.
+*
+* The scene graph is completely decoupled from the physics system.  The node
+* does not have to be the same size as the physics body. We only guarantee
+* that the node is positioned correctly according to the drawing scale.
+*
+* @param value  the scene graph node for drawing purposes.
+*
+* @retain  a reference to this scene graph node
+* @release the previous scene graph node used by this object
+*/
+void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
+    if (_root != nullptr) {
+        clearRootNode();
+    }
+
+    _root = node;
+    _scale.set(_root->getContentSize().width / _bounds.size.width,
+               _root->getContentSize().height / _bounds.size.height);
+
+    // Create, but transfer ownership to root
+    _worldnode = scene2::SceneNode::alloc();
+    _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _worldnode->setPosition(Vec2::ZERO);
+
+    _debugnode = scene2::SceneNode::alloc();
+    _debugnode->setScale(_scale); // Debug node draws in PHYSICS coordinates
+    _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _debugnode->setPosition(Vec2::ZERO);
+
+    _root->addChild(_worldnode);
+    _root->addChild(_debugnode);
+
+    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
+        std::shared_ptr<physics2::PolygonObstacle> wall = *it;
+        auto sprite = scene2::PolygonNode::allocWithTexture(
+                _assets->get<Texture>(EARTH_TEXTURE),
+                wall->getPolygon() * _scale);
+        addObstacle(wall, sprite);  // All walls share the same texture
+    }
+
+    for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
+        std::shared_ptr<Carrot> carrot = *it;
+        auto carrotNode = scene2::PolygonNode::allocWithTexture(
+                _assets->get<Texture>(DUDE_TEXTURE));
+        carrotNode->setColor(Color4::ORANGE);
+        carrot->setSceneNode(carrotNode);
+        carrot->setDrawScale(
+                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        // Create the polygon node (empty, as the model will initialize)
+        _worldnode->addChild(carrotNode);
+        carrot->setDebugScene(_debugnode);
+    }
+
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        std::shared_ptr<BabyCarrot> baby = *it;
+        auto babyNode = scene2::PolygonNode::allocWithTexture(
+                _assets->get<Texture>(DUDE_TEXTURE));
+        babyNode->setColor(Color4::BLUE);
+        baby->setSceneNode(babyNode);
+        baby->setDrawScale(
+                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        // Create the polygon node (empty, as the model will initialize)
+        _worldnode->addChild(babyNode);
+        baby->setDebugScene(_debugnode);
+    }
+
+    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+        std::shared_ptr<Wheat> wheat = *it;
+        auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
+                                                              1, WHEAT_FRAMES, WHEAT_FRAMES);
+        wheat->setSceneNode(spriteImage);
+        addObstacle(wheat, spriteImage);  // All walls share the same texture
+    }
+
+    for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
+        std::shared_ptr<Farmer> farmer = *it;
+        auto farmerNode = scene2::PolygonNode::allocWithTexture(
+                _assets->get<Texture>(DUDE_TEXTURE));
+        farmer->setSceneNode(farmerNode);
+        farmer->setDrawScale(
+                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        // Create the polygon node (empty, as the model will initialize)
+        _worldnode->addChild(farmerNode);
+        farmer->setDebugScene(_debugnode);
+    }
+
+}
+
+/**
+* Toggles whether to show the debug layer of this game world.
+*
+* The debug layer displays wireframe outlines of the physics fixtures.
+*
+* @param  flag whether to show the debug layer of this game world
+*/
+void Map::showDebug(bool flag) {
+    if (_debugnode != nullptr) {
+        _debugnode->setVisible(flag);
+    }
+}
+
+#pragma mark -
+#pragma mark Asset Loading
+
+/**
+ * Loads this game level from the source file
+ *
+ * This load method should NEVER access the AssetManager.  Assets are loaded in
+ * parallel, not in sequence.  If an asset (like a game level) has references to
+ * other assets, then these should be connected later, during scene initialization.
+ *
+ * @return true if successfully loaded the asset from a file
+ */
+bool Map::preload(const std::string file) {
+    std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
+    return preload(reader->readJson());
+}
+
+/**
+ * Loads this game level from the source file
+ *
+ * This load method should NEVER access the AssetManager.  Assets are loaded in
+ * parallel, not in sequence.  If an asset (like a game level) has references to
+ * other assets, then these should be connected later, during scene initialization.
+ *
+ * @return true if successfully loaded the asset from a file
+ */
+bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
+    if (json == nullptr) {
+        CUAssertLog(false, "Failed to load level file");
+    }
+    // Initial geometry
+    float w = json->get("width")->asFloat();
+    float h = json->get("height")->asFloat();
+    _bounds.size.set(w, h);
+
+    /** Create the physics world */
+    _world = physics2::ObstacleWorld::alloc(getBounds(), Vec2(0, 0));
+
+    auto walls = json->get("walls");
+    if (walls != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int wsize = (int) walls->size();
+        for (int ii = 0; ii < wsize; ii++) {
+            loadWall(walls->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load walls");
+    }
+
+    auto carrots = json->get("carrots");
+    if (carrots != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int csize = (int) carrots->size();
+        for (int ii = 0; ii < csize; ii++) {
+            loadCarrot(carrots->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load carrots");
+    }
+
+    auto babies = json->get("babies");
+    if (babies != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int bsize = (int) babies->size();
+        for (int ii = 0; ii < bsize; ii++) {
+            loadBabyCarrot(babies->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load babies");
+    }
+
+    auto farmers = json->get("farmers");
+    if (farmers != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int fsize = (int) farmers->size();
+        for (int ii = 0; ii < fsize; ii++) {
+            loadFarmer(farmers->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load farmers");
+    }
+
+    auto wheat = json->get("wheat");
+    if (wheat != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int wsize = (int) wheat->size();
+        for (int ii = 0; ii < wsize; ii++) {
+            loadWheat(wheat->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load wheat");
+    }
+    return true;
+}
+
+/**
+* Unloads this game level, releasing all sources
+*
+* This load method should NEVER access the AssetManager.  Assets are loaded and
+* unloaded in parallel, not in sequence.  If an asset (like a game level) has
+* references to other assets, then these should be disconnected earlier.
+*/
+void Map::unload() {
+    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _walls.clear();
+    for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _carrots.clear();
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _babies.clear();
+    for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _wheat.clear();
+    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _farmers.clear();
+    if (_world != nullptr) {
+        _world->clear();
+        _world = nullptr;
+    }
+}
+
+
+#pragma mark -
+#pragma mark Individual Loaders
+
+/**
+ * Loads a single wall
+ *
+ * The crate will be retained and stored in the vector _walls.  If the
+ * wall fails to load, then it will not be added to _walls.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the wall
+ *
+ * @retain the wall
+ * @return true if the crate was successfully loaded
+ */
+bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
+    bool success = true;
+
+    int polysize = json->getInt("vertices");
+    success = polysize > 0;
+
+    std::vector<float> vertices = json->get("boundary")->asFloatArray();
+    success = success && 2 * polysize == vertices.size();
+
+    Vec2 *verts = reinterpret_cast<Vec2 *>(&vertices[0]);
+    Poly2 wall(verts, (int) vertices.size() / 2);
+    EarclipTriangulator triangulator;
+    triangulator.set(wall.vertices);
+    triangulator.calculate();
+    wall.setIndices(triangulator.getTriangulation());
+    triangulator.clear();
+
+    // Get the object, which is automatically retained
+    std::shared_ptr<physics2::PolygonObstacle> wallobj = physics2::PolygonObstacle::allocWithAnchor(
+            wall, Vec2::ANCHOR_CENTER);
+    wallobj->setName(json->key());
+
+    wallobj->setBodyType(b2_staticBody);
+    wallobj->setDensity(BASIC_DENSITY);
+    wallobj->setFriction(BASIC_FRICTION);
+    wallobj->setRestitution(BASIC_RESTITUTION);
+    wallobj->setDebugColor(DEBUG_COLOR);
+
+    if (success) {
+        _walls.push_back(wallobj);
+    } else {
+        wallobj = nullptr;
+    }
+
+    vertices.clear();
+    return success;
+
+}
+
+/**
+ * Loads a single carrot
+ *
+ * The carrots will be retained and stored in the vector _carrots.  If the
+ * carrot fails to load, then it will not be added to _carrots.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the carrot
+ *
+ * @retain the carrot
+ * @return true if the carrot was successfully loaded
+ */
+bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
+    bool success = true;
+
+    auto posArray = json->get("position");
+    success = posArray->isArray();
+    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
+    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+    _carrots.push_back(carrot);
+
+    if (success) {
+        _world->addObstacle(carrot);
+    }
+
+    return success;
+
+}
+
+/**
+ * Loads a single wheat
+ *
+ * The wheat will be retained and stored in the vector _wheat.  If the
+ * wheat fails to load, then it will not be added to _wheat.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the wheat
+ *
+ * @retain the baby carrot
+ * @return true if the baby carrot was successfully loaded
+ */
+bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
+
+    bool success = true;
+    success = json->isArray();
+    Vec2 wheatPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
+    std::shared_ptr<Wheat> wheat = Wheat::alloc(wheatPos, WHEAT_SIZE, _scale.x);
+    _wheat.push_back(wheat);
+
+    return success;
+}
+
+/**
+ * Loads a single baby carrot
+ *
+ * The baby carrot will be retained and stored in the vector _babies.  If the
+ * baby carrot fails to load, then it will not be added to _babies.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the baby carrot
+ *
+ * @retain the baby carrot
+ * @return true if the baby carrot was successfully loaded
+ */
+bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
+
+    bool success = true;
+
+    auto posArray = json->get("position");
+    success = posArray->isArray();
+    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
+    std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     _babies.push_back(baby);
 
-#pragma mark : Dude
-    Vec2 dudePos = DUDE_POS;
-    image = assets->get<Texture>(DUDE_TEXTURE);
-    auto avatar = Carrot::alloc(dudePos, image->getSize() / scale, scale);
-    sprite = scene2::PolygonNode::allocWithTexture(image);
-    sprite->setColor(Color4::ORANGE);
-    avatar->setSceneNode(sprite);
-    avatar->setDebugColor(DEBUG_COLOR);
-    addObstacle(avatar, sprite, worldnode, debugnode); // Put this at the very front
-
-    _carrots.push_back(avatar);
-    
-#pragma mark : Wheat
-//    image = assets->get<Texture>(WHEAT_TEXTURE);
-    for (int ii = 0; ii < WHEAT_COUNT; ii++) {
-        Vec2 offset = Vec2(0.5, 0.5);
-        Vec2 wheatPos = WHEAT_POS[ii];
-        wheatPos += offset;
-        auto spriteImage = scene2::SpriteNode::allocWithSheet(assets->get<Texture>(WHEAT_TEXTURE),
-                                                      1, WHEAT_FRAMES, WHEAT_FRAMES);
-        auto singleWheat = Wheat::alloc(wheatPos, spriteImage->getSize() / scale, scale);
-        
-        singleWheat->setSceneNode(spriteImage);
-        addObstacle(singleWheat, spriteImage, worldnode, debugnode);
-        
-        _wheat.push_back(singleWheat);
+    if (success) {
+        _world->addObstacle(baby);
     }
-    
-    return true;
+
+    return success;
+
+}
+
+/**
+ * Loads a single farmer
+ *
+ * The farmer will be retained and stored in the vector _farmers.  If the
+ * farmer fails to load, then it will not be added to _farmers.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the farmer
+ *
+ * @retain the farmer
+ * @return true if the crate was successfully loaded
+ */
+bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
+    bool success = true;
+
+    return success;
+
 }
 
 /**
@@ -538,22 +523,15 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
  *
  * @param obj             The physics object to add
  * @param node            The scene graph node to attach it to
- * @param scale           The scale between the physics world and the screen (MUST BE UNIFORM)
- * @param useObjPosition  Whether to update the node's position to be at the object's position
  */
 void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
-                      const std::shared_ptr<cugl::scene2::SceneNode> &node,
-                      const std::shared_ptr<cugl::scene2::SceneNode> &worldnode,
-                      const std::shared_ptr<cugl::scene2::SceneNode> &debugnode,
-                      bool useObjPosition) {
+                      const std::shared_ptr<cugl::scene2::SceneNode> &node) {
     _world->addObstacle(obj);
-    obj->setDebugScene(debugnode);
+    obj->setDebugScene(_debugnode);
 
     // Position the scene graph node (enough for static objects)
-    if (useObjPosition) {
-        node->setPosition(obj->getPosition() * _scale);
-    }
-    worldnode->addChild(node);
+    node->setPosition(obj->getPosition() * _scale);
+    _worldnode->addChild(node);
 
     // Dynamic objects need constant updating
     if (obj->getBodyType() == b2_dynamicBody) {
@@ -568,11 +546,10 @@ void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
 /**
  * Rustle wheats if in contact with an object
  */
-void Map::rustleWheats(float amount){
-    for(auto w : _wheat){
-        if(w->getRustling()){
+void Map::rustleWheats(float amount) {
+    for (auto w: _wheat) {
+        if (w->getRustling()) {
             w->rustle(amount);
         }
     }
 }
-

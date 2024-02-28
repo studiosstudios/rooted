@@ -46,28 +46,15 @@
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
 
-#define SIGNUM(x)  ((x > 0) - (x < 0))
 
 #pragma mark -
 #pragma mark Physics Constants
-/** Cooldown (in animation frames) for jumping */
-#define JUMP_COOLDOWN   5
-/** Cooldown (in animation frames) for shooting */
-#define SHOOT_COOLDOWN  20
 /** The amount to shrink the body fixture (vertically) relative to the image */
 #define DUDE_VSHRINK  0.95f
 /** The amount to shrink the body fixture (horizontally) relative to the image */
 #define DUDE_HSHRINK  0.7f
-/** The amount to shrink the sensor fixture (horizontally) relative to the image */
-#define DUDE_SSHRINK  0.6f
-/** Height of the sensor attached to the player's feet */
-#define SENSOR_HEIGHT   0.1f
 /** The density of the character */
 #define DUDE_DENSITY    1.0f
-/** The impulse for the character jump */
-#define DUDE_JUMP       5.5f
-/** Debug color for the sensor */
-#define DEBUG_COLOR     Color4::RED
 
 
 using namespace cugl;
@@ -228,9 +215,6 @@ void EntityModel::update(float dt) {
  */
 void EntityModel::resetDebug() {
     BoxObstacle::resetDebug();
-    float w = DUDE_SSHRINK*_dimension.width;
-    float h = SENSOR_HEIGHT;
-    Poly2 poly(Rect(-w/2.0f,-h/2.0f,w,h));
 }
 
 

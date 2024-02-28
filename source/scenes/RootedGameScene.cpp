@@ -53,6 +53,10 @@ using namespace cugl;
 #define LOSE_MESSAGE    "FAILURE!"
 /** The color of the lose message */
 #define LOSE_COLOR      Color4::RED
+/** The message for resetting the game */
+#define RESET_MESSAGE    "RESETTING"
+/** The color of the reset message */
+#define RESET_COLOR      Color4::YELLOW
 /** The key the basic game music */
 #define GAME_MUSIC      "game"
 /** The key the victory game music */
@@ -93,9 +97,6 @@ using namespace cugl;
  * This allows us to use a controller without a heap pointer.
  */
 GameScene::GameScene() : Scene2(),
-                         _worldnode(nullptr),
-                         _debugnode(nullptr),
-                         _world(nullptr),
                          _complete(false),
                          _debug(false) {
 }
@@ -115,88 +116,38 @@ GameScene::GameScene() : Scene2(),
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
-    return init(assets, Rect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT), Vec2(0, DEFAULT_GRAVITY));
-}
-
-/**
- * Initializes the controller contents, and starts the game
- *
- * The constructor does not allocate any objects or memory.  This allows
- * us to have a non-pointer reference to this controller, reducing our
- * memory allocation.  Instead, allocation happens in this method.
- *
- * The game world is scaled so that the screen coordinates do not agree
- * with the Box2d coordinates.  The bounds are in terms of the Box2d
- * world, not the screen.
- *
- * @param assets    The (loaded) assets for this game mode
- * @param rect      The game bounds in Box2d coordinates
- *
- * @return  true if the controller is initialized properly, false otherwise.
- */
-bool GameScene::init(const std::shared_ptr<AssetManager> &assets, const Rect &rect) {
-    return init(assets, rect, Vec2(0, DEFAULT_GRAVITY));
-}
-
-/**
- * Initializes the controller contents, and starts the game
- *
- * The constructor does not allocate any objects or memory.  This allows
- * us to have a non-pointer reference to this controller, reducing our
- * memory allocation.  Instead, allocation happens in this method.
- *
- * The game world is scaled so that the screen coordinates do not agree
- * with the Box2d coordinates.  The bounds are in terms of the Box2d
- * world, not the screen.
- *
- * @param assets    The (loaded) assets for this game mode
- * @param rect      The game bounds in Box2d coordinates
- * @param gravity   The gravitational force on this Box2d world
- *
- * @return  true if the controller is initialized properly, false otherwise.
- */
-bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
-                     const Rect &rect, const Vec2 &gravity) {
-    // Initialize the scene to a locked height (iPhone X is narrow, but wide)
+    // Initialize the scene to a locked width
     Size dimen = computeActiveSize();
-
     if (assets == nullptr) {
         return false;
     } else if (!Scene2::init(dimen)) {
         return false;
     }
 
-    // Start up the input handler
+    _map = assets->get<Map>("map");
+    if (_map == nullptr) {
+        CULog("Failed to load map");
+        return false;
+    }
+
     _assets = assets;
-    _input = InputController::alloc(getBounds());
 
     // Create the world and attach the listeners.
-    _world = physics2::ObstacleWorld::alloc(rect, gravity);
-    _world->activateCollisionCallbacks(true);
-    _world->onBeginContact = [this](b2Contact *contact) {
-        _collision.beginContact(contact);
-    };
-    _world->onEndContact = [this](b2Contact *contact) {
-        _collision.endContact(contact);
-    };
+    std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
+    activateWorldCollisions(world);
 
     // IMPORTANT: SCALING MUST BE UNIFORM
     // This means that we cannot change the aspect ratio of the physics world
     // Shift to center if a bad fit
-    _scale = dimen.width == SCENE_WIDTH ? dimen.width / rect.size.width : dimen.height /
-                                                                          rect.size.height;
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
+             dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
+    
+    _rootnode = scene2::SceneNode::alloc();
+    _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _rootnode->setPosition(_offset);
 
     // Create the scene graph
-    std::shared_ptr<Texture> image;
-    _worldnode = scene2::SceneNode::alloc();
-    _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _worldnode->setPosition(_offset);
-
-    _debugnode = scene2::SceneNode::alloc();
-    _debugnode->setScale(_scale); // Debug node draws in PHYSICS coordinates
-    _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _debugnode->setPosition(_offset);
     
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -208,7 +159,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _winnode->setPosition(dimen.width / 2.0f, dimen.height / 2.0f);
+    _winnode->setPosition(dimen / 2.0f);
     _winnode->setForeground(WIN_COLOR);
     setComplete(false);
 
@@ -218,13 +169,23 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets,
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
-    addChild(_worldnode);
-    addChild(_debugnode);
+    _loadnode = scene2::Label::allocWithText(RESET_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
+    _loadnode->setAnchor(Vec2::ANCHOR_CENTER);
+    _loadnode->setPosition(dimen / 2.0f);
+    _loadnode->setForeground(RESET_COLOR);
+    _loadnode->setVisible(false);
+
+    addChild(_rootnode);
     addChild(_uinode);
     addChild(_winnode);
+    addChild(_loadnode);
     addChild(_losenode);
 
-    _map = Map::alloc(_assets, _world, _worldnode, _debugnode, _scale);
+    _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
+    _map->setAssets(_assets);
+    _map->setRootNode(_rootnode); // Obtains ownership of root.
+
+    _input = InputController::alloc(getBounds());
     _collision.init(_map);
     _action.init(_map, _input);
     _camera->setZoom(CAMERA_ZOOM);
@@ -257,25 +218,14 @@ void GameScene::moveCamera(){
 }
 
 /**
- * Updates the position of any nodes that are "fixed" to the camera
- */
-void GameScene::moveCameraFixedNodes() {
-    Vec2 game_bounds = screenToWorldCoords(0.25f*Application::get()->getDisplayBounds().size);
-    Vec3 cam_pos = _camera->getPosition();
-    _joyback->setPosition(cam_pos.x-game_bounds.x,
-                          cam_pos.y-game_bounds.y);
-//    _joyback->setPosition(cam_pos);
-}
-
-/**
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void GameScene::dispose() {
     if (_active) {
         _input = nullptr;
-        _world = nullptr;
-        _worldnode = nullptr;
-        _debugnode = nullptr;
+        _rootnode = nullptr;
+        _winnode = nullptr;
+        _loadnode = nullptr;
         _uinode = nullptr;
         _winnode = nullptr;
         _losenode = nullptr;
@@ -284,7 +234,7 @@ void GameScene::dispose() {
         _ui.dispose();
         _complete = false;
         _debug = false;
-        _map->dispose();
+        _map = nullptr;
         Scene2::dispose();
     }
 }
@@ -299,13 +249,13 @@ void GameScene::dispose() {
  * This method disposes of the world and creates a new one.
  */
 void GameScene::reset() {
-    _world->clear();
-    _worldnode->removeAllChildren();
-    _debugnode->removeAllChildren();
+    // Unload the level but keep in memory temporarily
+    _assets->unload<Map>("map");
 
-    setFailure(false);
+    // Load a new level
+    _loadnode->setVisible(true);
+    _assets->load<Map>("map", "json/map.json");
     setComplete(false);
-    _map->init(_assets, _world, _worldnode, _debugnode, _scale);
     auto _avatar = _map->getCarrots().at(0);
     _camera->setPosition(_initCamera);
 }
@@ -334,11 +284,44 @@ void GameScene::reset() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void GameScene::preUpdate(float dt) {
+    if (_map == nullptr) {
+        return;
+    }
+
+    // Check to see if new level loaded yet
+    if (_loadnode->isVisible()) {
+        if (_assets->complete()) {
+
+            _collision.dispose();
+            _action.dispose();
+            _map = nullptr;
+
+            // Access and initialize level
+            _map = _assets->get<Map>("map");
+            _map->setAssets(_assets);
+            _map->setRootNode(_rootnode); // Obtains ownership of root.
+            _map->showDebug(_debug);
+
+            activateWorldCollisions(_map->getWorld());
+
+            _collision.init(_map);
+            _action.init(_map, _input);
+
+            _loadnode->setVisible(false);
+        } else {
+            // Level is not loaded yet; refuse input
+            return;
+        }
+    }
+
     _input->update(dt);
 
     // Process the toggled key commands
     if (_input->didDebug()) { setDebug(!isDebug()); }
-    if (_input->didReset()) { reset(); }
+    if (_input->didReset()) {
+        reset();
+        return;
+    }
     if (_input->didExit()) {
         CULog("Shutting down");
         Application::get()->quit();
@@ -398,7 +381,7 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
-    _world->update(step);
+    _map->getWorld()->update(step);
     moveCamera();
     _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/CAMERA_ZOOM);
     _camera->update();
@@ -428,7 +411,7 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Since items may be deleted, garbage collect
-    _world->garbageCollect();
+    _map->getWorld()->garbageCollect();
 
     _action.postUpdate(remain);
 
@@ -440,11 +423,6 @@ void GameScene::postUpdate(float remain) {
         setFailure(true);
     }
 
-    // Check if goal was reached
-    if (_collision.isComplete()) {
-        setComplete(true);
-    }
-
     // Reset the game if we win or lose.
     if (_countdown > 0) {
         _countdown--;
@@ -453,6 +431,23 @@ void GameScene::postUpdate(float remain) {
     }
 }
 
+/**
+* Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
+*
+* @param world the physics world to activate world collision callbacks on
+*/
+void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::ObstacleWorld> &world) {
+    world->activateCollisionCallbacks(true);
+    world->onBeginContact = [this](b2Contact *contact) {
+        _collision.beginContact(contact);
+    };
+    world->onEndContact = [this](b2Contact *contact) {
+        _collision.endContact(contact);
+    };
+    world->shouldCollide = [this](b2Fixture *f1, b2Fixture *f2) {
+        return _collision.shouldCollide(f1, f2);
+    };
+}
 
 /**
 * Sets whether the level is completed.
@@ -479,7 +474,7 @@ void GameScene::setComplete(bool value) {
  * Sets whether the level is failed.
  *
  * If true, the level will reset after a countdown
- *
+ 
  * @param value whether the level is failed.
  */
 void GameScene::setFailure(bool value) {

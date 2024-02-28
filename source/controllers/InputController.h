@@ -49,6 +49,11 @@ private:
     bool  _keyDebug;
     /** Whether the exit key is down */
     bool  _keyExit;
+    /** Whether the dash key is down */
+    bool _keyDash;
+    
+    /** Whether the dash key was pressed in previous frame */
+    bool _keyDashPressed;
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
@@ -61,6 +66,8 @@ protected:
     bool _debugPressed;
     /** Whether the exit action was chosen. */
     bool _exitPressed;
+    /** Whether the dash action was chosen. */
+    bool _dashPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
     
@@ -304,6 +311,8 @@ public:
     
     // CAN DELETE THIS
     bool didRustle() const { return _rustlePressed; }
+    
+    bool didDash() const { return _dashPressed; }
 
 #pragma mark -
 #pragma mark Touch and Mouse Callbacks

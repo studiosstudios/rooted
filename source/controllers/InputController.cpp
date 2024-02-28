@@ -71,13 +71,16 @@ _resetPressed(false),
 _debugPressed(false),
 _exitPressed(false),
 _rustlePressed(false),
+_dashPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
 _keyRustle(false),
 _movement(Vec2(0,0)),
 _joystick(false),
-_hasJumped(false) {
+_hasJumped(false),
+_keyDash(false),
+_keyDashPressed(false) {
 }
 
 /**
@@ -160,6 +163,8 @@ void InputController::update(float dt) {
     _keyDebug  = keys->keyPressed(DEBUG_KEY);
     _keyExit   = keys->keyPressed(EXIT_KEY);
     _keyRustle = keys->keyPressed(KeyCode::M);
+    _keyDashPressed = _keyDash;
+    _keyDash   = keys->keyPressed(KeyCode::X);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -181,6 +186,7 @@ void InputController::update(float dt) {
     _resetPressed = _keyReset;
     _debugPressed = _keyDebug;
     _exitPressed  = _keyExit;
+    _dashPressed  = (_keyDash && !_keyDashPressed);
     // for testing rustling
     _rustlePressed = _keyRustle;
 
@@ -201,6 +207,7 @@ void InputController::clear() {
     _resetPressed = false;
     _debugPressed = false;
     _exitPressed  = false;
+    _dashPressed  = false;
 }
 
 #pragma mark -

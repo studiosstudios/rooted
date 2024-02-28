@@ -26,8 +26,13 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
  */
 void ActionController::preUpdate(float dt) {
     for (auto carrot : _map->getCarrots()) {
-        carrot->setMovement(_input->getMovement() * carrot ->getForce());
+        if (_input->didDash()) {
+            carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
+        } else {
+            carrot->setMovement(_input->getMovement() * carrot ->getForce());
+        }
         carrot->applyForce();
+        
     }
 
     for (auto farmer : _map->getFarmers()) {

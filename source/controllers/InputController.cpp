@@ -72,6 +72,7 @@ _debugPressed(false),
 _exitPressed(false),
 _rustlePressed(false),
 _dashPressed(false),
+_switchPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
@@ -164,6 +165,7 @@ void InputController::update(float dt) {
     _keyExit   = keys->keyPressed(EXIT_KEY);
     _keyRustle = keys->keyPressed(KeyCode::M);
     _keyDash   = keys->keyPressed(KeyCode::X);
+    _keySwitch = keys->keyPressed(KeyCode::S);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -187,6 +189,7 @@ void InputController::update(float dt) {
     _exitPressed  = _keyExit;
     // for testing rustling
     _rustlePressed = _keyRustle;
+    _switchPressed = _keySwitch;
 
     _dashPressed  = (_keyDash && !_keyDashPressed);
     _keyDashPressed = _keyDash;

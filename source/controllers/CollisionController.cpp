@@ -38,7 +38,8 @@ void CollisionController::beginContact(b2Contact* contact) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
-    auto avatar = _map->getCarrots().at(0);
+    auto carrotavatar = _map->getCarrots().at(0);
+    auto farmeravatar = _map->getFarmers().at(0);
     auto babycarrot = _map->getBabyCarrots().at(0);
 
     // TODO: generalize for all players other stuff
@@ -49,7 +50,7 @@ void CollisionController::beginContact(b2Contact* contact) {
         Wheat* wheat = static_cast<Wheat*>(bd2);
 
         // Player collisions:
-        if (bd1 == avatar.get()) {
+        if (bd1 == carrotavatar.get() && !_map->isFarmerPlaying()) {
 
             // TODO: this ain't it, it is very jank sorry I will fix later
             if (fix2->IsSensor() && wheat) {
@@ -59,9 +60,17 @@ void CollisionController::beginContact(b2Contact* contact) {
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
                 // TODO: baby carrot stuff
                 printf("player collided with baby carrot");
-                avatar->captureBabyCarrot();
+                carrotavatar->captureBabyCarrot();
                 babycarrot->gotCaptured();
 //                _map->getBabyCarrots().erase(_map->getBabyCarrots().begin() + 0);
+            }
+        }
+        
+        if (bd1 == farmeravatar.get() && _map->isFarmerPlaying()) {
+
+            // TODO: this ain't it, it is very jank sorry I will fix later
+            if (fix2->IsSensor() && wheat) {
+                wheat->setRustling(true);
             }
         }
 
@@ -111,7 +120,8 @@ void CollisionController::endContact(b2Contact* contact) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
-    auto avatar = _map->getCarrots().at(0);
+    auto carrotavatar = _map->getCarrots().at(0);
+    auto farmeravatar = _map->getFarmers().at(0);
     auto babycarrot = _map->getBabyCarrots().at(0);
 
     // TODO: generalize for all players other stuff
@@ -122,7 +132,7 @@ void CollisionController::endContact(b2Contact* contact) {
         Wheat* wheat = static_cast<Wheat*>(bd2);
 
         // Player collisions:
-        if (bd1 == avatar.get()) {
+        if (bd1 == carrotavatar.get()) {
 
             // TODO: this ain't it, it is very jank sorry I will fix later
             if (fix2->IsSensor() && wheat) {
@@ -131,6 +141,13 @@ void CollisionController::endContact(b2Contact* contact) {
 
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
 //                _map->getBabyCarrots().erase(_map->getBabyCarrots().begin() + 0);
+            }
+        }
+        if (bd1 == farmeravatar.get()) {
+
+            // TODO: this ain't it, it is very jank sorry I will fix later
+            if (fix2->IsSensor() && wheat) {
+                wheat->setRustling(false);
             }
         }
 

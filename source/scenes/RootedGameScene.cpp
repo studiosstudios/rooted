@@ -205,14 +205,27 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
  * Moves the camera to focus the avatar
  */
 void GameScene::moveCamera(){
-    auto _avatar = _map->getCarrots().at(0);
-    if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
-         _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
-        _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
+    if(_map->isFarmerPlaying()){
+        auto _avatar = _map->getFarmers().at(0);
+        if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
+             _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
+            _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
+        }
+        if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
+            _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
+            _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
+        }
     }
-    if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
-        _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
-        _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
+    else{
+        auto _avatar = _map->getCarrots().at(0);
+        if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
+             _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
+            _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
+        }
+        if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
+            _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
+            _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
+        }
     }
     _camera->update();
 }
@@ -256,8 +269,6 @@ void GameScene::reset() {
     _loadnode->setVisible(true);
     _assets->load<Map>("map", "json/map.json");
     setComplete(false);
-    auto _avatar = _map->getCarrots().at(0);
-    _camera->setPosition(_initCamera);
 }
 
 #pragma mark -
@@ -307,6 +318,8 @@ void GameScene::preUpdate(float dt) {
             _collision.init(_map);
             _action.init(_map, _input);
 
+            _camera->setPosition(_initCamera);
+
             _loadnode->setVisible(false);
         } else {
             // Level is not loaded yet; refuse input
@@ -343,6 +356,11 @@ void GameScene::preUpdate(float dt) {
             int randomNumber = dis(gen);
             w->rustle(randomNumber);
         }
+    }
+    
+    if(_input->didSwitch()) {
+        _map->togglePlayer();
+        _map->clearRustling();
     }
 
     // Process the movement

@@ -14,6 +14,7 @@
 #include "../objects/EntityModel.h"
 #include "../controllers/CollisionController.h"
 #include "../controllers/ActionController.h"
+#include "../controllers/UIController.h"
 #include "../objects/Map.h"
 
 /**
@@ -36,23 +37,31 @@ protected:
     CollisionController _collision;
     /** Controller for updating objects */
     ActionController _action;
-
+    /** Controller for game UI */
+    UIController _ui;
+    
     // VIEW
     /** Reference to the physics root of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _rootnode;
     /** Reference to the reset message label */
     std::shared_ptr<cugl::scene2::Label> _loadnode;
+    /** Reference to ui root of scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _uinode;
     /** Reference to the win message label */
     std::shared_ptr<cugl::scene2::Label> _winnode;
     /** Reference to the lose message label */
     std::shared_ptr<cugl::scene2::Label> _losenode;
-    /** Reference to the left joystick image */
-    std::shared_ptr<cugl::scene2::PolygonNode> _leftnode;
-    /** Reference to the right joystick image */
-    std::shared_ptr<cugl::scene2::PolygonNode> _rightnode;
+    /** Reference to the background joystick circle **/
+    std::shared_ptr<cugl::scene2::PolygonNode> _joyback;
+    /** Reference to the foreground joystick circle **/
+    std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
+    
+    std::shared_ptr<cugl::scene2::PolygonNode> _debugjoynode;
 
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _scale;
+    /** Offset */
+    Vec2 _offset;
 
     /** Reference to the map */
     std::shared_ptr<Map> _map;
@@ -73,7 +82,6 @@ protected:
 
     /** Moves the camera to focus the avatar */
     void moveCamera();
-
 
     /**
      * Returns the active screen size of this scene.

@@ -49,14 +49,6 @@ private:
     bool  _keyDebug;
     /** Whether the exit key is down */
     bool  _keyExit;
-    /** Whether the left arrow key is down */
-    bool  _keyLeft;
-    /** Whether the right arrow key is down */
-    bool  _keyRight;
-    /** Whether the up arrow key is down */
-    bool  _keyUp;
-    /** Whether the down arrow key is down */
-    bool  _keyDown;
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
@@ -102,7 +94,7 @@ protected:
 		/** The touch was not inside the screen bounds */
 		UNDEFINED,
 		/** The touch was in the left zone (as shown above) */
-		LEFT,
+        JOY,
 		/** The touch was in the right zone (as shown above) */
 		RIGHT,
 		/** The touch was in the main zone (as shown above) */
@@ -113,14 +105,14 @@ protected:
     cugl::Rect _tbounds;
     /** The bounds of the entire game screen (in scene coordinates) */
 	cugl::Rect _sbounds;
-	/** The bounds of the left touch zone */
-	cugl::Rect _lzone;
+	/** The bounds of the joy touch zone */
+	cugl::Rect _jzone;
 	/** The bounds of the right touch zone */
 	cugl::Rect _rzone;
 
 	// Each zone can have only one touch
-	/** The current touch location for the left zone */
-	TouchInstance _ltouch;
+	/** The current touch location for the joy zone */
+	TouchInstance _jtouch;
 	/** The current touch location for the right zone */
 	TouchInstance _rtouch;
 	/** The current touch location for the bottom zone */
@@ -128,8 +120,10 @@ protected:
     
     /** Whether the virtual joystick is active */
     bool _joystick;
-    /** The position of the virtual joystick */
-    cugl::Vec2 _joycenter;
+    /** The position of the virtual joystick anchor */
+    cugl::Vec2 _joyAnchor;
+    /** The position of the virtual joystick dynamic */
+    cugl::Vec2 _joyCenter;
     /** Whether or not we have processed a jump for this swipe yet */
     bool _hasJumped;
     /** The timestamp for a double tap on the right */
@@ -306,7 +300,7 @@ public:
      *
      * @return the scene graph position of the virtual joystick
      */
-    cugl::Vec2 getJoystick() const { return _joycenter; }
+    std::pair<cugl::Vec2, cugl::Vec2> getJoystick() const { return std::pair(_joyAnchor, _joyCenter); }
     
     // CAN DELETE THIS
     bool didRustle() const { return _rustlePressed; }
@@ -338,7 +332,8 @@ public:
      * @param focus	Whether the listener currently has focus
      */
     void touchesMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus);
-  
+
+    int signum(int num);
 };
 
 #endif /* __PF_INPUT_H__ */

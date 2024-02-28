@@ -32,6 +32,8 @@ using namespace cugl;
 #define DEFAULT_HEIGHT  18.0f
 /** Zoom of camera relative to scene */
 #define CAMERA_ZOOM 1.5
+/** Camera gliding rate */
+#define CAMERA_GLIDE_RATE 0.06f
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -212,9 +214,11 @@ void GameScene::moveCamera(){
     else{
         _avatar = _map->getCarrots().at(0);
     }
-    float x = std::min(std::max((_avatar->getPosition()*_scale).x, (float) ((SCENE_WIDTH/2)/CAMERA_ZOOM)), (float) (SCENE_WIDTH-(SCENE_WIDTH/2)/CAMERA_ZOOM));
-    float y = std::min(std::max((_avatar->getPosition()*_scale).y, (float) ((SCENE_HEIGHT/2)/CAMERA_ZOOM)), (float) (SCENE_HEIGHT-(SCENE_HEIGHT/2)/CAMERA_ZOOM));
-    _camera->setPosition(Vec3(x, y, _camera->getPosition().z));
+    float new_x = std::min(std::max((_avatar->getPosition()*_scale).x, (float) ((SCENE_WIDTH/2)/CAMERA_ZOOM)), (float) (SCENE_WIDTH-(SCENE_WIDTH/2)/CAMERA_ZOOM));
+    float new_y = std::min(std::max((_avatar->getPosition()*_scale).y, (float) ((SCENE_HEIGHT/2)/CAMERA_ZOOM)), (float) (SCENE_HEIGHT-(SCENE_HEIGHT/2)/CAMERA_ZOOM));
+    float curr_x = _camera->getPosition().x;
+    float curr_y = _camera->getPosition().y;
+    _camera->setPosition(Vec3(curr_x + (new_x-curr_x) * CAMERA_GLIDE_RATE, curr_y + (new_y-curr_y) * CAMERA_GLIDE_RATE, _camera->getPosition().z));
     _camera->update();
 }
 

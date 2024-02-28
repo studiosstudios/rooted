@@ -36,7 +36,11 @@ void ActionController::preUpdate(float dt) {
         }}
     else {
         for (auto farmer : _map->getFarmers()) {
-            farmer->setMovement(_input->getMovement() * farmer ->getForce());
+            if (_input->didDash()) {
+                farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
+            } else {
+                farmer->setMovement(_input->getMovement() * farmer ->getForce());
+            }
             farmer->applyForce();
         }
     }

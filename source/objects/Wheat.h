@@ -12,7 +12,7 @@ using namespace cugl;
 #pragma mark Drawing Constants
 /** The texture for the character avatar */
 #define WHEAT_TEXTURE       "wheat"
-#define WHEAT_FRAMES    1
+#define WHEAT_FRAMES    8
 #define WHEAT_ANIMATION_SPEED     0.5f
 
 #define RECOVERY            0.01f

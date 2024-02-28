@@ -40,6 +40,8 @@ float CARROT_SIZE[2] = {1.0f, 1.0f}; //TODO: make json constants fil
 
 float WHEAT_SIZE[2] = {1.0f, 1.0f};
 
+float FARMER_SIZE[2] = {1.0f, 1.0f};
+
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::YELLOW
 
@@ -176,21 +178,12 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
                 _assets->get<Texture>(DUDE_TEXTURE));
         babyNode->setColor(Color4::BLUE);
         baby->setSceneNode(babyNode);
-        baby->setDrawScale(
-                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)
         _worldnode->addChild(babyNode);
         baby->setDebugScene(_debugnode);
     }
-
-    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
-        std::shared_ptr<Wheat> wheat = *it;
-        auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
-                                                              1, WHEAT_FRAMES, WHEAT_FRAMES);
-        wheat->setSceneNode(spriteImage);
-        addObstacle(wheat, spriteImage);  // All walls share the same texture
-    }
-
+    
     for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
         std::shared_ptr<Farmer> farmer = *it;
         auto farmerNode = scene2::PolygonNode::allocWithTexture(
@@ -201,6 +194,14 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
         // Create the polygon node (empty, as the model will initialize)
         _worldnode->addChild(farmerNode);
         farmer->setDebugScene(_debugnode);
+    }
+
+    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+        std::shared_ptr<Wheat> wheat = *it;
+        auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
+                                                              1, WHEAT_FRAMES, WHEAT_FRAMES);
+        wheat->setSceneNode(spriteImage);
+        addObstacle(wheat, spriteImage);  // All walls share the same texture
     }
 
 }
@@ -434,6 +435,7 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     success = posArray->isArray();
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+    carrot->setDebugColor(DEBUG_COLOR);
     _carrots.push_back(carrot);
 
     if (success) {
@@ -461,6 +463,7 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
     success = json->isArray();
     Vec2 wheatPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
     std::shared_ptr<Wheat> wheat = Wheat::alloc(wheatPos, WHEAT_SIZE, _scale.x);
+    wheat->setDebugColor(DEBUG_COLOR);
     _wheat.push_back(wheat);
 
     return success;
@@ -485,6 +488,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     success = posArray->isArray();
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+    baby->setDebugColor(DEBUG_COLOR);
     _babies.push_back(baby);
 
     if (success) {
@@ -508,7 +512,17 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
  */
 bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     bool success = true;
-
+    
+    auto posArray = json->get("position");
+    success = posArray->isArray();
+    Vec2 farmerPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
+    std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, FARMER_SIZE, _scale.x);
+    _farmers.push_back(farmer);
+    
+    if (success) {
+        _world->addObstacle(farmer);
+    }
+    
     return success;
 
 }

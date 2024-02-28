@@ -71,13 +71,17 @@ _resetPressed(false),
 _debugPressed(false),
 _exitPressed(false),
 _rustlePressed(false),
+_dashPressed(false),
+_switchPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
 _keyRustle(false),
 _movement(Vec2(0,0)),
 _joystick(false),
-_hasJumped(false) {
+_hasJumped(false),
+_keyDash(false),
+_keyDashPressed(false) {
 }
 
 /**
@@ -160,11 +164,13 @@ void InputController::update(float dt) {
     _keyDebug  = keys->keyPressed(DEBUG_KEY);
     _keyExit   = keys->keyPressed(EXIT_KEY);
     _keyRustle = keys->keyPressed(KeyCode::M);
+    _keyDash   = keys->keyPressed(KeyCode::X);
+    _keySwitch = keys->keyPressed(KeyCode::S);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
-        _movement.x = 1.0f;
-    } else if (keys->keyDown(KeyCode::ARROW_RIGHT)) {
         _movement.x = -1.0f;
+    } else if (keys->keyDown(KeyCode::ARROW_RIGHT)) {
+        _movement.x = 1.0f;
     } else {
         _movement.x = 0;
     }
@@ -183,6 +189,10 @@ void InputController::update(float dt) {
     _exitPressed  = _keyExit;
     // for testing rustling
     _rustlePressed = _keyRustle;
+    _switchPressed = _keySwitch;
+
+    _dashPressed  = (_keyDash && !_keyDashPressed);
+    _keyDashPressed = _keyDash;
 
     // _movement is now updated directly in processJoystick
 
@@ -201,6 +211,7 @@ void InputController::clear() {
     _resetPressed = false;
     _debugPressed = false;
     _exitPressed  = false;
+    _dashPressed  = false;
 }
 
 #pragma mark -
@@ -279,6 +290,7 @@ Vec2 InputController::touch2Screen(const Vec2 pos) const {
  */
 void InputController::processJoystick(const cugl::Vec2 pos) {
     Vec2 diff =  pos - _jtouch.position;
+    _joyCenter = touch2Screen(pos);
 
     // Max out the diff
     if (diff.lengthSquared() > JSTICK_RADIUS*JSTICK_RADIUS) {
@@ -287,14 +299,12 @@ void InputController::processJoystick(const cugl::Vec2 pos) {
     }
     
     if (std::fabsf(diff.x) > JSTICK_DEADZONE) {
-        _joystick = true;
         _movement.x = ((std::fabsf(diff.x) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE)) * signum(diff.x);
     } else {
         _movement.x = 0;
     }
     
     if (std::fabsf(diff.y) > JSTICK_DEADZONE) {
-        _joystick = true;
         _movement.y = ((std::fabsf(diff.y) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE)) * -signum(diff.y); // Negative here because of inverted y
     } else {
         _movement.y = 0;
@@ -347,17 +357,18 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _jtouch.timestamp.mark();
                 _jtouch.touchids.insert(event.touch);
 
+                _joyCenter = touch2Screen(pos);
+                _joyAnchor = _joyCenter;
                 _joystick = true;
             }
             break;
         case Zone::RIGHT:
             // Only process if no touch in zone
             if (_rtouch.touchids.empty()) {
-                // Right is jump AND fire controls
                 _rtouch.position = event.position;
                 _rtouch.timestamp.mark();
                 _rtouch.touchids.insert(event.touch);
-                _hasJumped = false;
+                _keyDash = false;
             }
             break;
         case Zone::MAIN:
@@ -399,7 +410,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _movement.setZero();
         _joystick = false;
     } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
-        _hasJumped = false;
+        _keyDash = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
     } else if (zone == Zone::MAIN) {
@@ -424,9 +435,10 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
     if (_jtouch.touchids.find(event.touch) != _jtouch.touchids.end()) {
         processJoystick(pos);
     } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
-        if (!_hasJumped) {
+        if (!_keyDash) {
             if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
-                _hasJumped = true;
+//                std::cout << "Swiped!\n";
+                _keyDash = true;
             }
         }
     } else if (_mtouch.touchids.size() > 1) {

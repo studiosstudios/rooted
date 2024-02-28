@@ -178,8 +178,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
                 _assets->get<Texture>(DUDE_TEXTURE));
         babyNode->setColor(Color4::BLUE);
         baby->setSceneNode(babyNode);
-        baby->setDrawScale(
-                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)
         _worldnode->addChild(babyNode);
         baby->setDebugScene(_debugnode);
@@ -437,6 +436,7 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     success = posArray->isArray();
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+    carrot->setDebugColor(DEBUG_COLOR);
     _carrots.push_back(carrot);
 
     if (success) {
@@ -489,6 +489,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     success = posArray->isArray();
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+    baby->setDebugColor(DEBUG_COLOR);
     _babies.push_back(baby);
 
     if (success) {
@@ -566,4 +567,20 @@ void Map::rustleWheats(float amount) {
             w->rustle(amount);
         }
     }
+}
+
+/**
+ * Stops all wheat from rustling
+ */
+void Map::clearRustling(){
+    for (auto w: _wheat) {
+        w->setRustling(false);
+    }
+}
+
+/**
+ * TEMP: Switches current player between carrot and farmer
+ */
+void Map::togglePlayer(){
+    _farmerPlaying = !_farmerPlaying;
 }

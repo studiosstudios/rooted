@@ -49,9 +49,15 @@ private:
     bool  _keyDebug;
     /** Whether the exit key is down */
     bool  _keyExit;
+    /** Whether the dash key is down */
+    bool _keyDash;
+    
+    /** Whether the dash key was pressed in previous frame */
+    bool _keyDashPressed;
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
+    bool _keySwitch;
   
 protected:
     // INPUT RESULTS
@@ -61,11 +67,14 @@ protected:
     bool _debugPressed;
     /** Whether the exit action was chosen. */
     bool _exitPressed;
+    /** Whether the dash action was chosen. */
+    bool _dashPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
     
     // CAN REMOVE THIS, THIS IS JUST FOR TESTING
     bool _rustlePressed;
+    bool _switchPressed;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -120,8 +129,10 @@ protected:
     
     /** Whether the virtual joystick is active */
     bool _joystick;
-    /** The position of the virtual joystick */
-    cugl::Vec2 _joycenter;
+    /** The position of the virtual joystick anchor */
+    cugl::Vec2 _joyAnchor;
+    /** The position of the virtual joystick dynamic */
+    cugl::Vec2 _joyCenter;
     /** Whether or not we have processed a jump for this swipe yet */
     bool _hasJumped;
     /** The timestamp for a double tap on the right */
@@ -298,10 +309,15 @@ public:
      *
      * @return the scene graph position of the virtual joystick
      */
-    cugl::Vec2 getJoystick() const { return _joycenter; }
+    std::pair<cugl::Vec2, cugl::Vec2> getJoystick() const { return std::pair(_joyAnchor, _joyCenter); }
     
     // CAN DELETE THIS
     bool didRustle() const { return _rustlePressed; }
+    
+    bool didDash() const { return _dashPressed; }
+
+    bool didSwitch() const { return _switchPressed; }
+
 
 #pragma mark -
 #pragma mark Touch and Mouse Callbacks

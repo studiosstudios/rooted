@@ -37,7 +37,7 @@ public:
     bool init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
               cugl::Vec2 offset);
     
-    void updateJoystick();
+    void updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick);
     
-    void update(float dt);
+    void update(float step, std::shared_ptr<cugl::OrthographicCamera> &camera, bool joyOn, std::pair<cugl::Vec2, cugl::Vec2> joyStick);
 };

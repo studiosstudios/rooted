@@ -170,9 +170,9 @@ void InputController::update(float dt) {
     }
     
     if (keys->keyDown(KeyCode::ARROW_UP)) {
-        _movement.y = -1.0f;
-    } else if (keys->keyDown(KeyCode::ARROW_DOWN)) {
         _movement.y = 1.0f;
+    } else if (keys->keyDown(KeyCode::ARROW_DOWN)) {
+        _movement.y = -1.0f;
     } else {
         _movement.y = 0;
     }

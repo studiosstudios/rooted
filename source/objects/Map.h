@@ -287,13 +287,13 @@ public:
 #pragma mark -
 #pragma mark Getters and Setters
 
-    std::vector<std::shared_ptr<BabyCarrot>> getBabyCarrots() { return _babies; }
+    std::vector<std::shared_ptr<BabyCarrot>>& getBabyCarrots() { return _babies; }
 
-    std::vector<std::shared_ptr<Carrot>> getCarrots() { return _carrots; }
+    std::vector<std::shared_ptr<Carrot>>& getCarrots() { return _carrots; }
 
-    std::vector<std::shared_ptr<Farmer>> getFarmers() { return _farmers; }
+    std::vector<std::shared_ptr<Farmer>>& getFarmers() { return _farmers; }
 
-    std::vector<std::shared_ptr<Wheat>> getWheat() { return _wheat; }
+    std::vector<std::shared_ptr<Wheat>>& getWheat() { return _wheat; }
 
     std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
     

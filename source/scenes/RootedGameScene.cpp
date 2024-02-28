@@ -32,6 +32,8 @@ using namespace cugl;
 #define DEFAULT_HEIGHT  18.0f
 /** Zoom of camera relative to scene */
 #define CAMERA_ZOOM 1.5
+/** Camera gliding rate */
+#define CAMERA_GLIDE_RATE 0.06f
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -205,28 +207,18 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
  * Moves the camera to focus the avatar
  */
 void GameScene::moveCamera(){
+    std::shared_ptr<EntityModel> _avatar;
     if(_map->isFarmerPlaying()){
-        auto _avatar = _map->getFarmers().at(0);
-        if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
-             _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
-            _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
-        }
-        if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
-            _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
-            _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
-        }
+        _avatar = _map->getFarmers().at(0);
     }
     else{
-        auto _avatar = _map->getCarrots().at(0);
-        if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
-             _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
-            _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
-        }
-        if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
-            _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
-            _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
-        }
+        _avatar = _map->getCarrots().at(0);
     }
+    float new_x = std::min(std::max((_avatar->getPosition()*_scale).x, (float) ((SCENE_WIDTH/2)/CAMERA_ZOOM)), (float) (SCENE_WIDTH-(SCENE_WIDTH/2)/CAMERA_ZOOM));
+    float new_y = std::min(std::max((_avatar->getPosition()*_scale).y, (float) ((SCENE_HEIGHT/2)/CAMERA_ZOOM)), (float) (SCENE_HEIGHT-(SCENE_HEIGHT/2)/CAMERA_ZOOM));
+    float curr_x = _camera->getPosition().x;
+    float curr_y = _camera->getPosition().y;
+    _camera->setPosition(Vec3(curr_x + (new_x-curr_x) * CAMERA_GLIDE_RATE, curr_y + (new_y-curr_y) * CAMERA_GLIDE_RATE, _camera->getPosition().z));
     _camera->update();
 }
 
@@ -428,12 +420,12 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Since items may be deleted, garbage collect
-    _map->getWorld()->garbageCollect();
 
     _action.postUpdate(remain);
 
+    _map->getWorld()->garbageCollect();
+
     auto avatar = _map->getCarrots().at(0);
-    auto baby = _map->getBabyCarrots().at(0);
 
     // Record failure if necessary.
     if (!_failed && avatar->getY() < 0) {

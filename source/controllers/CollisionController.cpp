@@ -38,47 +38,49 @@ void CollisionController::beginContact(b2Contact* contact) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
-    auto carrotavatar = _map->getCarrots().at(0);
-    auto farmeravatar = _map->getFarmers().at(0);
-    auto babycarrot = _map->getBabyCarrots().at(0);
-
-    // TODO: generalize for all players other stuff
 
     // Twice to swap
     for (int i = 0; i < 2; i++) {
 
-        Wheat* wheat = static_cast<Wheat*>(bd2);
+        std::string name1 = bd1->getName();
+        std::string name2 = bd2->getName();
 
-        // Player collisions:
-        if (bd1 == carrotavatar.get() && !_map->isFarmerPlaying()) {
-
-            // TODO: this ain't it, it is very jank sorry I will fix later
-            // changed this so that you are only rustling when colliding
-            if (fix2->IsSensor() && wheat) {
-                wheat->rustle(bd1->getLinearVelocity().length());
-            }
-
-            if (bd2 == _map->getBabyCarrots().at(0).get()) {
-                // TODO: baby carrot stuff
-                printf("player collided with baby carrot");
-                carrotavatar->captureBabyCarrot();
-                babycarrot->gotCaptured();
-//                _map->getBabyCarrots().erase(_map->getBabyCarrots().begin() + 0);
+        Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+        BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+        Farmer* b2farmer = dynamic_cast<Farmer*>(bd2);
+        
+        for (auto carrot : _map->getCarrots()) {
+            if (bd1 == carrot.get() && !_map->isFarmerPlaying()) {
+                if (wheat) {
+//                    printf("carrot collision with wheat \n");
+                    wheat->rustle(bd1->getLinearVelocity().length());
+                }
+                
+                if (b2babycarrot) {
+//                    printf("carrot collision with baby carrot \n");
+                    carrot->captureBabyCarrot();
+                    b2babycarrot->gotCaptured();
+                }
+                
+                if (b2farmer) {
+                    // TODO: carrot gets rooted
+                }
             }
         }
         
-        if (bd1 == farmeravatar.get() && _map->isFarmerPlaying()) {
-
-            // TODO: this ain't it, it is very jank sorry I will fix later
-            if (fix2->IsSensor() && wheat) {
-                wheat->setRustling(true);
+        for (auto babyCarrot : _map->getBabyCarrots()) {
+            if (bd1 == babyCarrot.get()) {
+                if (wheat) {
+                    wheat->rustle(bd1->getLinearVelocity().length());
+                }
             }
         }
 
-        // Baby Carrot collisions:
-        if (bd1 == babycarrot.get()) {
-            if (fix2->IsSensor() && wheat) {
-                wheat->rustle(bd1->getLinearVelocity().length());
+        for (auto farmer : _map->getFarmers()) {
+            if (bd1 == farmer.get() && _map->isFarmerPlaying()) {
+                if (wheat) {
+                    wheat->rustle(bd1->getLinearVelocity().length());
+                }
             }
         }
 
@@ -121,43 +123,38 @@ void CollisionController::endContact(b2Contact* contact) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
-    auto carrotavatar = _map->getCarrots().at(0);
-    auto farmeravatar = _map->getFarmers().at(0);
-    auto babycarrot = _map->getBabyCarrots().at(0);
-
-    // TODO: generalize for all players other stuff
-
-    // Twice to swap
     for (int i = 0; i < 2; i++) {
-
-        Wheat* wheat = static_cast<Wheat*>(bd2);
-
-        // Player collisions:
-        if (bd1 == carrotavatar.get()) {
-
-            // TODO: this ain't it, it is very jank sorry I will fix later
-            // currently removed, but if we want there to be an interaction on end contact here it is
-//            if (fix2->IsSensor() && wheat) {
-//                wheat->rustle(3);
-//            }
-
-            if (bd2 == _map->getBabyCarrots().at(0).get()) {
-//                _map->getBabyCarrots().erase(_map->getBabyCarrots().begin() + 0);
-            }
-        }
-        if (bd1 == farmeravatar.get()) {
-
-            // TODO: this ain't it, it is very jank sorry I will fix later
-            if (fix2->IsSensor() && wheat) {
-                wheat->setRustling(false);
+        
+        Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+        BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+        Farmer* b2farmer = dynamic_cast<Farmer*>(bd2);
+        
+        for (auto carrot : _map->getCarrots()) {
+            if (bd1 == carrot.get()) {
+                if (wheat) {
+                    wheat->setRustling(false);
+                }
+                
+                if (b2babycarrot) {
+                    
+                }
             }
         }
 
-        // Baby Carrot collisions:
-        if (bd1 == babycarrot.get()) {
-//            if (fix2->IsSensor() && wheat) {
-//                wheat->rustle(3);
-//            }
+        for (auto farmer : _map->getFarmers()) {
+            if (bd1 == farmer.get()) {
+                if (wheat) {
+                    wheat->setRustling(false);
+                }
+            }
+        }
+        
+        for (auto babyCarrot : _map->getBabyCarrots()) {
+            if (bd1 == babyCarrot.get()) {
+                if (wheat) {
+                    wheat->setRustling(false);
+                }
+            }
         }
 
         // Swap everything
@@ -190,17 +187,22 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
-    auto avatar = _map->getCarrots().at(0);
-    auto babycarrot = _map->getBabyCarrots().at(0);
-
-    // Twice to swap
     for (int i = 0; i < 2; i++) {
 
-        if (bd1 == avatar.get()) {
-
-            // Carrot with Baby Carrot
-            if (bd2 == _map->getBabyCarrots().at(0).get()) {
-                return false;
+        BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+        
+        for (auto carrot : _map->getCarrots()) {
+            if (bd1 == carrot.get()) {
+                
+                if (b2babycarrot) {
+                    
+                }
+            }
+        }
+        
+        for (auto babyCarrot : _map->getBabyCarrots()) {
+            if (bd1 == babyCarrot.get()) {
+              
             }
         }
 

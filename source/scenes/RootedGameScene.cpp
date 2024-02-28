@@ -253,8 +253,6 @@ void GameScene::reset() {
     _loadnode->setVisible(true);
     _assets->load<Map>("map", "json/map.json");
     setComplete(false);
-    auto _avatar = _map->getCarrots().at(0);
-    _camera->setPosition(_initCamera);
 }
 
 #pragma mark -
@@ -303,6 +301,8 @@ void GameScene::preUpdate(float dt) {
 
             _collision.init(_map);
             _action.init(_map, _input);
+
+            _camera->setPosition(_initCamera);
 
             _loadnode->setVisible(false);
         } else {

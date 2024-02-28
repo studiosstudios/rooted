@@ -299,13 +299,15 @@ void InputController::processJoystick(const cugl::Vec2 pos) {
     }
     
     if (std::fabsf(diff.x) > JSTICK_DEADZONE) {
-        _movement.x = ((std::fabsf(diff.x) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE)) * signum(diff.x);
+        _movement.x = ((std::fabsf(diff.x) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE));
+        _movement.x *= _movement.x * signum(diff.x);
     } else {
         _movement.x = 0;
     }
     
     if (std::fabsf(diff.y) > JSTICK_DEADZONE) {
-        _movement.y = ((std::fabsf(diff.y) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE)) * -signum(diff.y); // Negative here because of inverted y
+        _movement.y = ((std::fabsf(diff.y) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE));
+        _movement.y *= _movement.y * -signum(diff.y); // Negative here because of inverted y;
     } else {
         _movement.y = 0;
     }
@@ -369,6 +371,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _rtouch.timestamp.mark();
                 _rtouch.touchids.insert(event.touch);
                 _keyDash = false;
+                _keySwitch = false;
             }
             break;
         case Zone::MAIN:
@@ -411,6 +414,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _joystick = false;
     } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         _keyDash = false;
+        _keySwitch = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
     } else if (zone == Zone::MAIN) {
@@ -439,6 +443,9 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
 //                std::cout << "Swiped!\n";
                 _keyDash = true;
+            }
+            else if ((pos.y-_rtouch.position.y) > SWIPE_LENGTH) {
+                _keySwitch = true;
             }
         }
     } else if (_mtouch.touchids.size() > 1) {

@@ -52,8 +52,9 @@ void CollisionController::beginContact(b2Contact* contact) {
         if (bd1 == avatar.get()) {
 
             // TODO: this ain't it, it is very jank sorry I will fix later
+            // changed this so that you are only rustling when colliding
             if (fix2->IsSensor() && wheat) {
-                wheat->setRustling(true);
+                wheat->rustle(3);
             }
 
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
@@ -68,7 +69,7 @@ void CollisionController::beginContact(b2Contact* contact) {
         // Baby Carrot collisions:
         if (bd1 == babycarrot.get()) {
             if (fix2->IsSensor() && wheat) {
-                wheat->setRustling(true);
+                wheat->rustle(3);
             }
         }
 
@@ -125,9 +126,10 @@ void CollisionController::endContact(b2Contact* contact) {
         if (bd1 == avatar.get()) {
 
             // TODO: this ain't it, it is very jank sorry I will fix later
-            if (fix2->IsSensor() && wheat) {
-                wheat->setRustling(false);
-            }
+            // currently removed, but if we want there to be an interaction on end contact here it is
+//            if (fix2->IsSensor() && wheat) {
+//                wheat->rustle(3);
+//            }
 
             if (bd2 == _map->getBabyCarrots().at(0).get()) {
 //                _map->getBabyCarrots().erase(_map->getBabyCarrots().begin() + 0);
@@ -136,9 +138,9 @@ void CollisionController::endContact(b2Contact* contact) {
 
         // Baby Carrot collisions:
         if (bd1 == babycarrot.get()) {
-            if (fix2->IsSensor() && wheat) {
-                wheat->setRustling(false);
-            }
+//            if (fix2->IsSensor() && wheat) {
+//                wheat->rustle(3);
+//            }
         }
 
         // Swap everything
@@ -184,7 +186,6 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
                 return false;
             }
         }
-
 
         // Swap everything
         b2Fixture* fixTemp = f1;

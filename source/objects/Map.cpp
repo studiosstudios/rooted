@@ -203,6 +203,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
                                                               1, WHEAT_FRAMES, WHEAT_FRAMES);
         wheat->setSceneNode(spriteImage);
         addObstacle(wheat, spriteImage);  // All walls share the same texture
+        
     }
 
 }
@@ -463,6 +464,7 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
     success = json->isArray();
     Vec2 wheatPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
     std::shared_ptr<Wheat> wheat = Wheat::alloc(wheatPos, WHEAT_SIZE, _scale.x);
+    wheat->setDebugColor(DEBUG_COLOR);
     _wheat.push_back(wheat);
 
     return success;

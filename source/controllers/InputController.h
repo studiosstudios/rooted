@@ -49,9 +49,15 @@ private:
     bool  _keyDebug;
     /** Whether the exit key is down */
     bool  _keyExit;
+    /** Whether the dash key is down */
+    bool _keyDash;
+    
+    /** Whether the dash key was pressed in previous frame */
+    bool _keyDashPressed;
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
+    bool _keySwitch;
   
 protected:
     // INPUT RESULTS
@@ -61,11 +67,14 @@ protected:
     bool _debugPressed;
     /** Whether the exit action was chosen. */
     bool _exitPressed;
+    /** Whether the dash action was chosen. */
+    bool _dashPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
     
     // CAN REMOVE THIS, THIS IS JUST FOR TESTING
     bool _rustlePressed;
+    bool _switchPressed;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -304,6 +313,11 @@ public:
     
     // CAN DELETE THIS
     bool didRustle() const { return _rustlePressed; }
+    
+    bool didDash() const { return _dashPressed; }
+
+    bool didSwitch() const { return _switchPressed; }
+
 
 #pragma mark -
 #pragma mark Touch and Mouse Callbacks

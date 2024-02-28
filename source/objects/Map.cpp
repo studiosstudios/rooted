@@ -567,3 +567,19 @@ void Map::rustleWheats(float amount) {
         }
     }
 }
+
+/**
+ * Stops all wheat from rustling
+ */
+void Map::clearRustling(){
+    for (auto w: _wheat) {
+        w->setRustling(false);
+    }
+}
+
+/**
+ * TEMP: Switches current player between carrot and farmer
+ */
+void Map::togglePlayer(){
+    _farmerPlaying = !_farmerPlaying;
+}

@@ -124,7 +124,6 @@ void CollisionController::endContact(b2Contact* contact) {
         
         Wheat* wheat = dynamic_cast<Wheat*>(bd2);
         BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
-        Farmer* b2farmer = dynamic_cast<Farmer*>(bd2);
         
         for (auto carrot : _map->getCarrots()) {
             if (bd1 == carrot.get()) {
@@ -140,6 +139,14 @@ void CollisionController::endContact(b2Contact* contact) {
         
         for (auto babyCarrot : _map->getBabyCarrots()) {
             if (bd1 == babyCarrot.get()) {
+                if (wheat) {
+                    wheat->setRustling(false);
+                }
+            }
+        }
+        
+        for (auto farmer : _map->getFarmers()) {
+            if (bd1 == farmer.get()) {
                 if (wheat) {
                     wheat->setRustling(false);
                 }

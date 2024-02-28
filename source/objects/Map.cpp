@@ -510,7 +510,6 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
     _carrots.push_back(avatar);
     
 #pragma mark : Wheat
-//    image = assets->get<Texture>(WHEAT_TEXTURE);
     for (int ii = 0; ii < WHEAT_COUNT; ii++) {
         Vec2 offset = Vec2(0.5, 0.5);
         Vec2 wheatPos = WHEAT_POS[ii];
@@ -520,6 +519,7 @@ bool Map::init(const std::shared_ptr<cugl::AssetManager> &assets,
         auto singleWheat = Wheat::alloc(wheatPos, spriteImage->getSize() / scale, scale);
         
         singleWheat->setSceneNode(spriteImage);
+        singleWheat->setDebugColor(DEBUG_COLOR);
         addObstacle(singleWheat, spriteImage, worldnode, debugnode);
         
         _wheat.push_back(singleWheat);

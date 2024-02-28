@@ -398,7 +398,7 @@ bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
     // Get the object, which is automatically retained
     std::shared_ptr<physics2::PolygonObstacle> wallobj = physics2::PolygonObstacle::allocWithAnchor(
             wall, Vec2::ANCHOR_CENTER);
-    wallobj->setName(json->key());
+    wallobj->setName("wall");
 
     wallobj->setBodyType(b2_staticBody);
     wallobj->setDensity(BASIC_DENSITY);
@@ -436,6 +436,7 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     carrot->setDebugColor(DEBUG_COLOR);
+    carrot->setName("carrot");
     _carrots.push_back(carrot);
 
     if (success) {
@@ -464,6 +465,7 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
     Vec2 wheatPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
     std::shared_ptr<Wheat> wheat = Wheat::alloc(wheatPos, WHEAT_SIZE, _scale.x);
     wheat->setDebugColor(DEBUG_COLOR);
+    wheat->setName("wheat");
     _wheat.push_back(wheat);
 
     return success;
@@ -489,6 +491,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
+    baby->setName("baby");
     _babies.push_back(baby);
 
     if (success) {
@@ -517,6 +520,8 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     success = posArray->isArray();
     Vec2 farmerPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, FARMER_SIZE, _scale.x);
+    farmer->setDebugColor(DEBUG_COLOR);
+    farmer->setName("farmer");
     _farmers.push_back(farmer);
     
     if (success) {
@@ -566,4 +571,20 @@ void Map::rustleWheats(float amount) {
             w->rustle(amount);
         }
     }
+}
+
+/**
+ * Stops all wheat from rustling
+ */
+void Map::clearRustling(){
+    for (auto w: _wheat) {
+        w->setRustling(false);
+    }
+}
+
+/**
+ * TEMP: Switches current player between carrot and farmer
+ */
+void Map::togglePlayer(){
+    _farmerPlaying = !_farmerPlaying;
 }

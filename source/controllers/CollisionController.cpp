@@ -38,15 +38,19 @@ void CollisionController::beginContact(b2Contact* contact) {
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
+
     // Twice to swap
     for (int i = 0; i < 2; i++) {
+
+        std::string name1 = bd1->getName();
+        std::string name2 = bd2->getName();
 
         Wheat* wheat = dynamic_cast<Wheat*>(bd2);
         BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
         Farmer* b2farmer = dynamic_cast<Farmer*>(bd2);
         
         for (auto carrot : _map->getCarrots()) {
-            if (bd1 == carrot.get()) {
+            if (bd1 == carrot.get() && !_map->isFarmerPlaying()) {
                 if (wheat) {
 //                    printf("carrot collision with wheat \n");
                     wheat->setRustling(true);
@@ -74,7 +78,7 @@ void CollisionController::beginContact(b2Contact* contact) {
         }
         
         for (auto farmer : _map->getFarmers()) {
-            if (bd1 == farmer.get()) {
+            if (bd1 == farmer.get() && _map->isFarmerPlaying()) {
                 if (wheat) {
                     wheat->setRustling(true);
                 }
@@ -134,6 +138,14 @@ void CollisionController::endContact(b2Contact* contact) {
                 
                 if (b2babycarrot) {
                     
+                }
+            }
+        }
+
+        for (auto farmer : _map->getFarmers()) {
+            if (bd1 == farmer.get()) {
+                if (wheat) {
+                    wheat->setRustling(false);
                 }
             }
         }

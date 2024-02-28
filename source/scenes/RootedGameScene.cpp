@@ -205,15 +205,16 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
  * Moves the camera to focus the avatar
  */
 void GameScene::moveCamera(){
-    auto _avatar = _map->getCarrots().at(0);
-    if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
-         _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
-        _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
+    std::shared_ptr<EntityModel> _avatar;
+    if(_map->isFarmerPlaying()){
+        _avatar = _map->getFarmers().at(0);
     }
-    if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
-        _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
-        _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
+    else{
+        _avatar = _map->getCarrots().at(0);
     }
+    float x = std::min(std::max((_avatar->getPosition()*_scale).x, (float) ((SCENE_WIDTH/2)/CAMERA_ZOOM)), (float) (SCENE_WIDTH-(SCENE_WIDTH/2)/CAMERA_ZOOM));
+    float y = std::min(std::max((_avatar->getPosition()*_scale).y, (float) ((SCENE_HEIGHT/2)/CAMERA_ZOOM)), (float) (SCENE_HEIGHT-(SCENE_HEIGHT/2)/CAMERA_ZOOM));
+    _camera->setPosition(Vec3(x, y, _camera->getPosition().z));
     _camera->update();
 }
 
@@ -343,6 +344,11 @@ void GameScene::preUpdate(float dt) {
             int randomNumber = dis(gen);
             w->rustle(randomNumber);
         }
+    }
+    
+    if(_input->didSwitch()) {
+        _map->togglePlayer();
+        _map->clearRustling();
     }
 
     // Process the movement

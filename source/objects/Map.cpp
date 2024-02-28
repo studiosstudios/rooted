@@ -162,8 +162,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
         std::shared_ptr<Carrot> carrot = *it;
         auto carrotNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(DUDE_TEXTURE));
-        carrotNode->setColor(Color4::ORANGE);
+                _assets->get<Texture>(CARROT_TEXTURE));
+//        carrotNode->setColor(Color4::ORANGE);
         carrot->setSceneNode(carrotNode);
         carrot->setDrawScale(
                 _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
@@ -175,8 +175,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     for (auto it = _babies.begin(); it != _babies.end(); ++it) {
         std::shared_ptr<BabyCarrot> baby = *it;
         auto babyNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(DUDE_TEXTURE));
-        babyNode->setColor(Color4::BLUE);
+                _assets->get<Texture>(BABY_TEXTURE));
+//        babyNode->setColor(Color4::BLUE);
         baby->setSceneNode(babyNode);
         baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)
@@ -187,7 +187,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
         std::shared_ptr<Farmer> farmer = *it;
         auto farmerNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(DUDE_TEXTURE));
+                _assets->get<Texture>(FARMER_TEXTURE));
         farmer->setSceneNode(farmerNode);
         farmer->setDrawScale(
                 _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM

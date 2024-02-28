@@ -184,7 +184,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _map->setAssets(_assets);
     _map->setRootNode(_rootnode); // Obtains ownership of root.
 
-    _input = InputController::alloc(_map->getBounds());
+    _input = InputController::alloc(getBounds());
     _collision.init(_map);
     _action.init(_map, _input);
     _camera->setZoom(CAMERA_ZOOM);

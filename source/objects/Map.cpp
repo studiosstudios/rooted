@@ -161,8 +161,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
         std::shared_ptr<Carrot> carrot = *it;
         auto carrotNode = scene2::PolygonNode::allocWithTexture(
                 _assets->get<Texture>(DUDE_TEXTURE));
-        carrot->setSceneNode(carrotNode);
         carrotNode->setColor(Color4::ORANGE);
+        carrot->setSceneNode(carrotNode);
         carrot->setDrawScale(
                 _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)

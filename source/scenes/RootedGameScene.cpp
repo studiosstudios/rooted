@@ -420,12 +420,12 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Since items may be deleted, garbage collect
-    _map->getWorld()->garbageCollect();
 
     _action.postUpdate(remain);
 
+    _map->getWorld()->garbageCollect();
+
     auto avatar = _map->getCarrots().at(0);
-    auto baby = _map->getBabyCarrots().at(0);
 
     // Record failure if necessary.
     if (!_failed && avatar->getY() < 0) {

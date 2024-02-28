@@ -51,5 +51,14 @@ void ActionController::preUpdate(float dt) {
  * @param remain    The amount of time (in seconds) last fixedUpdate
  */
 void ActionController::postUpdate(float dt) {
+    //remove objects from vectors when necessary
+    auto it = _map->getBabyCarrots().begin();
+    while (it != _map->getBabyCarrots().end()) {
+        if ((*it)->isRemoved()) {
+            _map->getBabyCarrots().erase(it);
+
+        }
+        else ++it;
+    }
 
 }

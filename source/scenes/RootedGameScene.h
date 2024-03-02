@@ -15,6 +15,7 @@
 #include "../controllers/CollisionController.h"
 #include "../controllers/ActionController.h"
 #include "../controllers/UIController.h"
+#include "../controllers/CameraController.h"
 #include "../objects/Map.h"
 
 /**
@@ -39,6 +40,8 @@ protected:
     ActionController _action;
     /** Controller for game UI */
     UIController _ui;
+    /** Controller for camera */
+    CameraController _cam;
     
     // VIEW
     /** Reference to the physics root of the scene graph */

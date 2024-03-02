@@ -4,15 +4,24 @@
 
 #include "Wheat.h"
 
+#pragma mark -
+#pragma mark Physics Constants
+
+/** The amount to shrink the fixture (horizontally) relative to the image */
+#define WHEAT_HSHRINK  0.28f
+/** The amount to shrink the fixture (vertically) relative to the image */
+#define WHEAT_VSHRINK  0.15f
+
 bool Wheat::init(const cugl::Vec2 &pos, const cugl::Size &size, float scale) {
+    Size nsize = size;
+    nsize.width  *= WHEAT_HSHRINK;
+    nsize.height *= WHEAT_VSHRINK;
     _drawScale = scale;
         
-    if (BoxObstacle::init(pos, size)) {
+    if (BoxObstacle::init(pos, nsize)) {
         // set this so players can pass through
         setSensor(true);
-        
-        BoxObstacle::createFixtures();
-        
+                
         // Gameplay attributes
         _fadeout = 1;
         _animframe = 0;

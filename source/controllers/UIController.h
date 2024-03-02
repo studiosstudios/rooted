@@ -24,6 +24,7 @@ private:
     std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
     
     cugl::Vec2 _offset;
+    float _cameraZoom;
     
 public:
     UIController() {};
@@ -35,9 +36,9 @@ public:
     void initJoystickNodes();
     
     bool init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
-              cugl::Vec2 offset);
+              cugl::Vec2 offset, float cameraZoom);
     
     void updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick);
     
-    void update(float step, std::shared_ptr<cugl::OrthographicCamera> &camera, bool joyOn, std::pair<cugl::Vec2, cugl::Vec2> joyStick);
+    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, bool joyOn, std::pair<cugl::Vec2, cugl::Vec2> joyStick);
 };

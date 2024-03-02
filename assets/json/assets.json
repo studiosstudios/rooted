@@ -8,6 +8,15 @@
         "dude": {
             "file":     "textures/dude.png"
         },
+        "carrot": {
+            "file":     "textures/carrot.png"
+        },
+        "farmer": {
+            "file":     "textures/bunny.png"
+        },
+        "baby": {
+            "file":     "textures/baby.png"
+        },
         "wheat": {
             "file":     "textures/wheatsprite.png"
         },

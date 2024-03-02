@@ -32,6 +32,8 @@ using namespace cugl;
 #define DEFAULT_HEIGHT  18.0f
 /** Zoom of camera relative to scene */
 #define CAMERA_ZOOM 1.5
+/** Camera gliding rate */
+#define CAMERA_GLIDE_RATE 0.06f
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -188,46 +190,19 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _input = InputController::alloc(getBounds());
     _collision.init(_map);
     _action.init(_map, _input);
-    _camera->setZoom(CAMERA_ZOOM);
-    _initCamera = _camera->getPosition();
     _active = true;
     _complete = false;
     setDebug(false);
     
-    _ui.init(_uinode, _offset);
+    _ui.init(_uinode, _offset, CAMERA_ZOOM);
+    
+    _cam.init(_map->getCarrots().at(0), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.setZoom(CAMERA_ZOOM);
+    _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
     Application::get()->setClearColor(Color4(142,114,78,255));
     return true;
-}
-
-/**
- * Moves the camera to focus the avatar
- */
-void GameScene::moveCamera(){
-    if(_map->isFarmerPlaying()){
-        auto _avatar = _map->getFarmers().at(0);
-        if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
-             _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
-            _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
-        }
-        if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
-            _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
-            _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
-        }
-    }
-    else{
-        auto _avatar = _map->getCarrots().at(0);
-        if(!(_avatar->getPosition().x*_scale-(SCENE_WIDTH/2)/CAMERA_ZOOM < 0 ||
-             _avatar->getPosition().x*_scale+(SCENE_WIDTH/2)/CAMERA_ZOOM > SCENE_WIDTH)){
-            _camera->setPosition(Vec3((_avatar->getPosition()*_scale).x, _camera->getPosition().y, _camera->getPosition().z));
-        }
-        if(!(_avatar->getPosition().y*_scale-(SCENE_HEIGHT/2)/CAMERA_ZOOM < 0 ||
-            _avatar->getPosition().y*_scale+(SCENE_HEIGHT/2)/CAMERA_ZOOM > SCENE_HEIGHT)){
-            _camera->setPosition(Vec3(_camera->getPosition().x, (_avatar->getPosition()*_scale).y, _camera->getPosition().z));
-        }
-    }
-    _camera->update();
 }
 
 /**
@@ -318,7 +293,7 @@ void GameScene::preUpdate(float dt) {
             _collision.init(_map);
             _action.init(_map, _input);
 
-            _camera->setPosition(_initCamera);
+            _cam.setPosition(_initCamera);
 
             _loadnode->setVisible(false);
         } else {
@@ -339,9 +314,8 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
-    if(_input->getMovement().length() > 0){
-        _map->rustleWheats(3);
-    }
+    
+//    _map->rustleWheats(3);
     
     // Test out wheat rustling via a key
     if (_input->didRustle()) {
@@ -361,6 +335,12 @@ void GameScene::preUpdate(float dt) {
     if(_input->didSwitch()) {
         _map->togglePlayer();
         _map->clearRustling();
+        if(_map->isFarmerPlaying()){
+            _cam.setTarget(_map->getFarmers().at(0));
+        }
+        else{
+            _cam.setTarget(_map->getCarrots().at(0));
+        }
     }
 
     // Process the movement
@@ -400,9 +380,8 @@ void GameScene::preUpdate(float dt) {
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     _map->getWorld()->update(step);
-    moveCamera();
-    _ui.update(step, _camera, _input->withJoystick(), _input->getJoystick());
-    _camera->update();
+    _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
+    _cam.update(step);
 }
 
 /**
@@ -429,12 +408,12 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Since items may be deleted, garbage collect
-    _map->getWorld()->garbageCollect();
 
     _action.postUpdate(remain);
 
+    _map->getWorld()->garbageCollect();
+
     auto avatar = _map->getCarrots().at(0);
-    auto baby = _map->getBabyCarrots().at(0);
 
     // Record failure if necessary.
     if (!_failed && avatar->getY() < 0) {

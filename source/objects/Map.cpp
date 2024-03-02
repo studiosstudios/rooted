@@ -162,8 +162,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
         std::shared_ptr<Carrot> carrot = *it;
         auto carrotNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(DUDE_TEXTURE));
-        carrotNode->setColor(Color4::ORANGE);
+                _assets->get<Texture>(CARROT_TEXTURE));
+//        carrotNode->setColor(Color4::ORANGE);
         carrot->setSceneNode(carrotNode);
         carrot->setDrawScale(
                 _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
@@ -175,8 +175,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     for (auto it = _babies.begin(); it != _babies.end(); ++it) {
         std::shared_ptr<BabyCarrot> baby = *it;
         auto babyNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(DUDE_TEXTURE));
-        babyNode->setColor(Color4::BLUE);
+                _assets->get<Texture>(BABY_TEXTURE));
+//        babyNode->setColor(Color4::BLUE);
         baby->setSceneNode(babyNode);
         baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)
@@ -187,7 +187,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
         std::shared_ptr<Farmer> farmer = *it;
         auto farmerNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(DUDE_TEXTURE));
+                _assets->get<Texture>(FARMER_TEXTURE));
         farmer->setSceneNode(farmerNode);
         farmer->setDrawScale(
                 _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
@@ -202,6 +202,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
                                                               1, WHEAT_FRAMES, WHEAT_FRAMES);
         wheat->setSceneNode(spriteImage);
         addObstacle(wheat, spriteImage);  // All walls share the same texture
+        
     }
 
 }
@@ -398,7 +399,7 @@ bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
     // Get the object, which is automatically retained
     std::shared_ptr<physics2::PolygonObstacle> wallobj = physics2::PolygonObstacle::allocWithAnchor(
             wall, Vec2::ANCHOR_CENTER);
-    wallobj->setName(json->key());
+    wallobj->setName("wall");
 
     wallobj->setBodyType(b2_staticBody);
     wallobj->setDensity(BASIC_DENSITY);
@@ -436,6 +437,7 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     carrot->setDebugColor(DEBUG_COLOR);
+    carrot->setName("carrot");
     _carrots.push_back(carrot);
 
     if (success) {
@@ -464,6 +466,7 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
     Vec2 wheatPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
     std::shared_ptr<Wheat> wheat = Wheat::alloc(wheatPos, WHEAT_SIZE, _scale.x);
     wheat->setDebugColor(DEBUG_COLOR);
+    wheat->setName("wheat");
     _wheat.push_back(wheat);
 
     return success;
@@ -489,6 +492,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
+    baby->setName("baby");
     _babies.push_back(baby);
 
     if (success) {
@@ -517,6 +521,8 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     success = posArray->isArray();
     Vec2 farmerPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, FARMER_SIZE, _scale.x);
+    farmer->setDebugColor(DEBUG_COLOR);
+    farmer->setName("farmer");
     _farmers.push_back(farmer);
     
     if (success) {

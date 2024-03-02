@@ -36,7 +36,11 @@ void ActionController::preUpdate(float dt) {
         }}
     else {
         for (auto farmer : _map->getFarmers()) {
-            farmer->setMovement(_input->getMovement() * farmer ->getForce());
+            if (_input->didDash()) {
+                farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
+            } else {
+                farmer->setMovement(_input->getMovement() * farmer ->getForce());
+            }
             farmer->applyForce();
         }
     }
@@ -58,5 +62,14 @@ void ActionController::preUpdate(float dt) {
  * @param remain    The amount of time (in seconds) last fixedUpdate
  */
 void ActionController::postUpdate(float dt) {
+    //remove objects from vectors when necessary
+    auto it = _map->getBabyCarrots().begin();
+    while (it != _map->getBabyCarrots().end()) {
+        if ((*it)->isRemoved()) {
+            _map->getBabyCarrots().erase(it);
+
+        }
+        else ++it;
+    }
 
 }

@@ -1,0 +1,76 @@
+//
+//  CameraController.cpp
+//  Rooted
+//
+//  Created by Kimmy Lin on 2/28/24.
+//
+
+#include "CameraController.h"
+
+using namespace cugl;
+
+#pragma mark -
+#pragma mark Initializers
+
+bool CameraController::init(const std::shared_ptr<EntityModel> target, const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale) {
+    _target = target;
+    _root = root;
+    _lerp = lerp;
+    _camera = camera;
+    _maxZoom = maxZoom;
+    _ui = ui;
+    _scale = scale;
+
+    return true;
+}
+
+#pragma mark -
+#pragma mark Camera Handling
+
+void CameraController::update(float dt) {
+    int sceneWidth = _camera->getViewport().getMaxX();
+    int sceneHeight = _camera->getViewport().getMaxY();
+    float new_x = std::min(std::max((_target->getPosition()*_scale).x, (float) ((sceneWidth/2)/_camera->getZoom())), (float) (sceneWidth-(sceneWidth/2)/_camera->getZoom()));
+    float new_y = std::min(std::max((_target->getPosition()*_scale).y, (float) ((sceneHeight/2)/_camera->getZoom())), (float) (sceneHeight-(sceneHeight/2)/_camera->getZoom()));
+    float curr_x = _camera->getPosition().x;
+    float curr_y = _camera->getPosition().y;
+    _camera->setPosition(Vec3(curr_x + (new_x-curr_x) * _lerp, curr_y + (new_y-curr_y) * _lerp, _camera->getPosition().z));
+    _camera->update();
+//    Vec2 uiPos = Vec2(_camera->getPosition().x - _camera->getViewport().getMaxX() / (2 * _camera->getZoom()), _camera->getPosition().y - _camera->getViewport().getMaxY() / (2 * _camera->getZoom()));
+//    _ui->setPosition(uiPos);
+}
+
+void CameraController::setZoom(float zoom) {
+    float originalZoom = _camera->getZoom();
+    // Don't let it be greater than max zoom
+    if (zoom > _maxZoom) return;
+    _camera->setZoom(zoom);
+    // If this causes the camera to go out of bounds, revert the change
+    if (_root->getSize().width < _camera->getViewport().getMaxX() / _camera->getZoom() || _root->getSize().height < _camera->getViewport().getMaxY() / _camera->getZoom()) {
+        _camera->setZoom(originalZoom);
+    }
+    // Scale the UI so that it always looks the same size
+//    _ui->setScale(1 / _camera->getZoom());
+}
+
+void CameraController::addZoom(float zoom) {
+    float originalZoom = _camera->getZoom();
+    // Don't let it be greater than max zoom
+    if (originalZoom + zoom > _maxZoom) return;
+    float truezoom = std::max(originalZoom + zoom, 0.01f);
+    _camera->setZoom(truezoom);
+    // If this causes the camera to go out of bounds, revert the change
+    if (_root->getSize().width < _camera->getViewport().getMaxX() / _camera->getZoom() || _root->getSize().height < _camera->getViewport().getMaxY() / _camera->getZoom()) {
+        _camera->setZoom(originalZoom);
+    }
+    // Scale the UI so that it always looks the same size
+//    _ui->setScale(1 / _camera->getZoom());
+}
+
+void CameraController::setPosition(Vec3 pos){
+    _camera->setPosition(pos);
+}
+
+void CameraController::setTarget(std::shared_ptr<EntityModel> target) {
+    _target = target;
+}

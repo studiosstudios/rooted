@@ -13,7 +13,7 @@ using namespace cugl;
 
 bool AIController::init(std::shared_ptr<Map> &map) {
     _map = map;
-    srand(time(NULL)^2);
+    srand(static_cast<unsigned int>( time(NULL) )^2);
     return true;
 }
 
@@ -25,12 +25,14 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
     }
     if (babyCarrot->hasTarget()) {
         Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
-        movement * MOVEMENT_SPEED;
-        babyCarrot->setMovement(Vec2(0,0));
-        babyCarrot->setMovement(movement);
-        babyCarrot->applyForce();
+//        movement * MOVEMENT_SPEED;
+        movement *= 2.5;
+//        babyCarrot->setMovement(Vec2(0,0));
+//        babyCarrot->setMovement(movement);
+        babyCarrot->setLinearVelocity(movement);
+//        babyCarrot->applyForce();
     } else {
-        Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*10+1, ((float) std::rand()/ RAND_MAX)*5+5);
+        Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*25+2, ((float) std::rand()/ RAND_MAX)*5+5);
         babyCarrot->setTarget(newTarget);
         
     }

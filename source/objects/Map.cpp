@@ -575,11 +575,12 @@ void Map::rustleWheats(float amount) {
 }
 
 /**
- * Stops all wheat from rustling
+ * Stops all wheat from rustling and clear any signs of occupancy
  */
 void Map::clearRustling(){
     for (auto w: _wheat) {
         w->setRustling(false);
+        w->setOccupied(false);
     }
 }
 

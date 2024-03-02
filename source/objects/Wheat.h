@@ -35,6 +35,8 @@ private:
     int _numShakes;
     /** Whether it is shaking */
     int _isShaking;
+    /** Whether wheat is occupied by the player */
+    bool _isOccupied;
     /** The scene graph node for the Wheat. */
     std::shared_ptr<cugl::scene2::SpriteNode> _node;
     /** The current animation frame */
@@ -43,8 +45,6 @@ private:
     float _drawScale;
     /** This macro disables the copy constructor (not allowed on physics objects) */
     CU_DISALLOW_COPY_AND_ASSIGN(Wheat);
-    /** Whether this wheat is in contact with object */
-    bool isRustling;
     
 public:
 #pragma mark Constructors
@@ -162,12 +162,25 @@ public:
     void rustle(float amount);
     
     /** Whether this wheat is in contact with moving object */
-    bool getRustling() { return isRustling; };
+    bool getRustling() { return _isShaking; }
     
     /** Sets whether this wheat is in contact with moving object
      * @param b whether this wheat is in contact with moving object
      */
-    void setRustling(bool b) { isRustling = b; };
+    void setRustling(bool b) { _isShaking = b; }
+    
+    bool getOccupied() { return _isOccupied; }
+    
+    void setOccupied(bool b) {
+        _isOccupied = b;
+        if (b) {
+            _node->setColor(Color4(255, 255, 255, 255 * 0.4f));
+        }
+        else {
+            _node->setColor(Color4(255, 255, 255, 255 * _fadeout));
+        }
+    }
+    
 };
 
 #endif //ROOTED_WHEAT_H

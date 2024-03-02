@@ -50,7 +50,8 @@ void Wheat::update(float dt) {
     // should this be in game scene as per design choices?
     animateWheat();
     
-    if (_node != nullptr) {
+    // only change the color of the transparency was not modified with something else in there
+    if (_node != nullptr && !_isOccupied) {
         _node->setColor(Color4(255, 255, 255, 255 * _fadeout));
     }
 }

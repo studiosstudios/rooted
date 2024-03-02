@@ -20,8 +20,7 @@ bool CollisionController::init(std::shared_ptr<Map> &map) {
  * Processes the start of a collision
  *
  * This method is called when we first get a collision between two objects.  We use
- * this method to test if it is the "right" kind of collision.  In particular, we
- * use it to test if we make it to the win door.
+ * this method to test if it is the "right" kind of collision.
  *
  * @param  contact  The two bodies that collided
  */
@@ -52,12 +51,11 @@ void CollisionController::beginContact(b2Contact* contact) {
         for (auto carrot : _map->getCarrots()) {
             if (bd1 == carrot.get() && !_map->isFarmerPlaying()) {
                 if (wheat) {
-//                    printf("carrot collision with wheat \n");
                     wheat->rustle(bd1->getLinearVelocity().length());
+                    wheat->setOccupied(true);
                 }
                 
                 if (b2babycarrot) {
-//                    printf("carrot collision with baby carrot \n");
                     carrot->captureBabyCarrot();
                     b2babycarrot->gotCaptured();
                 }
@@ -80,6 +78,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             if (bd1 == farmer.get() && _map->isFarmerPlaying()) {
                 if (wheat) {
                     wheat->rustle(bd1->getLinearVelocity().length());
+                    wheat->setOccupied(true);
                 }
             }
         }
@@ -106,9 +105,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 /**
  * Callback method for the start of a collision
  *
- * This method is called when two objects cease to touch.  The main use of this method
- * is to determine when the characer is NOT on the ground.  This is how we prevent
- * double jumping.
+ * This method is called when two objects cease to touch.
  */
 void CollisionController::endContact(b2Contact* contact) {
     b2Fixture* fix1 = contact->GetFixtureA();
@@ -132,7 +129,7 @@ void CollisionController::endContact(b2Contact* contact) {
         for (auto carrot : _map->getCarrots()) {
             if (bd1 == carrot.get()) {
                 if (wheat) {
-                    wheat->setRustling(false);
+                    wheat->setOccupied(false);
                 }
                 
                 if (b2babycarrot) {
@@ -144,7 +141,7 @@ void CollisionController::endContact(b2Contact* contact) {
         for (auto farmer : _map->getFarmers()) {
             if (bd1 == farmer.get()) {
                 if (wheat) {
-                    wheat->setRustling(false);
+                    wheat->setOccupied(false);
                 }
             }
         }

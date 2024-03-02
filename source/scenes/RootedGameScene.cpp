@@ -314,9 +314,7 @@ void GameScene::preUpdate(float dt) {
         CULog("Shutting down");
         Application::get()->quit();
     }
-    
-//    _map->rustleWheats(3);
-    
+        
     // Test out wheat rustling via a key
     if (_input->didRustle()) {
 //        CULog("rustling");

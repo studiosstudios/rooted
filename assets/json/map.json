@@ -23,6 +23,9 @@
   "babies": [
     {
       "position": [2.5, 10.0]
+    },
+    {
+      "position": [2.5, 5.0]
     }
   ],
   "farmers": [

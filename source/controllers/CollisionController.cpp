@@ -61,13 +61,10 @@ void CollisionController::beginContact(b2Contact* contact) {
         }
         
         if (name1 == "baby") {
-            if (!_map->isFarmerPlaying()) {
-                if (name2 == "wheat") {
-                    Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                    wheat->rustle(bd1->getLinearVelocity().length());
-                }
+            if (name2 == "wheat") {
+                Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                wheat->rustle(bd1->getLinearVelocity().length());
             }
-            
         }
         
         if (name1 == "farmer") {

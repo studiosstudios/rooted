@@ -13,6 +13,7 @@ class BabyCarrot : public EntityModel {
     
 private:
     bool _isCaptured;
+    Vec2 _target = Vec2::ZERO;
     
 public:
     
@@ -31,6 +32,12 @@ public:
     void gotCaptured();
     
     bool isCaptured() { return _isCaptured; };
+    
+    bool hasTarget() { return !_target.isZero(); };
+
+    Vec2 getTarget() { return _target; };
+    
+    void setTarget(const Vec2 newTarget) { _target = newTarget; };
 };
 
 #endif //ROOTED_BABYCARROT_H

@@ -590,3 +590,10 @@ void Map::clearRustling(){
 void Map::togglePlayer(){
     _farmerPlaying = !_farmerPlaying;
 }
+
+/**
+ * TEMP: Switches whether we want to see player or not
+ */
+void Map::toggleShowPlayer(){
+    _showPlayer = !_showPlayer;
+}

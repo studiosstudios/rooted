@@ -57,6 +57,8 @@ private:
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
+    bool _keyShowPlayer;
+    
     bool _keySwitch;
   
 protected:
@@ -74,6 +76,8 @@ protected:
     
     // CAN REMOVE THIS, THIS IS JUST FOR TESTING
     bool _rustlePressed;
+    bool _showPlayerPressed;
+    
     bool _switchPressed;
 
 #pragma mark Internal Touch Management   
@@ -313,6 +317,8 @@ public:
     
     // CAN DELETE THIS
     bool didRustle() const { return _rustlePressed; }
+    
+    bool didShowPlayer() const { return _showPlayerPressed; }
     
     bool didDash() const { return _dashPressed; }
 

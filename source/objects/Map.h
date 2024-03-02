@@ -39,6 +39,7 @@ private:
     /** Reference to the debug root of the scene graph */
     std::shared_ptr<scene2::SceneNode> _debugnode;
     bool _farmerPlaying = false;
+    bool _showPlayer = false;
 
 
 public:
@@ -298,12 +299,16 @@ public:
     std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
     
     bool isFarmerPlaying() { return _farmerPlaying; }
+    
+    bool isShowingPlayer() { return _showPlayer; }
 
     void rustleWheats(float amount);
     
     void clearRustling();
 
     void togglePlayer();
+    
+    void toggleShowPlayer();
 };
 
 

@@ -48,7 +48,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 if (name2 == "wheat") {
                     Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                     wheat->rustle(bd1->getLinearVelocity().length());
-                    wheat->setOccupied(true);
+                    wheat->setOccupied(_map->isShowingPlayer());
                 }
                 
                 if (name2 == "baby") {
@@ -72,7 +72,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 if (name2 == "wheat") {
                     Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                     wheat->rustle(bd1->getLinearVelocity().length());
-                    wheat->setOccupied(true);
+                    wheat->setOccupied(_map->isShowingPlayer());
                 }
             }
         }
@@ -135,7 +135,6 @@ void CollisionController::endContact(b2Contact* contact) {
         if (name1 == "baby") {
             if (!_map->isFarmerPlaying()) {
                 if (name2 == "wheat") {
-                    Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                 }
             }
             

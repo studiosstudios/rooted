@@ -17,11 +17,13 @@ using namespace cugl;
 #define WHEAT_SENSOR_NAME     "wheatsensor"
 
 #define RECOVERY            0.01f
-#define SNEAK_TRANSPARENCY  0.95f
+#define SNEAK_TRANSPARENCY  1
 #define WALK_INTENSITY      3
-#define WALK_TRANSPARENCY   0.85f
-#define DASH_INTENSITY      5
-#define DASH_TRANSPARENCY   0.75f
+#define WALK_TRANSPARENCY   1
+#define RUN_INTENSITY       5
+#define RUN_TRANSPARENCY   0.85f
+#define DASH_INTENSITY      8
+#define DASH_TRANSPARENCY   0.4f
 
 
 class Wheat : public cugl::physics2::BoxObstacle {
@@ -173,12 +175,6 @@ public:
     
     void setOccupied(bool b) {
         _isOccupied = b;
-        if (b) {
-            _node->setColor(Color4(255, 255, 255, 255 * 0.4f));
-        }
-        else {
-            _node->setColor(Color4(255, 255, 255, 255 * _fadeout));
-        }
     }
     
 };

@@ -54,6 +54,9 @@ void Wheat::update(float dt) {
     if (_node != nullptr && !_isOccupied) {
         _node->setColor(Color4(255, 255, 255, 255 * _fadeout));
     }
+    else if (_isOccupied) {
+        _node->setColor(Color4(255, 255, 255, 255 * DASH_TRANSPARENCY));
+    }
 }
 
 void Wheat::animateWheat() {
@@ -79,6 +82,9 @@ void Wheat::rustle(float amount) {
     _isShaking = true;
     if (amount >= DASH_INTENSITY) {
         _fadeout = DASH_TRANSPARENCY;
+    }
+    else if (amount >= RUN_INTENSITY) {
+        _fadeout = RUN_TRANSPARENCY;
     }
     else if (amount >= WALK_INTENSITY) {
         _fadeout = WALK_TRANSPARENCY;

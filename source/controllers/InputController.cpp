@@ -74,11 +74,13 @@ _debugPressed(false),
 _exitPressed(false),
 _rustlePressed(false),
 _dashPressed(false),
+_showPlayerPressed(false),
 _switchPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
 _keyRustle(false),
+_keyShowPlayer(false),
 _movement(Vec2(0,0)),
 _joystick(false),
 _hasJumped(false),
@@ -166,6 +168,7 @@ void InputController::update(float dt) {
     _keyDebug  = keys->keyPressed(DEBUG_KEY);
     _keyExit   = keys->keyPressed(EXIT_KEY);
     _keyRustle = keys->keyPressed(KeyCode::M);
+    _keyShowPlayer = keys->keyPressed(KeyCode::V);
     _keyDash   = keys->keyPressed(KeyCode::X);
     _keySwitch = keys->keyPressed(KeyCode::S);
 
@@ -191,6 +194,8 @@ void InputController::update(float dt) {
     _exitPressed  = _keyExit;
     // for testing rustling
     _rustlePressed = _keyRustle;
+    _showPlayerPressed = _keyShowPlayer;
+    
     _switchPressed = _keySwitch;
 
     _dashPressed  = (_keyDash && !_keyDashPressed);
@@ -203,6 +208,7 @@ void InputController::update(float dt) {
     _keyExit = false;
     _keyReset = false;
     _keyDebug = false;
+    _keyShowPlayer = false;
 #endif
 }
 
@@ -214,6 +220,7 @@ void InputController::clear() {
     _debugPressed = false;
     _exitPressed  = false;
     _dashPressed  = false;
+    _keyShowPlayer = false;
 }
 
 #pragma mark -
@@ -374,6 +381,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _rtouch.touchids.insert(event.touch);
                 _keyDash = false;
                 _keySwitch = false;
+                _keyShowPlayer = false;
             }
             break;
         case Zone::MAIN:
@@ -449,6 +457,9 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             else if ((pos.y-_rtouch.position.y) > SWITCH_SWIPE_LENGTH) {
                 _keySwitch = true;
                 _rtouch.position = pos;
+            }
+            else if ((pos.x-_rtouch.position.x) > SWITCH_SWIPE_LENGTH) {
+                _keyShowPlayer = true;
             }
         }
     } else if (_mtouch.touchids.size() > 1) {

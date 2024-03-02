@@ -18,11 +18,11 @@ using namespace cugl;
 
 #define RECOVERY            0.01f
 #define SNEAK_TRANSPARENCY  1
-#define WALK_INTENSITY      3
+#define WALK_INTENSITY      2.5f
 #define WALK_TRANSPARENCY   1
-#define RUN_INTENSITY       5
-#define RUN_TRANSPARENCY   0.85f
-#define DASH_INTENSITY      8
+#define RUN_INTENSITY       4.25f
+#define RUN_TRANSPARENCY    0.8f
+#define DASH_INTENSITY      5.1f
 #define DASH_TRANSPARENCY   0.4f
 
 

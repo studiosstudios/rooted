@@ -79,15 +79,17 @@ void Wheat::animateWheat() {
 
 void Wheat::rustle(float amount) {
     if (amount == 0) { return; }
-    _isShaking = true;
     if (amount >= DASH_INTENSITY) {
         _fadeout = DASH_TRANSPARENCY;
+        _isShaking = true;
     }
     else if (amount >= RUN_INTENSITY) {
         _fadeout = RUN_TRANSPARENCY;
+        _isShaking = true;
     }
     else if (amount >= WALK_INTENSITY) {
         _fadeout = WALK_TRANSPARENCY;
+        _isShaking = true;
     }
     else {
         _fadeout = SNEAK_TRANSPARENCY;

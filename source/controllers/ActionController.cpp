@@ -25,24 +25,28 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void ActionController::preUpdate(float dt) {
-    if(!_map->isFarmerPlaying()){
-        for (auto carrot : _map->getCarrots()) {
+    for (auto carrot : _map->getCarrots()) {
+        carrot->setMovement(Vec2::ZERO);
+        if (!_map->isFarmerPlaying()) {
             if (_input->didDash()) {
                 carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
             } else {
                 carrot->setMovement(_input->getMovement() * carrot ->getForce());
             }
-            carrot->applyForce();
-        }}
-    else {
-        for (auto farmer : _map->getFarmers()) {
+        }
+        carrot->applyForce();
+    }
+    
+    for (auto farmer : _map->getFarmers()) {
+        farmer->setMovement(Vec2::ZERO);
+        if (_map->isFarmerPlaying()){
             if (_input->didDash()) {
                 farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
             } else {
                 farmer->setMovement(_input->getMovement() * farmer ->getForce());
             }
-            farmer->applyForce();
         }
+        farmer->applyForce();
     }
 
     for (auto babyCarrot : _map->getBabyCarrots()) {        

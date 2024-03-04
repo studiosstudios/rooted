@@ -436,6 +436,7 @@ void GameScene::postUpdate(float remain) {
 */
 void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::ObstacleWorld> &world) {
     world->activateCollisionCallbacks(true);
+    world->activateFilterCallbacks(true);
     world->onBeginContact = [this](b2Contact *contact) {
         _collision.beginContact(contact);
     };

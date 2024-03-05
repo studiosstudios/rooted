@@ -21,6 +21,9 @@ protected:
     GameScene _gameplay;
     /** The controller for the loading screen */
     LoadingScene _loading;
+
+    /** testing shader */
+    std::shared_ptr<cugl::Shader> _shader;
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;

@@ -201,7 +201,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
-    Application::get()->setClearColor(Color4(142,114,78,255));
+//    Application::get()->setClearColor(Color4(142,114,78,255));
+    Application::get()->setClearColor(Color4(118,118,118,255));
     return true;
 }
 

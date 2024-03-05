@@ -255,7 +255,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
     float h = json->get("height")->asFloat();
     _bounds.size.set(w, h);
 
-    /** Create the physics world */
+    /** Create the physic   s world */
     _world = physics2::ObstacleWorld::alloc(getBounds(), Vec2(0, 0));
 
     auto walls = json->get("walls");
@@ -323,7 +323,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
 * references to other assets, then these should be disconnected earlier.
 */
 void Map::unload() {
-    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
+     for (auto it = _walls.begin(); it != _walls.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
         }

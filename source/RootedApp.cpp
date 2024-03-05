@@ -6,6 +6,30 @@
 
 using namespace cugl;
 
+/**
+ * Default fragment shader
+ *
+ * This trick uses C++11 raw string literals to put the shader in a separate
+ * file without having to guarantee its presence in the asset directory.
+ * However, to work properly, the #include statement below MUST be on its
+ * own separate line.
+ */
+const std::string oglShaderFrag =
+#include "shaders/fragment.frag"
+;
+
+/**
+ * Default vertex shader
+ *
+ * This trick uses C++11 raw string literals to put the shader in a separate
+ * file without having to guarantee its presence in the asset directory.
+ * However, to work properly, the #include statement below MUST be on its
+ * own separate line.
+ */
+const std::string oglShaderVert =
+#include "shaders/vertex.vert"
+;
+
 #pragma mark -
 #pragma mark Application State
 /**
@@ -43,6 +67,7 @@ void RootedApp::onStartup() {
     AudioEngine::start();
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
     _assets->loadAsync<Map>("map", "json/map.json", nullptr);
+
     
     Application::onStartup(); // YOU MUST END with call to parent
 }
@@ -125,6 +150,10 @@ void RootedApp::update(float dt) {
     } else if (!_loaded) {
         _loading.dispose(); // Disables the input listeners in this mode
         _gameplay.init(_assets);
+        
+        _shader = Shader::alloc(SHADER(oglShaderVert), SHADER(oglShaderFrag));
+        _batch->setShader(_shader);
+        _shader->setUniformMat4("uPerspective",_gameplay.getCamera()->getCombined());
         _loaded = true;
         
         // Switch to deterministic mode

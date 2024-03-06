@@ -6,10 +6,20 @@
 #define RootedApp_h
 
 #include <cugl/cugl.h>
-#include "scenes/RootedGameScene.h"
-#include "scenes/RootedLoadingScene.h"
+#include "scenes/GameScene.h"
+#include "scenes/LoadingScene.h"
+#include "scenes/MenuScene.h"
 
 class RootedApp : public cugl::Application{
+
+    enum Status {
+        LOAD,
+        MENU,
+        HOST,
+        CLIENT,
+        GAME
+    };
+    
 protected:
     /** The global sprite batch for drawing (only want one of these) */
     std::shared_ptr<cugl::SpriteBatch> _batch;
@@ -21,9 +31,12 @@ protected:
     GameScene _gameplay;
     /** The controller for the loading screen */
     LoadingScene _loading;
+    MenuScene _mainmenu;
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;
+    
+    Status _status;
     
 public:
 #pragma mark Constructors
@@ -184,6 +197,17 @@ public:
      * @param dt    The amount of time (in seconds) since the last frame
      */
     virtual void postUpdate(float dt) override;
+    
+    /**
+     * Inidividualized update method for the menu scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the menu scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateMenuScene(float timestep);
+
     
     /**
      * The method called to draw the application to the screen.

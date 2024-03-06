@@ -2,7 +2,7 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#include "RootedGameScene.h"
+#include "GameScene.h"
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>

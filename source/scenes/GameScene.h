@@ -2,8 +2,8 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#ifndef RootedGameScene_h
-#define RootedGameScene_h
+#ifndef GameScene_h
+#define GameScene_h
 
 #include <cugl/cugl.h>
 #include <box2d/b2_world_callbacks.h>

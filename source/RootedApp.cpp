@@ -34,17 +34,24 @@ void RootedApp::onStartup() {
     _assets->attach<Sound>(SoundLoader::alloc()->getHook());
     _assets->attach<scene2::SceneNode>(Scene2Loader::alloc()->getHook());
     _assets->attach<Map>(GenericLoader<Map>::alloc()->getHook());
+    _assets->attach<JsonValue>(JsonLoader::alloc()->getHook());
+    _assets->attach<WidgetValue>(WidgetLoader::alloc()->getHook());
 
     // Create a "loading" screen
     _loaded = false;
     _loading.init(_assets);
+    _status = LOAD;
     
     // Que up the other assets
     AudioEngine::start();
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
     _assets->loadAsync<Map>("map", "json/map.json", nullptr);
     
+    // ???? UH
+    cugl::net::NetworkLayer::start(net::NetworkLayer::Log::INFO);
+    
     Application::onStartup(); // YOU MUST END with call to parent
+    setDeterministic(true);
 }
 
 /**
@@ -61,6 +68,7 @@ void RootedApp::onStartup() {
 void RootedApp::onShutdown() {
     _loading.dispose();
     _gameplay.dispose();
+    _mainmenu.dispose();
     _assets = nullptr;
     _batch = nullptr;
     
@@ -120,16 +128,16 @@ void RootedApp::onResume() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void RootedApp::update(float dt) {
-    if (!_loaded && _loading.isActive()) {
-        _loading.update(0.01f);
-    } else if (!_loaded) {
-        _loading.dispose(); // Disables the input listeners in this mode
-        _gameplay.init(_assets);
-        _loaded = true;
-        
-        // Switch to deterministic mode
-        setDeterministic(true);
-    }
+//    if (!_loaded && _loading.isActive()) {
+//        _loading.update(0.01f);
+//    } else if (!_loaded) {
+//        _loading.dispose(); // Disables the input listeners in this mode
+//        _gameplay.init(_assets);
+//        _loaded = true;
+//        
+//        // Switch to deterministic mode
+//        setDeterministic(true);
+//    }
 }
 
 /**
@@ -153,7 +161,37 @@ void RootedApp::update(float dt) {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void RootedApp::preUpdate(float dt) {
-    _gameplay.preUpdate(dt);
+    //    _gameplay.preUpdate(dt);
+    if (!_loaded && _loading.isActive()) {
+        _loading.update(0.01f);
+    } else if (_status == LOAD) {
+        // NETWORK NOT IN YET
+        //        _network = NetEventController::alloc(_assets);
+        _loading.dispose(); // Disables the input listeners in this mode
+        _mainmenu.init(_assets);
+        _mainmenu.setActive(true);
+        // NOT IN YET
+        //        _hostgame.init(_assets,_network);
+        //        _joingame.init(_assets,_network);
+        _loaded = true;
+        _status = MENU;
+    } else if (_status == MENU) {
+        updateMenuScene(dt);
+    }
+    //    else if (_status == HOST){
+    //        updateHostScene(timestep);
+    //    }
+    //    else if (_status == CLIENT){
+    //        updateClientScene(timestep);
+    //    }
+    //    else if (_status == GAME){
+    //        if(_gameplay.isComplete()){
+    //            _gameplay.reset();
+    //            _status = MENU;
+    //            _mainmenu.setActive(true);
+    //        }
+    //        _gameplay.preUpdate(timestep);
+    //    }
 }
 
 /**
@@ -180,7 +218,13 @@ void RootedApp::preUpdate(float dt) {
 void RootedApp::fixedUpdate() {
     // Compute time to report to game scene version of fixedUpdate
     float time = getFixedStep()/1000000.0f;
-    _gameplay.fixedUpdate(time);
+//    _gameplay.fixedUpdate(time);
+    if (_status == GAME) {
+        _gameplay.fixedUpdate(time);
+    }
+//    if(_network){
+//        _network->updateNet();
+//    }
 }
 
 /**
@@ -209,7 +253,37 @@ void RootedApp::fixedUpdate() {
 void RootedApp::postUpdate(float dt) {
     // Compute time to report to game scene version of postUpdate
     float time = getFixedRemainder()/1000000.0f;
-    _gameplay.postUpdate(time);
+//    _gameplay.postUpdate(time);
+    if (_status == GAME) {
+        _gameplay.postUpdate(time);
+    }
+}
+
+/**
+ * Inidividualized update method for the menu scene.
+ *
+ * This method keeps the primary {@link #update} from being a mess of switch
+ * statements. It also handles the transition logic from the menu scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ */
+void RootedApp::updateMenuScene(float timestep) {
+    _mainmenu.update(timestep);
+    switch (_mainmenu.getChoice()) {
+        case MenuScene::Choice::HOST:
+            _mainmenu.setActive(false);
+//            _hostgame.setActive(true);
+            _status = HOST;
+            break;
+        case MenuScene::Choice::JOIN:
+            _mainmenu.setActive(false);
+//            _joingame.setActive(true);
+            _status = CLIENT;
+            break;
+        case MenuScene::Choice::NONE:
+            // DO NOTHING
+            break;
+    }
 }
 
 /**
@@ -222,9 +296,27 @@ void RootedApp::postUpdate(float dt) {
  * at all. The default implmentation does nothing.
  */
 void RootedApp::draw() {
-    if (!_loaded) {
-        _loading.render(_batch);
-    } else {
-        _gameplay.render(_batch);
+//    if (!_loaded) {
+//        _loading.render(_batch);
+//    } else {
+//        _gameplay.render(_batch);
+//    }
+    switch (_status) {
+        case LOAD:
+            _loading.render(_batch);
+            break;
+        case MENU:
+            _mainmenu.render(_batch);
+            break;
+//        case HOST:
+//            _hostgame.render(_batch);
+//            break;
+//        case CLIENT:
+//            _joingame.render(_batch);
+            break;
+        case GAME:
+            _gameplay.render(_batch);
+        default:
+            break;
     }
 }

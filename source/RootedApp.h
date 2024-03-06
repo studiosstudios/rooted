@@ -9,6 +9,10 @@
 #include "scenes/GameScene.h"
 #include "scenes/LoadingScene.h"
 #include "scenes/MenuScene.h"
+#include "scenes/HostScene.h"
+#include "controllers/NetworkController.h"
+
+using namespace cugl::physics2::net;
 
 class RootedApp : public cugl::Application{
 
@@ -25,6 +29,7 @@ protected:
     std::shared_ptr<cugl::SpriteBatch> _batch;
     /** The global asset manager */
     std::shared_ptr<cugl::AssetManager> _assets;
+    std::shared_ptr<NetworkController> _network;
     
     // Player modes
     /** The primary controller for the game world */
@@ -32,6 +37,8 @@ protected:
     /** The controller for the loading screen */
     LoadingScene _loading;
     MenuScene _mainmenu;
+    HostScene _hostgame;
+    
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;
@@ -207,6 +214,8 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void updateMenuScene(float timestep);
+    
+    void updateHostScene(float timestep);
 
     
     /**

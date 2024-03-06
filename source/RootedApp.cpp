@@ -47,7 +47,6 @@ void RootedApp::onStartup() {
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
     _assets->loadAsync<Map>("map", "json/map.json", nullptr);
     
-    // ???? UH
     cugl::net::NetworkLayer::start(net::NetworkLayer::Log::INFO);
     
     Application::onStartup(); // YOU MUST END with call to parent
@@ -161,28 +160,26 @@ void RootedApp::update(float dt) {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void RootedApp::preUpdate(float dt) {
-    //    _gameplay.preUpdate(dt);
     if (!_loaded && _loading.isActive()) {
         _loading.update(0.01f);
     } else if (_status == LOAD) {
-        // NETWORK NOT IN YET
-        //        _network = NetEventController::alloc(_assets);
+        // I don't think this is how I should do it but if it works for now it works.
+        _network = NetworkController::alloc(NetEventController::alloc(_assets));
         _loading.dispose(); // Disables the input listeners in this mode
         _mainmenu.init(_assets);
         _mainmenu.setActive(true);
-        // NOT IN YET
-        //        _hostgame.init(_assets,_network);
+                _hostgame.init(_assets,_network);
         //        _joingame.init(_assets,_network);
         _loaded = true;
         _status = MENU;
     } else if (_status == MENU) {
         updateMenuScene(dt);
     }
-    //    else if (_status == HOST){
-    //        updateHostScene(timestep);
-    //    }
+        else if (_status == HOST){
+            updateHostScene(dt);
+        }
     //    else if (_status == CLIENT){
-    //        updateClientScene(timestep);
+    //        updateClientScene(dt);
     //    }
     //    else if (_status == GAME){
     //        if(_gameplay.isComplete()){
@@ -190,7 +187,7 @@ void RootedApp::preUpdate(float dt) {
     //            _status = MENU;
     //            _mainmenu.setActive(true);
     //        }
-    //        _gameplay.preUpdate(timestep);
+    //        _gameplay.preUpdate(dt);
     //    }
 }
 
@@ -222,9 +219,9 @@ void RootedApp::fixedUpdate() {
     if (_status == GAME) {
         _gameplay.fixedUpdate(time);
     }
-//    if(_network){
-//        _network->updateNet();
-//    }
+    if(_network){
+        _network->_network->updateNet();
+    }
 }
 
 /**
@@ -272,7 +269,7 @@ void RootedApp::updateMenuScene(float timestep) {
     switch (_mainmenu.getChoice()) {
         case MenuScene::Choice::HOST:
             _mainmenu.setActive(false);
-//            _hostgame.setActive(true);
+            _hostgame.setActive(true);
             _status = HOST;
             break;
         case MenuScene::Choice::JOIN:
@@ -284,6 +281,39 @@ void RootedApp::updateMenuScene(float timestep) {
             // DO NOTHING
             break;
     }
+}
+
+/**
+ * Inidividualized update method for the host scene.
+ *
+ * This method keeps the primary {@link #update} from being a mess of switch
+ * statements. It also handles the transition logic from the host scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ */
+void RootedApp::updateHostScene(float timestep) {
+    _hostgame.update(timestep);
+    if(_hostgame.getBackClicked()){
+        _status = MENU;
+        _hostgame.setActive(false);
+        _mainmenu.setActive(true);
+    }
+//    else if (_network->_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->_network->getShortUID()) {
+//        _gameplay.init(_assets, _network, true);
+//        _network->markReady();
+//    }
+//    else if (_network->getStatus() == NetEventController::Status::INGAME) {
+//        _hostgame.setActive(false);
+//        _gameplay.setActive(true);
+//        _status = GAME;
+//    }
+//    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
+//        _network->disconnect();
+//        _hostgame.setActive(false);
+//        _mainmenu.setActive(true);
+//        _gameplay.dispose();
+//        _status = MENU;
+//    }
 }
 
 /**
@@ -308,9 +338,9 @@ void RootedApp::draw() {
         case MENU:
             _mainmenu.render(_batch);
             break;
-//        case HOST:
-//            _hostgame.render(_batch);
-//            break;
+        case HOST:
+            _hostgame.render(_batch);
+            break;
 //        case CLIENT:
 //            _joingame.render(_batch);
             break;

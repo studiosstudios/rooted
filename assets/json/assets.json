@@ -44,6 +44,9 @@
             }
         }
 	},
+    "jsons": {
+        "server": "json/server.json"
+    },
     "sounds": {
         "game": {
             "type":     "sample",

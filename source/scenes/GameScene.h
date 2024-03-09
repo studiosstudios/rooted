@@ -61,6 +61,9 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
     
     std::shared_ptr<cugl::scene2::PolygonNode> _debugjoynode;
+    
+    /** The network controller */
+    std::shared_ptr<NetworkController> _network;
 
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _scale;
@@ -78,6 +81,8 @@ protected:
     bool _failed;
     /** Countdown active for winning or losing */
     int _countdown;
+    /** Host is by default a farmer (will need to change this later) */
+    bool _isHost;
 
     /** Initial camera position */
     Vec3 _initCamera;
@@ -94,6 +99,9 @@ protected:
      * ratios
      */
     cugl::Size computeActiveSize() const;
+    
+    /** Function made for switching players */
+    void switchPlayer();
 
 public:
 #pragma mark -

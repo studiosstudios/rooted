@@ -153,6 +153,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     
+    _isHost = false;
+    
     // To be changed -CJ
 //    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
 //    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -221,7 +223,16 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
  */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost) {
     // TODO: set whether client or host
-    return init(assets);
+    _network = network;
+    _isHost = isHost;
+    
+    bool initSuccess = init(assets);
+    
+    if (initSuccess && isHost) {
+        switchPlayer();
+    }
+    
+    return initSuccess;
 }
 
 /**
@@ -353,14 +364,7 @@ void GameScene::preUpdate(float dt) {
     }
     
     if(_input->didSwitch()) {
-        _map->togglePlayer();
-        _map->clearRustling();
-        if(_map->isFarmerPlaying()){
-            _cam.setTarget(_map->getFarmers().at(0));
-        }
-        else{
-            _cam.setTarget(_map->getCarrots().at(0));
-        }
+        switchPlayer();
     }
 
     // Process the movement
@@ -369,6 +373,17 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
+}
+
+void GameScene::switchPlayer() {
+    _map->togglePlayer();
+    _map->clearRustling();
+    if(_map->isFarmerPlaying()){
+        _cam.setTarget(_map->getFarmers().at(0));
+    }
+    else{
+        _cam.setTarget(_map->getCarrots().at(0));
+    }
 }
 
 /**

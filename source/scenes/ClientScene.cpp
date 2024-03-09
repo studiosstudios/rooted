@@ -99,7 +99,9 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
 
     _gameid->addExitListener([this](const std::string& name, const std::string& value) {
     // call the network controller to connect as a client (Remember to convert the string from decimal to hex)
-    _network->_network->connectAsClient(dec2hex(value));
+        if (!value.empty()) {
+            _network->_network->connectAsClient(dec2hex(value));
+        }
     });
 
     
@@ -136,7 +138,7 @@ void ClientScene::setActive(bool value) {
         Scene2::setActive(value);
         
         /**
-         * TODO: This is similar to HostScene. if value is true, you need to activate the _backout button, and set the clicked variable to false. However, you should start a connection this time. If the value is false, you should disconnect the network controller, and reset all buttons and textfields to their original state.
+         * This is similar to HostScene. if value is true, you need to activate the _backout button, and set the clicked variable to false. However, you should start a connection this time. If the value is false, you should disconnect the network controller, and reset all buttons and textfields to their original state.
          */
         if (value) {
             _gameid->activate();

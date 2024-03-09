@@ -16,18 +16,18 @@
         },
         "children": {
             "up" : {
-				"type" : "NinePatch",
-				"data": {
-					"texture":  "button",
-					"anchor"   : [0.5, 0.5],
-					"interior" : [33,40,62,55],
-					"color"    : "#ffffff"
-				},
-				"layout" : {
-					"x_anchor" : "fill",
-					"y_anchor" : "fill"
-				}
-			}
+                "type" : "NinePatch",
+                "data": {
+                    "texture":  "button",
+                    "anchor"   : [0.5, 0.5],
+                    "interior" : [33,40,62,55],
+                    "color"    : "#ffffff"
+                },
+                "layout" : {
+                    "x_anchor" : "fill",
+                    "y_anchor" : "fill"
+                }
+            }
         },
         "layout" : {
             "x_anchor" : "center",

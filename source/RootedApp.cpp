@@ -364,11 +364,6 @@ void RootedApp::updateClientScene(float timestep) {
  * at all. The default implmentation does nothing.
  */
 void RootedApp::draw() {
-//    if (!_loaded) {
-//        _loading.render(_batch);
-//    } else {
-//        _gameplay.render(_batch);
-//    }
     switch (_status) {
         case LOAD:
             _loading.render(_batch);

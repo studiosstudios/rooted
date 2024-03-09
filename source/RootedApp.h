@@ -10,6 +10,7 @@
 #include "scenes/LoadingScene.h"
 #include "scenes/MenuScene.h"
 #include "scenes/HostScene.h"
+#include "scenes/ClientScene.h"
 #include "controllers/NetworkController.h"
 
 using namespace cugl::physics2::net;
@@ -38,7 +39,7 @@ protected:
     LoadingScene _loading;
     MenuScene _mainmenu;
     HostScene _hostgame;
-    
+    ClientScene _joingame;
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;
@@ -215,8 +216,25 @@ public:
      */
     void updateMenuScene(float timestep);
     
+    /**
+     * Inidividualized update method for the host scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the host scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
     void updateHostScene(float timestep);
 
+    /**
+     * Inidividualized update method for the client scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the client scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateClientScene(float timestep);
     
     /**
      * The method called to draw the application to the screen.

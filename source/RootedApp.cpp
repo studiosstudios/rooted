@@ -29,6 +29,9 @@ void RootedApp::onStartup() {
     Input::activate<Mouse>();
 #endif
     
+    Input::activate<Keyboard>();
+    Input::activate<TextInput>();
+    
     _assets->attach<Font>(FontLoader::alloc()->getHook());
     _assets->attach<Texture>(TextureLoader::alloc()->getHook());
     _assets->attach<Sound>(SoundLoader::alloc()->getHook());
@@ -68,6 +71,8 @@ void RootedApp::onShutdown() {
     _loading.dispose();
     _gameplay.dispose();
     _mainmenu.dispose();
+    _hostgame.dispose();
+    _joingame.dispose();
     _assets = nullptr;
     _batch = nullptr;
     
@@ -168,27 +173,27 @@ void RootedApp::preUpdate(float dt) {
         _loading.dispose(); // Disables the input listeners in this mode
         _mainmenu.init(_assets);
         _mainmenu.setActive(true);
-                _hostgame.init(_assets,_network);
-        //        _joingame.init(_assets,_network);
+        _hostgame.init(_assets,_network);
+        _joingame.init(_assets,_network);
         _loaded = true;
         _status = MENU;
     } else if (_status == MENU) {
         updateMenuScene(dt);
     }
-        else if (_status == HOST){
-            updateHostScene(dt);
+    else if (_status == HOST){
+        updateHostScene(dt);
+    }
+    else if (_status == CLIENT){
+        updateClientScene(dt);
+    }
+    else if (_status == GAME){
+        if(_gameplay.isComplete()){
+            _gameplay.reset();
+            _status = MENU;
+            _mainmenu.setActive(true);
         }
-    //    else if (_status == CLIENT){
-    //        updateClientScene(dt);
-    //    }
-    //    else if (_status == GAME){
-    //        if(_gameplay.isComplete()){
-    //            _gameplay.reset();
-    //            _status = MENU;
-    //            _mainmenu.setActive(true);
-    //        }
-    //        _gameplay.preUpdate(dt);
-    //    }
+        _gameplay.preUpdate(dt);
+    }
 }
 
 /**
@@ -274,7 +279,7 @@ void RootedApp::updateMenuScene(float timestep) {
             break;
         case MenuScene::Choice::JOIN:
             _mainmenu.setActive(false);
-//            _joingame.setActive(true);
+            _joingame.setActive(true);
             _status = CLIENT;
             break;
         case MenuScene::Choice::NONE:
@@ -298,22 +303,55 @@ void RootedApp::updateHostScene(float timestep) {
         _hostgame.setActive(false);
         _mainmenu.setActive(true);
     }
-//    else if (_network->_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->_network->getShortUID()) {
-//        _gameplay.init(_assets, _network, true);
-//        _network->markReady();
-//    }
-//    else if (_network->getStatus() == NetEventController::Status::INGAME) {
-//        _hostgame.setActive(false);
-//        _gameplay.setActive(true);
-//        _status = GAME;
-//    }
-//    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
-//        _network->disconnect();
-//        _hostgame.setActive(false);
-//        _mainmenu.setActive(true);
-//        _gameplay.dispose();
-//        _status = MENU;
-//    }
+    else if (_network->_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->_network->getShortUID()) {
+        _gameplay.init(_assets, _network, true);
+        _network->_network->markReady();
+    }
+    else if (_network->_network->getStatus() == NetEventController::Status::INGAME) {
+        _hostgame.setActive(false);
+        _gameplay.setActive(true);
+        _status = GAME;
+    }
+    else if (_network->_network->getStatus() == NetEventController::Status::NETERROR) {
+        _network->_network->disconnect();
+        _hostgame.setActive(false);
+        _mainmenu.setActive(true);
+        _gameplay.dispose();
+        _status = MENU;
+    }
+}
+
+/**
+ * Inidividualized update method for the client scene.
+ *
+ * This method keeps the primary {@link #update} from being a mess of switch
+ * statements. It also handles the transition logic from the client scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ */
+void RootedApp::updateClientScene(float timestep) {
+    _joingame.update(timestep);
+    if(_joingame.getBackClicked()){
+        _status = MENU;
+        _joingame.setActive(false);
+        _mainmenu.setActive(true);
+    }
+    else if (_network->_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->_network->getShortUID()) {
+        _gameplay.init(_assets, _network, false);
+        _network->_network->markReady();
+    }
+    else if (_network->_network->getStatus() == NetEventController::Status::INGAME) {
+        _joingame.setActive(false);
+        _gameplay.setActive(true);
+        _status = GAME;
+    }
+    else if (_network->_network->getStatus() == NetEventController::Status::NETERROR) {
+        _network->_network->disconnect();
+        _joingame.setActive(false);
+        _mainmenu.setActive(true);
+        _gameplay.dispose();
+        _status = MENU;
+    }
 }
 
 /**
@@ -341,8 +379,8 @@ void RootedApp::draw() {
         case HOST:
             _hostgame.render(_batch);
             break;
-//        case CLIENT:
-//            _joingame.render(_batch);
+        case CLIENT:
+            _joingame.render(_batch);
             break;
         case GAME:
             _gameplay.render(_batch);

@@ -206,6 +206,25 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 }
 
 /**
+ * Initializes the controller contents, and starts the game
+ *
+ * The constructor does not allocate any objects or memory.  This allows
+ * us to have a non-pointer reference to this controller, reducing our
+ * memory allocation.  Instead, allocation happens in this method.
+ *
+ * The game world is scaled so that the screen coordinates do not agree
+ * with the Box2d coordinates.  This initializer uses the default scale.
+ *
+ * @param assets    The (loaded) assets for this game mode
+ *
+ * @return true if the controller is initialized properly, false otherwise.
+ */
+bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost) {
+    // TODO: set whether client or host
+    return init(assets);
+}
+
+/**
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void GameScene::dispose() {

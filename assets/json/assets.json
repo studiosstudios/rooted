@@ -60,6 +60,10 @@
             "file":     "textures/gradient.png"
         }
 	},
+    "jsons": {
+        "server": "json/server.json",
+        "map": "json/map.json"
+    },
     "sounds": {
         "game": {
             "type":     "sample",

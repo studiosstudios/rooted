@@ -6,6 +6,9 @@
 
 using namespace cugl;
 
+/** Time after dashing when carrot can be captured */
+#define CAPTURE_TIME    10 //TEMPORARY DASH TO ROOT SOLUTION
+
 /**
  * Initializes an ActionController
  */
@@ -27,7 +30,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
 void ActionController::preUpdate(float dt) {
     for (auto carrot : _map->getCarrots()) {
         carrot->setMovement(Vec2::ZERO);
-        if (!_map->isFarmerPlaying()) {
+        if (!_map->isFarmerPlaying() && !carrot->isCaptured() && !carrot->isRooted()) {
             if (_input->didDash()) {
                 carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
             } else {
@@ -40,8 +43,16 @@ void ActionController::preUpdate(float dt) {
     for (auto farmer : _map->getFarmers()) {
         farmer->setMovement(Vec2::ZERO);
         if (_map->isFarmerPlaying()){
+            if(dashWindow == 0){
+                farmer->setDash(false);
+            }
+            else{
+                dashWindow--;
+            }
             if (_input->didDash()) {
                 farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
+                dashWindow=CAPTURE_TIME;
+                farmer->setDash(true);
             } else {
                 farmer->setMovement(_input->getMovement() * farmer ->getForce());
             }

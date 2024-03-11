@@ -21,6 +21,7 @@ private:
     std::shared_ptr<Map> _map;
     /** ai controller for baby carrots */
     AIController _ai;
+    int dashWindow;
 
 public:
 

@@ -14,6 +14,7 @@ class Farmer : public EntityModel {
 
 private:
     bool _isHoldingCarrot;
+    bool _isDashing;
 
 public:
 
@@ -27,7 +28,11 @@ public:
         std::shared_ptr<Farmer> result = std::make_shared<Farmer>();
         return (result->init(pos, size, scale) ? result : nullptr);
     }
-
+    
+    void setDash(bool dash) {_isDashing = dash; }
+    
+    bool isDashing(){ return _isDashing; }
+    
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
     void grabCarrot();

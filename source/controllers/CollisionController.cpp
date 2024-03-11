@@ -74,6 +74,13 @@ void CollisionController::beginContact(b2Contact* contact) {
                     wheat->rustle(bd1->getLinearVelocity().length());
                     wheat->setOccupied(_map->isShowingPlayer());
                 }
+                if(name2 == "carrot") {
+                    Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+                    Carrot* carrot = dynamic_cast<Carrot*>(bd2);
+                    if(farmer->isDashing()){
+                        carrot->gotCaptured();
+                    }
+                }
             }
         }
 

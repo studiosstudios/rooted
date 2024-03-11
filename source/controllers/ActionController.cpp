@@ -49,7 +49,7 @@ void ActionController::preUpdate(float dt) {
             else{
                 dashWindow--;
             }
-            if (_input->didDash()) {
+            if (_input->didDash() && !farmer->isHoldingCarrot()) {
                 farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
                 dashWindow=CAPTURE_TIME;
                 farmer->setDash(true);

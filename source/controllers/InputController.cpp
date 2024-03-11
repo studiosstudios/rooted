@@ -76,6 +76,7 @@ _rustlePressed(false),
 _dashPressed(false),
 _showPlayerPressed(false),
 _switchPressed(false),
+_rootPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
@@ -171,6 +172,7 @@ void InputController::update(float dt) {
     _keyShowPlayer = keys->keyPressed(KeyCode::V);
     _keyDash   = keys->keyPressed(KeyCode::X);
     _keySwitch = keys->keyPressed(KeyCode::S);
+    _keyRoot   = keys->keyPressed(KeyCode::Z);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -200,6 +202,8 @@ void InputController::update(float dt) {
 
     _dashPressed  = (_keyDash && !_keyDashPressed);
     _keyDashPressed = _keyDash;
+    
+    _rootPressed = _keyRoot;
 
     // _movement is now updated directly in processJoystick
 
@@ -221,6 +225,7 @@ void InputController::clear() {
     _exitPressed  = false;
     _dashPressed  = false;
     _keyShowPlayer = false;
+    _rootPressed = false;
 }
 
 #pragma mark -

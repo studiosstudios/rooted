@@ -10,7 +10,7 @@
 #include "Farmer.h"
 #include "Wheat.h"
 
-class Map : public Asset {
+class Map {
 private:
     /** references to the baby carrots */
     std::vector<std::shared_ptr<BabyCarrot>> _babies;
@@ -32,6 +32,8 @@ private:
     Vec2 _gravity;
     /** The scale between the physics world and the screen */
     Vec2 _scale;
+    /** Reference to map json */
+    std::shared_ptr<JsonValue> _json;
     /** The AssetManager for the game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** Reference to the physics root of the scene graph */
@@ -52,19 +54,6 @@ public:
     virtual ~Map(void);
 
     /**
-     * Creates a new Map with no source file.
-     *
-     * The source file can be set at any time via the setFile() method. This method
-     * does NOT load the asset.  You must call the load() method to do that.
-     *
-     * @return  an autoreleased level file
-     */
-    static std::shared_ptr<Map> alloc() {
-        std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init("") ? result : nullptr);
-    }
-
-    /**
      * Creates a new Map with the given source file.
      *
      * This method does NOT load the level. You must call the load() method to do that.
@@ -72,10 +61,18 @@ public:
      *
      * @return  an autoreleased level file
      */
-    static std::shared_ptr<Map> alloc(std::string file) {
+    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets,
+                                      const std::shared_ptr<scene2::SceneNode> &root,
+                                      const std::shared_ptr<cugl::JsonValue> &json) {
         std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init(file) ? result : nullptr);
+        return (result->init(assets, root, json) ? result : nullptr);
     }
+
+    bool init(const std::shared_ptr<AssetManager> &assets,
+              const std::shared_ptr<scene2::SceneNode> &root,
+              const std::shared_ptr<cugl::JsonValue> &json);
+
+    bool populate();
 
 
 #pragma mark -
@@ -97,7 +94,7 @@ public:
      * @retain the wall
      * @return true if the crate was successfully loaded
      */
-    bool loadWall(const std::shared_ptr<JsonValue>& json);
+    bool loadWall(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single farmer
@@ -110,7 +107,7 @@ public:
      * @retain the farmer
      * @return true if the crate was successfully loaded
      */
-    bool loadFarmer(const std::shared_ptr<JsonValue>& json);
+    bool loadFarmer(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single carrot
@@ -123,7 +120,7 @@ public:
      * @retain the carrot
      * @return true if the carrot was successfully loaded
      */
-    bool loadCarrot(const std::shared_ptr<JsonValue>& json);
+    bool loadCarrot(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single baby carrot
@@ -136,7 +133,7 @@ public:
      * @retain the baby carrot
      * @return true if the baby carrot was successfully loaded
      */
-    bool loadBabyCarrot(const std::shared_ptr<JsonValue>& json);
+    bool loadBabyCarrot(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single wheat
@@ -149,7 +146,7 @@ public:
      * @retain the baby carrot
      * @return true if the baby carrot was successfully loaded
      */
-    bool loadWheat(const std::shared_ptr<JsonValue>& json);
+    bool loadWheat(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Adds the physics object to the physics world and loosely couples it to the scene graph
@@ -249,65 +246,38 @@ public:
 #pragma mark Asset Loading
 
     /**
-     * Loads this game level from the source file
-     *
-     * This load method should NEVER access the AssetManager.  Assets are loaded in
-     * parallel, not in sequence.  If an asset (like a game level) has references to
-     * other assets, then these should be connected later, during scene initialization.
-     *
-     * @param file the name of the source file to load from
-     *
-     * @return true if successfully loaded the asset from a file
-     */
-    virtual bool preload(const std::string file) override;
-
-
-    /**
-     * Loads this game level from a JsonValue containing all data from a source Json file.
-     *
-     * This load method should NEVER access the AssetManager.  Assets are loaded in
-     * parallel, not in sequence.  If an asset (like a game level) has references to
-     * other assets, then these should be connected later, during scene initialization.
-     *
-     * @param json the json loaded from the source file to use when loading this game level
-     *
-     * @return true if successfully loaded the asset from the input JsonValue
-     */
-    virtual bool preload(const std::shared_ptr<cugl::JsonValue> &json) override;
-
-    /**
      * Unloads this game level, releasing all sources
      *
      * This load method should NEVER access the AssetManager.  Assets are loaded and
      * unloaded in parallel, not in sequence.  If an asset (like a game level) has
      * references to other assets, then these should be disconnected earlier.
      */
-    void unload();
+    void dispose();
 
 
 #pragma mark -
 #pragma mark Getters and Setters
 
-    std::vector<std::shared_ptr<BabyCarrot>>& getBabyCarrots() { return _babies; }
+    std::vector<std::shared_ptr<BabyCarrot>> &getBabyCarrots() { return _babies; }
 
-    std::vector<std::shared_ptr<Carrot>>& getCarrots() { return _carrots; }
+    std::vector<std::shared_ptr<Carrot>> &getCarrots() { return _carrots; }
 
-    std::vector<std::shared_ptr<Farmer>>& getFarmers() { return _farmers; }
+    std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
 
-    std::vector<std::shared_ptr<Wheat>>& getWheat() { return _wheat; }
+    std::vector<std::shared_ptr<Wheat>> &getWheat() { return _wheat; }
 
     std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
-    
+
     bool isFarmerPlaying() { return _farmerPlaying; }
-    
+
     bool isShowingPlayer() { return _showPlayer; }
 
     void rustleWheats(float amount);
-    
+
     void clearRustling();
 
     void togglePlayer();
-    
+
     void toggleShowPlayer();
 };
 

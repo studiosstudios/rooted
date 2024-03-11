@@ -9,11 +9,20 @@
 #define WheatRenderer_h
 
 #include <cugl/cugl.h>
+#include "../controllers/CameraController.h"
+#include "../objects/Map.h"
+
+
 
 class WheatRenderer {
 protected:
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
+    
+    Size _size;
+    
+    /** Controller for camera */
+    std::shared_ptr<cugl::OrthographicCamera> _cam;
 
 //    /** The OpenGL camera */
 //    std::shared_ptr<cugl::OrthographicCamera> _camera;
@@ -42,33 +51,23 @@ protected:
     /** The listener key for input */
     Uint32 _key;
     
-    /**
-     * Builds the graphics pipeline.
-     *
-     * This initializes the shader and adds the triangle
-     */
-    void buildPipeline();
     
 public:
-    /**
-     * Creates, but does not initialized a new application.
-     *
-     * This constructor is called by main.cpp.  You will notice that, like
-     * most of the classes in CUGL, we do not do any initialization in the
-     * constructor.  That is the purpose of the init() method.  Separation
-     * of initialization from the constructor allows main.cpp to perform
-     * advanced configuration of the application before it starts.
-     */
-    WheatRenderer() {}
     
+    WheatRenderer() {}
+
+    ~WheatRenderer() {}
+            
     /**
-     * Disposes of this application, releasing all resources.
+     * Sets the loaded assets for this game level
      *
-     * This destructor is called by main.cpp when the application quits.
-     * It simply calls the dispose() method in Application.  There is nothing
-     * special to do here.
+     * @param assets the loaded assets for this game level
      */
-    ~WheatRenderer() { }
+    void load(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera);
+    
+    void setSize(Size size) { _size = size; }
+        
+    void dispose();
     
 
     
@@ -94,7 +93,14 @@ public:
      * When overriding this method, you do not need to call the parent method
      * at all. The default implmentation does nothing.
      */
-    virtual void draw();
+    virtual void render();
+    
+    /**
+     * Builds the graphics pipeline.
+     *
+     * This initializes the shader and adds the triangle
+     */
+    void buildShader();
     
 };
 

@@ -203,6 +203,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4(118,118,118,255));
+    
     return true;
 }
 
@@ -297,6 +298,7 @@ void GameScene::preUpdate(float dt) {
             _cam.setPosition(_initCamera);
 
             _loadnode->setVisible(false);
+            
         } else {
             // Level is not loaded yet; refuse input
             return;

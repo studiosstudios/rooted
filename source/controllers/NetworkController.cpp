@@ -4,17 +4,21 @@
 //
 //  Created by Joshua Guo on 3/6/24.
 //
+#include <cugl/cugl.h>
 
 #include "NetworkController.h"
 
-NetworkController::NetworkController() :
-_network(nullptr) {}
+using namespace cugl;
 
-void NetworkController::dispose() {
-    
+
+void NetworkController::dispose()  {
+    NetEventController::dispose();
 }
 
-bool NetworkController::init(std::shared_ptr<NetEventController> network) {
-    _network = network;
-    return true;
+bool NetworkController::init(const std::shared_ptr<AssetManager>& assets) {
+    return this->NetEventController::init(assets);
+}
+
+std::shared_ptr<cugl::net::NetcodeConnection> NetworkController::getNetcode() {
+    return this->_network;
 }

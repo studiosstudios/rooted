@@ -4,6 +4,7 @@
 
 #include "Map.h"
 #include "../objects/EntityModel.h"
+#include "NetworkController.h"
 
 // TODO: put all constants into JSON
 
@@ -363,7 +364,6 @@ void Map::unload() {
         _world = nullptr;
     }
 }
-
 
 #pragma mark -
 #pragma mark Individual Loaders

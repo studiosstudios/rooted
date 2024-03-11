@@ -55,5 +55,3 @@ void main(void) {
 }
 
 /////////// SHADER END //////////)"
-
-

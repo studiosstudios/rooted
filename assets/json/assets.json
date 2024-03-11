@@ -54,7 +54,8 @@
         }
 	},
     "jsons": {
-        "server": "json/server.json"
+        "server": "json/server.json",
+        "map": "json/map.json"
     },
     "sounds": {
         "game": {

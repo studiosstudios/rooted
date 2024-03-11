@@ -36,7 +36,7 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 #define WALL_NAME       "wall"
 /** The name of a platform (for object identification) */
 #define PLATFORM_NAME   "platform"
-float CARROT_SIZE[2] = {1.0f, 1.0f}; //TODO: make json constants fil
+float CARROT_SIZE[2] = {1.0f, 1.0f}; //TODO: make json constants file
 
 float WHEAT_SIZE[2] = {1.0f, 1.0f};
 
@@ -50,11 +50,11 @@ using namespace cugl;
 /**
 * Creates a new, empty Map.
 */
-Map::Map(void) : Asset(),
-                 _root(nullptr),
-                 _world(nullptr),
-                 _worldnode(nullptr),
-                 _debugnode(nullptr) {
+Map::Map() :
+        _root(nullptr),
+        _world(nullptr),
+        _worldnode(nullptr),
+        _debugnode(nullptr) {
     _bounds.size.set(1.0f, 1.0f);
 }
 
@@ -62,7 +62,7 @@ Map::Map(void) : Asset(),
 * Destroys this Map, releasing all resources.
 */
 Map::~Map(void) {
-    unload();
+    dispose();
     clearRootNode();
 }
 
@@ -151,60 +151,6 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _root->addChild(_worldnode);
     _root->addChild(_debugnode);
 
-    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-        std::shared_ptr<physics2::PolygonObstacle> wall = *it;
-        auto sprite = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(EARTH_TEXTURE),
-                wall->getPolygon() * _scale);
-        addObstacle(wall, sprite);  // All walls share the same texture
-    }
-
-    for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
-        std::shared_ptr<Carrot> carrot = *it;
-        auto carrotNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(CARROT_TEXTURE));
-//        carrotNode->setColor(Color4::ORANGE);
-        carrot->setSceneNode(carrotNode);
-        carrot->setDrawScale(
-                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-        // Create the polygon node (empty, as the model will initialize)
-        _worldnode->addChild(carrotNode);
-        carrot->setDebugScene(_debugnode);
-    }
-
-    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
-        std::shared_ptr<BabyCarrot> baby = *it;
-        auto babyNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(BABY_TEXTURE));
-//        babyNode->setColor(Color4::BLUE);
-        baby->setSceneNode(babyNode);
-        baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-        // Create the polygon node (empty, as the model will initialize)
-        _worldnode->addChild(babyNode);
-        baby->setDebugScene(_debugnode);
-    }
-    
-    for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
-        std::shared_ptr<Farmer> farmer = *it;
-        auto farmerNode = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(FARMER_TEXTURE));
-        farmer->setSceneNode(farmerNode);
-        farmer->setDrawScale(
-                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-        // Create the polygon node (empty, as the model will initialize)
-        _worldnode->addChild(farmerNode);
-        farmer->setDebugScene(_debugnode);
-    }
-
-    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
-        std::shared_ptr<Wheat> wheat = *it;
-        auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
-                                                              1, WHEAT_FRAMES, WHEAT_FRAMES);
-        wheat->setSceneNode(spriteImage);
-        addObstacle(wheat, spriteImage);  // All walls share the same texture
-        
-    }
-
 }
 
 /**
@@ -232,33 +178,35 @@ void Map::showDebug(bool flag) {
  *
  * @return true if successfully loaded the asset from a file
  */
-bool Map::preload(const std::string file) {
-    std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
-    return preload(reader->readJson());
-}
+bool Map::init(const std::shared_ptr<AssetManager> &assets,
+               const std::shared_ptr<scene2::SceneNode> &root,
+               const std::shared_ptr<cugl::JsonValue> &json) {
+    setAssets(assets);
 
-/**
- * Loads this game level from the source file
- *
- * This load method should NEVER access the AssetManager.  Assets are loaded in
- * parallel, not in sequence.  If an asset (like a game level) has references to
- * other assets, then these should be connected later, during scene initialization.
- *
- * @return true if successfully loaded the asset from a file
- */
-bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
     if (json == nullptr) {
         CUAssertLog(false, "Failed to load level file");
     }
+
+    _json = json;
+
     // Initial geometry
     float w = json->get("width")->asFloat();
     float h = json->get("height")->asFloat();
     _bounds.size.set(w, h);
 
+    setRootNode(root);
+
+    return true;
+}
+
+bool Map::populate() {
+
     /** Create the physics world */
     _world = physics2::ObstacleWorld::alloc(getBounds(), Vec2(0, 0));
 
-    auto walls = json->get("walls");
+    _farmerPlaying = false;
+
+    auto walls = _json->get("walls");
     if (walls != nullptr) {
         // Convert the object to an array so we can see keys and values
         int wsize = (int) walls->size();
@@ -269,7 +217,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
         CUAssertLog(false, "Failed to load walls");
     }
 
-    auto carrots = json->get("carrots");
+    auto carrots = _json->get("carrots");
     if (carrots != nullptr) {
         // Convert the object to an array so we can see keys and values
         int csize = (int) carrots->size();
@@ -280,7 +228,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
         CUAssertLog(false, "Failed to load carrots");
     }
 
-    auto babies = json->get("babies");
+    auto babies = _json->get("babies");
     if (babies != nullptr) {
         // Convert the object to an array so we can see keys and values
         int bsize = (int) babies->size();
@@ -291,7 +239,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
         CUAssertLog(false, "Failed to load babies");
     }
 
-    auto farmers = json->get("farmers");
+    auto farmers = _json->get("farmers");
     if (farmers != nullptr) {
         // Convert the object to an array so we can see keys and values
         int fsize = (int) farmers->size();
@@ -302,7 +250,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
         CUAssertLog(false, "Failed to load farmers");
     }
 
-    auto wheat = json->get("wheat");
+    auto wheat = _json->get("wheat");
     if (wheat != nullptr) {
         // Convert the object to an array so we can see keys and values
         int wsize = (int) wheat->size();
@@ -322,7 +270,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
 * unloaded in parallel, not in sequence.  If an asset (like a game level) has
 * references to other assets, then these should be disconnected earlier.
 */
-void Map::unload() {
+void Map::dispose() {
     for (auto it = _walls.begin(); it != _walls.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
@@ -413,6 +361,11 @@ bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
         wallobj = nullptr;
     }
 
+    auto sprite = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(EARTH_TEXTURE),
+            wallobj->getPolygon() * _scale);
+    addObstacle(wallobj, sprite);  // All walls share the same texture
+
     vertices.clear();
     return success;
 
@@ -439,6 +392,16 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     carrot->setDebugColor(DEBUG_COLOR);
     carrot->setName("carrot");
     _carrots.push_back(carrot);
+
+    auto carrotNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROT_TEXTURE));
+//        carrotNode->setColor(Color4::ORANGE);
+    carrot->setSceneNode(carrotNode);
+    carrot->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(carrotNode);
+    carrot->setDebugScene(_debugnode);
 
     if (success) {
         _world->addObstacle(carrot);
@@ -469,6 +432,11 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
     wheat->setName("wheat");
     _wheat.push_back(wheat);
 
+    auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
+                                                          1, WHEAT_FRAMES, WHEAT_FRAMES);
+    wheat->setSceneNode(spriteImage);
+    addObstacle(wheat, spriteImage);  // All walls share the same texture
+
     return success;
 }
 
@@ -495,6 +463,16 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     baby->setName("baby");
     _babies.push_back(baby);
 
+    auto babyNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(BABY_TEXTURE));
+//        babyNode->setColor(Color4::BLUE);
+    baby->setSceneNode(babyNode);
+    baby->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(babyNode);
+    baby->setDebugScene(_debugnode);
+
     if (success) {
         _world->addObstacle(baby);
     }
@@ -516,19 +494,29 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
  */
 bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     bool success = true;
-    
+
     auto posArray = json->get("position");
     success = posArray->isArray();
     Vec2 farmerPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
     std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, FARMER_SIZE, _scale.x);
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
+
+    auto farmerNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(FARMER_TEXTURE));
+    farmer->setSceneNode(farmerNode);
+    farmer->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(farmerNode);
+    farmer->setDebugScene(_debugnode);
+
     _farmers.push_back(farmer);
-    
+
     if (success) {
         _world->addObstacle(farmer);
     }
-    
+
     return success;
 
 }
@@ -577,7 +565,7 @@ void Map::rustleWheats(float amount) {
 /**
  * Stops all wheat from rustling and clear any signs of occupancy
  */
-void Map::clearRustling(){
+void Map::clearRustling() {
     for (auto w: _wheat) {
         w->setRustling(false);
         w->setOccupied(false);
@@ -587,13 +575,13 @@ void Map::clearRustling(){
 /**
  * TEMP: Switches current player between carrot and farmer
  */
-void Map::togglePlayer(){
+void Map::togglePlayer() {
     _farmerPlaying = !_farmerPlaying;
 }
 
 /**
  * TEMP: Switches whether we want to see player or not
  */
-void Map::toggleShowPlayer(){
+void Map::toggleShowPlayer() {
     _showPlayer = !_showPlayer;
 }

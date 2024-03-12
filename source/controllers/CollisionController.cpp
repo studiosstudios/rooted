@@ -82,6 +82,10 @@ void CollisionController::beginContact(b2Contact* contact) {
                         farmer->grabCarrot();
                     }
                 }
+                if(name2 == "planting spot") {
+                    Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+                    farmer->setCanPlant(true);
+                }
             }
         }
 
@@ -153,6 +157,10 @@ void CollisionController::endContact(b2Contact* contact) {
                 if (name2 == "wheat") {
                     Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                     wheat->setOccupied(false);
+                }
+                if(name2 == "planting spot"){
+                    Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+                    farmer->setCanPlant(false);
                 }
             }
         }

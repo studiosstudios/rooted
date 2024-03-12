@@ -352,7 +352,7 @@ void GameScene::preUpdate(float dt) {
         switchPlayer();
     }
     
-    if(_input->didRoot()){
+    if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
         _map->getFarmers().at(0)->rootCarrot();
         _map->getCarrots().at(0)->gotRooted();
     }

@@ -30,6 +30,7 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 #pragma mark -
 #pragma mark Asset Constants
 # define WHEAT_TEXTURE  "wheat"
+# define PLANTING_SPOT_TEXTURE "planting spot"
 /** The key for the earth texture in the asset manager */
 #define EARTH_TEXTURE   "earth"
 /** The name of a wall (for object identification) */
@@ -39,6 +40,8 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 float CARROT_SIZE[2] = {1.0f, 1.0f}; //TODO: make json constants file
 
 float WHEAT_SIZE[2] = {1.0f, 1.0f};
+
+float PLANTING_SPOT_SIZE[2] = {3.0f, 3.0f};
 
 float FARMER_SIZE[2] = {1.0f, 1.0f};
 
@@ -259,6 +262,17 @@ bool Map::populate() {
         }
     } else {
         CUAssertLog(false, "Failed to load wheat");
+    }
+    
+    auto plantingSpots = _json->get("plantingSpots");
+    if(plantingSpots != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int wsize = (int) plantingSpots->size();
+        for (int ii = 0; ii < wsize; ii++) {
+            loadPlantingSpot(plantingSpots->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load planting spots");
     }
     return true;
 }
@@ -490,7 +504,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
  * @param  reader   a JSON reader with cursor ready to read the farmer
  *
  * @retain the farmer
- * @return true if the crate was successfully loaded
+ * @return true if the farmer was successfully loaded
  */
 bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     bool success = true;
@@ -519,6 +533,34 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
 
     return success;
 
+}
+
+/**
+ * Loads a single planting spot
+ *
+ * The farmer will be retained and stored in the vector _plantingSpot.  If the
+ * farmer fails to load, then it will not be added to _plantingSpot.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the planting spots
+ *
+ * @retain the planting spot
+ * @return true if the planting spot was successfully loaded
+ */
+bool Map::loadPlantingSpot(const std::shared_ptr<JsonValue> &json) {
+    bool success = true;
+    success = json->isArray();
+    Vec2 spotPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
+    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, PLANTING_SPOT_SIZE, _scale.x);
+    plantingSpot->setDebugColor(DEBUG_COLOR);
+    plantingSpot->setName("planting spot");
+    _plantingSpot.push_back(plantingSpot);
+
+    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
+    plantingSpot->setSceneNode(spotNode);
+    spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
+    addObstacle(plantingSpot, spotNode);
+
+    return success;
 }
 
 /**

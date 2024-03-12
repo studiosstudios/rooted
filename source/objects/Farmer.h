@@ -15,6 +15,7 @@ class Farmer : public EntityModel {
 private:
     bool _isHoldingCarrot;
     bool _isDashing;
+    bool _canPlant;
 
 public:
 
@@ -39,6 +40,9 @@ public:
 
     void rootCarrot();
 
+    bool canPlant() { return _canPlant; };
+    
+    void setCanPlant(bool plant) { _canPlant = plant; };
 };
 
 

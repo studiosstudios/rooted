@@ -485,7 +485,7 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     _carrots.push_back(carrot);
 
     if (success) { //Do not immediately add, wait until we check network players
-        _world->addObstacle(carrot);
+        _world->initObstacle(carrot);
     }
 
     return success;
@@ -540,7 +540,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     _babies.push_back(baby);
 
     if (success) {
-        _world->addObstacle(baby);
+        _world->initObstacle(baby);
     }
 
     return success;
@@ -570,7 +570,7 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     _farmers.push_back(farmer);
     
     if (success) {
-        _world->addObstacle(farmer);
+        _world->initObstacle(farmer);
     }
     
     return success;
@@ -590,7 +590,7 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
  */
 void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
                       const std::shared_ptr<cugl::scene2::SceneNode> &node) {
-    _world->addObstacle(obj);
+    _world->initObstacle(obj);
     obj->setDebugScene(_debugnode);
 
     // Position the scene graph node (enough for static objects)

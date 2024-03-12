@@ -3,17 +3,20 @@
 //
 
 #include "ActionController.h"
+#include "NetworkController.h"
 
 using namespace cugl;
 
 /**
  * Initializes an ActionController
  */
-bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input) {
+bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
+    std::shared_ptr<NetworkController> &network) {
     _map = map;
     _input = input;
     _world = _map->getWorld();
     _ai.init(map);
+    _network = network;
     return true;
 }
 
@@ -52,6 +55,8 @@ void ActionController::preUpdate(float dt) {
     for (auto babyCarrot : _map->getBabyCarrots()) {        
         _ai.updateBabyCarrot(babyCarrot);
     }
+    
+    networkQueuePositions();
 }
 
 /**
@@ -76,4 +81,8 @@ void ActionController::postUpdate(float dt) {
         else ++it;
     }
 
+}
+
+void ActionController::networkQueuePositions() {
+    
 }

@@ -257,7 +257,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
     _bounds.size.set(w, h);
 
     /** Create the physics world */
-    _world = physics2::ObstacleWorld::alloc(getBounds(), Vec2(0, 0));
+    _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
 
     auto walls = json->get("walls");
     if (walls != nullptr) {
@@ -324,6 +324,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
 * references to other assets, then these should be disconnected earlier.
 */
 void Map::unload() {
+    _character = nullptr;
     for (auto it = _walls.begin(); it != _walls.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
@@ -383,6 +384,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     if (ret == nullptr) {
         ret = _farmers.at(0);
     }
+    _character = ret;
     return ret;
 }
 

@@ -9,6 +9,7 @@
 #include "../objects/Map.h"
 #include "InputController.h"
 #include "AIController.h"
+#include "NetworkController.h"
 
 class ActionController {
 private:
@@ -21,6 +22,8 @@ private:
     std::shared_ptr<Map> _map;
     /** ai controller for baby carrots */
     AIController _ai;
+    /** NetworkController */
+    std::shared_ptr<NetworkController> _network;
 
 public:
 
@@ -30,12 +33,14 @@ public:
     void dispose() {
         _map = nullptr;
         _world = nullptr;
+        _network = nullptr;
     }
 
     /**
      * Initializes an ActionController
      */
-    bool init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input);
+    bool init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
+              std::shared_ptr<NetworkController> &network);
 
     /**
      * The method called to indicate the start of a deterministic loop.
@@ -58,6 +63,8 @@ public:
      * @param remain    The amount of time (in seconds) last fixedUpdate
      */
     void postUpdate(float remain);
+    
+    void networkQueuePositions();
 };
 
 

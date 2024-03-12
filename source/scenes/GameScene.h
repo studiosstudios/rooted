@@ -72,6 +72,7 @@ protected:
 
     /** Reference to the map */
     std::shared_ptr<Map> _map;
+    std::shared_ptr<EntityModel> _character;
 
     /** Whether we have completed this "game" */
     bool _complete;

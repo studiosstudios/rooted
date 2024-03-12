@@ -131,7 +131,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         CULog("Failed to load map");
         return false;
     }
-    _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
 
     _assets = assets;
 
@@ -192,7 +192,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _input = InputController::alloc(getBounds());
     _collision.init(_map);
-    _action.init(_map, _input);
+    _action.init(_map, _input, _network);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -254,6 +254,7 @@ void GameScene::dispose() {
         _complete = false;
         _debug = false;
         _map = nullptr;
+        _character = nullptr;
         Scene2::dispose();
     }
 }
@@ -322,7 +323,7 @@ void GameScene::preUpdate(float dt) {
             activateWorldCollisions(_map->getWorld());
 
             _collision.init(_map);
-            _action.init(_map, _input);
+            _action.init(_map, _input, _network);
 
             _cam.setPosition(_initCamera);
 

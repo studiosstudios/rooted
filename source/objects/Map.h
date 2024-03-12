@@ -14,6 +14,8 @@
 
 class Map : public Asset {
 private:
+    /** reference to this game's player's active EntityModel */
+    std::shared_ptr<EntityModel> _character;
     /** references to the baby carrots */
     std::vector<std::shared_ptr<BabyCarrot>> _babies;
     /** references to the carrots */
@@ -25,7 +27,7 @@ private:
     /** references to the walls */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
-    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    std::shared_ptr<cugl::physics2::net::NetWorld> _world;
     /** The root node of this level */
     std::shared_ptr<scene2::SceneNode> _root;
     /** The bounds of this level in physics coordinates */

@@ -289,6 +289,8 @@ public:
     void unload();
     
     std::shared_ptr<EntityModel> loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID);
+    
+    void acquireMapOwnership();
 
 
 #pragma mark -
@@ -302,7 +304,7 @@ public:
 
     std::vector<std::shared_ptr<Wheat>>& getWheat() { return _wheat; }
 
-    std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
+    std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
     
     bool isFarmerPlaying() { return _farmerPlaying; }
     

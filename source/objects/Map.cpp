@@ -372,8 +372,6 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     for (std::string uuid : players) {
         if (uuid != hostUUID) {
             (*carrot)->setUUID(uuid);
-            (*carrot)->setEnabled(true);
-            _world->addObstacle(*carrot);
             if (uuid == thisUUID) {
                 ret = (*carrot);
             }
@@ -385,7 +383,29 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
         ret = _farmers.at(0);
     }
     _character = ret;
+    
     return ret;
+}
+
+void Map::acquireMapOwnership() {
+    auto ownerMap = _world->getOwnedObstacles();
+    std::cout << "owned obstacles size: " << ownerMap.size();
+    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    std::cout << "owned obstacles size: " << _world->getOwnedObstacles().size();
 }
 
 #pragma mark -
@@ -461,12 +481,12 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     carrot->setDebugColor(DEBUG_COLOR);
     carrot->setName("carrot");
-    carrot->setEnabled(false); // Initially disabled
+//    carrot->setEnabled(false);  Initially disabled
     _carrots.push_back(carrot);
 
-//    if (success) { Do not immediately add, wait until we check network players
-//        _world->addObstacle(carrot);
-//    }
+    if (success) { //Do not immediately add, wait until we check network players
+        _world->addObstacle(carrot);
+    }
 
     return success;
 

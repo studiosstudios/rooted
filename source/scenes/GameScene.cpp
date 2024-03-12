@@ -131,6 +131,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         CULog("Failed to load map");
         return false;
     }
+    if (_network->isHost()) {
+        _map->acquireMapOwnership();
+    }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
 
     _assets = assets;
@@ -153,8 +156,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // Create the scene graph
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    
-    _isHost = false;
     
     // To be changed -CJ
 //    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
@@ -202,6 +203,14 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _cam.init(_map->getCarrots().at(0), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
     _cam.setZoom(CAMERA_ZOOM);
     _initCamera = _cam.getCamera()->getPosition();
+    
+    // Network world synchronization
+    // Won't compile unless I make this variable with type NetWorld :/
+    std::shared_ptr<NetWorld> w = _map->getWorld();
+    _network->enablePhysics(w);
+    if (!_network->isHost()) {
+        _network->getPhysController()->acquireObs(_character, 0);
+    }
 
     // XNA nostalgia
     Application::get()->setClearColor(Color4(142,114,78,255));
@@ -416,6 +425,9 @@ void GameScene::switchPlayer() {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    if (_network->isInAvailable()) {
+        CULog("NetEvent in queue, discarding for now");
+    }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);

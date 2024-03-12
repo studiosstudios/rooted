@@ -278,6 +278,17 @@ void GameScene::reset() {
     setComplete(false);
 }
 
+void GameScene::switchPlayer() {
+    _map->togglePlayer();
+    _map->clearRustling();
+    if(_map->isFarmerPlaying()){
+        _cam.setTarget(_map->getFarmers().at(0));
+    }
+    else{
+        _cam.setTarget(_map->getCarrots().at(0));
+    }
+}
+
 #pragma mark -
 #pragma mark Physics Handling
 
@@ -347,17 +358,6 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
-}
-
-void GameScene::switchPlayer() {
-    _map->togglePlayer();
-    _map->clearRustling();
-    if(_map->isFarmerPlaying()){
-        _cam.setTarget(_map->getFarmers().at(0));
-    }
-    else{
-        _cam.setTarget(_map->getCarrots().at(0));
-    }
 }
 
 /**

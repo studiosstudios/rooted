@@ -9,6 +9,7 @@
 #include "Carrot.h"
 #include "Farmer.h"
 #include "Wheat.h"
+#include "PlantingSpot.h"
 
 class Map {
 private:
@@ -20,6 +21,8 @@ private:
     std::vector<std::shared_ptr<Farmer>> _farmers;
     /** references to the wheat */
     std::vector<std::shared_ptr<Wheat>> _wheat;
+    /** references to the planting spots */
+    std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the walls */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
@@ -143,11 +146,24 @@ public:
      *
      * @param  reader   a JSON reader with cursor ready to read the wheat
      *
-     * @retain the baby carrot
-     * @return true if the baby carrot was successfully loaded
+     * @retain the wheat
+     * @return true if the wheat was successfully loaded
      */
     bool loadWheat(const std::shared_ptr<JsonValue> &json);
 
+    /**
+     * Loads a single planting spot
+     *
+     * The wheat will be retained and stored in the vector _wheat.  If the
+     * wheat fails to load, then it will not be added to _wheat.
+     *
+     * @param  reader   a JSON reader with cursor ready to read the wheat
+     *
+     * @retain the planting spot
+     * @return true if the planting spot was successfully loaded
+     */
+    bool loadPlantingSpot(const std::shared_ptr<JsonValue> &json);
+    
     /**
      * Adds the physics object to the physics world and loosely couples it to the scene graph
      *
@@ -265,6 +281,8 @@ public:
     std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
 
     std::vector<std::shared_ptr<Wheat>> &getWheat() { return _wheat; }
+    
+    std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
     std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
 

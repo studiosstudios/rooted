@@ -23,3 +23,18 @@
 bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     return EntityModel::init(pos, size, scale);
 }
+
+/**
+ * Sets carrot state after being captured
+ */
+void Carrot::gotCaptured(){
+    _isCaptured = true;
+}
+
+/**
+ * Sets carrot state after getting rooted
+ */
+void Carrot::gotRooted(){
+    _isCaptured = false;
+    _isRooted = true;
+}

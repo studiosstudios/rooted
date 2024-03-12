@@ -20,6 +20,9 @@
         "wheat": {
             "file":     "textures/wheatsprite.png"
         },
+        "planting spot": {
+            "file":     "textures/plantingSpot.png"
+        },
         "spinner": {
             "file":     "textures/barrier.png"
         },

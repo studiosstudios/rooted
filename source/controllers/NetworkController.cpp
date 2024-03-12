@@ -22,3 +22,10 @@ bool NetworkController::init(const std::shared_ptr<AssetManager>& assets) {
 std::shared_ptr<cugl::net::NetcodeConnection> NetworkController::getNetcode() {
     return this->_network;
 }
+
+std::vector<std::string> NetworkController::getOrderedPlayers() {
+    std::unordered_set<std::string> playerSet = this->_network->getPlayers();
+    std::vector<std::string> playerVec(playerSet.begin(), playerSet.end());
+    std::sort(playerVec.begin(), playerVec.end());
+    return playerVec;
+}

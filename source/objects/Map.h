@@ -5,6 +5,8 @@
 #ifndef ROOTED_MAP_H
 #define ROOTED_MAP_H
 
+#include <cugl/cugl.h>
+
 #include "BabyCarrot.h"
 #include "Carrot.h"
 #include "Farmer.h"
@@ -283,6 +285,8 @@ public:
      * references to other assets, then these should be disconnected earlier.
      */
     void unload();
+    
+    std::shared_ptr<EntityModel> loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID);
 
 
 #pragma mark -

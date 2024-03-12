@@ -365,6 +365,27 @@ void Map::unload() {
     }
 }
 
+std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
+    std::shared_ptr<EntityModel> ret;
+    auto carrot = _carrots.begin();
+    for (std::string uuid : players) {
+        if (uuid != hostUUID) {
+            (*carrot)->setUUID(uuid);
+            (*carrot)->setEnabled(true);
+            _world->addObstacle(*carrot);
+            if (uuid == thisUUID) {
+                ret = (*carrot);
+            }
+            carrot++;
+        }
+    }
+    _farmers.at(0)->setUUID(hostUUID);
+    if (ret == nullptr) {
+        ret = _farmers.at(0);
+    }
+    return ret;
+}
+
 #pragma mark -
 #pragma mark Individual Loaders
 
@@ -438,11 +459,12 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     carrot->setDebugColor(DEBUG_COLOR);
     carrot->setName("carrot");
+    carrot->setEnabled(false); // Initially disabled
     _carrots.push_back(carrot);
 
-    if (success) {
-        _world->addObstacle(carrot);
-    }
+//    if (success) { Do not immediately add, wait until we check network players
+//        _world->addObstacle(carrot);
+//    }
 
     return success;
 

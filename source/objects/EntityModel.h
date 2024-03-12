@@ -92,6 +92,7 @@ protected:
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
+    std::string _uuid;
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
 	*
@@ -375,6 +376,10 @@ public:
      * @return true if this character is facing right
      */
     bool isFacingRight() const { return _faceRight; }
+    
+    std::string getUUID() const { return _uuid; }
+    
+    void setUUID(std::string uuid) { _uuid = uuid; }
 
     
 #pragma mark -

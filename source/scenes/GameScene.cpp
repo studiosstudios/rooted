@@ -131,6 +131,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         CULog("Failed to load map");
         return false;
     }
+    _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
 
     _assets = assets;
 

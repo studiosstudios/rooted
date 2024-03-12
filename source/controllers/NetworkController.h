@@ -15,10 +15,10 @@ using namespace cugl;
 
 class NetworkController : public NetEventController {
 public:
-    NetworkController() {} ; 
+    NetworkController() {} ;
     ~NetworkController() { dispose(); }
     void dispose();
-    // This shouldn't be like this I think, probably better to just take in assets and make the NetEventController in here
+
     bool init(const std::shared_ptr<AssetManager>& assets);
     
     static std::shared_ptr<NetworkController> alloc(const std::shared_ptr<AssetManager>& assets) {
@@ -27,6 +27,8 @@ public:
     }
 
     std::shared_ptr<cugl::net::NetcodeConnection> getNetcode();
+    
+    std::vector<std::string> getOrderedPlayers();
 };
 
 #endif /* NetworkController_h */

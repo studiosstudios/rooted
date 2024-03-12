@@ -87,6 +87,10 @@ uniform vec2 SCREEN_PIXEL_SIZE;
 const float MAX_BLADE_LENGTH = 100.0f;
 const float PI = 3.1415926535;
 
+/** Objects */
+uniform vec2 farmer_pos;
+uniform vec2 carrot1_pos;
+
 /**
  Calculates a sine wave
  
@@ -116,7 +120,7 @@ vec4 sampleColor(float dist) {
  */
 float sampleBladeLength(vec2 uv) {
     if (texture(grass_tex, uv).r > 0) {
-        return texture(grass_tex, uv).r * 255.0 + 5.0;
+        return texture(grass_tex, uv).r * 255.0 + 2.0;
     }
     return 0.0;
 }
@@ -197,9 +201,6 @@ void main(void) {
                 
                 if (windValue <= 0.5) {
                     baseColor = tip_color;
-                    if (texture(wheat_details_tex, fragUV).g > 0.0) {
-//                        baseColor = vec4(texture(wheat_details_tex, fragUV).rgb, 1.0);
-                    }
                 } else {
                     baseColor = wind_color;
                 }
@@ -213,10 +214,19 @@ void main(void) {
                 baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
             }
         }
+        
+        // Shade player positions
+        if (fragUV.x > carrot1_pos.x - 20 && fragUV.x < carrot1_pos.x + 20 &&
+            fragUV.y > carrot1_pos.y - 20 && fragUV.y < carrot1_pos.y + 20) {
+//            baseColor = vec4(0, 0, 0, 1.0);
+        }
 
         // Move on to the next pixel, down the blades
         fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
+        
     }
+    
+    
 
     frag_color = baseColor;
     

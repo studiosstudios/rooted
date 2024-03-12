@@ -200,8 +200,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
         std::shared_ptr<Wheat> wheat = *it;
         auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
                                                               1, WHEAT_FRAMES, WHEAT_FRAMES);
-        wheat->setSceneNode(spriteImage);
-        addObstacle(wheat, spriteImage);  // All walls share the same texture
+//        wheat->setSceneNode(spriteImage);
+//        addObstacle(wheat, spriteImage);  // All walls share the same texture
         
     }
 

@@ -48,8 +48,8 @@ protected:
     /** The type */
     int _type;
     
-    /** The listener key for input */
-    Uint32 _key;
+//    /** The listener key for input */
+//    Uint32 _key;
     
     
 public:

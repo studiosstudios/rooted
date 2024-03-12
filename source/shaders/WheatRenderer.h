@@ -57,15 +57,26 @@ public:
     WheatRenderer() {}
 
     ~WheatRenderer() {}
+    
+    static std::shared_ptr<WheatRenderer> alloc() {
+        std::shared_ptr<WheatRenderer> result = std::make_shared<WheatRenderer>();
+        return result;
+    }
+    
+//    bool init();
             
     /**
      * Sets the loaded assets for this game level
      *
      * @param assets the loaded assets for this game level
      */
-    void load(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera);
+    void load();
     
     void setSize(Size size) { _size = size; }
+    
+    void setAssets(const std::shared_ptr<cugl::AssetManager> &assets) { _assets = assets; }
+    
+    void setCamera(const std::shared_ptr<cugl::OrthographicCamera> &camera) { _cam = camera; }
         
     void dispose();
     

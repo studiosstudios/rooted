@@ -289,6 +289,8 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
+    
+    void renderShader();
 
 };
 

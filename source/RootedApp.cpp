@@ -232,5 +232,6 @@ void RootedApp::draw() {
         _loading.render(_batch);
     } else {
         _gameplay.render(_batch);
+//        _gameplay.renderShader();
     }
 }

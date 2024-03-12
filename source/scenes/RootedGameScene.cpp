@@ -204,6 +204,12 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4(118,118,118,255));
     
+    // Shader
+    _wheatrenderer = _wheatrenderer->alloc();
+    _wheatrenderer->setAssets(_assets);
+    _wheatrenderer->setCamera(_cam.getCamera());
+    _wheatrenderer->load();
+    _wheatrenderer->buildShader();
     return true;
 }
 
@@ -225,6 +231,7 @@ void GameScene::dispose() {
         _complete = false;
         _debug = false;
         _map = nullptr;
+        _wheatrenderer->dispose();
         Scene2::dispose();
     }
 }
@@ -299,6 +306,7 @@ void GameScene::preUpdate(float dt) {
 
             _loadnode->setVisible(false);
             
+//            _wheatrenderer->buildShader();
         } else {
             // Level is not loaded yet; refuse input
             return;
@@ -386,6 +394,8 @@ void GameScene::fixedUpdate(float step) {
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
+    _wheatrenderer->update(step);
+//    _wheatrenderer->render();
 }
 
 /**
@@ -507,4 +517,10 @@ Size GameScene::computeActiveSize() const {
         dimen *= SCENE_HEIGHT / dimen.height;
     }
     return dimen;
+}
+
+void GameScene::renderShader() {
+    if (_wheatrenderer) {
+        _wheatrenderer->render();
+    }
 }

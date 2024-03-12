@@ -43,20 +43,19 @@ const std::string oglShaderVert =
 #include "vertex.vert"
 ;
 
-void WheatRenderer::load(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera) {
+
+void WheatRenderer::load() {
     _totalTime = 0;
-    _cam = camera;
     
-    _grasstex = _assets->get<Texture>("base");
-    _cloudtex = _assets->get<Texture>("clouds");
-    _noisetex = _assets->get<Texture>("noise");
-    _gradienttex = _assets->get<Texture>("gradient");
+    _grasstex = _assets->get<Texture>("shader_base");
+    _cloudtex = _assets->get<Texture>("shader_clouds");
+    _noisetex = _assets->get<Texture>("shader_noise");
+    _gradienttex = _assets->get<Texture>("shader_gradient");
     
     _textures.push_back(_grasstex);
     _textures.push_back(_cloudtex);
     _textures.push_back(_noisetex);
     _textures.push_back(_gradienttex);
-    _textures.push_back(_wheatdetails);
     
     for (int i = 0; i < _textures.size(); i++) {
         _textures[i]->setBindPoint(i);
@@ -71,8 +70,10 @@ void WheatRenderer::dispose() {
 }
 
 void WheatRenderer::update(float timestep) {
-    _totalTime += timestep;
-    _shader->setUniform1f("TIME", _totalTime);
+//    if (_shader) {
+//        _totalTime += timestep;
+//        _shader->setUniform1f("TIME", _totalTime);
+//    }
 }
 
 void WheatRenderer::render() {
@@ -108,10 +109,10 @@ void WheatRenderer::buildShader() {
     // Allocate the shader (this binds as well)
     _shader = Shader::alloc(SHADER(oglShaderVert), SHADER(oglShaderFrag));
     
-//    GLenum error = glGetError();
-//    if (error) {
-//        CULog("ERROR 1: %s",gl_error_name(error).c_str());
-//    }
+    GLenum error = glGetError();
+    if (error) {
+        CULog("ERROR 1: %s",gl_error_name(error).c_str());
+    }
     
     // Attach the camera to the shader
     _shader->setUniformMat4("uPerspective",_cam->getCombined());

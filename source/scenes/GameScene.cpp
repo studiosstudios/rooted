@@ -351,11 +351,6 @@ void GameScene::preUpdate(float dt) {
     if(_input->didSwitch()) {
         switchPlayer();
     }
-    
-    if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
-        _map->getFarmers().at(0)->rootCarrot();
-        _map->getCarrots().at(0)->gotRooted();
-    }
 
     // Process the movement
     if (_input->withJoystick()) {
@@ -393,16 +388,6 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
-    for(std::shared_ptr<Carrot> c : _map->getCarrots()){
-        if(c->isCaptured()){
-            c->setSensor(true);
-            c->setX(_map->getFarmers().at(0)->getX()-0.5);
-            c->setY(_map->getFarmers().at(0)->getY()-0.5);
-        }
-        else if(!c->isRooted()){
-            c->setSensor(false);
-        }
-    }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);

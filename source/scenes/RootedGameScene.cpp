@@ -448,6 +448,7 @@ void GameScene::fixedUpdate(float step) {
         CULog("x: %f", _map->getCarrots().at(0)->getX()/_scale);
         CULog("y: %f", _map->getCarrots().at(0)->getY()/_scale);
         _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/_scale, 1 - _map->getCarrots().at(0)->getY()/_scale);
+        _shader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
 //        _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
 //        _shader->setUniform2f("carrot1_pos",  _cam.getCamera()->getPosition().x, _cam.getCamera()->getPosition().y);
     }
@@ -701,6 +702,7 @@ void GameScene::buildShader() {
 //    _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
 //    _shader->setUniform2f("cam_pos", _cam.getCamera()->getPosition().x, _cam.getCamera()->getPosition().y);
     _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/SCENE_WIDTH, _map->getCarrots().at(0)->getY()/SCENE_HEIGHT);
+    _shader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
     
     _shader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_grasstex->getWidth(),1.0/_grasstex->getHeight());
     

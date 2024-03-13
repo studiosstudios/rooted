@@ -90,6 +90,7 @@ const float PI = 3.1415926535;
 /** Objects */
 //uniform vec2 farmer_pos;
 uniform vec2 cam_pos;
+uniform vec2 cam_vel;
 
 /**
  Calculates a sine wave
@@ -188,9 +189,9 @@ void main(void) {
 
         if (bladeLength > 0.0) {
             if (distance(fragUV, cam_pos) < 0.03) {
-                float rustle_noise = sampleNoise(vec2(round(100*distance(fragUV, cam_pos))/300.0, 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
-                bladeLength += 1.0;
-                bladeLength -= round((rustle_noise - 2.0) * 1.0);
+//                float rustle_noise = sampleNoise(vec2(round(100*distance(fragUV, cam_pos))/300.0, 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
+                bladeLength += round(1.0*length(cam_vel));
+//                bladeLength -= round((rustle_noise - 2.0) * 1.0);
             }
 
             // Blades are pressed down by the wind

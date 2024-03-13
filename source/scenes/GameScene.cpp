@@ -135,6 +135,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         _map->acquireMapOwnership();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    
+    _babies = _map->loadBabyEntities();
 
     _assets = assets;
 
@@ -210,6 +212,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->enablePhysics(w);
     if (!_network->isHost()) {
         _network->getPhysController()->acquireObs(_character, 0);
+    } else {
+        for (auto baby : _babies) {
+            _network->getPhysController()->acquireObs(baby, 0);
+        }
     }
 
     // XNA nostalgia
@@ -264,8 +270,16 @@ void GameScene::dispose() {
         _debug = false;
         _map = nullptr;
         _character = nullptr;
+        unload();
         Scene2::dispose();
     }
+}
+
+void GameScene::unload() {
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        (*it) = nullptr;
+    }
+    _babies.clear();
 }
 
 

@@ -73,6 +73,7 @@ protected:
     /** Reference to the map */
     std::shared_ptr<Map> _map;
     std::shared_ptr<EntityModel> _character;
+    std::vector<std::shared_ptr<EntityModel>> _babies;
 
     /** Whether we have completed this "game" */
     bool _complete;
@@ -312,6 +313,9 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
+    
+    
+    void unload();
 
 };
 

@@ -393,6 +393,15 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     return ret;
 }
 
+std::vector<std::shared_ptr<EntityModel>> Map::loadBabyEntities() {
+    std::vector<std::shared_ptr<EntityModel>> ret;
+    for ( auto baby : _babies) {
+        ret.push_back(baby);
+        getWorld()->getOwnedObstacles().insert({baby, 0});
+    }
+    return ret;
+}
+
 void Map::acquireMapOwnership() {
     auto ownerMap = _world->getOwnedObstacles();
     std::cout << "owned obstacles size: " << ownerMap.size();

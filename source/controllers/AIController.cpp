@@ -20,15 +20,16 @@ bool AIController::init(std::shared_ptr<Map> &map) {
 void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarrot) {
     if (nearTarget(babyCarrot->getPosition(), babyCarrot->getTarget())) {
         babyCarrot->setTarget(Vec2::ZERO);
-        babyCarrot->setMovement(Vec2(0,0));
-        babyCarrot->applyForce();
+//        babyCarrot->setMovement(Vec2(0,0));
+//        babyCarrot->applyForce();
+        babyCarrot->setLinearVelocity(Vec2::ZERO);
     }
     if (babyCarrot->hasTarget()) {
         Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
         movement *= 2.5;
         babyCarrot->setLinearVelocity(movement);
     } else {
-        Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*25+2, ((float) std::rand()/ RAND_MAX)*5+5);
+        Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
         babyCarrot->setTarget(newTarget);
         
     }

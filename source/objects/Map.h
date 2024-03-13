@@ -290,6 +290,8 @@ public:
     
     std::shared_ptr<EntityModel> loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID);
     
+    std::vector<std::shared_ptr<EntityModel>> loadBabyEntities();
+    
     void acquireMapOwnership();
 
 

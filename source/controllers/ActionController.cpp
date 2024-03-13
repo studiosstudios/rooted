@@ -52,8 +52,10 @@ void ActionController::preUpdate(float dt) {
         farmer->applyForce();
     }
 
-    for (auto babyCarrot : _map->getBabyCarrots()) {        
-        _ai.updateBabyCarrot(babyCarrot);
+    if (_network->isHost()) {
+        for (auto babyCarrot : _map->getBabyCarrots()) {
+            _ai.updateBabyCarrot(babyCarrot);
+        }
     }
     
     networkQueuePositions();

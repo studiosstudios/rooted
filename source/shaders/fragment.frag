@@ -187,8 +187,9 @@ void main(void) {
         float bladeLength = sampleBladeLength(fragUV);
 
         if (bladeLength > 0.0) {
-            if (distance(fragUV, cam_pos) < 0.1) {
-                bladeLength += 2.0;
+            if (distance(fragUV, cam_pos) < 0.03) {
+                bladeLength += 1.0;
+                bladeLength -= round((noise - 2.0) * 4.0);
             }
 
             // Blades are pressed down by the wind

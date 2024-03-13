@@ -240,11 +240,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _cloudtex = _assets->get<Texture>("shader_clouds");
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
+    _carrottex = _assets->get<Texture>("carrot");
     
     _textures.push_back(_grasstex);
     _textures.push_back(_cloudtex);
     _textures.push_back(_noisetex);
     _textures.push_back(_gradienttex);
+    _textures.push_back(_carrottex);
     
     for (int i = 0; i < _textures.size(); i++) {
         _textures[i]->setBindPoint(i);
@@ -443,8 +445,9 @@ void GameScene::fixedUpdate(float step) {
         _totalTime += step;
         _shader->setUniform1f("TIME", _totalTime);
         _shader->setUniformMat4("uPerspective", _cam.getCamera()->getCombined());
-        _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
-        _shader->setUniform2f("carrot1_pos",  _map->getCarrots().at(0)->getX(), _map->getCarrots().at(0)->getY());
+        _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/SCENE_WIDTH, _map->getCarrots().at(0)->getY()/SCENE_HEIGHT);
+//        _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
+//        _shader->setUniform2f("carrot1_pos",  _cam.getCamera()->getPosition().x, _cam.getCamera()->getPosition().y);
     }
 }
 
@@ -595,7 +598,7 @@ void GameScene::renderShader() {
 
 void GameScene::buildShader() {
     Size  size  = Application::get()->getDisplaySize();
-    float scale = 1024/size.width;
+    float scale = SCENE_WIDTH/size.width;
     size *= scale;
     
     // Create the camera
@@ -617,7 +620,9 @@ void GameScene::buildShader() {
     _shader->setSampler("cloud_tex", _cloudtex);
     _shader->setSampler("noise_tex", _noisetex);
     _shader->setSampler("gradient_tex", _gradienttex);
-    _shader->setSampler("wheat_details_tex", _wheatdetails);
+//    _shader->setSampler("carrot_tex", _carrottex);
+//    _shader->setSampler("farmer_t", <#GLuint bpoint#>)
+//    _shader->setSampler("wheat_details_tex", _wheatdetails);
 
     // Allocate the vertex buffer (this binds as well)
     _vertbuff = VertexBuffer::alloc(sizeof(SpriteVertex2));
@@ -691,8 +696,9 @@ void GameScene::buildShader() {
     _shader->setUniform1f("cloud_speed", 0.05);
     _shader->setUniform2f("wind_direction", 1.0, 1.0);
     _shader->setUniform2f("noise_tex_size", 50.0, 1.0);
-    _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
-    _shader->setUniform2f("carrot1_pos",  _map->getCarrots().at(0)->getX(), _map->getCarrots().at(0)->getY());
+//    _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
+//    _shader->setUniform2f("cam_pos", _cam.getCamera()->getPosition().x, _cam.getCamera()->getPosition().y);
+    _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/SCENE_WIDTH, _map->getCarrots().at(0)->getY()/SCENE_HEIGHT);
     
     _shader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_grasstex->getWidth(),1.0/_grasstex->getHeight());
     

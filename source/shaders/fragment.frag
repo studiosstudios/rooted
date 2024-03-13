@@ -88,8 +88,8 @@ const float MAX_BLADE_LENGTH = 100.0f;
 const float PI = 3.1415926535;
 
 /** Objects */
-uniform vec2 farmer_pos;
-uniform vec2 carrot1_pos;
+//uniform vec2 farmer_pos;
+uniform vec2 cam_pos;
 
 /**
  Calculates a sine wave
@@ -162,7 +162,7 @@ void main(void) {
     cloud_uv += cloud_speed * normalize(wind_direction) * TIME;
     
     float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1 * TIME);
-//    float noise = 2.0;
+
     vec2 fragUV = uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
     
     vec2 cloud_fragUV = cloud_uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
@@ -172,9 +172,6 @@ void main(void) {
     
     if (texture(grass_tex, fragUV).r > 0.0) {
         baseColor = sampleColor(0.0);
-//        if (texture(wheat_details_tex, fragUV).g > 0.0) {
-//            baseColor -= vec4(texture(wheat_details_tex, fragUV).rgb, 0.0);
-//        }
         baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
     }
     else {
@@ -198,7 +195,6 @@ void main(void) {
             // Color basec on distance from root
             if (abs(dist - bladeLength) < 0.0000001) {
                 // Color grass tips
-                
                 if (windValue <= 0.5) {
                     baseColor = tip_color;
                 } else {
@@ -214,19 +210,15 @@ void main(void) {
                 baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
             }
         }
-        
-        // Shade player positions
-        if (fragUV.x > carrot1_pos.x - 20 && fragUV.x < carrot1_pos.x + 20 &&
-            fragUV.y > carrot1_pos.y - 20 && fragUV.y < carrot1_pos.y + 20) {
-//            baseColor = vec4(0, 0, 0, 1.0);
-        }
 
         // Move on to the next pixel, down the blades
         fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
-        
     }
     
-    
+    // Shade player positions
+    if (distance(fragUV, cam_pos) < 0.4) {
+        baseColor = vec4(0, 0, 0, 1.0);
+    }
 
     frag_color = baseColor;
     

@@ -97,6 +97,7 @@ protected:
     std::shared_ptr<cugl::Texture> _cloudtex;
     std::shared_ptr<cugl::Texture> _gradienttex;
     std::shared_ptr<cugl::Texture> _wheatdetails;
+    std::shared_ptr<cugl::Texture> _carrottex;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
 
     /** The type */

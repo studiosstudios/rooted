@@ -644,7 +644,6 @@ void GameScene::buildShader() {
     // Cover the entire screen with a rectangle
     SpriteVertex2 vert;
     vert.position = Vec2(0, 0);
-    vert.color = Color4::WHITE.getPacked();
     vert.texcoord = Vec2(0, 1);  // Flip the y-coordinate
     vert.gradcoord = Vec2(0, 0);
     _mesh.vertices.push_back(vert);
@@ -653,31 +652,21 @@ void GameScene::buildShader() {
     vert.texcoord = Vec2(1, 1);
     vert.gradcoord = Vec2(1, 0);
     _mesh.vertices.push_back(vert);
-
-    vert.position = Vec2(size.width, size.height);
-    vert.texcoord = Vec2(1, 0);
-    vert.gradcoord = Vec2(1, 1);
-    _mesh.vertices.push_back(vert);
     
-    vert.position = Vec2(0, 0);
-    vert.color = Color4::WHITE.getPacked();
-    vert.texcoord = Vec2(0, 1);  // Flip the y-coordinate
-    vert.gradcoord = Vec2(0, 0);
-    _mesh.vertices.push_back(vert);
-
     vert.position = Vec2(0, size.height);
     vert.texcoord = Vec2(0, 0);
     vert.gradcoord = Vec2(0, 1);
     _mesh.vertices.push_back(vert);
-    
+
     vert.position = Vec2(size.width, size.height);
     vert.texcoord = Vec2(1, 0);
     vert.gradcoord = Vec2(1, 1);
     _mesh.vertices.push_back(vert);
 
-    _mesh.indices = {0, 1, 2, 3, 4, 5}; // Two triangles to cover the rectangle
+    _mesh.indices = {0, 1, 2, 0, 1, 2, 3}; // Two triangles to cover the rectangle
 
     _mesh.command = GL_TRIANGLES;
+
     
     // ADVANCED FEATURE: Create a gradient and load it into the shader
     auto gradient = Gradient::allocRadial(Color4::MAGENTA, Color4::YELLOW,
@@ -708,6 +697,8 @@ void GameScene::buildShader() {
     
     // IMPORTANT LAST STEP: Load the mesh into the vertex buffer
     // We only need to reload it if the vertex data changes (which is never)
+//    glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_TRUE);
+//    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     _vertbuff->loadVertexData(_mesh.vertices.data(), (int)_mesh.vertices.size());
     _vertbuff->loadIndexData(_mesh.indices.data(), (int)_mesh.indices.size());
 }

@@ -187,6 +187,10 @@ void main(void) {
         float bladeLength = sampleBladeLength(fragUV);
 
         if (bladeLength > 0.0) {
+            if (distance(fragUV, cam_pos) < 0.1) {
+                bladeLength += 2.0;
+            }
+
             // Blades are pressed down by the wind
             if (windValue > 0.5) {
                 bladeLength -= 3.0;
@@ -213,13 +217,11 @@ void main(void) {
 
         // Move on to the next pixel, down the blades
         fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
+
     }
     
     // Shade player positions
 
-    if (distance(uv, cam_pos) < 0.1) {
-        baseColor = vec4(0, 0, 0, 1.0);
-    }
 
     frag_color = baseColor;
     

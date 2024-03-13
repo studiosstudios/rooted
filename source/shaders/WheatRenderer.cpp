@@ -96,7 +96,7 @@ void WheatRenderer::render() {
 //    _shader->bind();
     
     if (_shader) {
-        _shader->bind();
+        _vertbuff->attach(_shader);
         
         // Draw with the given textures (if it exists)
         for (auto texture : _textures) {
@@ -112,7 +112,7 @@ void WheatRenderer::render() {
                 texture->unbind();
             }
         }
-        _shader->unbind();
+        _vertbuff->detach();
     }
 }
 

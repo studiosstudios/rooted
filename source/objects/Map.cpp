@@ -263,7 +263,7 @@ bool Map::preload(const std::shared_ptr<cugl::JsonValue> &json) {
         // Convert the object to an array so we can see keys and values
         int wsize = (int) walls->size();
         for (int ii = 0; ii < wsize; ii++) {
-//            loadWall(walls->get(ii));
+            loadWall(walls->get(ii));
         }
     } else {
         CUAssertLog(false, "Failed to load walls");

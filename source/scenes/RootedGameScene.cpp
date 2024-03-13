@@ -547,25 +547,6 @@ Size GameScene::computeActiveSize() const {
 void GameScene::renderShader() {
     // OpenGL commands to enable alpha blending (if needed)
     _wheatrenderer->render();
-    
-//    _shader->enableBlending(true);
-//    _shader->setBlendEquation(GL_FUNC_ADD);
-//    _shader->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//    
-//    // Draw with the given textures (if it exists)
-//    for (auto texture : _textures) {
-//        if (texture) {
-//            texture->bind();
-//        }
-//    }
-//    
-//    _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
-//    
-//    for (auto texture : _textures) {
-//        if (texture) {
-//            texture->unbind();
-//        }
-//    }
 }
 
 

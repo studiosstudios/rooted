@@ -110,7 +110,14 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
  
  - dist: distance from base
  */
-vec4 sampleColor(float dist) {
+vec4 sampleColor(float dist, float bladeLen) {
+//    if (dist/bladeLen > 0.6) {
+//        return texture(gradient_tex, vec2(2.1f, 0.0f) / 3.0f);
+//    }
+//    else if (dist/bladeLen > 0.4) {
+//        return texture(gradient_tex, vec2(1.1f, 0.0f) / 3.0f);
+//    }
+//    return texture(gradient_tex, vec2(0.2f, 0.0f) / 3.0f);
     return texture(gradient_tex, vec2(dist + 0.5f, 0.0f) / 3.0f);
 }
 
@@ -172,7 +179,7 @@ void main(void) {
     vec4 baseColor;
     
     if (texture(grass_tex, fragUV).r > 0.0) {
-        baseColor = sampleColor(0.0);
+        baseColor = sampleColor(0.0, 0.0);
         baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
     }
     else {
@@ -192,6 +199,7 @@ void main(void) {
         float bladeLength = sampleBladeLength(fragUV);
 
         if (bladeLength > 0.0) {
+            // Shade player positions
             if (distance(fragUV, cam_pos) < 0.03) {
 //                float rustle_noise = sampleNoise(vec2(round(100*distance(fragUV, cam_pos))/300.0, 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
 //                float rustle_noise = sampleNoise(vec2(round(length(cam_vel)), 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
@@ -217,7 +225,7 @@ void main(void) {
                 break;
             } else if (dist < bladeLength) {
                 // Color grass stems
-                baseColor = sampleColor(dist);
+                baseColor = sampleColor(dist, bladeLength);
                 // Add the cloud shadow
                 baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
             }
@@ -227,9 +235,6 @@ void main(void) {
         fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
 
     }
-    
-    // Shade player positions
-
 
     frag_color = baseColor;
     

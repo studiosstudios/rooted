@@ -696,7 +696,7 @@ void GameScene::buildShader() {
     _shader->setUniform4f("tip_color", 1.0, 0.8666667, 0.423529, 1.0);
     _shader->setUniform4f("wind_color", 1.0, 0.894118, 0.537255, 1.0);
     _shader->setUniform1f("wind_speed", 1.0);
-    _shader->setUniform1f("cloud_speed", 0.05);
+    _shader->setUniform1f("cloud_speed", 0.03);
     _shader->setUniform2f("wind_direction", 1.0, 1.0);
     _shader->setUniform2f("noise_tex_size", 50.0, 1.0);
 //    _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());

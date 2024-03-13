@@ -208,7 +208,7 @@ void main(void) {
             }
 
             // Blades are pressed down by the wind
-            if (windValue > 0.5) {
+            else if (windValue > 0.5) {
                 bladeLength -= 3.0;
             }
 

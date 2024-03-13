@@ -17,7 +17,7 @@
 #include "../controllers/UIController.h"
 #include "../controllers/CameraController.h"
 #include "../objects/Map.h"
-//#include "../shaders/WheatRenderer.h"
+#include "../shaders/WheatRenderer.h"
 
 
 /**
@@ -83,7 +83,7 @@ protected:
     /** Initial camera position */
     Vec3 _initCamera;
     
-//    std::shared_ptr<WheatRenderer> _wheatrenderer;
+    std::shared_ptr<WheatRenderer> _wheatrenderer;
     /** A shader to render our triangle */
     std::shared_ptr<cugl::Shader> _shader;
     /** A vertex buffer to receive our triangle */

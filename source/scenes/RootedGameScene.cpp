@@ -231,29 +231,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     // Shader stuff
     
-//    _wheatrenderer = _wheatrenderer->alloc();
+    _wheatrenderer = _wheatrenderer->alloc(_assets, _cam.getCamera(), _map, _scale);
 //    _wheatrenderer->setAssets(_assets);
 //    _wheatrenderer->setCamera(_cam.getCamera());
-//    _wheatrenderer->load();
-//    _wheatrenderer->buildShader();
-    _grasstex = _assets->get<Texture>("shader_base");
-    _cloudtex = _assets->get<Texture>("shader_clouds");
-    _noisetex = _assets->get<Texture>("shader_noise");
-    _gradienttex = _assets->get<Texture>("shader_gradient");
-    _carrottex = _assets->get<Texture>("carrot");
-    
-    _textures.push_back(_grasstex);
-    _textures.push_back(_cloudtex);
-    _textures.push_back(_noisetex);
-    _textures.push_back(_gradienttex);
-    _textures.push_back(_carrottex);
-    
-    for (int i = 0; i < _textures.size(); i++) {
-        _textures[i]->setBindPoint(i);
-    }
-    
-    _shadertype = 0;
-    buildShader();
+    _wheatrenderer->buildShader();
     return true;
 }
 
@@ -275,7 +256,7 @@ void GameScene::dispose() {
         _complete = false;
         _debug = false;
         _map = nullptr;
-//        _wheatrenderer->dispose();
+        _wheatrenderer->dispose();
         Scene2::dispose();
     }
 }
@@ -350,7 +331,7 @@ void GameScene::preUpdate(float dt) {
 
             _loadnode->setVisible(false);
             
-//            _wheatrenderer->buildShader();
+            _wheatrenderer->buildShader();
         } else {
             // Level is not loaded yet; refuse input
             return;
@@ -438,20 +419,7 @@ void GameScene::fixedUpdate(float step) {
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
-//    _wheatrenderer->update(step);
-//    _wheatrenderer->render();
-    
-    if (_shader) {
-        _totalTime += step;
-        _shader->setUniform1f("TIME", _totalTime);
-        _shader->setUniformMat4("uPerspective", _cam.getCamera()->getCombined());
-        CULog("x: %f", _map->getCarrots().at(0)->getX()/_scale);
-        CULog("y: %f", _map->getCarrots().at(0)->getY()/_scale);
-        _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/_scale, 1 - _map->getCarrots().at(0)->getY()/_scale);
-        _shader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
-//        _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
-//        _shader->setUniform2f("carrot1_pos",  _cam.getCamera()->getPosition().x, _cam.getCamera()->getPosition().y);
-    }
+    _wheatrenderer->update(step);
 }
 
 /**
@@ -578,130 +546,28 @@ Size GameScene::computeActiveSize() const {
 
 void GameScene::renderShader() {
     // OpenGL commands to enable alpha blending (if needed)
-    _shader->enableBlending(true);
-    _shader->setBlendEquation(GL_FUNC_ADD);
-    _shader->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    _wheatrenderer->render();
     
-    // Draw with the given textures (if it exists)
-    for (auto texture : _textures) {
-        if (texture) {
-            texture->bind();
-        }
-    }
-    
-    _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
-    
-    for (auto texture : _textures) {
-        if (texture) {
-            texture->unbind();
-        }
-    }
-}
-
-
-void GameScene::buildShader() {
-    Size  size  = Application::get()->getDisplaySize();
-    float scale = SCENE_WIDTH/size.width;
-    size *= scale;
-    
-    // Create the camera
-//    _camera = OrthographicCamera::alloc(size);
-    
-    // Allocate the shader (this binds as well)
-    _shader = Shader::alloc(SHADER(oglShaderVert), SHADER(oglShaderFrag));
-    
-//    GLenum error = glGetError();
-//    if (error) {
-//        CULog("ERROR 1: %s",gl_error_name(error).c_str());
+//    _shader->enableBlending(true);
+//    _shader->setBlendEquation(GL_FUNC_ADD);
+//    _shader->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    
+//    // Draw with the given textures (if it exists)
+//    for (auto texture : _textures) {
+//        if (texture) {
+//            texture->bind();
+//        }
 //    }
-    
-    // Attach the camera to the shader
-    _shader->setUniformMat4("uPerspective", _cam.getCamera()->getCombined());
-    _shader->setUniform1i("uType",_shadertype);
-    
-    _shader->setSampler("grass_tex", _grasstex);
-    _shader->setSampler("cloud_tex", _cloudtex);
-    _shader->setSampler("noise_tex", _noisetex);
-    _shader->setSampler("gradient_tex", _gradienttex);
-//    _shader->setSampler("carrot_tex", _carrottex);
-//    _shader->setSampler("farmer_t", <#GLuint bpoint#>)
-//    _shader->setSampler("wheat_details_tex", _wheatdetails);
-
-    // Allocate the vertex buffer (this binds as well)
-    _vertbuff = VertexBuffer::alloc(sizeof(SpriteVertex2));
-    _vertbuff->setupAttribute("aPosition", 2, GL_FLOAT, GL_FALSE,
-                              offsetof(cugl::SpriteVertex2,position));
-    _vertbuff->setupAttribute("aColor",    4, GL_UNSIGNED_BYTE, GL_TRUE,
-                              offsetof(cugl::SpriteVertex2,color));
-    _vertbuff->setupAttribute("aTexCoord", 2, GL_FLOAT, GL_FALSE,
-                              offsetof(cugl::SpriteVertex2,texcoord));
-    _vertbuff->setupAttribute("aGradCoord",2, GL_FLOAT, GL_FALSE,
-                               offsetof(cugl::SpriteVertex2,gradcoord));
-    
-    // Attach the shader
-    _vertbuff->attach(_shader);
-    
-    // Cover the entire screen with a rectangle
-    SpriteVertex2 vert;
-    vert.position = Vec2(0, 0);
-    vert.texcoord = Vec2(0, 1);  // Flip the y-coordinate
-    vert.gradcoord = Vec2(0, 0);
-    _mesh.vertices.push_back(vert);
-
-    vert.position = Vec2(size.width, 0);
-    vert.texcoord = Vec2(1, 1);
-    vert.gradcoord = Vec2(1, 0);
-    _mesh.vertices.push_back(vert);
-    
-    vert.position = Vec2(0, size.height);
-    vert.texcoord = Vec2(0, 0);
-    vert.gradcoord = Vec2(0, 1);
-    _mesh.vertices.push_back(vert);
-
-    vert.position = Vec2(size.width, size.height);
-    vert.texcoord = Vec2(1, 0);
-    vert.gradcoord = Vec2(1, 1);
-    _mesh.vertices.push_back(vert);
-
-    _mesh.indices = {0, 1, 2, 0, 1, 2, 3}; // Two triangles to cover the rectangle
-
-    _mesh.command = GL_TRIANGLES;
-
-    
-    // ADVANCED FEATURE: Create a gradient and load it into the shader
-    auto gradient = Gradient::allocRadial(Color4::MAGENTA, Color4::YELLOW,
-                                          Vec2(0.5,0.5), 0.5);
-
-    // A gradient is defined by SEVERAL uniform variables
-    float data[21];
-    gradient->getComponents(data);
-    _shader->setUniformMatrix3fv("gdMatrix", 1, data, false);
-    _shader->setUniform4f("gdInner",  data[ 9],data[10],data[11],data[12]);
-    _shader->setUniform4f("gdOuter",  data[13],data[14],data[15],data[16]);
-    _shader->setUniform2f("gdExtent", data[17],data[18]);
-    _shader->setUniform1f("gdRadius", data[19]);
-    _shader->setUniform1f("gdFeathr", data[20]);
-    _shader->setUniform1f("TIME", _totalTime);
-    _shader->setUniform4f("tip_color", 1.0, 0.8666667, 0.423529, 1.0);
-    _shader->setUniform4f("wind_color", 1.0, 0.894118, 0.537255, 1.0);
-    _shader->setUniform1f("wind_speed", 1.0);
-    _shader->setUniform1f("cloud_speed", 0.03);
-    _shader->setUniform2f("wind_direction", 1.0, 1.0);
-    _shader->setUniform2f("noise_tex_size", 50.0, 1.0);
-//    _shader->setUniform2f("farmer_pos", _map->getFarmers().at(0)->getX(), _map->getFarmers().at(0)->getY());
-//    _shader->setUniform2f("cam_pos", _cam.getCamera()->getPosition().x, _cam.getCamera()->getPosition().y);
-    _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/SCENE_WIDTH, _map->getCarrots().at(0)->getY()/SCENE_HEIGHT);
-    _shader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
-    
-    _shader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_grasstex->getWidth(),1.0/_grasstex->getHeight());
-    
-    // IMPORTANT LAST STEP: Load the mesh into the vertex buffer
-    // We only need to reload it if the vertex data changes (which is never)
-//    glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_TRUE);
-//    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-    _vertbuff->loadVertexData(_mesh.vertices.data(), (int)_mesh.vertices.size());
-    _vertbuff->loadIndexData(_mesh.indices.data(), (int)_mesh.indices.size());
+//    
+//    _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
+//    
+//    for (auto texture : _textures) {
+//        if (texture) {
+//            texture->unbind();
+//        }
+//    }
 }
+
 
 
 

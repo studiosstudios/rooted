@@ -23,6 +23,10 @@ protected:
     
     /** Controller for camera */
     std::shared_ptr<cugl::OrthographicCamera> _cam;
+    
+    std::shared_ptr<Map> _map;
+    
+    float _scale;
 
 //    /** The OpenGL camera */
 //    std::shared_ptr<cugl::OrthographicCamera> _camera;
@@ -45,11 +49,6 @@ protected:
     std::shared_ptr<cugl::Texture> _wheatdetails;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
 
-    /** The type */
-    int _type;
-    
-//    /** The listener key for input */
-//    Uint32 _key;
     
     
 public:
@@ -58,21 +57,18 @@ public:
 
     ~WheatRenderer() {}
     
-    static std::shared_ptr<WheatRenderer> alloc() {
+    static std::shared_ptr<WheatRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera,
+        std::shared_ptr<Map> &map, float scale) {
         std::shared_ptr<WheatRenderer> result = std::make_shared<WheatRenderer>();
-        return result;
+        return (result->init(assets, camera, map, scale) ? result : nullptr);
     }
     
-//    bool init();
-            
-    /**
-     * Sets the loaded assets for this game level
-     *
-     * @param assets the loaded assets for this game level
-     */
-    void load();
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera,
+        std::shared_ptr<Map> &map, float _scale);
     
     void setSize(Size size) { _size = size; }
+    
+    void setScale(float scale) { _scale = scale; }
     
     void setAssets(const std::shared_ptr<cugl::AssetManager> &assets) { _assets = assets; }
     

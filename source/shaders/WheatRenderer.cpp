@@ -44,7 +44,16 @@ const std::string oglShaderVert =
 ;
 
 
-void WheatRenderer::load() {
+bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera,
+                         std::shared_ptr<Map> &map, float scale) {
+    
+    
+    _size = Application::get()->getDisplaySize();
+    _assets = assets;
+    _cam = camera;
+    _map = map;
+    _scale = scale;
+    
     _totalTime = 0;
     
     _grasstex = _assets->get<Texture>("shader_base");
@@ -61,7 +70,8 @@ void WheatRenderer::load() {
         _textures[i]->setBindPoint(i);
     }
     
-    _type = 0;
+    return true;
+    
 }
 
 void WheatRenderer::dispose() {
@@ -70,41 +80,47 @@ void WheatRenderer::dispose() {
 }
 
 void WheatRenderer::update(float timestep) {
-//    if (_shader) {
-//        _totalTime += timestep;
-//        _shader->setUniform1f("TIME", _totalTime);
-//    }
+    if (_shader) {
+        _shader->bind();
+        _totalTime += timestep;
+        _shader->setUniform1f("TIME", _totalTime);
+        _shader->setUniformMat4("uPerspective", _cam->getCombined());
+        _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/_scale, 1 - _map->getCarrots().at(0)->getY()/_scale);
+        _shader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
+        _shader->unbind();
+    }
 }
 
 void WheatRenderer::render() {
     // OpenGL commands to enable alpha blending (if needed)
-    _shader->enableBlending(true);
-    _shader->setBlendEquation(GL_FUNC_ADD);
-    _shader->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    _shader->bind();
     
-    // Draw with the given textures (if it exists)
-    for (auto texture : _textures) {
-        if (texture) {
-            texture->bind();
+    if (_shader) {
+        _shader->bind();
+        
+        // Draw with the given textures (if it exists)
+        for (auto texture : _textures) {
+            if (texture) {
+                texture->bind();
+            }
         }
-    }
-    
-    _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
-    
-    for (auto texture : _textures) {
-        if (texture) {
-            texture->unbind();
+        
+        _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
+        
+        for (auto texture : _textures) {
+            if (texture) {
+                texture->unbind();
+            }
         }
+        _shader->unbind();
     }
 }
 
 void WheatRenderer::buildShader() {
-//    Size  size  = getDisplaySize();
-    float scale = 1024/_size.width;
-    _size *= scale;
+
     
-    // Create the camera
-//    _camera = OrthographicCamera::alloc(size);
+    CULog("scale: %f \t size: (%f, %f)", _scale, _size.width, _size.height);
+    
     
     // Allocate the shader (this binds as well)
     _shader = Shader::alloc(SHADER(oglShaderVert), SHADER(oglShaderFrag));
@@ -116,7 +132,6 @@ void WheatRenderer::buildShader() {
     
     // Attach the camera to the shader
     _shader->setUniformMat4("uPerspective",_cam->getCombined());
-    _shader->setUniform1i("uType",_type);
     
     _shader->setSampler("grass_tex", _grasstex);
     _shader->setSampler("cloud_tex", _cloudtex);
@@ -132,8 +147,6 @@ void WheatRenderer::buildShader() {
                               offsetof(cugl::SpriteVertex2,color));
     _vertbuff->setupAttribute("aTexCoord", 2, GL_FLOAT, GL_FALSE,
                               offsetof(cugl::SpriteVertex2,texcoord));
-    _vertbuff->setupAttribute("aGradCoord",2, GL_FLOAT, GL_FALSE,
-                               offsetof(cugl::SpriteVertex2,gradcoord));
     
     // Attach the shader
     _vertbuff->attach(_shader);
@@ -143,41 +156,24 @@ void WheatRenderer::buildShader() {
     vert.position = Vec2(0, 0);
     vert.color = Color4::WHITE.getPacked();
     vert.texcoord = Vec2(0, 1);  // Flip the y-coordinate
-    vert.gradcoord = Vec2(0, 0);
     _mesh.vertices.push_back(vert);
 
     vert.position = Vec2(_size.width, 0);
     vert.texcoord = Vec2(1, 1);
-    vert.gradcoord = Vec2(1, 0);
-    _mesh.vertices.push_back(vert);
-
-    vert.position = Vec2(_size.width, _size.height);
-    vert.texcoord = Vec2(1, 0);
-    vert.gradcoord = Vec2(1, 1);
     _mesh.vertices.push_back(vert);
 
     vert.position = Vec2(0, _size.height);
     vert.texcoord = Vec2(0, 0);
-    vert.gradcoord = Vec2(0, 1);
+    _mesh.vertices.push_back(vert);
+    
+    vert.position = Vec2(_size.width, _size.height);
+    vert.texcoord = Vec2(1, 0);
     _mesh.vertices.push_back(vert);
 
-    _mesh.indices = {0, 1, 2, 0, 2, 3}; // Two triangles to cover the rectangle
+    _mesh.indices = {0, 1, 2, 0, 1, 2, 3}; // Two? triangles to cover the rectangle
 
     _mesh.command = GL_TRIANGLES;
     
-    // ADVANCED FEATURE: Create a gradient and load it into the shader
-    auto gradient = Gradient::allocRadial(Color4::MAGENTA, Color4::YELLOW,
-                                          Vec2(0.5,0.5), 0.5);
-
-    // A gradient is defined by SEVERAL uniform variables
-    float data[21];
-    gradient->getComponents(data);
-    _shader->setUniformMatrix3fv("gdMatrix", 1, data, false);
-    _shader->setUniform4f("gdInner",  data[ 9],data[10],data[11],data[12]);
-    _shader->setUniform4f("gdOuter",  data[13],data[14],data[15],data[16]);
-    _shader->setUniform2f("gdExtent", data[17],data[18]);
-    _shader->setUniform1f("gdRadius", data[19]);
-    _shader->setUniform1f("gdFeathr", data[20]);
     _shader->setUniform1f("TIME", _totalTime);
     _shader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
     _shader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);

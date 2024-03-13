@@ -176,19 +176,19 @@ void EntityModel::applyForce() {
         b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
         _body->ApplyForce(force,_body->GetPosition(),true);
     }
-    else {
-        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
-    }
+//    else {
+//        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
+//    }
     // Velocity too high, clamp it
     
-//    if (getLinearVelocity().length() >= getMaxSpeed()) {
-//        setLinearVelocity(getLinearVelocity().normalize() * getMaxSpeed());
-//    }
-//    else{
-//        setLinearVelocity(getLinearVelocity());
-//    }
-//    b2Vec2 force(getMovement().x, getMovement().y);
-//    _body->ApplyForce(force,_body->GetPosition(),true);
+    if (getLinearVelocity().length() >= getMaxSpeed()) {
+        setLinearVelocity(getLinearVelocity().normalize() * getMaxSpeed());
+    }
+    else{
+        setLinearVelocity(getLinearVelocity());
+    }
+    b2Vec2 force(getMovement().x, getMovement().y);
+    _body->ApplyForce(force,_body->GetPosition(),true);
 }
 
 /**

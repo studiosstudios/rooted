@@ -216,7 +216,8 @@ void main(void) {
     }
     
     // Shade player positions
-    if (distance(fragUV, cam_pos) < 0.4) {
+
+    if (distance(uv, cam_pos) < 0.1) {
         baseColor = vec4(0, 0, 0, 1.0);
     }
 

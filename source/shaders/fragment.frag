@@ -176,7 +176,8 @@ void main(void) {
         baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
     }
     else {
-        baseColor = vec4(0.5333, 0.7529, 0.5176, 1.0);
+//        baseColor = vec4(0.5333, 0.7529, 0.5176, 1.0);
+        baseColor = vec4(0.819608, 0.819608, 0.219608, 1.0);
         baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
     }
 
@@ -190,6 +191,7 @@ void main(void) {
         if (bladeLength > 0.0) {
             if (distance(fragUV, cam_pos) < 0.03) {
 //                float rustle_noise = sampleNoise(vec2(round(100*distance(fragUV, cam_pos))/300.0, 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
+//                float rustle_noise = sampleNoise(vec2(round(length(cam_vel)), 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
                 bladeLength += round(1.0*length(cam_vel));
 //                bladeLength -= round((rustle_noise - 2.0) * 1.0);
             }

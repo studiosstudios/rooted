@@ -693,8 +693,8 @@ void GameScene::buildShader() {
     _shader->setUniform1f("gdRadius", data[19]);
     _shader->setUniform1f("gdFeathr", data[20]);
     _shader->setUniform1f("TIME", _totalTime);
-    _shader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
-    _shader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
+    _shader->setUniform4f("tip_color", 1.0, 0.8666667, 0.423529, 1.0);
+    _shader->setUniform4f("wind_color", 1.0, 0.894118, 0.537255, 1.0);
     _shader->setUniform1f("wind_speed", 1.0);
     _shader->setUniform1f("cloud_speed", 0.05);
     _shader->setUniform2f("wind_direction", 1.0, 1.0);

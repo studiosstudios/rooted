@@ -44,7 +44,7 @@ void CollisionController::beginContact(b2Contact* contact) {
         std::string name2 = bd2->getName();
         
         if (name1 == "carrot") {
-            if (!_map->isFarmerPlaying()) {
+//            if (!_map->isFarmerPlaying()) {
                 if (name2 == "wheat") {
                     Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                     wheat->rustle(bd1->getLinearVelocity().length());
@@ -57,7 +57,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                     carrot->captureBabyCarrot();
                     b2babycarrot->gotCaptured();
                 }
-            }
+//            }
         }
         
         if (name1 == "baby") {
@@ -68,13 +68,13 @@ void CollisionController::beginContact(b2Contact* contact) {
         }
         
         if (name1 == "farmer") {
-            if (_map->isFarmerPlaying()) {
+//            if (_map->isFarmerPlaying()) {
                 if (name2 == "wheat") {
                     Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                     wheat->rustle(bd1->getLinearVelocity().length());
                     wheat->setOccupied(_map->isShowingPlayer());
                 }
-            }
+//            }
         }
 
         // Swap everything

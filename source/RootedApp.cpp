@@ -194,6 +194,9 @@ void RootedApp::preUpdate(float dt) {
         }
         _gameplay.preUpdate(dt);
     }
+    if(_network){
+        _network->updateNet();
+    }
 }
 
 /**
@@ -223,9 +226,6 @@ void RootedApp::fixedUpdate() {
 //    _gameplay.fixedUpdate(time);
     if (_status == GAME) {
         _gameplay.fixedUpdate(time);
-    }
-    if(_network){
-        _network->updateNet();
     }
 }
 

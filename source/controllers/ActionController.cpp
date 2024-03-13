@@ -99,8 +99,8 @@ void ActionController::postUpdate(float dt) {
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
         if(c->isCaptured()){
             c->setSensor(true);
-            c->setX(_map->getFarmers().at(0)->getX()-0.5);
-            c->setY(_map->getFarmers().at(0)->getY()-0.5);
+            c->setX(_map->getFarmers().at(0)->getX()-1);
+            c->setY(_map->getFarmers().at(0)->getY()-1);
         }
         else if(!c->isRooted()){
             c->setSensor(false);

@@ -202,6 +202,11 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             return false;
         }
         
+        if (name1 == "carrot" && name2 == "farmer") {
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+            return !carrot->isCaptured();
+        }
+        
         // Swap everything
         b2Fixture* fixTemp = f1;
         f1 = f2;

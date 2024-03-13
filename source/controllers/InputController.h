@@ -51,6 +51,8 @@ private:
     bool  _keyExit;
     /** Whether the dash key is down */
     bool _keyDash;
+    /** Whether the root key is down*/
+    bool _keyRoot;
     
     /** Whether the dash key was pressed in previous frame */
     bool _keyDashPressed;
@@ -71,6 +73,8 @@ protected:
     bool _exitPressed;
     /** Whether the dash action was chosen. */
     bool _dashPressed;
+    /** Whether the root action was chosen */
+    bool _rootPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
     
@@ -321,6 +325,8 @@ public:
     bool didShowPlayer() const { return _showPlayerPressed; }
     
     bool didDash() const { return _dashPressed; }
+    
+    bool didRoot() const { return _rootPressed; }
 
     bool didSwitch() const { return _switchPressed; }
 

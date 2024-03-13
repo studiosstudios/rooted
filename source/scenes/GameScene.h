@@ -47,8 +47,6 @@ protected:
     // VIEW
     /** Reference to the physics root of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _rootnode;
-    /** Reference to the reset message label */
-    std::shared_ptr<cugl::scene2::Label> _loadnode;
     /** Reference to ui root of scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
     /** Reference to the win message label */

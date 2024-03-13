@@ -36,7 +36,6 @@ void RootedApp::onStartup() {
     _assets->attach<Texture>(TextureLoader::alloc()->getHook());
     _assets->attach<Sound>(SoundLoader::alloc()->getHook());
     _assets->attach<scene2::SceneNode>(Scene2Loader::alloc()->getHook());
-    _assets->attach<Map>(GenericLoader<Map>::alloc()->getHook());
     _assets->attach<JsonValue>(JsonLoader::alloc()->getHook());
     _assets->attach<WidgetValue>(WidgetLoader::alloc()->getHook());
 
@@ -48,7 +47,6 @@ void RootedApp::onStartup() {
     // Que up the other assets
     AudioEngine::start();
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
-    _assets->loadAsync<Map>("map", "json/map.json", nullptr);
     
     cugl::net::NetworkLayer::start(net::NetworkLayer::Log::INFO);
     

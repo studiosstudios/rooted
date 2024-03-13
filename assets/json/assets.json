@@ -20,6 +20,9 @@
         "wheat": {
             "file":     "textures/wheatsprite.png"
         },
+        "planting spot": {
+            "file":     "textures/plantingSpot.png"
+        },
         "spinner": {
             "file":     "textures/barrier.png"
         },
@@ -54,7 +57,8 @@
         }
 	},
     "jsons": {
-        "server": "json/server.json"
+        "server": "json/server.json",
+        "map": "json/map.json"
     },
     "sounds": {
         "game": {

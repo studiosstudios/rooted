@@ -126,30 +126,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         return false;
     }
 
-    _map = assets->get<Map>("map");
-    if (_map == nullptr) {
-        CULog("Failed to load map");
-        return false;
-    }
-    if (_network->isHost()) {
-        _map->acquireMapOwnership();
-    }
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-    
-    _babies = _map->loadBabyEntities();
-
     _assets = assets;
-
-    // Create the world and attach the listeners.
-    std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
-    activateWorldCollisions(world);
-
-    // IMPORTANT: SCALING MUST BE UNIFORM
-    // This means that we cannot change the aspect ratio of the physics world
-    // Shift to center if a bad fit
-    _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
-             dimen.height / world->getBounds().getMaxY();
-    _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
     
     _rootnode = scene2::SceneNode::alloc();
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -177,21 +154,36 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
-    _loadnode = scene2::Label::allocWithText(RESET_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _loadnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _loadnode->setPosition(dimen / 2.0f);
-    _loadnode->setForeground(RESET_COLOR);
-    _loadnode->setVisible(false);
-
     addChild(_rootnode);
     addChild(_uinode);
     addChild(_winnode);
-    addChild(_loadnode);
     addChild(_losenode);
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
-    _map->setAssets(_assets);
-    _map->setRootNode(_rootnode); // Obtains ownership of root.
+    
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("map")); // Obtains ownership of root.
+    
+    if (!_map->populate()) {
+        CULog("Failed to populate map");
+        return false;
+    }
+    
+    if (_network->isHost()) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+
+    // Create the world and attach the listeners.
+    std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
+    activateWorldCollisions(world);
+
+    // IMPORTANT: SCALING MUST BE UNIFORM
+    // This means that we cannot change the aspect ratio of the physics world
+    // Shift to center if a bad fit
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
+             dimen.height / world->getBounds().getMaxY();
+    _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
     _input = InputController::alloc(getBounds());
     _collision.init(_map);
@@ -259,7 +251,6 @@ void GameScene::dispose() {
         _input = nullptr;
         _rootnode = nullptr;
         _winnode = nullptr;
-        _loadnode = nullptr;
         _uinode = nullptr;
         _winnode = nullptr;
         _losenode = nullptr;
@@ -292,13 +283,35 @@ void GameScene::unload() {
  * This method disposes of the world and creates a new one.
  */
 void GameScene::reset() {
-    // Unload the level but keep in memory temporarily
-    _assets->unload<Map>("map");
-
     // Load a new level
-    _loadnode->setVisible(true);
-    _assets->load<Map>("map", "json/map.json");
+    _map->clearRootNode();
+    _map->setRootNode(_rootnode);
+    _map->dispose();
+    _map->populate();
+
+    _collision.dispose();
+    _action.dispose();
+
+    activateWorldCollisions(_map->getWorld());
+
+    _collision.init(_map);
+    _action.init(_map, _input, _network);
+
+    _cam.setPosition(_initCamera);
+    _cam.setTarget(_map->getCarrots().at(0));
+
     setComplete(false);
+}
+
+void GameScene::switchPlayer() {
+    _map->togglePlayer();
+    _map->clearRustling();
+    if(_map->isFarmerPlaying()){
+        _cam.setTarget(_map->getFarmers().at(0));
+    }
+    else{
+        _cam.setTarget(_map->getCarrots().at(0));
+    }
 }
 
 #pragma mark -
@@ -327,34 +340,6 @@ void GameScene::reset() {
 void GameScene::preUpdate(float dt) {
     if (_map == nullptr) {
         return;
-    }
-
-    // Check to see if new level loaded yet
-    if (_loadnode->isVisible()) {
-        if (_assets->complete()) {
-
-            _collision.dispose();
-            _action.dispose();
-            _map = nullptr;
-
-            // Access and initialize level
-            _map = _assets->get<Map>("map");
-            _map->setAssets(_assets);
-            _map->setRootNode(_rootnode); // Obtains ownership of root.
-            _map->showDebug(_debug);
-
-            activateWorldCollisions(_map->getWorld());
-
-            _collision.init(_map);
-            _action.init(_map, _input, _network);
-
-            _cam.setPosition(_initCamera);
-
-            _loadnode->setVisible(false);
-        } else {
-            // Level is not loaded yet; refuse input
-            return;
-        }
     }
 
     _input->update(dt);
@@ -398,17 +383,6 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
-}
-
-void GameScene::switchPlayer() {
-    _map->togglePlayer();
-    _map->clearRustling();
-    if(_map->isFarmerPlaying()){
-        _cam.setTarget(_map->getFarmers().at(0));
-    }
-    else{
-        _cam.setTarget(_map->getCarrots().at(0));
-    }
 }
 
 /**

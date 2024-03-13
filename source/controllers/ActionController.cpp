@@ -7,6 +7,9 @@
 
 using namespace cugl;
 
+/** Time after dashing when carrot can be captured */
+#define CAPTURE_TIME    10 //TEMPORARY DASH TO ROOT SOLUTION
+
 /**
  * Initializes an ActionController
  */
@@ -30,7 +33,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
 void ActionController::preUpdate(float dt) {
     for (auto carrot : _map->getCarrots()) {
         carrot->setMovement(Vec2::ZERO);
-        if (!_map->isFarmerPlaying()) {
+        if (!_map->isFarmerPlaying() && !carrot->isCaptured() && !carrot->isRooted()) {
             if (_input->didDash()) {
                 carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
             } else {
@@ -43,8 +46,16 @@ void ActionController::preUpdate(float dt) {
     for (auto farmer : _map->getFarmers()) {
         farmer->setMovement(Vec2::ZERO);
         if (_map->isFarmerPlaying()){
-            if (_input->didDash()) {
+            if(dashWindow == 0){
+                farmer->setDash(false);
+            }
+            else{
+                dashWindow--;
+            }
+            if (_input->didDash() && !farmer->isHoldingCarrot()) {
                 farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
+                dashWindow=CAPTURE_TIME;
+                farmer->setDash(true);
             } else {
                 farmer->setMovement(_input->getMovement() * farmer ->getForce());
             }
@@ -59,6 +70,11 @@ void ActionController::preUpdate(float dt) {
     }
     
     networkQueuePositions();
+
+    if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
+        _map->getFarmers().at(0)->rootCarrot();
+        _map->getCarrots().at(0)->gotRooted();
+    }
 }
 
 /**
@@ -82,7 +98,16 @@ void ActionController::postUpdate(float dt) {
         }
         else ++it;
     }
-
+    for(std::shared_ptr<Carrot> c : _map->getCarrots()){
+        if(c->isCaptured()){
+            c->setSensor(true);
+            c->setX(_map->getFarmers().at(0)->getX()-1);
+            c->setY(_map->getFarmers().at(0)->getY()-1);
+        }
+        else if(!c->isRooted()){
+            c->setSensor(false);
+        }
+    }
 }
 
 void ActionController::networkQueuePositions() {

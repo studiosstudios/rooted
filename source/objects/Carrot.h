@@ -12,6 +12,8 @@ using namespace cugl;
 class Carrot : public EntityModel {
     
 private:
+    /** if this carrot has been captured */
+    bool _isCaptured;
     /** if this carrot is rooted*/
     bool _isRooted;
     /** number of baby carrots this carrot has caught so far */
@@ -78,6 +80,8 @@ public:
 #pragma mark Getters and Setters
     bool isRooted() { return _isRooted; };
     
+    bool isCaptured() {return _isCaptured; };
+    
     int getNumBabyCarrots() { return  _numBabyCarrots; };
 
 #pragma mark -
@@ -88,6 +92,7 @@ public:
     
     void gotCaptured();
     
+    void gotRooted();
     
 };
 

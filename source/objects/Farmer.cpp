@@ -7,3 +7,11 @@
 bool Farmer::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     return EntityModel::init(pos, size, scale);
 }
+
+void Farmer::grabCarrot(){
+    _isHoldingCarrot = true;
+}
+
+void Farmer::rootCarrot(){
+    _isHoldingCarrot = false;
+}

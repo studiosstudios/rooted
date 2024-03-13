@@ -375,8 +375,6 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
             (*carrot)->setUUID(uuid);
             if (uuid == thisUUID) {
                 ret = (*carrot);
-            }
-            if (isHost) {
                 getWorld()->getOwnedObstacles().insert({*carrot, 0});
             }
             carrot++;

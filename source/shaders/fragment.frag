@@ -127,7 +127,7 @@ vec4 sampleColor(float dist, float bladeLen) {
  - uv: position to evaluate blade length at
  */
 float sampleBladeLength(vec2 uv) {
-    if (texture(grass_tex, uv).r > 0) {
+    if (texture(grass_tex, uv).r > 0.0) {
         return texture(grass_tex, uv).r * 255.0 + 2.0;
     }
     return 0.0;
@@ -184,7 +184,8 @@ void main(void) {
     }
     else {
 //        baseColor = vec4(0.5333, 0.7529, 0.5176, 1.0);
-        baseColor = vec4(0.819608, 0.819608, 0.219608, 1.0);
+        //baseColor = vec4(0.819608, 0.819608, 0.219608, 1.0);
+        baseColor = vec4(0.0);
         if (distance(fragUV, cam_pos) < 0.03) {
             baseColor = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
         }

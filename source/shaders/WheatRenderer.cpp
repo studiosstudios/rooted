@@ -85,7 +85,7 @@ void WheatRenderer::update(float timestep) {
         _totalTime += timestep;
         _shader->setUniform1f("TIME", _totalTime);
         _shader->setUniformMat4("uPerspective", _cam->getCombined());
-        _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/_scale, 1 - _map->getCarrots().at(0)->getY()/_scale);
+        _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/_scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight()/2)/_scale * 16/9);
         _shader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
         _shader->unbind();
     }

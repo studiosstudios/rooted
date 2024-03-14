@@ -18,6 +18,7 @@
 #include "../controllers/CameraController.h"
 #include "../objects/Map.h"
 #include "../shaders/WheatRenderer.h"
+#include "../shaders/GroundRenderer.h"
 
 
 /**
@@ -84,24 +85,11 @@ protected:
     Vec3 _initCamera;
     
     std::shared_ptr<WheatRenderer> _wheatrenderer;
-    /** A shader to render our triangle */
-    std::shared_ptr<cugl::Shader> _shader;
-    /** A vertex buffer to receive our triangle */
-    std::shared_ptr<cugl::VertexBuffer> _vertbuff;
-    /** The mesh for storing the drawing data */
-    cugl::Mesh<cugl::SpriteVertex2> _mesh;
     
-    float _totalTime;
-    std::shared_ptr<cugl::Texture> _grasstex;
-    std::shared_ptr<cugl::Texture> _noisetex;
-    std::shared_ptr<cugl::Texture> _cloudtex;
-    std::shared_ptr<cugl::Texture> _gradienttex;
-    std::shared_ptr<cugl::Texture> _wheatdetails;
-    std::shared_ptr<cugl::Texture> _carrottex;
-    std::vector<std::shared_ptr<cugl::Texture>> _textures;
+    std::shared_ptr<GroundRenderer> _groundrenderer;
+    
+    
 
-    /** The type */
-    int _shadertype;
 
 #pragma mark Internal Object Management
 
@@ -312,7 +300,9 @@ public:
     
     void buildShader();
     
-    void renderShader();
+    void renderWheatShader();
+    
+    void renderGroundShader();
 
 };
 

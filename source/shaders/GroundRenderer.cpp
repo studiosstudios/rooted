@@ -40,7 +40,7 @@ const std::string oglShaderFrag =
  * own separate line.
  */
 const std::string oglShaderVert =
-#include "wheat_vertex.vert"
+#include "ground_vertex.vert"
 ;
 
 

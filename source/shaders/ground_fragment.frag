@@ -141,17 +141,16 @@ void main(void) {
     // Convert fragCoord to UV
     vec2 uv = outTexCoord;
     
-//    vec2 cloud_uv = uv;
-//    
-//    cloud_uv += cloud_speed * normalize(wind_direction) * TIME;
-//    
+    vec2 cloud_uv = uv;
+    
+    cloud_uv += cloud_speed * normalize(wind_direction) * TIME;
+    
     float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1 * TIME);
 
     vec2 fragUV = uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
     
-//    vec2 cloud_fragUV = cloud_uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
+    vec2 cloud_fragUV = cloud_uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
     
-    // Color the base of the grass with the first gradient color
     vec4 baseColor;
     
     baseColor = vec4(0.819608, 0.819608, 0.219608, 1.0);
@@ -160,62 +159,10 @@ void main(void) {
         baseColor = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
     }
     
-//    if (texture(grass_tex, fragUV).r > 0.0) {
-//        baseColor = sampleColor(0.0, 0.0);
-//        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
-//    }
-//    else {
-////        baseColor = vec4(0.5333, 0.7529, 0.5176, 1.0);
-//        //baseColor = vec4(0.819608, 0.819608, 0.219608, 1.0);
-//        baseColor = vec4(0.0);
-//        
-//        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
-//    }
-//
-//    for (float dist = 0.0; dist < MAX_BLADE_LENGTH; ++dist) {
-//        // Sample the wind
-//        float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, TIME);
-//        // Get the height of the blade originating at the current pixel
-//        // (0 means no blade)
-//        float bladeLength = sampleBladeLength(fragUV);
-//
-//        if (bladeLength > 0.0) {
-//            // Shade player positions
-//            if (distance(fragUV, cam_pos) < 0.03) {
-////                float rustle_noise = sampleNoise(vec2(round(100*distance(fragUV, cam_pos))/300.0, 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
-////                float rustle_noise = sampleNoise(vec2(round(length(cam_vel)), 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
-//                bladeLength += round(1.0*length(cam_vel));
-////                bladeLength -= round((rustle_noise - 2.0) * 1.0);
-//            }
-//
-//            // Blades are pressed down by the wind
-//            else if (windValue > 0.5) {
-//                bladeLength -= 3.0;
-//            }
-//
-//            // Color basec on distance from root
-//            if (abs(dist - bladeLength) < 0.0000001) {
-//                // Color grass tips
-//                if (windValue <= 0.5) {
-//                    baseColor = tip_color;
-//                } else {
-//                    baseColor = wind_color;
-//                }
-//                // Add the cloud shadow
-//                baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
-//                break;
-//            } else if (dist < bladeLength) {
-//                // Color grass stems
-//                baseColor = sampleColor(dist, bladeLength);
-//                // Add the cloud shadow
-//                baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
-//            }
-//        }
-//
-//        // Move on to the next pixel, down the blades
-//        fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
-//
-//    }
+    if (texture(grass_tex, fragUV).r == 0.0) {
+        // TODO: see if can factor out this cloud thing
+        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
+    }
 
     frag_color = baseColor;
     

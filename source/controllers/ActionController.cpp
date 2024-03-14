@@ -9,6 +9,7 @@ using namespace cugl;
 
 /** Time after dashing when carrot can be captured */
 #define CAPTURE_TIME    10 //TEMPORARY DASH TO ROOT SOLUTION
+#define DASH_TIME       2
 
 /**
  * Initializes an ActionController
@@ -34,8 +35,13 @@ void ActionController::preUpdate(float dt) {
     for (auto carrot : _map->getCarrots()) {
         carrot->setMovement(Vec2::ZERO);
         if (!_map->isFarmerPlaying() && !carrot->isCaptured() && !carrot->isRooted()) {
+            if(carrot->dashTimer > 0){
+                carrot->dashTimer -= 1;
+            }
             if (_input->didDash()) {
                 carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
+                carrot->dashTimer=DASH_TIME;
+                
             } else {
                 carrot->setMovement(_input->getMovement() * carrot ->getForce());
             }
@@ -46,15 +52,20 @@ void ActionController::preUpdate(float dt) {
     for (auto farmer : _map->getFarmers()) {
         farmer->setMovement(Vec2::ZERO);
         if (_map->isFarmerPlaying()){
-            if(dashWindow == 0){
+            if(farmer->dashTimer > 0){
+                farmer->dashTimer -= 1;
+            }
+            
+            if(farmer->captureTime == 0){
                 farmer->setDash(false);
             }
             else{
-                dashWindow--;
+                farmer->captureTime -= 1;
             }
+            
             if (_input->didDash() && !farmer->isHoldingCarrot()) {
                 farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
-                dashWindow=CAPTURE_TIME;
+                farmer->dashTimer=DASH_TIME;
                 farmer->setDash(true);
             } else {
                 farmer->setMovement(_input->getMovement() * farmer ->getForce());
@@ -101,11 +112,13 @@ void ActionController::postUpdate(float dt) {
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
         if(c->isCaptured()){
             c->setSensor(true);
-            c->setX(_map->getFarmers().at(0)->getX()-1);
-            c->setY(_map->getFarmers().at(0)->getY()-1);
+//            std::cout<<"carrot sensor set to true \n";
+            c->setX(_map->getFarmers().at(0)->getX()-0.5);
+            c->setY(_map->getFarmers().at(0)->getY()-0.5);
         }
         else if(!c->isRooted()){
             c->setSensor(false);
+//            std::cout<<"carrot sensor set to false \n";
         }
     }
 }

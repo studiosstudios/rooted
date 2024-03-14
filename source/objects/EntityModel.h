@@ -93,6 +93,7 @@ protected:
 	float _drawScale;
 
     std::string _uuid;
+    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
 	*
@@ -101,6 +102,9 @@ protected:
 	* the texture (e.g. a circular shape attached to a square texture).
 	*/
 	virtual void resetDebug() override;
+
+public:
+    int dashTimer;
 
 public:
     
@@ -417,7 +421,6 @@ public:
      * This method should be called after the force attribute is set.
      */
     void applyForce();
-
 
 	
 };

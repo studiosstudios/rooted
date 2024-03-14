@@ -28,6 +28,7 @@ bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
  * Sets carrot state after being captured
  */
 void Carrot::gotCaptured(){
+    CULog("got captured");
     _isCaptured = true;
 }
 

@@ -25,8 +25,6 @@ private:
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
 
-    int dashWindow;
-
 
 public:
 

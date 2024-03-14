@@ -343,6 +343,10 @@ void GameScene::preUpdate(float dt) {
     }
 
     _input->update(dt);
+    
+    if(_input->didDash()){
+        std::cout<<"game scene"<<_input->didDash()<<"\n";
+    }
 
     // Process the toggled key commands
     if (_input->didDebug()) { setDebug(!isDebug()); }

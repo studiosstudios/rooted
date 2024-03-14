@@ -28,7 +28,7 @@ using namespace cugl;
  * own separate line.
  */
 const std::string oglShaderFrag =
-#include "fragment.frag"
+#include "wheat_fragment.frag"
 ;
 
 /**
@@ -40,7 +40,7 @@ const std::string oglShaderFrag =
  * own separate line.
  */
 const std::string oglShaderVert =
-#include "vertex.vert"
+#include "wheat_vertex.vert"
 ;
 
 
@@ -49,6 +49,8 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, cons
     
     
     _size = Application::get()->getDisplaySize();
+    _size.width = 1024;
+    _size.height = 576;
     _assets = assets;
     _cam = camera;
     _map = map;
@@ -83,6 +85,9 @@ void WheatRenderer::update(float timestep) {
     if (_shader) {
         _shader->bind();
         _totalTime += timestep;
+        if (_totalTime >= 30.0) {
+            _totalTime = 0;
+        }
         _shader->setUniform1f("TIME", _totalTime);
         _shader->setUniformMat4("uPerspective", _cam->getCombined());
         _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/_scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight()/2)/_scale * 16/9);
@@ -125,10 +130,10 @@ void WheatRenderer::buildShader() {
     // Allocate the shader (this binds as well)
     _shader = Shader::alloc(SHADER(oglShaderVert), SHADER(oglShaderFrag));
     
-    GLenum error = glGetError();
-    if (error) {
-        CULog("ERROR 1: %s",gl_error_name(error).c_str());
-    }
+//    GLenum error = glGetError();
+//    if (error) {
+//        CULog("ERROR 1: %s",gl_error_name(error).c_str());
+//    }
     
     // Attach the camera to the shader
     _shader->setUniformMat4("uPerspective",_cam->getCombined());

@@ -89,31 +89,6 @@ using namespace cugl;
 #define DEBUG_OPACITY   192
 
 
-/**
- * Default fragment shader
- *
- * This trick uses C++11 raw string literals to put the shader in a separate
- * file without having to guarantee its presence in the asset directory.
- * However, to work properly, the #include statement below MUST be on its
- * own separate line.
- */
-const std::string oglShaderFrag =
-#include "../shaders/Fragment.frag"
-;
-
-/**
- * Default vertex shader
- *
- * This trick uses C++11 raw string literals to put the shader in a separate
- * file without having to guarantee its presence in the asset directory.
- * However, to work properly, the #include statement below MUST be on its
- * own separate line.
- */
-const std::string oglShaderVert =
-#include "../shaders/Vertex.vert"
-;
-
-
 #pragma mark -
 #pragma mark Constructors
 

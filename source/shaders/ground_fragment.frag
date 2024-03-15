@@ -155,7 +155,7 @@ void main(void) {
     
     baseColor = vec4(0.819608, 0.819608, 0.219608, 1.0);
     
-    if (distance(fragUV, cam_pos) < 0.03) {
+    if (distance(fragUV, cam_pos) < 0.02) {
         baseColor = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
     }
     

@@ -85,7 +85,7 @@ uniform vec2 noise_tex_size;
 uniform vec2 SCREEN_PIXEL_SIZE;
 
 const float MAX_BLADE_LENGTH = 100.0f;
-const float PI = 3.1415926535;
+const float PI = 3.1415926535f;
 
 /** Objects */
 //uniform vec2 farmer_pos;
@@ -102,7 +102,7 @@ uniform vec2 cam_vel;
  - pos: position to evaluate at
  */
 float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
-    return a * sin(2.0 * PI / T * dot(dir, pos) + phase);
+    return a * sin(2.0f * PI / T * dot(dir, pos) + phase);
 }
 
 /**
@@ -127,10 +127,10 @@ vec4 sampleColor(float dist, float bladeLen) {
  - uv: position to evaluate blade length at
  */
 float sampleBladeLength(vec2 uv) {
-    if (texture(grass_tex, uv).r > 0.0) {
-        return texture(grass_tex, uv).r * 255.0 + 2.0;
+    if (texture(grass_tex, uv).r > 0.0f) {
+        return texture(grass_tex, uv).r * 255.0f + 2.0f;
     }
-    return 0.0;
+    return 0.0f;
 }
 
 /**
@@ -140,10 +140,10 @@ float sampleBladeLength(vec2 uv) {
  - t: time to evaluate at
  */
 float wind(vec2 pos, float t) {
-    return (sineWave(200.0, 1.8, 1.0 * wind_speed * t, normalize(wind_direction), pos)
-           + sineWave(70.0, 0.1, 2.0 * wind_speed * t, normalize(wind_direction - vec2(0.0, 0.4)), pos)
-           + sineWave(75.0, 0.1, 1.5 * wind_speed * t, normalize(wind_direction + vec2(0.4, 0.0)), pos))
-           / 3.0;
+    return (sineWave(200.0f, 1.8f, 1.0f * wind_speed * t, normalize(wind_direction), pos)
+           + sineWave(70.0f, 0.1f, 2.0f * wind_speed * t, normalize(wind_direction - vec2(0.0f, 0.4f)), pos)
+           + sineWave(75.0f, 0.1f, 1.5f * wind_speed * t, normalize(wind_direction + vec2(0.4f, 0.0f)), pos))
+           / 3.0f;
 }
 
 /**
@@ -154,7 +154,7 @@ float wind(vec2 pos, float t) {
  - offset: offset sampling along x axis for jagged look
  */
 float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
-    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x / noise_tex_size.x + offset, 0.0)).r;
+    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x / noise_tex_size.x + offset, 0.0f)).r;
 }
 
 /**
@@ -169,18 +169,18 @@ void main(void) {
     
     cloud_uv += cloud_speed * normalize(wind_direction) * TIME;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1 * TIME);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1f * TIME);
 
-    vec2 fragUV = uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
+    vec2 fragUV = uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     
-    vec2 cloud_fragUV = cloud_uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
+    vec2 cloud_fragUV = cloud_uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     
     // Color the base of the grass with the first gradient color
     vec4 baseColor;
     
-    if (texture(grass_tex, fragUV).r > 0.0) {
-        baseColor = sampleColor(0.0, 0.0);
-        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
+    if (texture(grass_tex, fragUV).r > 0.0f) {
+        baseColor = sampleColor(0.0f, 0.0f);
+        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0f);
     }
     else {
 //        baseColor = vec4(0.5333, 0.7529, 0.5176, 1.0);
@@ -189,37 +189,39 @@ void main(void) {
 //        if (distance(fragUV, cam_pos) < 0.03) {
 //            baseColor = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
 //        }
-        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
+        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0f);
     }
 
-    for (float dist = 0.0; dist < MAX_BLADE_LENGTH; ++dist) {
+    for (float dist = 0.0f; dist < MAX_BLADE_LENGTH; ++dist) {
         // Sample the wind
         float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, TIME);
         // Get the height of the blade originating at the current pixel
         // (0 means no blade)
         float bladeLength = sampleBladeLength(fragUV);
 
-        if (bladeLength > 0.0) {
+        if (bladeLength > 0.0f) {
             // Shade player positions
-            if (distance(fragUV, cam_pos) < 0.03) {
+            if (distance(fragUV, cam_pos) < 0.02f) {
 //                float rustle_noise = sampleNoise(vec2(round(100*distance(fragUV, cam_pos))/300.0, 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
 //                float rustle_noise = sampleNoise(vec2(round(length(cam_vel)), 0.0), SCREEN_PIXEL_SIZE, 0.4 * TIME);
-                bladeLength += round(1.0*length(cam_vel));
+                bladeLength += round(0.9*length(cam_vel));
 //                bladeLength -= round((rustle_noise - 2.0) * 1.0);
             }
 
             // Blades are pressed down by the wind
-            else if (windValue > 0.5) {
-                bladeLength -= 3.0;
+            else if (windValue > 0.5f) {
+                bladeLength += 3.0f;
             }
 
             // Color basec on distance from root
-            if (abs(dist - bladeLength) < 0.0000001) {
+            if (abs(dist - bladeLength) < 0.0001f) {
                 // Color grass tips
-                if (windValue <= 0.5) {
+                if (windValue <= 0.5f) {
+//                    baseColor = vec4(1.0, 1.0, 1.0, 1.0);
                     baseColor = tip_color;
                 } else {
-                    baseColor = wind_color;
+                    baseColor = vec4(1.0, 0.984314, 0.639216, 1.0);
+//                    baseColor = wind_color;
                 }
                 // Add the cloud shadow
                 baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);

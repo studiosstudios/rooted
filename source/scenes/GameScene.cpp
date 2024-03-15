@@ -167,12 +167,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         CULog("Failed to populate map");
         return false;
     }
-    
-    if (_network->isHost()) {
-        _map->acquireMapOwnership();
-    }
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-    _babies = _map->loadBabyEntities();
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
@@ -200,6 +194,12 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     // Network world synchronization
     // Won't compile unless I make this variable with type NetWorld :/
+    if (_isHost) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+    
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
     if (!_network->isHost()) {
@@ -230,7 +230,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost) {
-    // TODO: set whether client or host
     _network = network;
     _isHost = isHost;
     

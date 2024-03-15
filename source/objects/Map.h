@@ -274,6 +274,9 @@ public:
      */
     void dispose();
 
+    /**
+     * Loads the players as a bunny farmer or carrot depending on whether they are the host or not.
+     */
     std::shared_ptr<EntityModel> loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID);
     
     std::vector<std::shared_ptr<EntityModel>> loadBabyEntities();
@@ -286,8 +289,10 @@ public:
     std::vector<std::shared_ptr<BabyCarrot>> &getBabyCarrots() { return _babies; }
 
     std::vector<std::shared_ptr<Carrot>> &getCarrots() { return _carrots; }
-
+    
     std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
+    
+    std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 
     std::vector<std::shared_ptr<Wheat>> &getWheat() { return _wheat; }
     

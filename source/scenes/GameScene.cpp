@@ -186,12 +186,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _complete = false;
     setDebug(false);
     
-    _ui.init(_uinode, _offset, CAMERA_ZOOM);
-    
-    _cam.init(_map->getCarrots().at(0), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
-    _cam.setZoom(CAMERA_ZOOM);
-    _initCamera = _cam.getCamera()->getPosition();
-    
     // Network world synchronization
     // Won't compile unless I make this variable with type NetWorld :/
     if (_isHost) {
@@ -209,6 +203,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
     }
+    
+    // set the camera after all of the network is loaded
+    _ui.init(_uinode, _offset, CAMERA_ZOOM);
+    
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.setZoom(CAMERA_ZOOM);
+    _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
     Application::get()->setClearColor(Color4(142,114,78,255));
@@ -233,13 +234,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::sha
     _network = network;
     _isHost = isHost;
     
-    bool initSuccess = init(assets);
-    
-    if (initSuccess && isHost) {
-        switchPlayer();
-    }
-    
-    return initSuccess;
+    return init(assets);
 }
 
 /**

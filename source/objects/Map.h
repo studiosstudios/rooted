@@ -299,7 +299,7 @@ public:
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
     std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
-    
+        
     bool isFarmerPlaying() { return _farmerPlaying; }
 
     bool isShowingPlayer() { return _showPlayer; }

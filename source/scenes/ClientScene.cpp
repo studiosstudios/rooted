@@ -92,6 +92,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _startgame->addListener([=](const std::string& name, bool down) {
         if (down) {
             // This will call the _gameid listener
+            _gameid->requestFocus();
             _gameid->releaseFocus();
         }
     });
@@ -155,7 +156,6 @@ void ClientScene::setActive(bool value) {
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
-            
         }
     }
 }
@@ -187,6 +187,9 @@ void ClientScene::update(float timestep) {
     configureStartButton();
     if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
         _player->setText(std::to_string(_network->getNumPlayers()));
+    }
+    else {
+        _player->setText("...");
     }
 }
 

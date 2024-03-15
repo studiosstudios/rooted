@@ -9,8 +9,9 @@
 
 using namespace cugl;
 
-bool CollisionController::init(std::shared_ptr<Map> &map) {
+bool CollisionController::init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network) {
     _map = map;
+    _network = network;
     return true;
 }
 
@@ -77,8 +78,11 @@ void CollisionController::beginContact(b2Contact* contact) {
                 CULog("carrot-farmer collision");
                 Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-                std::cout<<farmer->isDashing()<<"\n";
+                std::cout<<carrot->isSensor()<<"\n";
                 if(farmer->isDashing() && !carrot->isSensor()){
+                    std::cout<<"uuid: "<<_network->getShortUID();
+                    std::cout<<"someone dashed\n";
+                    _network->pushOutEvent(DashEvent::allocDashEvent());
                     carrot->gotCaptured();
                     farmer->grabCarrot();
                 }

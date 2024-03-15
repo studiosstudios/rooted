@@ -19,8 +19,6 @@ protected:
     LWSerializer _serializer;
     LWDeserializer _deserializer;
     
-    Vec2 _pos;
-    
 public:
     /**
     * This method is used by the NetEventController to create a new event of using a
@@ -31,7 +29,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocDashEvent(Vec2 pos);
+    static std::shared_ptr<NetEvent> allocDashEvent();
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -47,9 +45,6 @@ public:
      * useful parameters of this class.
      */
     void deserialize(const std::vector<std::byte>& data) override;
-    
-    /** Gets the position of the event. */
-    Vec2 getPos() { return _pos; };
 };
 
 #endif /* DashEvent_hpp */

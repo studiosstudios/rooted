@@ -21,6 +21,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _world = _map->getWorld();
     _ai.init(map);
     _network = network;
+    _network->attachEventType<DashEvent>();
     return true;
 }
 
@@ -32,9 +33,6 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void ActionController::preUpdate(float dt) {
-    if(_input->didDash()){
-        std::cout<<"action controller"<<_input->didDash()<<"\n";
-    }
     for (auto carrot : _map->getCarrots()) {
         carrot->setMovement(Vec2::ZERO);
         if (!_map->isFarmerPlaying() && !carrot->isCaptured() && !carrot->isRooted()) {
@@ -83,10 +81,21 @@ void ActionController::preUpdate(float dt) {
     }
     
     networkQueuePositions();
-
+    
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
         _map->getFarmers().at(0)->rootCarrot();
         _map->getCarrots().at(0)->gotRooted();
+    }
+}
+
+void ActionController::fixedUpdate(){
+    if(_network->isInAvailable()){
+        auto e = _network->popInEvent();
+        if(auto dashEvent = std::dynamic_pointer_cast<DashEvent>(e)){
+            std::cout<<_network->getShortUID();
+            CULog("Received dash event");
+            processDashEvent(dashEvent);
+        }
     }
 }
 
@@ -126,5 +135,13 @@ void ActionController::postUpdate(float dt) {
 }
 
 void ActionController::networkQueuePositions() {
+    
+}
+
+void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event){
+    
+}
+
+void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event){
     
 }

@@ -10,6 +10,8 @@
 #include "InputController.h"
 #include "AIController.h"
 #include "NetworkController.h"
+#include "DashEvent.h"
+#include "RootEvent.h"
 
 class ActionController {
 private:
@@ -24,8 +26,6 @@ private:
     AIController _ai;
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
-
-    int dashWindow;
 
 
 public:
@@ -53,6 +53,8 @@ public:
      * @param dt    The amount of time (in seconds) since the last frame
      */
     void preUpdate(float dt);
+    
+    void fixedUpdate();
 
     /**
      * The method called to indicate the end of a deterministic loop.
@@ -68,6 +70,10 @@ public:
     void postUpdate(float remain);
     
     void networkQueuePositions();
+    
+    void processDashEvent(const std::shared_ptr<DashEvent>& event);
+    
+    void processRootEvent(const std::shared_ptr<RootEvent>& event);
 };
 
 

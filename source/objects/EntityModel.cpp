@@ -54,7 +54,8 @@
 /** The amount to shrink the body fixture (horizontally) relative to the image */
 #define DUDE_HSHRINK  0.7f
 /** The density of the character */
-#define DUDE_DENSITY    1.0f
+#define DUDE_DENSITY  1.0f
+#define DUDE_DASH      20.0f
 
 
 using namespace cugl;
@@ -176,7 +177,10 @@ void EntityModel::applyForce() {
         b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
         _body->ApplyForce(force,_body->GetPosition(),true);
     }
-    else {
+    else if(dashTimer > 0){
+        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * DUDE_DASH);
+    }
+    else{
         setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
     }
     // Velocity too high, clamp it

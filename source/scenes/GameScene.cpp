@@ -180,7 +180,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
     _input = InputController::alloc(getBounds());
-    _collision.init(_map);
+    _collision.init(_map, _network);
     _action.init(_map, _input, _network);
     _active = true;
     _complete = false;
@@ -288,7 +288,7 @@ void GameScene::reset() {
 
     activateWorldCollisions(_map->getWorld());
 
-    _collision.init(_map);
+    _collision.init(_map, _network);
     _action.init(_map, _input, _network);
 
     _cam.setPosition(_initCamera);
@@ -408,12 +408,13 @@ void GameScene::preUpdate(float dt) {
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     if (_network->isInAvailable()) {
-        CULog("NetEvent in queue, discarding for now");
+//        CULog("NetEvent in queue, discarding for now");
     }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
 //    std::cout << _map->getCarrots().at(0)->getForce() << " " <<  _map->getCarrots().at(0)->getLinearVelocity().x << "," << _map->getCarrots().at(0)->getLinearVelocity().y << "\n";
+    _action.fixedUpdate();
 }
 
 /**
@@ -537,3 +538,5 @@ Size GameScene::computeActiveSize() const {
     }
     return dimen;
 }
+
+

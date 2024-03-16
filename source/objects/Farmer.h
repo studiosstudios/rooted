@@ -14,9 +14,13 @@ class Farmer : public EntityModel {
 
 private:
     bool _isHoldingCarrot;
-    bool _isDashing;
     bool _canPlant;
+    bool _dashWindow;
+    bool _isDashing; //used for farmer-carrot collision when farmer dashes
 
+public:
+    int captureTime;
+    
 public:
 
     Farmer() {};
@@ -30,8 +34,6 @@ public:
         return (result->init(pos, size, scale) ? result : nullptr);
     }
     
-    void setDash(bool dash) {_isDashing = dash; }
-    
     bool isDashing(){ return _isDashing; }
     
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
@@ -43,6 +45,11 @@ public:
     bool canPlant() { return _canPlant; };
     
     void setCanPlant(bool plant) { _canPlant = plant; };
+    
+    /**
+     * Used to detect whether farmer collides with carrot while dashing.
+     */
+    void setDash(bool dash) {_isDashing = dash; }
 };
 
 

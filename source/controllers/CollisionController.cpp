@@ -9,8 +9,9 @@
 
 using namespace cugl;
 
-bool CollisionController::init(std::shared_ptr<Map> &map) {
+bool CollisionController::init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network) {
     _map = map;
+    _network = network;
     return true;
 }
 
@@ -36,7 +37,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-
+    
     // Twice to swap
     for (int i = 0; i < 2; i++) {
 
@@ -53,8 +54,10 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
             if (name2 == "baby") {
                 BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
-                carrot->captureBabyCarrot();
-                b2babycarrot->gotCaptured();
+                if(!(carrot->isCaptured() || carrot->isRooted())){
+                    carrot->captureBabyCarrot();
+                    b2babycarrot->gotCaptured();
+                }
             }
         }
         
@@ -75,9 +78,16 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
             if(name2 == "carrot") {
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-                if(farmer->isDashing() && !carrot->isSensor()){
+//                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
+                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
+                    _network->pushOutEvent(DashEvent::allocDashEvent(carrot->getUUID()));
                     carrot->gotCaptured();
                     farmer->grabCarrot();
+//                    std::shared_ptr<cugl::physics2::DistanceJoint> joint = std::make_shared<cugl::physics2::DistanceJoint>();
+//                    std::shared_ptr<physics2::Obstacle> ptr1(bd1);
+//                    std::shared_ptr<physics2::Obstacle> ptr2(bd2);
+//                    joint->initWithObstacles(ptr1, ptr2, Vec2(0,0), Vec2(0,0));
+//                    CULog("joint created");
                 }
             }
             if(name2 == "planting spot") {

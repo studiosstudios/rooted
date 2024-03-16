@@ -22,6 +22,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _ai.init(map);
     _network = network;
     _network->attachEventType<DashEvent>();
+    _network->attachEventType<RootEvent>();
     return true;
 }
 
@@ -84,6 +85,8 @@ void ActionController::preUpdate(float dt) {
     networkQueuePositions();
     
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
+        std::cout<<"farmer did the rooting\n";
+        _network->pushOutEvent(RootEvent::allocRootEvent());
         _map->getFarmers().at(0)->rootCarrot();
         _map->getCarrots().at(0)->gotRooted();
     }
@@ -143,7 +146,7 @@ void ActionController::networkQueuePositions() {
 }
 
 void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event){
-    _map->getCarrots().at(0)->setSensor(false);
+    _map->getCarrots().at(0)->setSensor(true);
     _map->getCarrots().at(0)->gotCaptured();
 }
 

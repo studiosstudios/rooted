@@ -55,8 +55,10 @@ void CollisionController::beginContact(b2Contact* contact) {
                 if (name2 == "baby") {
                     Carrot* carrot = dynamic_cast<Carrot*>(bd1);
                     BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
-                    carrot->captureBabyCarrot();
-                    b2babycarrot->gotCaptured();
+                    if(!(carrot->isCaptured() || carrot->isRooted())){
+                        carrot->captureBabyCarrot();
+                        b2babycarrot->gotCaptured();
+                    }
                 }
 //            }
         }
@@ -79,7 +81,6 @@ void CollisionController::beginContact(b2Contact* contact) {
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
 //                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
                 if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
-                    CULog("got in here");
                     carrot->gotCaptured();
                     farmer->grabCarrot();
 //                    std::shared_ptr<cugl::physics2::DistanceJoint> joint = std::make_shared<cugl::physics2::DistanceJoint>();

@@ -18,11 +18,10 @@ std::shared_ptr<NetEvent> RootEvent::newEvent(){
     return std::make_shared<RootEvent>();
 }
 
-std::shared_ptr<NetEvent> RootEvent::allocRootEvent(Vec2 pos){
+std::shared_ptr<NetEvent> RootEvent::allocRootEvent(){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<RootEvent>();
-    event->_pos = pos;
     return event;
 #pragma mark END SOLUTION
 }
@@ -34,8 +33,8 @@ std::vector<std::byte> RootEvent::serialize(){
     //TODO: serialize _pos
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
-    _serializer.writeFloat(_pos.x);
-    _serializer.writeFloat(_pos.y);
+//    _serializer.writeFloat(_pos.x);
+//    _serializer.writeFloat(_pos.y);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -55,8 +54,7 @@ void RootEvent::deserialize(const std::vector<std::byte>& data){
 #pragma mark BEGIN SOLUTION
     _deserializer.reset();
     _deserializer.receive(data);
-    float x = _deserializer.readFloat();
-    float y = _deserializer.readFloat();
-    _pos = Vec2(x,y);
+//    float x = _deserializer.readFloat();
+//    float y = _deserializer.readFloat();
 #pragma mark END SOLUTION
 }

@@ -18,7 +18,7 @@ protected:
     LWSerializer _serializer;
     LWDeserializer _deserializer;
     
-    Vec2 _pos;
+//    Vec2 _pos;
     
 public:
     /**
@@ -30,7 +30,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocRootEvent(Vec2 pos);
+    static std::shared_ptr<NetEvent> allocRootEvent();
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -46,9 +46,6 @@ public:
      * useful parameters of this class.
      */
     void deserialize(const std::vector<std::byte>& data) override;
-    
-    /** Gets the position of the event. */
-    Vec2 getPos() { return _pos; };
 };
 
 #endif /* RootEvent_h */

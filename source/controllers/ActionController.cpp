@@ -122,16 +122,15 @@ void ActionController::postUpdate(float dt) {
         else ++it;
     }
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
-        std::cout<<c->isSensor()<<"\n";
+        std::cout<<"capture status"<< c->isCaptured() << "\n";
         if(c->isCaptured()){
+            std::cout<<"CAPTURED\n";
             c->setSensor(true);
             c->setX(_map->getFarmers().at(0)->getX()-0.5);
             c->setY(_map->getFarmers().at(0)->getY()-0.5);
-            std::cout<<"sensor set to true\n";
         }
         else if(!c->isRooted()){
             c->setSensor(false);
-            std::cout<<"sensor set to false\n";
         }
     }
 }

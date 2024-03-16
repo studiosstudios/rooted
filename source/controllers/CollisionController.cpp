@@ -45,14 +45,14 @@ void CollisionController::beginContact(b2Contact* contact) {
         std::string name2 = bd2->getName();
         
         if (name1 == "carrot") {
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                 wheat->rustle(bd1->getLinearVelocity().length());
                 wheat->setOccupied(_map->isShowingPlayer());
+                carrot->changeWheatContacts(1);
             }
-            
             if (name2 == "baby") {
-                Carrot* carrot = dynamic_cast<Carrot*>(bd1);
                 BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
                 if(!(carrot->isCaptured() || carrot->isRooted())){
                     carrot->captureBabyCarrot();
@@ -69,13 +69,14 @@ void CollisionController::beginContact(b2Contact* contact) {
         }
         
         if (name1 == "farmer") {
+            Farmer* farmer = dynamic_cast<Farmer*>(bd1);
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                 wheat->rustle(bd1->getLinearVelocity().length());
                 wheat->setOccupied(_map->isShowingPlayer());
+                farmer->changeWheatContacts(1);
             }
             if(name2 == "carrot") {
-                Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
 //                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
                 if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
@@ -90,7 +91,6 @@ void CollisionController::beginContact(b2Contact* contact) {
                 }
             }
             if(name2 == "planting spot") {
-                Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 farmer->setCanPlant(true);
             }
         }
@@ -139,7 +139,9 @@ void CollisionController::endContact(b2Contact* contact) {
         if (name1 == "carrot") {
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                Carrot* carrot = dynamic_cast<Carrot*>(bd1);
                 wheat->setOccupied(false);
+                carrot->changeWheatContacts(-1);
             }
             
             if (name2 == "baby") {
@@ -156,7 +158,9 @@ void CollisionController::endContact(b2Contact* contact) {
         if (name1 == "farmer") {
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 wheat->setOccupied(false);
+                farmer->changeWheatContacts(-1);
             }
             if(name2 == "planting spot"){
                 Farmer* farmer = dynamic_cast<Farmer*>(bd1);

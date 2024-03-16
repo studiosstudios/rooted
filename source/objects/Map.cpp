@@ -143,7 +143,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
                _root->getContentSize().height / _bounds.size.height);
 
     // Create, but transfer ownership to root
-    _worldnode = scene2::SceneNode::alloc();
+    // needs to be an ordered node in order to reorder some elements
+    _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(Vec2::ZERO);
 
@@ -350,6 +351,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     }
     
     _character = ret;
+    _character->getSceneNode()->setPriority(2);
     
     return ret;
 }

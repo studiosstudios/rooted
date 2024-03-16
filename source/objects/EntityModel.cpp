@@ -203,12 +203,17 @@ void EntityModel::applyForce() {
  * @param delta Number of seconds since last animation frame
  */
 void EntityModel::update(float dt) {
-
     BoxObstacle::update(dt);
     
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
+        if (isInWheat()) {
+            _node->setColor(Color4(255, 255, 255, 255.0/2));
+        }
+        else {
+            _node->setColor(Color4(255, 255, 255, 255));
+        }
     }
 }
 

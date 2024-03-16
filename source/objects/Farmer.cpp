@@ -17,6 +17,7 @@ void Farmer::grabCarrot(Carrot* carrot){
 }
 
 void Farmer::rootCarrot(){
+    // during networking this assertion will fail
     CUAssertLog(_carrotHeld != nullptr, "something went wrong");
     _carrotHeld->gotRooted();
     _carrotHeld = nullptr;

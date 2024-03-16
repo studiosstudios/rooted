@@ -78,7 +78,8 @@ void CollisionController::beginContact(b2Contact* contact) {
                 Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
 //                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
-                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
+                if(farmer->isDashing() && !carrot->isSensor()){
+                    CULog("got in here");
                     _network->pushOutEvent(DashEvent::allocDashEvent());
                     carrot->gotCaptured();
                     farmer->grabCarrot();
@@ -210,10 +211,10 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             return false;
         }
         
-        if (name1 == "carrot" && name2 == "farmer") {
-            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
-            return !carrot->isSensor();
-        }
+//        if (name1 == "carrot" && name2 == "farmer") {
+//            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+//            return !carrot->isSensor();
+//        }
         
         // Swap everything
         b2Fixture* fixTemp = f1;

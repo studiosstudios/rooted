@@ -80,7 +80,6 @@ void CollisionController::beginContact(b2Contact* contact) {
 //                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
                 if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
                     CULog("got in here");
-                    _network->pushOutEvent(DashEvent::allocDashEvent());
                     carrot->gotCaptured();
                     farmer->grabCarrot();
 //                    std::shared_ptr<cugl::physics2::DistanceJoint> joint = std::make_shared<cugl::physics2::DistanceJoint>();

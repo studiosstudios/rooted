@@ -414,7 +414,7 @@ void GameScene::preUpdate(float dt) {
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
     if (_network->isInAvailable()) {
-        CULog("NetEvent in queue, discarding for now");
+//        CULog("NetEvent in queue, discarding for now");
     }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());

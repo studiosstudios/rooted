@@ -129,7 +129,6 @@ void ActionController::postUpdate(float dt) {
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
 //        std::cout<<"capture status"<< c->isCaptured() << "\n";
         if(c->isCaptured()){
-//            std::cout<<"CAPTURED\n";
             _network->pushOutEvent(DashEvent::allocDashEvent());
             c->setSensor(true);
             c->setX(_map->getFarmers().at(0)->getX()-0.5);
@@ -146,11 +145,13 @@ void ActionController::networkQueuePositions() {
 }
 
 void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event){
+    std::cout<<"processing capture event\n";
     _map->getCarrots().at(0)->setSensor(true);
     _map->getCarrots().at(0)->gotCaptured();
 }
 
 void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event){
+    std::cout<<"processing rooting event\n";
     _map->getFarmers().at(0)->rootCarrot();
     _map->getCarrots().at(0)->gotRooted();
 }

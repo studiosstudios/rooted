@@ -93,6 +93,9 @@ protected:
 	float _drawScale;
 
     std::string _uuid;
+    
+    int _wheatContacts;
+    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
 	*
@@ -380,6 +383,10 @@ public:
     std::string getUUID() const { return _uuid; }
     
     void setUUID(std::string uuid) { _uuid = uuid; }
+            
+    bool isInWheat() const { return _wheatContacts > 0; }
+
+    void changeWheatContacts(int dx) { _wheatContacts += dx; }
 
     
 #pragma mark -

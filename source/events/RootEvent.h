@@ -10,13 +10,14 @@
 
 #include <cugl/cugl.h>
 using namespace cugl::physics2::net;
+using namespace cugl::net;
 using namespace cugl;
 
 class RootEvent : public NetEvent {
     
 protected:
-    LWSerializer _serializer;
-    LWDeserializer _deserializer;
+    NetcodeSerializer _serializer;
+    NetcodeDeserializer _deserializer;
     
     std::string _uuid;
     

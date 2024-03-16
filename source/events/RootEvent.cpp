@@ -34,8 +34,7 @@ std::vector<std::byte> RootEvent::serialize(){
     //TODO: serialize _pos
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
-//    _serializer.writeFloat(_pos.x);
-//    _serializer.writeFloat(_pos.y);
+    _serializer.writeString(_uuid);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -55,7 +54,7 @@ void RootEvent::deserialize(const std::vector<std::byte>& data){
 #pragma mark BEGIN SOLUTION
     _deserializer.reset();
     _deserializer.receive(data);
-//    float x = _deserializer.readFloat();
-//    float y = _deserializer.readFloat();
+    std::string uuid = _deserializer.readString();
+    _uuid = uuid;
 #pragma mark END SOLUTION
 }

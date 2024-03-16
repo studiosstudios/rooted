@@ -58,8 +58,5 @@ void DashEvent::deserialize(const std::vector<std::byte>& data){
     _deserializer.receive(data);
     std::string uuid = _deserializer.readString();
     _uuid = uuid;
-//    float x = _deserializer.readFloat();
-//    float y = _deserializer.readFloat();
-//    _pos = Vec2(x,y);
 #pragma mark END SOLUTION
 }

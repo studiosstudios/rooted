@@ -7,14 +7,13 @@
 
 #include <cugl/cugl.h>
 #include "EntityModel.h"
-#include "Carrot.h"
 
 using namespace cugl;
 
 class Farmer : public EntityModel {
 
 private:
-    Carrot* _carrotHeld;
+    bool _isHoldingCarrot;
     bool _isDashing;
     bool _canPlant;
 
@@ -31,13 +30,13 @@ public:
         return (result->init(pos, size, scale) ? result : nullptr);
     }
     
-    void setDash(bool dash) { _isDashing = dash; }
+    void setDash(bool dash) {_isDashing = dash; }
     
-    bool isDashing() { return _isDashing; }
+    bool isDashing(){ return _isDashing; }
     
-    bool isHoldingCarrot() { return _carrotHeld != nullptr; }
+    bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
-    void grabCarrot(Carrot* carrot);
+    void grabCarrot();
 
     void rootCarrot();
 

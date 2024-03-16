@@ -73,6 +73,7 @@ void ActionController::preUpdate(float dt) {
 
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
         _map->getFarmers().at(0)->rootCarrot();
+        _map->getCarrots().at(0)->gotRooted();
     }
 }
 

@@ -34,6 +34,7 @@ std::vector<std::byte> DashEvent::serialize(){
     //TODO: serialize _pos
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
+    _serializer.writeString(_uuid);
 //    _serializer.writeFloat(_pos.x);
 //    _serializer.writeFloat(_pos.y);
     return _serializer.serialize();
@@ -55,6 +56,8 @@ void DashEvent::deserialize(const std::vector<std::byte>& data){
 #pragma mark BEGIN SOLUTION
     _deserializer.reset();
     _deserializer.receive(data);
+    std::string uuid = _deserializer.readString();
+    _uuid = uuid;
 //    float x = _deserializer.readFloat();
 //    float y = _deserializer.readFloat();
 //    _pos = Vec2(x,y);

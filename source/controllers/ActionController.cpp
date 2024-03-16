@@ -85,12 +85,12 @@ void ActionController::preUpdate(float dt) {
     
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
 //        std::cout<<"farmer did the rooting\n";
-        _network->pushOutEvent(RootEvent::allocRootEvent());
         _map->getFarmers().at(0)->rootCarrot();
         // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
         for (auto carrot : _map->getCarrots()) {
             if (carrot->isCaptured()) {
                 carrot->gotRooted();
+                _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID()));
             }
         }
     }
@@ -149,11 +149,22 @@ void ActionController::networkQueuePositions() {
 }
 
 void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event){
-    _map->getCarrots().at(0)->setSensor(true);
-    _map->getCarrots().at(0)->gotCaptured();
+    std::cout<<event->getUUID();
+    for(auto carrot : _map->getCarrots()){
+        if(carrot->getUUID() == event->getUUID()){
+            carrot->setSensor(true);
+            carrot->gotCaptured();
+        }
+    }
+//    _map->getCarrots().at(0)->setSensor(true);
+//    _map->getCarrots().at(0)->gotCaptured();
 }
 
 void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event){
     _map->getFarmers().at(0)->rootCarrot();
-    _map->getCarrots().at(0)->gotRooted();
+    for(auto carrot : _map->getCarrots()){
+        if(carrot->getUUID() == event->getUUID()){
+            _map->getCarrots().at(0)->gotRooted();
+        }
+    }
 }

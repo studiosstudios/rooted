@@ -18,10 +18,11 @@ std::shared_ptr<NetEvent> RootEvent::newEvent(){
     return std::make_shared<RootEvent>();
 }
 
-std::shared_ptr<NetEvent> RootEvent::allocRootEvent(){
+std::shared_ptr<NetEvent> RootEvent::allocRootEvent(std::string uuid){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<RootEvent>();
+    event->_uuid = uuid;
     return event;
 #pragma mark END SOLUTION
 }

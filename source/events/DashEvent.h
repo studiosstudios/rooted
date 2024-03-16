@@ -5,19 +5,20 @@
 //  Created by Kimmy Lin on 3/14/24.
 //
 
-#ifndef DashEvent_hpp
-#define DashEvent_hpp
+#ifndef DashEvent_h
+#define DashEvent_h
 
 
 #include <cugl/cugl.h>
 using namespace cugl::physics2::net;
 using namespace cugl;
+using namespace cugl::net;
 
 class DashEvent : public NetEvent {
     
 protected:
-    LWSerializer _serializer;
-    LWDeserializer _deserializer;
+    NetcodeSerializer _serializer;
+    NetcodeDeserializer _deserializer;
     
     std::string _uuid;
     

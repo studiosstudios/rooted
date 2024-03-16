@@ -18,7 +18,7 @@ protected:
     LWSerializer _serializer;
     LWDeserializer _deserializer;
     
-//    Vec2 _pos;
+    std::string _uuid;
     
 public:
     /**
@@ -30,7 +30,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocRootEvent();
+    static std::shared_ptr<NetEvent> allocRootEvent(std::string uuid);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -46,6 +46,8 @@ public:
      * useful parameters of this class.
      */
     void deserialize(const std::vector<std::byte>& data) override;
+    
+    std::string getUUID() { return _uuid; }
 };
 
 #endif /* RootEvent_h */

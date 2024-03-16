@@ -78,7 +78,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
 //                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
-                if(farmer->isDashing() && !carrot->isSensor()){
+                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
                     _network->pushOutEvent(DashEvent::allocDashEvent());
                     carrot->gotCaptured();
                     farmer->grabCarrot();

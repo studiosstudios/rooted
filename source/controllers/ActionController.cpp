@@ -73,7 +73,12 @@ void ActionController::preUpdate(float dt) {
 
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
         _map->getFarmers().at(0)->rootCarrot();
-        _map->getCarrots().at(0)->gotRooted();
+        // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
+        for (auto carrot : _map->getCarrots()) {
+            if (carrot->isCaptured()) {
+                carrot->gotRooted();
+            }
+        }
     }
 }
 

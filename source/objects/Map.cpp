@@ -330,6 +330,7 @@ void Map::dispose() {
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
     std::shared_ptr<EntityModel> ret;
     bool isHost = hostUUID == thisUUID;
+    
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != hostUUID) {
@@ -341,15 +342,14 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
             carrot++;
         }
     }
+    
     _farmers.at(0)->setUUID(hostUUID);
-    if (ret == nullptr) {
-        ret = _farmers.at(0);
-    }
+    ret = ret == nullptr ? _farmers.at(0) : ret;
     if (isHost) {
         getWorld()->getOwnedObstacles().insert({_farmers.at(0), 0});
     }
-    _character = ret;
     
+    _character = ret;
     
     return ret;
 }

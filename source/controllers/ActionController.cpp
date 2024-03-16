@@ -33,7 +33,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
 void ActionController::preUpdate(float dt) {
     for (auto carrot : _map->getCarrots()) {
         carrot->setMovement(Vec2::ZERO);
-        if (!_map->isFarmerPlaying() && !carrot->isCaptured() && !carrot->isRooted()) {
+        if (_map->getCharacter()->getUUID() == carrot->getUUID() && !carrot->isCaptured() && !carrot->isRooted()) {
             if (_input->didDash()) {
                 carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
             } else {
@@ -45,7 +45,7 @@ void ActionController::preUpdate(float dt) {
     
     for (auto farmer : _map->getFarmers()) {
         farmer->setMovement(Vec2::ZERO);
-        if (_map->isFarmerPlaying()){
+        if (_map->getCharacter()->getUUID() == farmer->getUUID()){
             if(dashWindow == 0){
                 farmer->setDash(false);
             }
@@ -73,7 +73,12 @@ void ActionController::preUpdate(float dt) {
 
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
         _map->getFarmers().at(0)->rootCarrot();
-        _map->getCarrots().at(0)->gotRooted();
+        // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
+        for (auto carrot : _map->getCarrots()) {
+            if (carrot->isCaptured()) {
+                carrot->gotRooted();
+            }
+        }
     }
 }
 

@@ -164,7 +164,7 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
     _map->getFarmers().at(0)->rootCarrot();
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
-            _map->getCarrots().at(0)->gotRooted();
+            carrot->gotRooted();
         }
     }
 }

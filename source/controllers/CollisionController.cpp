@@ -77,8 +77,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
                 if(farmer->isDashing() && !carrot->isSensor()){
-                    carrot->gotCaptured();
-                    farmer->grabCarrot();
+                    farmer->grabCarrot(carrot);
                 }
             }
             if(name2 == "planting spot") {

@@ -91,6 +91,9 @@ const float PI = 3.1415926535f;
 //uniform vec2 farmer_pos;
 uniform vec2 cam_pos;
 uniform vec2 cam_vel;
+uniform vec2 positions[100];
+uniform float velocities[100];
+uniform int num_entities;
 
 /**
  Calculates a sine wave
@@ -201,13 +204,17 @@ void main(void) {
         float bladeLength = sampleBladeLength(fragUV);
 
         if (bladeLength > 0.0f) {
-            // Shade player positions
-            if (distance(fragUV, cam_pos) < 0.02f) {
-                bladeLength += round(0.9*length(cam_vel));
+            // push up entity positions
+            bool empty = true;
+            for (int i = 0; i < num_entities; i++ ){
+                if (distance(fragUV, positions[i]) < 0.02) {
+                    bladeLength += round(0.9*length(velocities[i]));
+                    empty = false;
+                }
             }
 
             // Blades are pressed down by the wind
-            else if (windValue > 0.5f) {
+            if (empty && windValue > 0.5f) {
                 bladeLength -= 3.0f;
             }
 

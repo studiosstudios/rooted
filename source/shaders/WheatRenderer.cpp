@@ -113,21 +113,48 @@ void WheatRenderer::update(float timestep) {
         _totalTime = 0;
     }
 
+    auto carrots = _map->getCarrots();
+    auto farmers = _map->getFarmers();
+    auto babies = _map->getBabyCarrots();
+    int size = carrots.size() + farmers.size() + babies.size();
+    float positions[2*size]; // must be 1d array
+    float velocities[size];
+    for (int i = 0; i < carrots.size(); i++) {
+        positions[2 * i] = carrots.at(i)->getX() / _scale;
+        positions[2 * i + 1] = 1 - (carrots.at(i)->getY() - carrots.at(i)->getHeight()/2) / _scale * 16/9;
+        velocities[i] = carrots.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < farmers.size(); i++) {
+        positions[2 * i + 2* carrots.size()] = farmers.at(i)->getX() / _scale;
+        positions[2 * i + 1 + 2 * carrots.size()] = 1 - (farmers.at(i)->getY() - farmers.at(i)->getHeight()/2) / _scale * 16/9;
+        velocities[i + carrots.size()] = farmers.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < babies.size(); i++) {
+        positions[2 * i + 2* (carrots.size() + farmers.size())] = babies.at(i)->getX() / _scale;
+        positions[2 * i + 1 + 2 * (carrots.size() + farmers.size())] = 1 - (babies.at(i)->getY() - babies.at(i)->getHeight()/2) / _scale * 16/9;
+        velocities[i + carrots.size() + farmers.size()] = babies.at(i)->getLinearVelocity().length();
+    }
+
     if (_wheatShader) {
         _wheatShader->bind();
         _wheatShader->setUniform1f("TIME", _totalTime);
+        _wheatShader->setUniform1i("num_entities", size);
         _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
         _wheatShader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX() / _scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight() / 2) / _scale * 16 / 9);
         _wheatShader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
+        _wheatShader->setUniform2fv("positions", size, positions);
+        _wheatShader->setUniform1fv("velocities", size, velocities);
         _wheatShader->unbind();
     }
 
     if (_groundShader) {
         _groundShader->bind();
         _groundShader->setUniform1f("TIME", _totalTime);
+        _groundShader->setUniform1i("num_entities", size);
         _groundShader->setUniformMat4("uPerspective", _cam->getCombined());
         _groundShader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX() / _scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight() / 2) / _scale * 16 / 9);
         _groundShader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
+        _groundShader->setUniform2fv("positions", size, positions);
         _groundShader->unbind();
     }
 }
@@ -164,23 +191,11 @@ void WheatRenderer::renderGround() {
     if (_wheatShader) {
         _vertbuff->attach(_groundShader);
 
-        // Draw with the given textures (if it exists)
-//        for (auto texture : _textures) {
-//            if (texture) {
-//                texture->bind();
-//            }
-//        }
         _grasstex->bind();
         _cloudtex->bind();
         _noisetex->bind();
 
         _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
-
-//        for (auto texture : _textures) {
-//            if (texture) {
-//                texture->unbind();
-//            }
-//        }
 
         _grasstex->unbind();
         _cloudtex->unbind();
@@ -241,9 +256,9 @@ void WheatRenderer::buildShaders() {
                               offsetof(cugl::SpriteVertex2,color));
     _vertbuff->setupAttribute("aTexCoord", 2, GL_FLOAT, GL_FALSE,
                               offsetof(cugl::SpriteVertex2,texcoord));
-    
-    // Attach the shader
-    _vertbuff->attach(_wheatShader);
+
+
+    _vertbuff->bind();
     
     // Cover the entire screen with a rectangle
     SpriteVertex2 vert;
@@ -272,4 +287,5 @@ void WheatRenderer::buildShaders() {
     // We only need to reload it if the vertex data changes (which is never)
     _vertbuff->loadVertexData(_mesh.vertices.data(), (int)_mesh.vertices.size());
     _vertbuff->loadIndexData(_mesh.indices.data(), (int)_mesh.indices.size());
+    _vertbuff->unbind();
 }

@@ -36,9 +36,11 @@ uniform vec2 noise_tex_size;
 uniform vec2 SCREEN_PIXEL_SIZE;
 
 /** Objects */
-//uniform vec2 farmer_pos;
 uniform vec2 cam_pos;
 uniform vec2 cam_vel;
+
+uniform vec2 positions[100];
+uniform int num_entities;
 
 /**
  Calculates noise from using noise texture
@@ -70,9 +72,11 @@ void main(void) {
     vec2 cloud_fragUV = cloud_uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
     
     frag_color = vec4(0.819608, 0.819608, 0.219608, 1.0);
-    
-    if (distance(fragUV, cam_pos) < 0.02) {
-        frag_color = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
+
+    for (int i = 0; i < num_entities; i++ ){
+        if (distance(fragUV, positions[i]) < 0.012) {
+            frag_color = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
+        }
     }
     
     if (texture(grass_tex, fragUV).r == 0.0) {

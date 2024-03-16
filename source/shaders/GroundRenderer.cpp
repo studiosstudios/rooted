@@ -27,7 +27,7 @@ using namespace cugl;
  * However, to work properly, the #include statement below MUST be on its
  * own separate line.
  */
-const std::string oglShaderFrag =
+const std::string wheatFrag =
 #include "ground_fragment.frag"
 ;
 
@@ -39,7 +39,7 @@ const std::string oglShaderFrag =
  * However, to work properly, the #include statement below MUST be on its
  * own separate line.
  */
-const std::string oglShaderVert =
+const std::string wheatVert =
 #include "ground_vertex.vert"
 ;
 
@@ -128,7 +128,7 @@ void GroundRenderer::buildShader() {
     
     
     // Allocate the shader (this binds as well)
-    _shader = Shader::alloc(SHADER(oglShaderVert), SHADER(oglShaderFrag));
+    _shader = Shader::alloc(SHADER(wheatVert), SHADER(wheatFrag));
     
 //    GLenum error = glGetError();
 //    if (error) {

@@ -205,10 +205,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     Application::get()->setClearColor(Color4(118,118,118,255));
     
     // Shaders
-    _groundrenderer = _groundrenderer->alloc(_assets, _cam.getCamera(), _map, _scale);
-    _groundrenderer->buildShader();
     _wheatrenderer = _wheatrenderer->alloc(_assets, _cam.getCamera(), _map, _scale);
-    _wheatrenderer->buildShader();
+    _wheatrenderer->buildShaders();
     return true;
 }
 
@@ -230,7 +228,6 @@ void GameScene::dispose() {
         _complete = false;
         _debug = false;
         _map = nullptr;
-        _groundrenderer->dispose();
         _wheatrenderer->dispose();
         Scene2::dispose();
     }
@@ -305,9 +302,8 @@ void GameScene::preUpdate(float dt) {
             _cam.setPosition(_initCamera);
 
             _loadnode->setVisible(false);
-            
-            _groundrenderer->buildShader();
-            _wheatrenderer->buildShader();
+
+            _wheatrenderer->buildShaders();
         } else {
             // Level is not loaded yet; refuse input
             return;
@@ -395,7 +391,6 @@ void GameScene::fixedUpdate(float step) {
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
-    _groundrenderer->update(step);
     _wheatrenderer->update(step);
 }
 
@@ -520,15 +515,10 @@ Size GameScene::computeActiveSize() const {
     return dimen;
 }
 
-
-void GameScene::renderWheatShader() {
-    // OpenGL commands to enable alpha blending (if needed)
-    _wheatrenderer->render();
-}
-
-void GameScene::renderGroundShader() {
-    // OpenGL commands to enable alpha blending (if needed)
-    _groundrenderer->render();
+void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
+    _wheatrenderer->renderGround();
+    Scene2::render(batch);
+    _wheatrenderer->renderWheat();
 }
 
 

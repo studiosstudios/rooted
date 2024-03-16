@@ -27,7 +27,7 @@ using namespace cugl;
  * However, to work properly, the #include statement below MUST be on its
  * own separate line.
  */
-const std::string oglShaderFrag =
+const std::string wheatFrag =
 #include "wheat_fragment.frag"
 ;
 
@@ -39,8 +39,32 @@ const std::string oglShaderFrag =
  * However, to work properly, the #include statement below MUST be on its
  * own separate line.
  */
-const std::string oglShaderVert =
+const std::string wheatVert =
 #include "wheat_vertex.vert"
+;
+
+/**
+ * Default fragment shader
+ *
+ * This trick uses C++11 raw string literals to put the shader in a separate
+ * file without having to guarantee its presence in the asset directory.
+ * However, to work properly, the #include statement below MUST be on its
+ * own separate line.
+ */
+const std::string groundFrag =
+#include "ground_fragment.frag"
+;
+
+/**
+ * Default vertex shader
+ *
+ * This trick uses C++11 raw string literals to put the shader in a separate
+ * file without having to guarantee its presence in the asset directory.
+ * However, to work properly, the #include statement below MUST be on its
+ * own separate line.
+ */
+const std::string groundVert =
+#include "ground_vertex.vert"
 ;
 
 
@@ -77,31 +101,43 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, cons
 }
 
 void WheatRenderer::dispose() {
-    _shader = nullptr;
+    _wheatShader = nullptr;
+    _groundShader = nullptr;
     _vertbuff = nullptr;
 }
 
 void WheatRenderer::update(float timestep) {
-    if (_shader) {
-        _shader->bind();
-        _totalTime += timestep;
-        if (_totalTime >= 30.0) {
-            _totalTime = 0;
-        }
-        _shader->setUniform1f("TIME", _totalTime);
-        _shader->setUniformMat4("uPerspective", _cam->getCombined());
-        _shader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX()/_scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight()/2)/_scale * 16/9);
-        _shader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
-        _shader->unbind();
+
+    _totalTime += timestep;
+    if (_totalTime >= 30.0) {
+        _totalTime = 0;
+    }
+
+    if (_wheatShader) {
+        _wheatShader->bind();
+        _wheatShader->setUniform1f("TIME", _totalTime);
+        _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
+        _wheatShader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX() / _scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight() / 2) / _scale * 16 / 9);
+        _wheatShader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
+        _wheatShader->unbind();
+    }
+
+    if (_groundShader) {
+        _groundShader->bind();
+        _groundShader->setUniform1f("TIME", _totalTime);
+        _groundShader->setUniformMat4("uPerspective", _cam->getCombined());
+        _groundShader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX() / _scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight() / 2) / _scale * 16 / 9);
+        _groundShader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
+        _groundShader->unbind();
     }
 }
 
-void WheatRenderer::render() {
+void WheatRenderer::renderWheat() {
     // OpenGL commands to enable alpha blending (if needed)
 //    _shader->bind();
     
-    if (_shader) {
-        _vertbuff->attach(_shader);
+    if (_wheatShader) {
+        _vertbuff->attach(_wheatShader);
         
         // Draw with the given textures (if it exists)
         for (auto texture : _textures) {
@@ -109,7 +145,7 @@ void WheatRenderer::render() {
                 texture->bind();
             }
         }
-        
+
         _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
         
         for (auto texture : _textures) {
@@ -121,14 +157,46 @@ void WheatRenderer::render() {
     }
 }
 
-void WheatRenderer::buildShader() {
+void WheatRenderer::renderGround() {
+    // OpenGL commands to enable alpha blending (if needed)
+//    _shader->bind();
+
+    if (_wheatShader) {
+        _vertbuff->attach(_groundShader);
+
+        // Draw with the given textures (if it exists)
+//        for (auto texture : _textures) {
+//            if (texture) {
+//                texture->bind();
+//            }
+//        }
+        _grasstex->bind();
+        _cloudtex->bind();
+        _noisetex->bind();
+
+        _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
+
+//        for (auto texture : _textures) {
+//            if (texture) {
+//                texture->unbind();
+//            }
+//        }
+
+        _grasstex->unbind();
+        _cloudtex->unbind();
+        _noisetex->unbind();
+        _vertbuff->detach();
+    }
+}
+
+void WheatRenderer::buildShaders() {
 
     
     CULog("scale: %f \t size: (%f, %f)", _scale, _size.width, _size.height);
     
     
     // Allocate the shader (this binds as well)
-    _shader = Shader::alloc(SHADER(oglShaderVert), SHADER(oglShaderFrag));
+    _wheatShader = Shader::alloc(SHADER(wheatVert), SHADER(wheatFrag));
     
 //    GLenum error = glGetError();
 //    if (error) {
@@ -136,13 +204,34 @@ void WheatRenderer::buildShader() {
 //    }
     
     // Attach the camera to the shader
-    _shader->setUniformMat4("uPerspective",_cam->getCombined());
+    _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
     
-    _shader->setSampler("grass_tex", _grasstex);
-    _shader->setSampler("cloud_tex", _cloudtex);
-    _shader->setSampler("noise_tex", _noisetex);
-    _shader->setSampler("gradient_tex", _gradienttex);
-    _shader->setSampler("wheat_details_tex", _wheatdetails);
+    _wheatShader->setSampler("grass_tex", _grasstex);
+    _wheatShader->setSampler("cloud_tex", _cloudtex);
+    _wheatShader->setSampler("noise_tex", _noisetex);
+    _wheatShader->setSampler("gradient_tex", _gradienttex);
+    _wheatShader->setSampler("wheat_details_tex", _wheatdetails);
+    _wheatShader->setUniform1f("TIME", _totalTime);
+    _wheatShader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
+    _wheatShader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
+    _wheatShader->setUniform1f("wind_speed", 1.0);
+    _wheatShader->setUniform1f("cloud_speed", 0.05);
+    _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
+    _wheatShader->setUniform2f("noise_tex_size", 50.0, 1.0);
+    _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _grasstex->getWidth(), 1.0 / _grasstex->getHeight());
+
+    _groundShader = Shader::alloc(SHADER(groundVert), SHADER(groundFrag));
+
+    _groundShader->setUniformMat4("uPerspective",_cam->getCombined());
+    _groundShader->setSampler("cloud_tex", _cloudtex);
+    _groundShader->setSampler("noise_tex", _noisetex);
+    _groundShader->setSampler("grass_tex", _grasstex);
+    _groundShader->setUniform1f("TIME", _totalTime);
+    _groundShader->setUniform1f("cloud_speed", 0.05);
+    _groundShader->setUniform2f("wind_direction", 1.0, 1.0);
+    _groundShader->setUniform2f("noise_tex_size", 50.0, 1.0);
+    _groundShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_grasstex->getWidth(),1.0/_grasstex->getHeight());
+
 
     // Allocate the vertex buffer (this binds as well)
     _vertbuff = VertexBuffer::alloc(sizeof(SpriteVertex2));
@@ -154,7 +243,7 @@ void WheatRenderer::buildShader() {
                               offsetof(cugl::SpriteVertex2,texcoord));
     
     // Attach the shader
-    _vertbuff->attach(_shader);
+    _vertbuff->attach(_wheatShader);
     
     // Cover the entire screen with a rectangle
     SpriteVertex2 vert;
@@ -178,15 +267,6 @@ void WheatRenderer::buildShader() {
     _mesh.indices = {0, 1, 2, 0, 1, 2, 3}; // Two? triangles to cover the rectangle
 
     _mesh.command = GL_TRIANGLES;
-    
-    _shader->setUniform1f("TIME", _totalTime);
-    _shader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
-    _shader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
-    _shader->setUniform1f("wind_speed", 1.0);
-    _shader->setUniform1f("cloud_speed", 0.05);
-    _shader->setUniform2f("wind_direction", 1.0, 1.0);
-    _shader->setUniform2f("noise_tex_size", 50.0, 1.0);
-    _shader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_grasstex->getWidth(),1.0/_grasstex->getHeight());
     
     // IMPORTANT LAST STEP: Load the mesh into the vertex buffer
     // We only need to reload it if the vertex data changes (which is never)

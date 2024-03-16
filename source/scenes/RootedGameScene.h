@@ -86,8 +86,6 @@ protected:
     
     std::shared_ptr<WheatRenderer> _wheatrenderer;
     
-    std::shared_ptr<GroundRenderer> _groundrenderer;
-    
     
 
 
@@ -295,15 +293,8 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
-    
-//    void renderShader();
-    
-    void buildShader();
-    
-    void renderWheatShader();
-    
-    void renderGroundShader();
 
+    void render(const std::shared_ptr<SpriteBatch> &batch);
 };
 
 #endif /* RootedGameScene_h */

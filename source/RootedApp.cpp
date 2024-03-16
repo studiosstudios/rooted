@@ -231,9 +231,6 @@ void RootedApp::draw() {
     if (!_loaded) {
         _loading.render(_batch);
     } else {
-        _gameplay.renderGroundShader();
         _gameplay.render(_batch);
-        _gameplay.renderWheatShader();
-        
     }
 }

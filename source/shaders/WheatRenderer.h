@@ -27,11 +27,10 @@ protected:
     std::shared_ptr<Map> _map;
     
     float _scale;
-
-//    /** The OpenGL camera */
-//    std::shared_ptr<cugl::OrthographicCamera> _camera;
-    /** A shader to render our triangle */
-    std::shared_ptr<cugl::Shader> _shader;
+    /** A shader to render wheat */
+    std::shared_ptr<cugl::Shader> _wheatShader;
+    /** A shader to render the ground (i.e. shadows) */
+    std::shared_ptr<cugl::Shader> _groundShader;
     /** A vertex buffer to receive our triangle */
     std::shared_ptr<cugl::VertexBuffer> _vertbuff;
     /** The mesh for storing the drawing data */
@@ -89,7 +88,7 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    virtual void update(float timestep);
+    void update(float timestep);
     
     /**
      * The method called to draw the application to the screen.
@@ -100,14 +99,25 @@ public:
      * When overriding this method, you do not need to call the parent method
      * at all. The default implmentation does nothing.
      */
-    virtual void render();
+    void renderWheat();
+
+    /**
+     * The method called to draw the application to the screen.
+     *
+     * This is your core loop and should be replaced with your custom implementation.
+     * This method should OpenGL and related drawing calls.
+     *
+     * When overriding this method, you do not need to call the parent method
+     * at all. The default implmentation does nothing.
+     */
+    void renderGround();
     
     /**
      * Builds the graphics pipeline.
      *
-     * This initializes the shader and adds the triangle
+     * This initializes the shaders and adds the triangles
      */
-    void buildShader();
+    void buildShaders();
     
 };
 

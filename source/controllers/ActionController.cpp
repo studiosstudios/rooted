@@ -85,7 +85,7 @@ void ActionController::preUpdate(float dt) {
     networkQueuePositions();
     
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
-        std::cout<<"farmer did the rooting\n";
+//        std::cout<<"farmer did the rooting\n";
         _network->pushOutEvent(RootEvent::allocRootEvent());
         _map->getFarmers().at(0)->rootCarrot();
         _map->getCarrots().at(0)->gotRooted();
@@ -100,6 +100,7 @@ void ActionController::fixedUpdate(){
             processDashEvent(dashEvent);
         }
         if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
+//            std::cout<<"got a root event\n";
             processRootEvent(rootEvent);
         }
     }
@@ -129,7 +130,6 @@ void ActionController::postUpdate(float dt) {
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
 //        std::cout<<"capture status"<< c->isCaptured() << "\n";
         if(c->isCaptured()){
-            _network->pushOutEvent(DashEvent::allocDashEvent());
             c->setSensor(true);
             c->setX(_map->getFarmers().at(0)->getX()-0.5);
             c->setY(_map->getFarmers().at(0)->getY()-0.5);
@@ -145,13 +145,11 @@ void ActionController::networkQueuePositions() {
 }
 
 void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event){
-    std::cout<<"processing capture event\n";
     _map->getCarrots().at(0)->setSensor(true);
     _map->getCarrots().at(0)->gotCaptured();
 }
 
 void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event){
-    std::cout<<"processing rooting event\n";
     _map->getFarmers().at(0)->rootCarrot();
     _map->getCarrots().at(0)->gotRooted();
 }

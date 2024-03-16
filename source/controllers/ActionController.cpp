@@ -123,6 +123,7 @@ void ActionController::postUpdate(float dt) {
     }
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
         if(c->isCaptured()){
+            std::cout<<"sensor\n";
             c->setSensor(true);
 //            std::cout<<"carrot sensor set to true \n";
             c->setX(_map->getFarmers().at(0)->getX()-0.5);

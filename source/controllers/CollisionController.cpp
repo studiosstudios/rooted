@@ -37,7 +37,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-
+    
     // Twice to swap
     for (int i = 0; i < 2; i++) {
 
@@ -77,10 +77,16 @@ void CollisionController::beginContact(b2Contact* contact) {
             if(name2 == "carrot") {
                 Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
+//                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
                 if(farmer->isDashing() && !carrot->isSensor()){
                     _network->pushOutEvent(DashEvent::allocDashEvent());
                     carrot->gotCaptured();
                     farmer->grabCarrot();
+//                    std::shared_ptr<cugl::physics2::DistanceJoint> joint = std::make_shared<cugl::physics2::DistanceJoint>();
+//                    std::shared_ptr<physics2::Obstacle> ptr1(bd1);
+//                    std::shared_ptr<physics2::Obstacle> ptr2(bd2);
+//                    joint->initWithObstacles(ptr1, ptr2, Vec2(0,0), Vec2(0,0));
+//                    CULog("joint created");
                 }
             }
             if(name2 == "planting spot") {

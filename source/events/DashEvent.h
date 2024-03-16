@@ -19,6 +19,8 @@ protected:
     LWSerializer _serializer;
     LWDeserializer _deserializer;
     
+    std::string _uuid;
+    
 public:
     /**
     * This method is used by the NetEventController to create a new event of using a
@@ -29,7 +31,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocDashEvent();
+    static std::shared_ptr<NetEvent> allocDashEvent(std::string uuid);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -45,6 +47,10 @@ public:
      * useful parameters of this class.
      */
     void deserialize(const std::vector<std::byte>& data) override;
+    
+    /** Gets the uuid of carrot associated with the event. */
+    std::string getUUID() { return _uuid; }
+
 };
 
 #endif /* DashEvent_hpp */

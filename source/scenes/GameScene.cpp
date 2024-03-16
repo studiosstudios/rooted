@@ -167,12 +167,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         CULog("Failed to populate map");
         return false;
     }
-    
-    if (_network->isHost()) {
-        _map->acquireMapOwnership();
-    }
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-    _babies = _map->loadBabyEntities();
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
@@ -192,14 +186,14 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _complete = false;
     setDebug(false);
     
-    _ui.init(_uinode, _offset, CAMERA_ZOOM);
-    
-    _cam.init(_map->getCarrots().at(0), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
-    _cam.setZoom(CAMERA_ZOOM);
-    _initCamera = _cam.getCamera()->getPosition();
-    
     // Network world synchronization
     // Won't compile unless I make this variable with type NetWorld :/
+    if (_isHost) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+    
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
     if (!_network->isHost()) {
@@ -209,6 +203,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
     }
+    
+    // set the camera after all of the network is loaded
+    _ui.init(_uinode, _offset, CAMERA_ZOOM);
+    
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.setZoom(CAMERA_ZOOM);
+    _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
     Application::get()->setClearColor(Color4(142,114,78,255));
@@ -230,17 +231,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost) {
-    // TODO: set whether client or host
     _network = network;
     _isHost = isHost;
     
-    bool initSuccess = init(assets);
-    
-    if (initSuccess && isHost) {
-        switchPlayer();
-    }
-    
-    return initSuccess;
+    return init(assets);
 }
 
 /**

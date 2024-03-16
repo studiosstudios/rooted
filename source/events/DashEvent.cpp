@@ -18,10 +18,11 @@ std::shared_ptr<NetEvent> DashEvent::newEvent(){
     return std::make_shared<DashEvent>();
 }
 
-std::shared_ptr<NetEvent> DashEvent::allocDashEvent(){
+std::shared_ptr<NetEvent> DashEvent::allocDashEvent(std::string uuid){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<DashEvent>();
+    event->_uuid = uuid;
     return event;
 #pragma mark END SOLUTION
 }

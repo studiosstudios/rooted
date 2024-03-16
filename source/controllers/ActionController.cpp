@@ -36,7 +36,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
 void ActionController::preUpdate(float dt) {
     for (auto carrot : _map->getCarrots()) {
         carrot->setMovement(Vec2::ZERO);
-        if (!_map->isFarmerPlaying() && !carrot->isCaptured() && !carrot->isRooted()) {
+        if (_map->getCharacter()->getUUID() == carrot->getUUID() && !carrot->isCaptured() && !carrot->isRooted()) {
             if(carrot->dashTimer > 0){
                 carrot->dashTimer -= 1;
             }
@@ -53,11 +53,10 @@ void ActionController::preUpdate(float dt) {
     
     for (auto farmer : _map->getFarmers()) {
         farmer->setMovement(Vec2::ZERO);
-        if (_map->isFarmerPlaying()){
+        if (_map->getCharacter()->getUUID() == farmer->getUUID()){
             if(farmer->dashTimer > 0){
                 farmer->dashTimer -= 1;
             }
-            
             if(farmer->captureTime == 0){
                 farmer->setDash(false);
             }
@@ -88,7 +87,12 @@ void ActionController::preUpdate(float dt) {
 //        std::cout<<"farmer did the rooting\n";
         _network->pushOutEvent(RootEvent::allocRootEvent());
         _map->getFarmers().at(0)->rootCarrot();
-        _map->getCarrots().at(0)->gotRooted();
+        // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
+        for (auto carrot : _map->getCarrots()) {
+            if (carrot->isCaptured()) {
+                carrot->gotRooted();
+            }
+        }
     }
 }
 
@@ -145,8 +149,12 @@ void ActionController::networkQueuePositions() {
 }
 
 void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event){
-    _map->getCarrots().at(0)->setSensor(true);
-    _map->getCarrots().at(0)->gotCaptured();
+    for (auto carrot : _map->getCarrots()) {
+        if (carrot->getUUID() == event->getUUID()) {
+            carrot->setSensor(true);
+            carrot->gotCaptured();
+        }
+    }
 }
 
 void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event){

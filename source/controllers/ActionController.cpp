@@ -66,6 +66,7 @@ void ActionController::preUpdate(float dt) {
             if (_input->didDash() && !farmer->isHoldingCarrot()) {
                 farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
                 farmer->dashTimer=DASH_TIME;
+                farmer->captureTime=CAPTURE_TIME;
                 farmer->setDash(true);
             } else {
                 farmer->setMovement(_input->getMovement() * farmer ->getForce());
@@ -93,7 +94,7 @@ void ActionController::fixedUpdate(){
         auto e = _network->popInEvent();
         if(auto dashEvent = std::dynamic_pointer_cast<DashEvent>(e)){
             std::cout<<_network->getShortUID();
-            CULog("Received dash event");
+//            CULog("Received dash event");
             processDashEvent(dashEvent);
         }
     }

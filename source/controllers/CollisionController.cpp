@@ -75,13 +75,9 @@ void CollisionController::beginContact(b2Contact* contact) {
                 wheat->setOccupied(_map->isShowingPlayer());
             }
             if(name2 == "carrot") {
-                CULog("carrot-farmer collision");
                 Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-                std::cout<<carrot->isSensor()<<"\n";
                 if(farmer->isDashing() && !carrot->isSensor()){
-                    std::cout<<"uuid: "<<_network->getShortUID();
-                    std::cout<<"someone dashed\n";
                     _network->pushOutEvent(DashEvent::allocDashEvent());
                     carrot->gotCaptured();
                     farmer->grabCarrot();

@@ -2,7 +2,7 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#include "RootedGameScene.h"
+#include "GameScene.h"
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
@@ -126,24 +126,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         return false;
     }
 
-    _map = assets->get<Map>("map");
-    if (_map == nullptr) {
-        CULog("Failed to load map");
-        return false;
-    }
-
     _assets = assets;
-
-    // Create the world and attach the listeners.
-    std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
-    activateWorldCollisions(world);
-
-    // IMPORTANT: SCALING MUST BE UNIFORM
-    // This means that we cannot change the aspect ratio of the physics world
-    // Shift to center if a bad fit
-    _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
-             dimen.height / world->getBounds().getMaxY();
-    _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
     
     _rootnode = scene2::SceneNode::alloc();
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -171,38 +154,87 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
-    _loadnode = scene2::Label::allocWithText(RESET_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _loadnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _loadnode->setPosition(dimen / 2.0f);
-    _loadnode->setForeground(RESET_COLOR);
-    _loadnode->setVisible(false);
-
     addChild(_rootnode);
     addChild(_uinode);
     addChild(_winnode);
-    addChild(_loadnode);
     addChild(_losenode);
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
-    _map->setAssets(_assets);
-    _map->setRootNode(_rootnode); // Obtains ownership of root.
+    
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("map")); // Obtains ownership of root.
+    
+    if (!_map->populate()) {
+        CULog("Failed to populate map");
+        return false;
+    }
+
+    // Create the world and attach the listeners.
+    std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
+    activateWorldCollisions(world);
+
+    // IMPORTANT: SCALING MUST BE UNIFORM
+    // This means that we cannot change the aspect ratio of the physics world
+    // Shift to center if a bad fit
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
+             dimen.height / world->getBounds().getMaxY();
+    _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
     _input = InputController::alloc(getBounds());
-    _collision.init(_map);
-    _action.init(_map, _input);
+    _collision.init(_map, _network);
+    _action.init(_map, _input, _network);
     _active = true;
     _complete = false;
     setDebug(false);
     
+    // Network world synchronization
+    // Won't compile unless I make this variable with type NetWorld :/
+    if (_isHost) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+    
+    std::shared_ptr<NetWorld> w = _map->getWorld();
+    _network->enablePhysics(w);
+    if (!_network->isHost()) {
+        _network->getPhysController()->acquireObs(_character, 0);
+    } else {
+        for (auto baby : _babies) {
+            _network->getPhysController()->acquireObs(baby, 0);
+        }
+    }
+    
+    // set the camera after all of the network is loaded
     _ui.init(_uinode, _offset, CAMERA_ZOOM);
     
-    _cam.init(_map->getCarrots().at(0), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
     _cam.setZoom(CAMERA_ZOOM);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
     Application::get()->setClearColor(Color4(142,114,78,255));
     return true;
+}
+
+/**
+ * Initializes the controller contents, and starts the game
+ *
+ * The constructor does not allocate any objects or memory.  This allows
+ * us to have a non-pointer reference to this controller, reducing our
+ * memory allocation.  Instead, allocation happens in this method.
+ *
+ * The game world is scaled so that the screen coordinates do not agree
+ * with the Box2d coordinates.  This initializer uses the default scale.
+ *
+ * @param assets    The (loaded) assets for this game mode
+ *
+ * @return true if the controller is initialized properly, false otherwise.
+ */
+bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost) {
+    _network = network;
+    _isHost = isHost;
+    
+    return init(assets);
 }
 
 /**
@@ -213,7 +245,6 @@ void GameScene::dispose() {
         _input = nullptr;
         _rootnode = nullptr;
         _winnode = nullptr;
-        _loadnode = nullptr;
         _uinode = nullptr;
         _winnode = nullptr;
         _losenode = nullptr;
@@ -223,8 +254,17 @@ void GameScene::dispose() {
         _complete = false;
         _debug = false;
         _map = nullptr;
+        _character = nullptr;
+        unload();
         Scene2::dispose();
     }
+}
+
+void GameScene::unload() {
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        (*it) = nullptr;
+    }
+    _babies.clear();
 }
 
 
@@ -237,13 +277,35 @@ void GameScene::dispose() {
  * This method disposes of the world and creates a new one.
  */
 void GameScene::reset() {
-    // Unload the level but keep in memory temporarily
-    _assets->unload<Map>("map");
-
     // Load a new level
-    _loadnode->setVisible(true);
-    _assets->load<Map>("map", "json/map.json");
+    _map->clearRootNode();
+    _map->setRootNode(_rootnode);
+    _map->dispose();
+    _map->populate();
+
+    _collision.dispose();
+    _action.dispose();
+
+    activateWorldCollisions(_map->getWorld());
+
+    _collision.init(_map, _network);
+    _action.init(_map, _input, _network);
+
+    _cam.setPosition(_initCamera);
+    _cam.setTarget(_map->getCarrots().at(0));
+
     setComplete(false);
+}
+
+void GameScene::switchPlayer() {
+    _map->togglePlayer();
+    _map->clearRustling();
+    if(_map->isFarmerPlaying()){
+        _cam.setTarget(_map->getFarmers().at(0));
+    }
+    else{
+        _cam.setTarget(_map->getCarrots().at(0));
+    }
 }
 
 #pragma mark -
@@ -272,34 +334,6 @@ void GameScene::reset() {
 void GameScene::preUpdate(float dt) {
     if (_map == nullptr) {
         return;
-    }
-
-    // Check to see if new level loaded yet
-    if (_loadnode->isVisible()) {
-        if (_assets->complete()) {
-
-            _collision.dispose();
-            _action.dispose();
-            _map = nullptr;
-
-            // Access and initialize level
-            _map = _assets->get<Map>("map");
-            _map->setAssets(_assets);
-            _map->setRootNode(_rootnode); // Obtains ownership of root.
-            _map->showDebug(_debug);
-
-            activateWorldCollisions(_map->getWorld());
-
-            _collision.init(_map);
-            _action.init(_map, _input);
-
-            _cam.setPosition(_initCamera);
-
-            _loadnode->setVisible(false);
-        } else {
-            // Level is not loaded yet; refuse input
-            return;
-        }
     }
 
     _input->update(dt);
@@ -334,14 +368,7 @@ void GameScene::preUpdate(float dt) {
     }
     
     if(_input->didSwitch()) {
-        _map->togglePlayer();
-        _map->clearRustling();
-        if(_map->isFarmerPlaying()){
-            _cam.setTarget(_map->getFarmers().at(0));
-        }
-        else{
-            _cam.setTarget(_map->getCarrots().at(0));
-        }
+        switchPlayer();
     }
 
     // Process the movement
@@ -380,9 +407,14 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    if (_network->isInAvailable()) {
+//        CULog("NetEvent in queue, discarding for now");
+    }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
+//    std::cout << _map->getCarrots().at(0)->getForce() << " " <<  _map->getCarrots().at(0)->getLinearVelocity().x << "," << _map->getCarrots().at(0)->getLinearVelocity().y << "\n";
+    _action.fixedUpdate();
 }
 
 /**
@@ -506,3 +538,5 @@ Size GameScene::computeActiveSize() const {
     }
     return dimen;
 }
+
+

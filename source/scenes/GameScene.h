@@ -2,8 +2,8 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#ifndef RootedGameScene_h
-#define RootedGameScene_h
+#ifndef GameScene_h
+#define GameScene_h
 
 #include <cugl/cugl.h>
 #include <box2d/b2_world_callbacks.h>
@@ -16,6 +16,7 @@
 #include "../controllers/ActionController.h"
 #include "../controllers/UIController.h"
 #include "../controllers/CameraController.h"
+#include "../controllers/NetworkController.h"
 #include "../objects/Map.h"
 
 /**
@@ -46,8 +47,6 @@ protected:
     // VIEW
     /** Reference to the physics root of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _rootnode;
-    /** Reference to the reset message label */
-    std::shared_ptr<cugl::scene2::Label> _loadnode;
     /** Reference to ui root of scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
     /** Reference to the win message label */
@@ -60,6 +59,9 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
     
     std::shared_ptr<cugl::scene2::PolygonNode> _debugjoynode;
+    
+    /** The network controller */
+    std::shared_ptr<NetworkController> _network;
 
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _scale;
@@ -68,6 +70,8 @@ protected:
 
     /** Reference to the map */
     std::shared_ptr<Map> _map;
+    std::shared_ptr<EntityModel> _character;
+    std::vector<std::shared_ptr<EntityModel>> _babies;
 
     /** Whether we have completed this "game" */
     bool _complete;
@@ -77,6 +81,8 @@ protected:
     bool _failed;
     /** Countdown active for winning or losing */
     int _countdown;
+    /** Host is by default a farmer (will need to change this later) */
+    bool _isHost;
 
     /** Initial camera position */
     Vec3 _initCamera;
@@ -93,6 +99,9 @@ protected:
      * ratios
      */
     cugl::Size computeActiveSize() const;
+    
+    /** Function made for switching players */
+    void switchPlayer();
 
 public:
 #pragma mark -
@@ -134,6 +143,23 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager> &assets);
+    
+    /**
+     * Initializes the controller contents, and starts the game
+     *
+     * The constructor does not allocate any objects or memory.  This allows
+     * us to have a non-pointer reference to this controller, reducing our
+     * memory allocation.  Instead, allocation happens in this method.
+     *
+     * The game world is scaled so that the screen coordinates do not agree
+     * with the Box2d coordinates.  This initializer uses the default scale.
+     *
+     * @param assets    The (loaded) assets for this game mode
+     *
+     * @return true if the controller is initialized properly, false otherwise.
+     */
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost);
+
 
 
 #pragma mark -
@@ -285,6 +311,9 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
+    
+    
+    void unload();
 
 };
 

@@ -2,7 +2,7 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#include "RootedLoadingScene.h"
+#include "LoadingScene.h"
 
 using namespace cugl;
 

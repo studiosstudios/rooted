@@ -76,6 +76,7 @@ _rustlePressed(false),
 _dashPressed(false),
 _showPlayerPressed(false),
 _switchPressed(false),
+_rootPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
@@ -171,6 +172,7 @@ void InputController::update(float dt) {
     _keyShowPlayer = keys->keyPressed(KeyCode::V);
     _keyDash   = keys->keyPressed(KeyCode::X);
     _keySwitch = keys->keyPressed(KeyCode::S);
+    _keyRoot   = keys->keyPressed(KeyCode::Z);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -200,6 +202,8 @@ void InputController::update(float dt) {
 
     _dashPressed  = (_keyDash && !_keyDashPressed);
     _keyDashPressed = _keyDash;
+    
+    _rootPressed = _keyRoot;
 
     // _movement is now updated directly in processJoystick
 
@@ -221,6 +225,7 @@ void InputController::clear() {
     _exitPressed  = false;
     _dashPressed  = false;
     _keyShowPlayer = false;
+    _rootPressed = false;
 }
 
 #pragma mark -
@@ -380,7 +385,8 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _rtouch.timestamp.mark();
                 _rtouch.touchids.insert(event.touch);
                 _keyDash = false;
-                _keySwitch = false;
+//                _keySwitch = false;
+                _keyRoot = false;
                 _keyShowPlayer = false;
             }
             break;
@@ -424,7 +430,8 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _joystick = false;
     } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         _keyDash = false;
-        _keySwitch = false;
+//        _keySwitch = false;
+        _keyRoot = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
     } else if (zone == Zone::MAIN) {
@@ -455,7 +462,8 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
                 _keyDash = true;
             }
             else if ((pos.y-_rtouch.position.y) > SWITCH_SWIPE_LENGTH) {
-                _keySwitch = true;
+//                _keySwitch = true;
+                _keyRoot = true;
                 _rtouch.position = pos;
             }
             else if ((pos.x-_rtouch.position.x) > SWITCH_SWIPE_LENGTH) {

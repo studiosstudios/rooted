@@ -5,13 +5,18 @@
 #ifndef ROOTED_MAP_H
 #define ROOTED_MAP_H
 
+#include <cugl/cugl.h>
+
 #include "BabyCarrot.h"
 #include "Carrot.h"
 #include "Farmer.h"
 #include "Wheat.h"
+#include "PlantingSpot.h"
 
-class Map : public Asset {
+class Map {
 private:
+    /** reference to this game's player's active EntityModel */
+    std::shared_ptr<EntityModel> _character;
     /** references to the baby carrots */
     std::vector<std::shared_ptr<BabyCarrot>> _babies;
     /** references to the carrots */
@@ -20,10 +25,12 @@ private:
     std::vector<std::shared_ptr<Farmer>> _farmers;
     /** references to the wheat */
     std::vector<std::shared_ptr<Wheat>> _wheat;
+    /** references to the planting spots */
+    std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the walls */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
-    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    std::shared_ptr<cugl::physics2::net::NetWorld> _world;
     /** The root node of this level */
     std::shared_ptr<scene2::SceneNode> _root;
     /** The bounds of this level in physics coordinates */
@@ -32,6 +39,8 @@ private:
     Vec2 _gravity;
     /** The scale between the physics world and the screen */
     Vec2 _scale;
+    /** Reference to map json */
+    std::shared_ptr<JsonValue> _json;
     /** The AssetManager for the game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** Reference to the physics root of the scene graph */
@@ -52,19 +61,6 @@ public:
     virtual ~Map(void);
 
     /**
-     * Creates a new Map with no source file.
-     *
-     * The source file can be set at any time via the setFile() method. This method
-     * does NOT load the asset.  You must call the load() method to do that.
-     *
-     * @return  an autoreleased level file
-     */
-    static std::shared_ptr<Map> alloc() {
-        std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init("") ? result : nullptr);
-    }
-
-    /**
      * Creates a new Map with the given source file.
      *
      * This method does NOT load the level. You must call the load() method to do that.
@@ -72,10 +68,18 @@ public:
      *
      * @return  an autoreleased level file
      */
-    static std::shared_ptr<Map> alloc(std::string file) {
+    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets,
+                                      const std::shared_ptr<scene2::SceneNode> &root,
+                                      const std::shared_ptr<cugl::JsonValue> &json) {
         std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init(file) ? result : nullptr);
+        return (result->init(assets, root, json) ? result : nullptr);
     }
+
+    bool init(const std::shared_ptr<AssetManager> &assets,
+              const std::shared_ptr<scene2::SceneNode> &root,
+              const std::shared_ptr<cugl::JsonValue> &json);
+
+    bool populate();
 
 
 #pragma mark -
@@ -97,7 +101,7 @@ public:
      * @retain the wall
      * @return true if the crate was successfully loaded
      */
-    bool loadWall(const std::shared_ptr<JsonValue>& json);
+    bool loadWall(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single farmer
@@ -110,7 +114,7 @@ public:
      * @retain the farmer
      * @return true if the crate was successfully loaded
      */
-    bool loadFarmer(const std::shared_ptr<JsonValue>& json);
+    bool loadFarmer(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single carrot
@@ -123,7 +127,7 @@ public:
      * @retain the carrot
      * @return true if the carrot was successfully loaded
      */
-    bool loadCarrot(const std::shared_ptr<JsonValue>& json);
+    bool loadCarrot(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single baby carrot
@@ -136,7 +140,7 @@ public:
      * @retain the baby carrot
      * @return true if the baby carrot was successfully loaded
      */
-    bool loadBabyCarrot(const std::shared_ptr<JsonValue>& json);
+    bool loadBabyCarrot(const std::shared_ptr<JsonValue> &json);
 
     /**
      * Loads a single wheat
@@ -146,11 +150,24 @@ public:
      *
      * @param  reader   a JSON reader with cursor ready to read the wheat
      *
-     * @retain the baby carrot
-     * @return true if the baby carrot was successfully loaded
+     * @retain the wheat
+     * @return true if the wheat was successfully loaded
      */
-    bool loadWheat(const std::shared_ptr<JsonValue>& json);
+    bool loadWheat(const std::shared_ptr<JsonValue> &json);
 
+    /**
+     * Loads a single planting spot
+     *
+     * The wheat will be retained and stored in the vector _wheat.  If the
+     * wheat fails to load, then it will not be added to _wheat.
+     *
+     * @param  reader   a JSON reader with cursor ready to read the wheat
+     *
+     * @retain the planting spot
+     * @return true if the planting spot was successfully loaded
+     */
+    bool loadPlantingSpot(const std::shared_ptr<JsonValue> &json);
+    
     /**
      * Adds the physics object to the physics world and loosely couples it to the scene graph
      *
@@ -249,65 +266,50 @@ public:
 #pragma mark Asset Loading
 
     /**
-     * Loads this game level from the source file
-     *
-     * This load method should NEVER access the AssetManager.  Assets are loaded in
-     * parallel, not in sequence.  If an asset (like a game level) has references to
-     * other assets, then these should be connected later, during scene initialization.
-     *
-     * @param file the name of the source file to load from
-     *
-     * @return true if successfully loaded the asset from a file
-     */
-    virtual bool preload(const std::string file) override;
-
-
-    /**
-     * Loads this game level from a JsonValue containing all data from a source Json file.
-     *
-     * This load method should NEVER access the AssetManager.  Assets are loaded in
-     * parallel, not in sequence.  If an asset (like a game level) has references to
-     * other assets, then these should be connected later, during scene initialization.
-     *
-     * @param json the json loaded from the source file to use when loading this game level
-     *
-     * @return true if successfully loaded the asset from the input JsonValue
-     */
-    virtual bool preload(const std::shared_ptr<cugl::JsonValue> &json) override;
-
-    /**
      * Unloads this game level, releasing all sources
      *
      * This load method should NEVER access the AssetManager.  Assets are loaded and
      * unloaded in parallel, not in sequence.  If an asset (like a game level) has
      * references to other assets, then these should be disconnected earlier.
      */
-    void unload();
+    void dispose();
 
+    /**
+     * Loads the players as a bunny farmer or carrot depending on whether they are the host or not.
+     */
+    std::shared_ptr<EntityModel> loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID);
+    
+    std::vector<std::shared_ptr<EntityModel>> loadBabyEntities();
+    
+    void acquireMapOwnership();
 
 #pragma mark -
 #pragma mark Getters and Setters
 
-    std::vector<std::shared_ptr<BabyCarrot>>& getBabyCarrots() { return _babies; }
+    std::vector<std::shared_ptr<BabyCarrot>> &getBabyCarrots() { return _babies; }
 
-    std::vector<std::shared_ptr<Carrot>>& getCarrots() { return _carrots; }
-
-    std::vector<std::shared_ptr<Farmer>>& getFarmers() { return _farmers; }
-
-    std::vector<std::shared_ptr<Wheat>>& getWheat() { return _wheat; }
-
-    std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
+    std::vector<std::shared_ptr<Carrot>> &getCarrots() { return _carrots; }
     
+    std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
+    
+    std::shared_ptr<EntityModel> &getCharacter() { return _character; }
+
+    std::vector<std::shared_ptr<Wheat>> &getWheat() { return _wheat; }
+    
+    std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
+
+    std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
+        
     bool isFarmerPlaying() { return _farmerPlaying; }
-    
+
     bool isShowingPlayer() { return _showPlayer; }
 
     void rustleWheats(float amount);
-    
+
     void clearRustling();
 
     void togglePlayer();
-    
+
     void toggleShowPlayer();
 };
 

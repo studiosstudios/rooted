@@ -13,6 +13,8 @@
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
 #include "../objects/Map.h"
+#include "NetworkController.h"
+#include "../events/DashEvent.h"
 
 
 class CollisionController {
@@ -20,6 +22,8 @@ protected:
 //  MARK: - Properties
     /** reference to the map */
     std::shared_ptr<Map> _map;
+    /** The network controller */
+    std::shared_ptr<NetworkController> _network;
 
 public:
 
@@ -43,7 +47,7 @@ public:
     /**
      * Initializes a Collision Controller
      */
-    bool init(std::shared_ptr<Map> &map);
+    bool init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network);
 
 
 //  MARK: - Callbacks

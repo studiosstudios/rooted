@@ -167,7 +167,7 @@ void RootedApp::preUpdate(float dt) {
         _loading.update(0.01f);
     } else if (_status == LOAD) {
         // I don't think this is how I should do it but if it works for now it works.
-        _network = NetworkController::alloc(NetEventController::alloc(_assets));
+        _network = NetworkController::alloc(_assets);
         _loading.dispose(); // Disables the input listeners in this mode
         _mainmenu.init(_assets);
         _mainmenu.setActive(true);
@@ -191,6 +191,9 @@ void RootedApp::preUpdate(float dt) {
             _mainmenu.setActive(true);
         }
         _gameplay.preUpdate(dt);
+    }
+    if(_network){
+        _network->updateNet();
     }
 }
 
@@ -221,9 +224,6 @@ void RootedApp::fixedUpdate() {
 //    _gameplay.fixedUpdate(time);
     if (_status == GAME) {
         _gameplay.fixedUpdate(time);
-    }
-    if(_network){
-        _network->_network->updateNet();
     }
 }
 
@@ -301,17 +301,17 @@ void RootedApp::updateHostScene(float timestep) {
         _hostgame.setActive(false);
         _mainmenu.setActive(true);
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->_network->getShortUID()) {
+    else if (_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->getShortUID()) {
         _gameplay.init(_assets, _network, true);
-        _network->_network->markReady();
+        _network->markReady();
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::INGAME) {
+    else if (_network->getStatus() == NetEventController::Status::INGAME) {
         _hostgame.setActive(false);
         _gameplay.setActive(true);
         _status = GAME;
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::NETERROR) {
-        _network->_network->disconnect();
+    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
+        _network->disconnect();
         _hostgame.setActive(false);
         _mainmenu.setActive(true);
         _gameplay.dispose();
@@ -334,17 +334,17 @@ void RootedApp::updateClientScene(float timestep) {
         _joingame.setActive(false);
         _mainmenu.setActive(true);
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->_network->getShortUID()) {
+    else if (_network->getStatus() == NetEventController::Status::HANDSHAKE && _network->getShortUID()) {
         _gameplay.init(_assets, _network, false);
-        _network->_network->markReady();
+        _network->markReady();
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::INGAME) {
+    else if (_network->getStatus() == NetEventController::Status::INGAME) {
         _joingame.setActive(false);
         _gameplay.setActive(true);
         _status = GAME;
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::NETERROR) {
-        _network->_network->disconnect();
+    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
+        _network->disconnect();
         _joingame.setActive(false);
         _mainmenu.setActive(true);
         _gameplay.dispose();

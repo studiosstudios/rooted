@@ -84,7 +84,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
-            _network->_network->disconnect();
+            _network->disconnect();
             _backClicked = true;
         }
     });
@@ -92,6 +92,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _startgame->addListener([=](const std::string& name, bool down) {
         if (down) {
             // This will call the _gameid listener
+            _gameid->requestFocus();
             _gameid->releaseFocus();
         }
     });
@@ -100,7 +101,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _gameid->addExitListener([this](const std::string& name, const std::string& value) {
     // call the network controller to connect as a client (Remember to convert the string from decimal to hex)
         if (!value.empty()) {
-            _network->_network->connectAsClient(dec2hex(value));
+            _network->connectAsClient(dec2hex(value));
         }
     });
 
@@ -155,7 +156,6 @@ void ClientScene::setActive(bool value) {
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
-            
         }
     }
 }
@@ -185,8 +185,11 @@ void ClientScene::updateText(const std::shared_ptr<scene2::Button>& button, cons
 void ClientScene::update(float timestep) {
     // Do this last for button safety
     configureStartButton();
-    if(_network->_network->getStatus() == NetEventController::Status::CONNECTED || _network->_network->getStatus() == NetEventController::Status::HANDSHAKE){
-        _player->setText(std::to_string(_network->_network->getNumPlayers()));
+    if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
+        _player->setText(std::to_string(_network->getNumPlayers()));
+    }
+    else {
+        _player->setText("...");
     }
 }
 
@@ -197,17 +200,17 @@ void ClientScene::update(float timestep) {
  * networking.
  */
 void ClientScene::configureStartButton() {
-    if (_network->_network->getStatus() == NetEventController::Status::IDLE) {
+    if (_network->getStatus() == NetEventController::Status::IDLE) {
         _startgame->setDown(false);
         _startgame->activate();
         updateText(_startgame, "Start Game");
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::CONNECTING) {
+    else if (_network->getStatus() == NetEventController::Status::CONNECTING) {
         _startgame->setDown(false);
         _startgame->deactivate();
         updateText(_startgame, "Connecting");
     }
-    else if (_network->_network->getStatus() == NetEventController::Status::CONNECTED) {
+    else if (_network->getStatus() == NetEventController::Status::CONNECTED) {
         _startgame->setDown(false);
         _startgame->deactivate();
         updateText(_startgame, "Waiting");

@@ -136,8 +136,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     
-    _isHost = false;
-    
     // To be changed -CJ
 //    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
 //    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -182,15 +180,34 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
     _input = InputController::alloc(getBounds());
-    _collision.init(_map);
-    _action.init(_map, _input);
+    _collision.init(_map, _network);
+    _action.init(_map, _input, _network);
     _active = true;
     _complete = false;
     setDebug(false);
     
+    // Network world synchronization
+    // Won't compile unless I make this variable with type NetWorld :/
+    if (_isHost) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+    
+    std::shared_ptr<NetWorld> w = _map->getWorld();
+    _network->enablePhysics(w);
+    if (!_network->isHost()) {
+        _network->getPhysController()->acquireObs(_character, 0);
+    } else {
+        for (auto baby : _babies) {
+            _network->getPhysController()->acquireObs(baby, 0);
+        }
+    }
+    
+    // set the camera after all of the network is loaded
     _ui.init(_uinode, _offset, CAMERA_ZOOM);
     
-    _cam.init(_map->getCarrots().at(0), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
     _cam.setZoom(CAMERA_ZOOM);
     _initCamera = _cam.getCamera()->getPosition();
 
@@ -214,17 +231,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost) {
-    // TODO: set whether client or host
     _network = network;
     _isHost = isHost;
     
-    bool initSuccess = init(assets);
-    
-    if (initSuccess && isHost) {
-        switchPlayer();
-    }
-    
-    return initSuccess;
+    return init(assets);
 }
 
 /**
@@ -244,8 +254,17 @@ void GameScene::dispose() {
         _complete = false;
         _debug = false;
         _map = nullptr;
+        _character = nullptr;
+        unload();
         Scene2::dispose();
     }
+}
+
+void GameScene::unload() {
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        (*it) = nullptr;
+    }
+    _babies.clear();
 }
 
 
@@ -269,8 +288,8 @@ void GameScene::reset() {
 
     activateWorldCollisions(_map->getWorld());
 
-    _collision.init(_map);
-    _action.init(_map, _input);
+    _collision.init(_map, _network);
+    _action.init(_map, _input, _network);
 
     _cam.setPosition(_initCamera);
     _cam.setTarget(_map->getCarrots().at(0));
@@ -388,9 +407,14 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    if (_network->isInAvailable()) {
+//        CULog("NetEvent in queue, discarding for now");
+    }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
+//    std::cout << _map->getCarrots().at(0)->getForce() << " " <<  _map->getCarrots().at(0)->getLinearVelocity().x << "," << _map->getCarrots().at(0)->getLinearVelocity().y << "\n";
+    _action.fixedUpdate();
 }
 
 /**
@@ -514,3 +538,5 @@ Size GameScene::computeActiveSize() const {
     }
     return dimen;
 }
+
+

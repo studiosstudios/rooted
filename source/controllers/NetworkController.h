@@ -13,19 +13,22 @@
 using namespace cugl::physics2::net;
 using namespace cugl;
 
-class NetworkController {
-//    std::shared_ptr<NetEventController> _network;
+class NetworkController : public NetEventController {
 public:
-    std::shared_ptr<NetEventController> _network;
-    NetworkController();
+    NetworkController() {} ;
     ~NetworkController() { dispose(); }
     void dispose();
-    // This shouldn't be like this I think, probably better to just take in assets and make the NetEventController in here
-    bool init(std::shared_ptr<NetEventController> network);
-    static std::shared_ptr<NetworkController> alloc(std::shared_ptr<NetEventController> network) {
+
+    bool init(const std::shared_ptr<AssetManager>& assets);
+    
+    static std::shared_ptr<NetworkController> alloc(const std::shared_ptr<AssetManager>& assets) {
         std::shared_ptr<NetworkController> result = std::make_shared<NetworkController>();
-        return (result->init(network) ? result : nullptr);
+        return (result->init(assets) ? result : nullptr);
     }
+
+    std::shared_ptr<cugl::net::NetcodeConnection> getNetcode();
+    
+    std::vector<std::string> getOrderedPlayers();
 };
 
 #endif /* NetworkController_h */

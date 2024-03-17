@@ -88,10 +88,11 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_center_game_field_text"));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_center_players_field_text"));
-    
+        
     // Program the buttons
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
+            _network->disconnect();
             _backClicked = true;
         }
     });
@@ -137,15 +138,13 @@ void HostScene::dispose() {
 void HostScene::setActive(bool value) {
     if (isActive() != value) {
         Scene2::setActive(value);
-        
         /**
          * TODO: if value is true, you need to activate the _backout button, and set the clicked variable to false. You need to also call the network controller to start a connection as a host. If the value is false, and reset all buttons and textfields to their original state.
          */
-#pragma mark BEGIN SOLUTION
         if (value) {
             _backout->activate();
-            _network->_network->disconnect();
-            _network->_network->connectAsHost();
+            _network->disconnect();
+            _network->connectAsHost();
             _backClicked = false;
         } else {
             _gameid->setText("");
@@ -156,7 +155,6 @@ void HostScene::setActive(bool value) {
             _startgame->setDown(false);
             _backout->setDown(false);
         }
-#pragma mark END SOLUTION
     }
 }
 
@@ -178,8 +176,6 @@ void HostScene::updateText(const std::shared_ptr<scene2::Button>& button, const 
 
 }
 
-#pragma mark -
-#pragma mark Student Methods
 /**
  * The method called to update the scene.
  *
@@ -188,11 +184,7 @@ void HostScene::updateText(const std::shared_ptr<scene2::Button>& button, const 
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void HostScene::update(float timestep) {
-    /**
-     * TODO: check for the status of `_network` (The NetworkController). If it is CONNECTED, you would need to update the scene nodes so that _gameId displays the id of the room (converted from hex to decimal) and _player displays the number of players. Additionally, you should check whether the `_startgame` button has been pressed and update its text. If it is not pressed yet, then its should display "Start Game" and be activated, otherwise, it should be deactivated and show "Starting".
-     */
-#pragma mark BEGIN SOLUTION
-    if(_network->_network->getStatus() == NetEventController::Status::CONNECTED){
+    if(_network->getStatus() == NetEventController::Status::CONNECTED) {
         if (!_startGameClicked) {
             updateText(_startgame, "Start Game");
             _startgame->activate();
@@ -201,19 +193,18 @@ void HostScene::update(float timestep) {
             updateText(_startgame, "Starting");
             _startgame->deactivate();
         }
-        _gameid->setText(hex2dec(_network->_network->getRoomID()));
-        _player->setText(std::to_string(_network->_network->getNumPlayers()));
+        _gameid->setText(hex2dec(_network->getRoomID()));
+        _player->setText(std::to_string(_network->getNumPlayers()));
     }
-#pragma mark END SOLUTION
+    else if (_network->getStatus() == NetEventController::Status::CONNECTING) {
+        _gameid->setText("...");
+    }
 }
 
 /**
  * This method prompts the network controller to start the game.
  */
 void HostScene::startGame(){
-    //TODO: call the network controller to start the game and set the _startGameClicked to true.
-#pragma mark BEGIN SOLUTION
-    _network->_network->startGame();
+    _network->startGame();
     _startGameClicked = true;
-#pragma mark END SOLUTION
 }

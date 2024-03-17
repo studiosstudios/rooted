@@ -9,8 +9,9 @@
 
 using namespace cugl;
 
-bool CollisionController::init(std::shared_ptr<Map> &map) {
+bool CollisionController::init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network) {
     _map = map;
+    _network = network;
     return true;
 }
 
@@ -36,7 +37,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 
     physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
-
+    
     // Twice to swap
     for (int i = 0; i < 2; i++) {
 
@@ -44,16 +45,16 @@ void CollisionController::beginContact(b2Contact* contact) {
         std::string name2 = bd2->getName();
         
         if (name1 == "carrot") {
-            if (!_map->isFarmerPlaying()) {
-                if (name2 == "wheat") {
-                    Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                    wheat->rustle(bd1->getLinearVelocity().length());
-                    wheat->setOccupied(_map->isShowingPlayer());
-                }
-                
-                if (name2 == "baby") {
-                    Carrot* carrot = dynamic_cast<Carrot*>(bd1);
-                    BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+            if (name2 == "wheat") {
+                Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                wheat->rustle(bd1->getLinearVelocity().length());
+                wheat->setOccupied(_map->isShowingPlayer());
+                carrot->changeWheatContacts(1);
+            }
+            if (name2 == "baby") {
+                BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+                if(!(carrot->isCaptured() || carrot->isRooted())){
                     carrot->captureBabyCarrot();
                     b2babycarrot->gotCaptured();
                 }
@@ -68,24 +69,29 @@ void CollisionController::beginContact(b2Contact* contact) {
         }
         
         if (name1 == "farmer") {
-            if (_map->isFarmerPlaying()) {
-                if (name2 == "wheat") {
-                    Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                    wheat->rustle(bd1->getLinearVelocity().length());
-                    wheat->setOccupied(_map->isShowingPlayer());
+            Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+            if (name2 == "wheat") {
+                Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                wheat->rustle(bd1->getLinearVelocity().length());
+                wheat->setOccupied(_map->isShowingPlayer());
+                farmer->changeWheatContacts(1);
+            }
+            if(name2 == "carrot") {
+                Carrot* carrot = dynamic_cast<Carrot*>(bd2);
+//                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
+                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
+                    _network->pushOutEvent(DashEvent::allocDashEvent(carrot->getUUID()));
+                    carrot->gotCaptured();
+                    farmer->grabCarrot();
+//                    std::shared_ptr<cugl::physics2::DistanceJoint> joint = std::make_shared<cugl::physics2::DistanceJoint>();
+//                    std::shared_ptr<physics2::Obstacle> ptr1(bd1);
+//                    std::shared_ptr<physics2::Obstacle> ptr2(bd2);
+//                    joint->initWithObstacles(ptr1, ptr2, Vec2(0,0), Vec2(0,0));
+//                    CULog("joint created");
                 }
-                if(name2 == "carrot") {
-                    Farmer* farmer = dynamic_cast<Farmer*>(bd1);
-                    Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-                    if(farmer->isDashing() && !carrot->isSensor()){
-                        carrot->gotCaptured();
-                        farmer->grabCarrot();
-                    }
-                }
-                if(name2 == "planting spot") {
-                    Farmer* farmer = dynamic_cast<Farmer*>(bd1);
-                    farmer->setCanPlant(true);
-                }
+            }
+            if(name2 == "planting spot") {
+                farmer->setCanPlant(true);
             }
         }
 
@@ -127,41 +133,38 @@ void CollisionController::endContact(b2Contact* contact) {
     physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
 
     for (int i = 0; i < 2; i++) {
-        
         std::string name1 = bd1->getName();
         std::string name2 = bd2->getName();
         
         if (name1 == "carrot") {
-            if (!_map->isFarmerPlaying()) {
-                if (name2 == "wheat") {
-                    Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                    wheat->setOccupied(false);
-                }
-                
-                if (name2 == "baby") {
-                
-                }
+            if (name2 == "wheat") {
+                Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+                wheat->setOccupied(false);
+                carrot->changeWheatContacts(-1);
+            }
+            
+            if (name2 == "baby") {
+            
             }
         }
         
         if (name1 == "baby") {
-            if (!_map->isFarmerPlaying()) {
-                if (name2 == "wheat") {
-                }
+            if (name2 == "wheat") {
+                
             }
-            
         }
         
         if (name1 == "farmer") {
-            if (_map->isFarmerPlaying()) {
-                if (name2 == "wheat") {
-                    Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                    wheat->setOccupied(false);
-                }
-                if(name2 == "planting spot"){
-                    Farmer* farmer = dynamic_cast<Farmer*>(bd1);
-                    farmer->setCanPlant(false);
-                }
+            if (name2 == "wheat") {
+                Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+                wheat->setOccupied(false);
+                farmer->changeWheatContacts(-1);
+            }
+            if(name2 == "planting spot"){
+                Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+                farmer->setCanPlant(false);
             }
         }
         
@@ -202,6 +205,11 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         // Baby carrots don't collide with each other
         if (name1 == "baby" && name2 == "baby") {
             return false;
+        }
+        
+        if (name1 == "carrot" && name2 == "farmer") {
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+            return !carrot->isSensor();
         }
         
         // Swap everything

@@ -208,7 +208,7 @@ void EntityModel::update(float dt) {
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
-        if (isInWheat()) {
+        if (isInWheat() && ((int) _node->getPriority()) == VISIBLE_PRIORITY) {
             _node->setColor(Color4(255, 255, 255, 255.0/2));
         }
         else {

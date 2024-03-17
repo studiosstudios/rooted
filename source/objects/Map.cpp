@@ -351,7 +351,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     }
     
     _character = ret;
-    _character->getSceneNode()->setPriority(2);
+    _character->getSceneNode()->setPriority(VISIBLE_PRIORITY);
     
     return ret;
 }

@@ -55,7 +55,7 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define BABY_TEXTURE   "baby"
-
+#define VISIBLE_PRIORITY 2
 
 #pragma mark -
 #pragma mark Physics Constants

@@ -4,6 +4,7 @@
 
 #include "Map.h"
 #include "../objects/EntityModel.h"
+#include "NetworkController.h"
 
 // TODO: put all constants into JSON
 
@@ -30,6 +31,7 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 #pragma mark -
 #pragma mark Asset Constants
 # define WHEAT_TEXTURE  "wheat"
+# define PLANTING_SPOT_TEXTURE "planting spot"
 /** The key for the earth texture in the asset manager */
 #define EARTH_TEXTURE   "earth"
 /** The name of a wall (for object identification) */
@@ -39,6 +41,8 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 float CARROT_SIZE[2] = {1.0f, 1.0f}; //TODO: make json constants file
 
 float WHEAT_SIZE[2] = {1.0f, 1.0f};
+
+float PLANTING_SPOT_SIZE[2] = {3.0f, 3.0f};
 
 float FARMER_SIZE[2] = {1.0f, 1.0f};
 
@@ -139,7 +143,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
                _root->getContentSize().height / _bounds.size.height);
 
     // Create, but transfer ownership to root
-    _worldnode = scene2::SceneNode::alloc();
+    // needs to be an ordered node in order to reorder some elements
+    _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(Vec2::ZERO);
 
@@ -202,7 +207,7 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
 bool Map::populate() {
 
     /** Create the physics world */
-    _world = physics2::ObstacleWorld::alloc(getBounds(), Vec2(0, 0));
+    _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
 
     _farmerPlaying = false;
 
@@ -260,6 +265,17 @@ bool Map::populate() {
     } else {
         CUAssertLog(false, "Failed to load wheat");
     }
+    
+    auto plantingSpots = _json->get("plantingSpots");
+    if(plantingSpots != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int wsize = (int) plantingSpots->size();
+        for (int ii = 0; ii < wsize; ii++) {
+            loadPlantingSpot(plantingSpots->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load planting spots");
+    }
     return true;
 }
 
@@ -312,6 +328,63 @@ void Map::dispose() {
     }
 }
 
+std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
+    std::shared_ptr<EntityModel> ret;
+    bool isHost = hostUUID == thisUUID;
+    
+    auto carrot = _carrots.begin();
+    for (std::string uuid : players) {
+        if (uuid != hostUUID) {
+            (*carrot)->setUUID(uuid);
+            if (uuid == thisUUID) {
+                ret = (*carrot);
+                getWorld()->getOwnedObstacles().insert({*carrot, 0});
+            }
+            carrot++;
+        }
+    }
+    
+    _farmers.at(0)->setUUID(hostUUID);
+    ret = ret == nullptr ? _farmers.at(0) : ret;
+    if (isHost) {
+        getWorld()->getOwnedObstacles().insert({_farmers.at(0), 0});
+    }
+    
+    _character = ret;
+    _character->getSceneNode()->setPriority(2);
+    
+    return ret;
+}
+
+std::vector<std::shared_ptr<EntityModel>> Map::loadBabyEntities() {
+    std::vector<std::shared_ptr<EntityModel>> ret;
+    for ( auto baby : _babies) {
+        ret.push_back(baby);
+        getWorld()->getOwnedObstacles().insert({baby, 0});
+    }
+    return ret;
+}
+
+void Map::acquireMapOwnership() {
+    auto ownerMap = _world->getOwnedObstacles();
+    std::cout << "owned obstacles size: " << ownerMap.size();
+    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    std::cout << "owned obstacles size: " << _world->getOwnedObstacles().size();
+}
 
 #pragma mark -
 #pragma mark Individual Loaders
@@ -391,6 +464,7 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     carrot->setDebugColor(DEBUG_COLOR);
     carrot->setName("carrot");
+//    carrot->setEnabled(false);  Initially disabled
     _carrots.push_back(carrot);
 
     auto carrotNode = scene2::PolygonNode::allocWithTexture(
@@ -403,8 +477,8 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     _worldnode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
 
-    if (success) {
-        _world->addObstacle(carrot);
+    if (success) { //Do not immediately add, wait until we check network players
+        _world->initObstacle(carrot);
     }
 
     return success;
@@ -474,7 +548,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     baby->setDebugScene(_debugnode);
 
     if (success) {
-        _world->addObstacle(baby);
+        _world->initObstacle(baby);
     }
 
     return success;
@@ -490,7 +564,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
  * @param  reader   a JSON reader with cursor ready to read the farmer
  *
  * @retain the farmer
- * @return true if the crate was successfully loaded
+ * @return true if the farmer was successfully loaded
  */
 bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     bool success = true;
@@ -514,11 +588,39 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     _farmers.push_back(farmer);
 
     if (success) {
-        _world->addObstacle(farmer);
+        _world->initObstacle(farmer);
     }
 
     return success;
 
+}
+
+/**
+ * Loads a single planting spot
+ *
+ * The farmer will be retained and stored in the vector _plantingSpot.  If the
+ * farmer fails to load, then it will not be added to _plantingSpot.
+ *
+ * @param  reader   a JSON reader with cursor ready to read the planting spots
+ *
+ * @retain the planting spot
+ * @return true if the planting spot was successfully loaded
+ */
+bool Map::loadPlantingSpot(const std::shared_ptr<JsonValue> &json) {
+    bool success = true;
+    success = json->isArray();
+    Vec2 spotPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
+    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, PLANTING_SPOT_SIZE, _scale.x);
+    plantingSpot->setDebugColor(DEBUG_COLOR);
+    plantingSpot->setName("planting spot");
+    _plantingSpot.push_back(plantingSpot);
+
+    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
+    plantingSpot->setSceneNode(spotNode);
+    spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
+    addObstacle(plantingSpot, spotNode);
+
+    return success;
 }
 
 /**
@@ -534,7 +636,7 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
  */
 void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
                       const std::shared_ptr<cugl::scene2::SceneNode> &node) {
-    _world->addObstacle(obj);
+    _world->initObstacle(obj);
     obj->setDebugScene(_debugnode);
 
     // Position the scene graph node (enough for static objects)

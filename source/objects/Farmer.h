@@ -14,7 +14,13 @@ class Farmer : public EntityModel {
 
 private:
     bool _isHoldingCarrot;
+    bool _canPlant;
+    bool _dashWindow;
+    bool _isDashing; //used for farmer-carrot collision when farmer dashes
 
+public:
+    int captureTime;
+    
 public:
 
     Farmer() {};
@@ -27,13 +33,23 @@ public:
         std::shared_ptr<Farmer> result = std::make_shared<Farmer>();
         return (result->init(pos, size, scale) ? result : nullptr);
     }
-
+    
+    bool isDashing(){ return _isDashing; }
+    
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
     void grabCarrot();
 
     void rootCarrot();
 
+    bool canPlant() { return _canPlant; };
+    
+    void setCanPlant(bool plant) { _canPlant = plant; };
+    
+    /**
+     * Used to detect whether farmer collides with carrot while dashing.
+     */
+    void setDash(bool dash) {_isDashing = dash; }
 };
 
 

@@ -2,7 +2,7 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#include "RootedGameScene.h"
+#include "GameScene.h"
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
@@ -180,15 +180,34 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
     _input = InputController::alloc(getBounds());
-    _collision.init(_map);
-    _action.init(_map, _input);
+    _collision.init(_map, _network);
+    _action.init(_map, _input, _network);
     _active = true;
     _complete = false;
     setDebug(false);
     
+    // Network world synchronization
+    // Won't compile unless I make this variable with type NetWorld :/
+    if (_isHost) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+    
+    std::shared_ptr<NetWorld> w = _map->getWorld();
+    _network->enablePhysics(w);
+    if (!_network->isHost()) {
+        _network->getPhysController()->acquireObs(_character, 0);
+    } else {
+        for (auto baby : _babies) {
+            _network->getPhysController()->acquireObs(baby, 0);
+        }
+    }
+    
+    // set the camera after all of the network is loaded
     _ui.init(_uinode, _offset, CAMERA_ZOOM);
     
-    _cam.init(_map->getCarrots().at(0), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
     _cam.setZoom(CAMERA_ZOOM);
     _initCamera = _cam.getCamera()->getPosition();
 
@@ -200,6 +219,27 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _wheatrenderer = _wheatrenderer->alloc(_assets, _cam.getCamera(), _map, _scale);
     _wheatrenderer->buildShaders();
     return true;
+}
+
+/**
+ * Initializes the controller contents, and starts the game
+ *
+ * The constructor does not allocate any objects or memory.  This allows
+ * us to have a non-pointer reference to this controller, reducing our
+ * memory allocation.  Instead, allocation happens in this method.
+ *
+ * The game world is scaled so that the screen coordinates do not agree
+ * with the Box2d coordinates.  This initializer uses the default scale.
+ *
+ * @param assets    The (loaded) assets for this game mode
+ *
+ * @return true if the controller is initialized properly, false otherwise.
+ */
+bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::shared_ptr<NetworkController> network, bool isHost) {
+    _network = network;
+    _isHost = isHost;
+    
+    return init(assets);
 }
 
 /**
@@ -220,8 +260,17 @@ void GameScene::dispose() {
         _debug = false;
         _map = nullptr;
         _wheatrenderer->dispose();
+        _character = nullptr;
+        unload();
         Scene2::dispose();
     }
+}
+
+void GameScene::unload() {
+    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
+        (*it) = nullptr;
+    }
+    _babies.clear();
 }
 
 
@@ -245,13 +294,24 @@ void GameScene::reset() {
 
     activateWorldCollisions(_map->getWorld());
 
-    _collision.init(_map);
-    _action.init(_map, _input);
+    _collision.init(_map, _network);
+    _action.init(_map, _input, _network);
 
     _cam.setPosition(_initCamera);
     _cam.setTarget(_map->getCarrots().at(0));
 
     setComplete(false);
+}
+
+void GameScene::switchPlayer() {
+    _map->togglePlayer();
+    _map->clearRustling();
+    if(_map->isFarmerPlaying()){
+        _cam.setTarget(_map->getFarmers().at(0));
+    }
+    else{
+        _cam.setTarget(_map->getCarrots().at(0));
+    }
 }
 
 #pragma mark -
@@ -281,6 +341,7 @@ void GameScene::preUpdate(float dt) {
     if (_map == nullptr) {
         return;
     }
+
     _input->update(dt);
 
     // Process the toggled key commands
@@ -313,14 +374,7 @@ void GameScene::preUpdate(float dt) {
     }
     
     if(_input->didSwitch()) {
-        _map->togglePlayer();
-        _map->clearRustling();
-        if(_map->isFarmerPlaying()){
-            _cam.setTarget(_map->getFarmers().at(0));
-        }
-        else{
-            _cam.setTarget(_map->getCarrots().at(0));
-        }
+        switchPlayer();
     }
 
     // Process the movement
@@ -359,10 +413,15 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    if (_network->isInAvailable()) {
+//        CULog("NetEvent in queue, discarding for now");
+    }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
     _wheatrenderer->update(step);
+//    std::cout << _map->getCarrots().at(0)->getForce() << " " <<  _map->getCarrots().at(0)->getLinearVelocity().x << "," << _map->getCarrots().at(0)->getLinearVelocity().y << "\n";
+    _action.fixedUpdate();
 }
 
 /**
@@ -416,6 +475,7 @@ void GameScene::postUpdate(float remain) {
 */
 void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::ObstacleWorld> &world) {
     world->activateCollisionCallbacks(true);
+    world->activateFilterCallbacks(true);
     world->onBeginContact = [this](b2Contact *contact) {
         _collision.beginContact(contact);
     };
@@ -491,7 +551,4 @@ void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
     Scene2::render(batch);
     _wheatrenderer->renderWheat();
 }
-
-
-
 

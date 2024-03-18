@@ -2,8 +2,8 @@
 //  Created by Kimmy Lin on 2/23/24.
 //
 
-#ifndef RootedLoadingScene_h
-#define RootedLoadingScene_h
+#ifndef LoadingScene_h
+#define LoadingScene_h
 #include <cugl/cugl.h>
 
 #pragma mark -

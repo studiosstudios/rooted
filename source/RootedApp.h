@@ -6,27 +6,45 @@
 #define RootedApp_h
 
 #include <cugl/cugl.h>
-#include "scenes/RootedGameScene.h"
-#include "scenes/RootedLoadingScene.h"
+#include "scenes/GameScene.h"
+#include "scenes/LoadingScene.h"
+#include "scenes/MenuScene.h"
+#include "scenes/HostScene.h"
+#include "scenes/ClientScene.h"
+#include "controllers/NetworkController.h"
+
+using namespace cugl::physics2::net;
 
 class RootedApp : public cugl::Application{
+
+    enum Status {
+        LOAD,
+        MENU,
+        HOST,
+        CLIENT,
+        GAME
+    };
+    
 protected:
     /** The global sprite batch for drawing (only want one of these) */
     std::shared_ptr<cugl::SpriteBatch> _batch;
     /** The global asset manager */
     std::shared_ptr<cugl::AssetManager> _assets;
+    std::shared_ptr<NetworkController> _network;
     
     // Player modes
     /** The primary controller for the game world */
     GameScene _gameplay;
     /** The controller for the loading screen */
     LoadingScene _loading;
-
-    /** testing shader */
-    std::shared_ptr<cugl::Shader> _shader;
+    MenuScene _mainmenu;
+    HostScene _hostgame;
+    ClientScene _joingame;
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;
+    
+    Status _status;
     
 public:
 #pragma mark Constructors
@@ -187,6 +205,36 @@ public:
      * @param dt    The amount of time (in seconds) since the last frame
      */
     virtual void postUpdate(float dt) override;
+    
+    /**
+     * Inidividualized update method for the menu scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the menu scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateMenuScene(float timestep);
+    
+    /**
+     * Inidividualized update method for the host scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the host scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateHostScene(float timestep);
+
+    /**
+     * Inidividualized update method for the client scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the client scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateClientScene(float timestep);
     
     /**
      * The method called to draw the application to the screen.

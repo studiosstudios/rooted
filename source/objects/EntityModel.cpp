@@ -54,7 +54,8 @@
 /** The amount to shrink the body fixture (horizontally) relative to the image */
 #define DUDE_HSHRINK  0.7f
 /** The density of the character */
-#define DUDE_DENSITY    1.0f
+#define DUDE_DENSITY  1.0f
+#define DUDE_DASH      20.0f
 
 
 using namespace cugl;
@@ -176,13 +177,22 @@ void EntityModel::applyForce() {
         b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
         _body->ApplyForce(force,_body->GetPosition(),true);
     }
-
-    // Velocity too high, clamp it
-    if (getLinearVelocity().length() >= getMaxSpeed()) {
-        setLinearVelocity(getLinearVelocity().normalize() * getMaxSpeed());
+    else if(dashTimer > 0){
+        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * DUDE_DASH);
     }
-    b2Vec2 force(getMovement().x, getMovement().y);
-    _body->ApplyForce(force,_body->GetPosition(),true);
+    else{
+        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
+    }
+    // Velocity too high, clamp it
+//    
+//    if (getLinearVelocity().length() >= getMaxSpeed()) {
+//        setLinearVelocity(getLinearVelocity().normalize() * getMaxSpeed());
+//    }
+//    else{
+//        setLinearVelocity(getLinearVelocity());
+//    }
+//    b2Vec2 force(getMovement().x, getMovement().y);
+//    _body->ApplyForce(force,_body->GetPosition(),true);
 }
 
 /**
@@ -193,12 +203,17 @@ void EntityModel::applyForce() {
  * @param delta Number of seconds since last animation frame
  */
 void EntityModel::update(float dt) {
-
     BoxObstacle::update(dt);
     
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
+        if (isInWheat()) {
+            _node->setColor(Color4(255, 255, 255, 255.0/2));
+        }
+        else {
+            _node->setColor(Color4(255, 255, 255, 255));
+        }
     }
 }
 

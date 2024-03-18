@@ -92,6 +92,10 @@ protected:
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
+    std::string _uuid;
+    
+    int _wheatContacts;
+   
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
 	*
@@ -100,6 +104,9 @@ protected:
 	* the texture (e.g. a circular shape attached to a square texture).
 	*/
 	virtual void resetDebug() override;
+
+public:
+    int dashTimer;
 
 public:
     
@@ -375,6 +382,14 @@ public:
      * @return true if this character is facing right
      */
     bool isFacingRight() const { return _faceRight; }
+    
+    std::string getUUID() const { return _uuid; }
+    
+    void setUUID(std::string uuid) { _uuid = uuid; }
+            
+    bool isInWheat() const { return _wheatContacts > 0; }
+
+    void changeWheatContacts(int dx) { _wheatContacts += dx; }
 
     
 #pragma mark -
@@ -412,7 +427,6 @@ public:
      * This method should be called after the force attribute is set.
      */
     void applyForce();
-
 
 	
 };

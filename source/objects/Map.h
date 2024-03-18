@@ -5,13 +5,18 @@
 #ifndef ROOTED_MAP_H
 #define ROOTED_MAP_H
 
+#include <cugl/cugl.h>
+
 #include "BabyCarrot.h"
 #include "Carrot.h"
 #include "Farmer.h"
 #include "Wheat.h"
+#include "PlantingSpot.h"
 
 class Map {
 private:
+    /** reference to this game's player's active EntityModel */
+    std::shared_ptr<EntityModel> _character;
     /** references to the baby carrots */
     std::vector<std::shared_ptr<BabyCarrot>> _babies;
     /** references to the carrots */
@@ -20,10 +25,12 @@ private:
     std::vector<std::shared_ptr<Farmer>> _farmers;
     /** references to the wheat */
     std::vector<std::shared_ptr<Wheat>> _wheat;
+    /** references to the planting spots */
+    std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the walls */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
-    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    std::shared_ptr<cugl::physics2::net::NetWorld> _world;
     /** The root node of this level */
     std::shared_ptr<scene2::SceneNode> _root;
     /** The bounds of this level in physics coordinates */
@@ -143,11 +150,24 @@ public:
      *
      * @param  reader   a JSON reader with cursor ready to read the wheat
      *
-     * @retain the baby carrot
-     * @return true if the baby carrot was successfully loaded
+     * @retain the wheat
+     * @return true if the wheat was successfully loaded
      */
     bool loadWheat(const std::shared_ptr<JsonValue> &json);
 
+    /**
+     * Loads a single planting spot
+     *
+     * The wheat will be retained and stored in the vector _wheat.  If the
+     * wheat fails to load, then it will not be added to _wheat.
+     *
+     * @param  reader   a JSON reader with cursor ready to read the wheat
+     *
+     * @retain the planting spot
+     * @return true if the planting spot was successfully loaded
+     */
+    bool loadPlantingSpot(const std::shared_ptr<JsonValue> &json);
+    
     /**
      * Adds the physics object to the physics world and loosely couples it to the scene graph
      *
@@ -254,6 +274,14 @@ public:
      */
     void dispose();
 
+    /**
+     * Loads the players as a bunny farmer or carrot depending on whether they are the host or not.
+     */
+    std::shared_ptr<EntityModel> loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID);
+    
+    std::vector<std::shared_ptr<EntityModel>> loadBabyEntities();
+    
+    void acquireMapOwnership();
 
 #pragma mark -
 #pragma mark Getters and Setters
@@ -261,13 +289,17 @@ public:
     std::vector<std::shared_ptr<BabyCarrot>> &getBabyCarrots() { return _babies; }
 
     std::vector<std::shared_ptr<Carrot>> &getCarrots() { return _carrots; }
-
+    
     std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
+    
+    std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 
     std::vector<std::shared_ptr<Wheat>> &getWheat() { return _wheat; }
+    
+    std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
-    std::shared_ptr<cugl::physics2::ObstacleWorld> getWorld() { return _world; }
-
+    std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
+        
     bool isFarmerPlaying() { return _farmerPlaying; }
 
     bool isShowingPlayer() { return _showPlayer; }

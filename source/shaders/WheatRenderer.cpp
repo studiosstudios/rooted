@@ -227,6 +227,7 @@ void WheatRenderer::buildShaders() {
     _wheatShader->setSampler("gradient_tex", _gradienttex);
     _wheatShader->setSampler("wheat_details_tex", _wheatdetails);
     _wheatShader->setUniform1f("TIME", _totalTime);
+//    _wheatShader->setUniform4f("tip_color", 0.96863, 0.8, 0.294118, 1.0);
     _wheatShader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
     _wheatShader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
     _wheatShader->setUniform1f("wind_speed", 1.0);

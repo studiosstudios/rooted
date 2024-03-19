@@ -435,6 +435,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _keyDash = false;
 //        _keySwitch = false;
         _keyRoot = false;
+        _keyUnroot = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
     } else if (zone == Zone::MAIN) {
@@ -467,6 +468,7 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             else if ((pos.y-_rtouch.position.y) > SWITCH_SWIPE_LENGTH) {
 //                _keySwitch = true;
                 _keyRoot = true;
+                _keyUnroot = true;
                 _rtouch.position = pos;
             }
             else if ((pos.x-_rtouch.position.x) > SWITCH_SWIPE_LENGTH) {

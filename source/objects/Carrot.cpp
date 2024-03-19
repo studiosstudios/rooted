@@ -38,3 +38,10 @@ void Carrot::gotRooted(){
     _isCaptured = false;
     _isRooted = true;
 }
+
+/**
+ * Sets carrot state after getting unrooted
+ */
+void Carrot::gotUnrooted(){
+    _isRooted = false;
+}

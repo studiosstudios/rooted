@@ -1,27 +1,24 @@
 //
-//  DashEvent.hpp
+//  UnrootEvent.h
 //  Rooted
 //
-//  Created by Kimmy Lin on 3/14/24.
+//  Created by Kimmy Lin on 3/19/24.
 //
 
-#ifndef DashEvent_h
-#define DashEvent_h
-
+#ifndef UnrootEvent_h
+#define UnrootEvent_h
 
 #include <cugl/cugl.h>
 using namespace cugl::physics2::net;
-using namespace cugl;
 using namespace cugl::net;
+using namespace cugl;
 
-class DashEvent : public NetEvent {
-    
+class UnrootEvent : public NetEvent {
 protected:
     NetcodeSerializer _serializer;
     NetcodeDeserializer _deserializer;
     
     std::string _uuid;
-    
 public:
     /**
     * This method is used by the NetEventController to create a new event of using a
@@ -32,7 +29,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocDashEvent(std::string uuid);
+    static std::shared_ptr<NetEvent> allocUnrootEvent(std::string uuid);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -49,9 +46,8 @@ public:
      */
     void deserialize(const std::vector<std::byte>& data) override;
     
-    /** Gets the uuid of carrot associated with the event. */
+    /** Gets the uuid of rooted carrot associated with the event. */
     std::string getUUID() { return _uuid; }
-
 };
 
-#endif /* DashEvent_hpp */
+#endif /* UnrootEvent_h */

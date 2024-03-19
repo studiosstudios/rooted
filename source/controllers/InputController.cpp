@@ -173,6 +173,7 @@ void InputController::update(float dt) {
     _keyDash   = keys->keyPressed(KeyCode::X);
     _keySwitch = keys->keyPressed(KeyCode::S);
     _keyRoot   = keys->keyPressed(KeyCode::Z);
+    _keyUnroot = keys->keyPressed(KeyCode::Z);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -204,6 +205,8 @@ void InputController::update(float dt) {
     _keyDashPressed = _keyDash;
     
     _rootPressed = _keyRoot;
+    
+    _unrootPressed = _keyUnroot;
 
     // _movement is now updated directly in processJoystick
 

@@ -14,7 +14,8 @@
 #include <box2d/b2_collision.h>
 #include "../objects/Map.h"
 #include "NetworkController.h"
-#include "../events/DashEvent.h"
+#include "../events/CaptureEvent.h"
+#include "../events/UnrootEvent.h"
 
 
 class CollisionController {

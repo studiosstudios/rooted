@@ -185,14 +185,16 @@ void RootedApp::preUpdate(float dt) {
         updateClientScene(dt);
     }
     else if (_status == GAME){
-        if(_gameplay.isComplete()){
-            _gameplay.reset();
-            _status = MENU;
-            _mainmenu.setActive(true);
-        }
+//        if(_gameplay.isComplete() || _gameplay.isFailure()){
+//            _gameplay.reset();
+//            _status = MENU;
+//            _mainmenu.setActive(true);
+//            _hostgame.setActive(false);
+//            _joingame.setActive(false);
+//        }
         _gameplay.preUpdate(dt);
     }
-    if(_network){
+    if(_network && (!_gameplay.isComplete() || _gameplay.isFailure())){
         _network->updateNet();
     }
 }

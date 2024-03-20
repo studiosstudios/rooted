@@ -332,6 +332,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     std::shared_ptr<EntityModel> ret;
     bool isHost = hostUUID == thisUUID;
     
+    _carrots.resize(players.size()-1);
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != hostUUID) {

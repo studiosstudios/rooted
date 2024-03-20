@@ -46,7 +46,7 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Asset Constants
 /** The font for victory/failure messages */
-#define MESSAGE_FONT    "retro"
+#define MESSAGE_FONT    "gyparody"
 /** The message for winning the game */
 #define WIN_MESSAGE     "VICTORY!"
 /** The color of the win message */
@@ -144,13 +144,15 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _winnode->setPosition(dimen / 2.0f);
+    _winnode->setPosition(dimen / 1.8f/ CAMERA_ZOOM);
+    _winnode->setScale(1/CAMERA_ZOOM);
     _winnode->setForeground(WIN_COLOR);
     setComplete(false);
 
     _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _losenode->setAnchor(Vec2::ANCHOR_CENTER);
-    _losenode->setPosition(dimen.width / 2.0f, dimen.height / 2.0f);
+    _losenode->setPosition(dimen.width / 1.8f / CAMERA_ZOOM, dimen.height / 1.8f / CAMERA_ZOOM);
+    _losenode->setScale(1/CAMERA_ZOOM);
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
@@ -292,9 +294,19 @@ void GameScene::reset() {
     _action.init(_map, _input, _network);
 
     _cam.setPosition(_initCamera);
-    _cam.setTarget(_map->getCarrots().at(0));
+    if(_isHost){
+        _cam.setTarget(_map->getFarmers().at(0));
+    }
+    else{
+        for(auto carrot : _map->getCarrots()){
+            if(carrot->getUUID() == _map->getCharacter()->getUUID()){
+                _cam.setTarget(carrot);
+            }
+        }
+    }
 
     setComplete(false);
+    setFailure(false);
 }
 
 void GameScene::switchPlayer() {
@@ -332,7 +344,7 @@ void GameScene::switchPlayer() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void GameScene::preUpdate(float dt) {
-    if (_map == nullptr) {
+    if (_map == nullptr || _countdown >= 0) {
         return;
     }
 
@@ -407,6 +419,9 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    if (_countdown >= 0){
+        return;
+    }
     if (_network->isInAvailable()) {
 //        CULog("NetEvent in queue, discarding for now");
     }
@@ -448,11 +463,34 @@ void GameScene::postUpdate(float remain) {
 
     auto avatar = _map->getCarrots().at(0);
 
-    // Record failure if necessary.
-    if (!_failed && avatar->getY() < 0) {
-        setFailure(true);
+    bool farmerWin = true;
+    for(auto carrot : _map->getCarrots()){
+        if(!carrot->isRooted()){
+            farmerWin = false;
+        }
     }
-
+    if(farmerWin){
+        if(_isHost){
+            setComplete(true);
+        }
+        else{
+            setFailure(true);
+        }
+    }
+    bool carrotWin = true;
+    for(auto babyCarrot : _map->getBabyCarrots()){
+        if(!babyCarrot->isCaptured()){
+            carrotWin = false;
+        }
+    }
+    if(carrotWin){
+        if(_isHost){
+            setFailure(true);
+        }
+        else{
+            setComplete(true);
+        }
+    }
     // Reset the game if we win or lose.
     if (_countdown > 0) {
         _countdown--;

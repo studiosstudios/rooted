@@ -18,11 +18,11 @@ std::shared_ptr<NetEvent> GameOverEvent::newEvent(){
     return std::make_shared<GameOverEvent>();
 }
 
-std::shared_ptr<NetEvent> GameOverEvent::allocGameOverEvent(bool win){
+std::shared_ptr<NetEvent> GameOverEvent::allocGameOverEvent(std::string roomid){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<GameOverEvent>();
-    event->_farmerWin = win;
+    event->_roomid = roomid;
     return event;
 #pragma mark END SOLUTION
 }
@@ -34,7 +34,7 @@ std::vector<std::byte> GameOverEvent::serialize(){
     //TODO: serialize _pos
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
-    _serializer.writeBool(_farmerWin);
+    _serializer.writeString(_roomid);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -54,7 +54,7 @@ void GameOverEvent::deserialize(const std::vector<std::byte>& data){
 #pragma mark BEGIN SOLUTION
     _deserializer.reset();
     _deserializer.receive(data);
-    bool win = _deserializer.readBool();
-    _farmerWin = win;
+    std::string roomid = _deserializer.readString();
+    _roomid = roomid;
 #pragma mark END SOLUTION
 }

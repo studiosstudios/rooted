@@ -186,16 +186,7 @@ void RootedApp::preUpdate(float dt) {
         updateClientScene(dt);
     }
     else if (_status == GAME){
-        if(_gameplay.isGameOver()){
-            _status = MENU;
-            _mainmenu.setActive(true);
-            _hostgame.setActive(false);
-            _joingame.setActive(false);
-            _gameplay.setGameOver(false);
-        }
-        else{
-            _gameplay.preUpdate(dt);
-        }
+        _gameplay.preUpdate(dt);
     }
     if(_network){
         _network->updateNet();

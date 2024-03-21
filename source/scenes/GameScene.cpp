@@ -280,6 +280,8 @@ void GameScene::unload() {
  */
 void GameScene::reset() {
     // Load a new level
+    _network->disconnect();
+    
     _map->clearRootNode();
     _map->setRootNode(_rootnode);
     _map->dispose();
@@ -298,6 +300,13 @@ void GameScene::reset() {
     setDebug(false);
     setComplete(false);
     setFailure(false);
+    if(_isHost){
+        _network->connectAsHost();
+    }
+    else{
+        _network->connectAsClient(_network->getRoomID());
+        std::cout<<"room id from client end is: "<<_network->getRoomID()<<"\n";
+    }
 }
 
 void GameScene::switchPlayer() {
@@ -451,7 +460,7 @@ void GameScene::postUpdate(float remain) {
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0) {
-        setGameOver(true);
+        reset();
     }
     else{
         _action.postUpdate(remain);
@@ -486,9 +495,9 @@ void GameScene::postUpdate(float remain) {
                 setComplete(true);
             }
         }
-        if(farmerWin || carrotWin){
-            _network->disconnect();
-        }
+//        if(farmerWin || carrotWin){
+//            _network->disconnect();
+//        }
     }
 }
 

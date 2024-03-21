@@ -19,7 +19,7 @@ protected:
     NetcodeSerializer _serializer;
     NetcodeDeserializer _deserializer;
     
-    bool _farmerWin;
+    std::string _roomid;
     
 public:
     /**
@@ -31,7 +31,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocGameOverEvent(bool win);
+    static std::shared_ptr<NetEvent> allocGameOverEvent(std::string roomid);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -48,7 +48,7 @@ public:
      */
     void deserialize(const std::vector<std::byte>& data) override;
     
-    bool getFarmerWin() { return _farmerWin; }
+    std::string getRoomId() { return _roomid; }
 };
 
 #endif /* Gameover_h */

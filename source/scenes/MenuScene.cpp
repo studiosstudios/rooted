@@ -95,7 +95,7 @@ void MenuScene::dispose() {
  */
 void MenuScene::setActive(bool value) {
     if (isActive() != value) {
-        CULog("set active");
+//        CULog("set active");
         Scene2::setActive(value);
         if (value) {
             _choice = NONE;

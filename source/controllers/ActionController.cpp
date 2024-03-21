@@ -127,6 +127,7 @@ void ActionController::postUpdate(float dt) {
     while (it != _map->getBabyCarrots().end()) {
         if ((*it)->isRemoved()) {
             (*it)->getSceneNode()->dispose();
+            (*it)->getDebugNode()->dispose();
             _map->getBabyCarrots().erase(it);
         }
         else ++it;

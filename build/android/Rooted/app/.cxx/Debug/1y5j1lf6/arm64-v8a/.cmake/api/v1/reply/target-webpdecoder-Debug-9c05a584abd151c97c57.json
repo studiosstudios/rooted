@@ -1,0 +1,370 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/libwebpdecoder.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"install",
+			"target_link_libraries",
+			"add_definitions",
+			"include_directories",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libwebp/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 207,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 634,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 211,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 181,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 105,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 97,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 212,
+				"parent" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "cpufeatures-libwebp::@8119d2646a9d2721a8f2"
+		},
+		{
+			"id" : "webpdecode::@8119d2646a9d2721a8f2"
+		},
+		{
+			"id" : "webpdspdecode::@8119d2646a9d2721a8f2"
+		},
+		{
+			"id" : "webputilsdecode::@8119d2646a9d2721a8f2"
+		}
+	],
+	"id" : "webpdecoder::@8119d2646a9d2721a8f2",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"name" : "webpdecoder",
+	"nameOnDisk" : "libwebpdecoder.a",
+	"paths" : 
+	{
+		"build" : "sdl2pckg.dir/sdl2image/external/libwebp",
+		"source" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libwebp"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Object Libraries",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/alpha_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/buffer_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/frame_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/idec_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/io_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/quant_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/tree_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/vp8_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/vp8l_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dec/webp_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/alpha_processing.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/cpu.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/dec_clip_tables.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/filters.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/lossless.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/rescaler.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/upsampling.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/yuv.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/alpha_processing_neon.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/dec_neon.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/filters_neon.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/lossless_neon.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/rescaler_neon.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/upsampling_neon.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpdspdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/dsp/yuv_neon.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/bit_reader_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/color_cache_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/filters_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/huffman_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/quant_levels_dec_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/rescaler_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/random_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/thread_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webputilsdecode.dir/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/utils/utils.c.o",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

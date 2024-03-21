@@ -1,0 +1,410 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/alpha_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/analysis_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/backward_references_cost_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/backward_references_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/config_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/cost_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/filter_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/frame_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/histogram_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/iterator_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/near_lossless_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_csp_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_psnr_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_rescale_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_tools_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/predictor_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/quant_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/syntax_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/token_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/tree_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/vp8l_enc.c.o"
+		},
+		{
+			"path" : "sdl2pckg.dir/sdl2image/external/libwebp/CMakeFiles/webpencode.dir/./Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/webp_enc.c.o"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"add_definitions",
+			"include_directories",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libwebp/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 225,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 181,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 105,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 97,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 226,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -fno-limit-debug-info  -fPIC   -Wall -Wno-xor-used-as-pow -Wno-unused-but-set-variable"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "HAVE_CONFIG_H"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "HAVE_CPU_FEATURES_H=1"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 4,
+					"path" : "/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/sources/android/cpufeatures"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				5,
+				6,
+				8,
+				9,
+				10,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				25,
+				27
+			],
+			"sysroot" : 
+			{
+				"path" : "/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot"
+			}
+		}
+	],
+	"id" : "webpencode::@8119d2646a9d2721a8f2",
+	"name" : "webpencode",
+	"paths" : 
+	{
+		"build" : "sdl2pckg.dir/sdl2image/external/libwebp",
+		"source" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libwebp"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				5,
+				6,
+				8,
+				9,
+				10,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				25,
+				27
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				4,
+				7,
+				11,
+				24,
+				26
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/alpha_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/analysis_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/backward_references_cost_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/backward_references_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/backward_references_enc.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/config_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/cost_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/cost_enc.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/filter_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/frame_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/histogram_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/histogram_enc.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/iterator_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/near_lossless_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_csp_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_psnr_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_rescale_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/picture_tools_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/predictor_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/quant_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/syntax_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/token_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/tree_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/vp8i_enc.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/vp8l_enc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/vp8li_enc.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/external/libwebp/src/enc/webp_enc.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "OBJECT_LIBRARY"
+}

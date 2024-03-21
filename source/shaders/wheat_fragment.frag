@@ -84,8 +84,8 @@ uniform vec2 noise_tex_size;
 
 uniform vec2 SCREEN_PIXEL_SIZE;
 
-const float MAX_BLADE_LENGTH = 100.0f;
-const float PI = 3.1415926535f;
+const float MAX_BLADE_LENGTH = 20.0f;
+const float PI = 3.14f;
 
 /** Objects */
 //uniform vec2 farmer_pos;

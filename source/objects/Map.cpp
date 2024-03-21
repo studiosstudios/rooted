@@ -4,7 +4,7 @@
 
 #include "Map.h"
 #include "../objects/EntityModel.h"
-#include "NetworkController.h"
+#include "../controllers/NetworkController.h"
 
 // TODO: put all constants into JSON
 

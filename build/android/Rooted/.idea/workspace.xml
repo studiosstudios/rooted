@@ -5,23 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1862fe52-ff64-428f-9dcb-d52dfde2d813" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../source/shaders/ShaderNode.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../source/shaders/ShaderNode.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/jni/src/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/app/jni/src/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apple/Rooted.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../apple/Rooted.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../apple/Rooted.xcodeproj/project.xcworkspace/xcuserdata/jffzh.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../../apple/Rooted.xcodeproj/project.xcworkspace/xcuserdata/jffzh.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../windows/Rooted/Rooted.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../windows/Rooted/Rooted.vcxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../windows/Rooted/Rooted.vcxproj.filters" beforeDir="false" afterPath="$PROJECT_DIR$/../../windows/Rooted/Rooted.vcxproj.filters" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../apple/Rooted.xcodeproj/xcuserdata/jffzh.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" beforeDir="false" afterPath="$PROJECT_DIR$/../../apple/Rooted.xcodeproj/xcuserdata/jffzh.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../mapTest.tiled-session" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../source/controllers/ActionController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/controllers/ActionController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../source/controllers/ActionController.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/controllers/ActionController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../source/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../source/objects/Map.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/objects/Map.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../source/objects/Map.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/objects/Map.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../source/scenes/GameScene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/scenes/GameScene.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../source/scenes/GameScene.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/scenes/GameScene.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../source/shaders/GroundRenderer.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../source/shaders/GroundRenderer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../source/shaders/ShaderNode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/shaders/ShaderNode.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../source/shaders/WheatRenderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/shaders/WheatRenderer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../source/shaders/WheatRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/shaders/WheatRenderer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../source/shaders/ground_fragment.frag" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/shaders/ground_fragment.frag" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../source/shaders/wheat_fragment.frag" beforeDir="false" afterPath="$PROJECT_DIR$/../../../source/shaders/wheat_fragment.frag" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +27,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/jffzh/.android/avd/Pixel_3a_API_34_extension_level_7_arm64-v8a.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[26101JEGR12597]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

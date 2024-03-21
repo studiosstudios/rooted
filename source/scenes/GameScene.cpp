@@ -429,23 +429,23 @@ void GameScene::fixedUpdate(float step) {
     int size = carrots.size() + farmers.size() + babies.size();
     float positions[2*size]; // must be 1d array
     float velocities[size];
+    float ratio = _wheatrenderer->getAspectRatio();
     for (int i = 0; i < carrots.size(); i++) {
         positions[2 * i] = carrots.at(i)->getX() / _scale;
-        positions[2 * i + 1] = 1 - (carrots.at(i)->getY() - carrots.at(i)->getHeight()/2) / _scale * 16/9;
+        positions[2 * i + 1] = 1 - (carrots.at(i)->getY() - carrots.at(i)->getHeight()/2) / _scale * ratio;
         velocities[i] = carrots.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < farmers.size(); i++) {
         positions[2 * i + 2* carrots.size()] = farmers.at(i)->getX() / _scale;
-        positions[2 * i + 1 + 2 * carrots.size()] = 1 - (farmers.at(i)->getY() - farmers.at(i)->getHeight()/2) / _scale * 16/9;
+        positions[2 * i + 1 + 2 * carrots.size()] = 1 - (farmers.at(i)->getY() - farmers.at(i)->getHeight()/2) / _scale * ratio;
         velocities[i + carrots.size()] = farmers.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < babies.size(); i++) {
         positions[2 * i + 2* (carrots.size() + farmers.size())] = babies.at(i)->getX() / _scale;
-        positions[2 * i + 1 + 2 * (carrots.size() + farmers.size())] = 1 - (babies.at(i)->getY() - babies.at(i)->getHeight()/2) / _scale * 16/9;
+        positions[2 * i + 1 + 2 * (carrots.size() + farmers.size())] = 1 - (babies.at(i)->getY() - babies.at(i)->getHeight()/2) / _scale * ratio;
         velocities[i + carrots.size() + farmers.size()] = babies.at(i)->getLinearVelocity().length();
     }
     _wheatrenderer->update(step, size, positions, velocities);
-//    std::cout << _map->getCarrots().at(0)->getForce() << " " <<  _map->getCarrots().at(0)->getLinearVelocity().x << "," << _map->getCarrots().at(0)->getLinearVelocity().y << "\n";
     _action.fixedUpdate();
 }
 

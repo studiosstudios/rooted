@@ -13,8 +13,9 @@ bool ShaderNode::init(const std::shared_ptr<WheatRenderer> &renderer, ShaderNode
     if (SceneNode::init()) {
         _renderer = renderer;
         _type = type;
+        return true;
     }
-    return true;
+    return false;
 }
 
 void ShaderNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::Affine2 &transform, cugl::Color4 tint) {

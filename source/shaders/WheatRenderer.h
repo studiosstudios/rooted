@@ -44,6 +44,7 @@ protected:
     std::shared_ptr<cugl::Texture> _gradienttex;
     std::shared_ptr<cugl::Texture> _wheatdetails;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
+    float _aspectRatio;
 
     
     
@@ -63,6 +64,8 @@ public:
     void setSize(Size size) { _size = size; }
     
     void setScale(float scale) { _scale = scale; }
+    
+    float getAspectRatio() { return _aspectRatio; }
     
     void setAssets(const std::shared_ptr<cugl::AssetManager> &assets) { _assets = assets; }
     

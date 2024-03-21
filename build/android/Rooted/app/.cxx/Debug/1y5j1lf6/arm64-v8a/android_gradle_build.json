@@ -1,0 +1,347 @@
+{
+  "buildFiles": [
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/android/jni/cugl/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/box2d/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/box2d/src/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/libjuice/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/libsrtp/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/openssl/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/openssl/crypto/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/openssl/ssl/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/plog/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/usrsctp/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/usrsctp/usrsctplib/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/poly2tri/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2app/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/libFLAC/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/getopt/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/grabbag/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/replaygain_analysis/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/replaygain_synthesis/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/utf8/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/kissfft/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/ogg/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/vorbis/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/vorbis/lib/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libtiff/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libtiff/libtiff/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libwebp/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2ttf/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2ttf/external/freetype/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2ttf/external/harfbuzz/CMakeLists.txt",
+    "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/jni/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "FLAC::@2d4264331f8f6549d11d": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "FLAC",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/flac/src/libFLAC/libFLAC.a"
+    },
+    "SDL2::@cc1b873799dd6c24cc1a": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL2",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2.so",
+      "runtimeFiles": []
+    },
+    "SDL2_app::@dc1227265743810ab2eb": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL2_app",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_app.so",
+      "runtimeFiles": [
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2.so"
+      ]
+    },
+    "SDL2_atk::@51429a36e05cf9af2efa": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL2_atk",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_atk.so",
+      "runtimeFiles": [
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2.so"
+      ]
+    },
+    "SDL2_image::@bf259a6078524f396dee": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL2_image",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_image.so",
+      "runtimeFiles": [
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2.so"
+      ]
+    },
+    "SDL2_ttf::@6e86b8aca881fb9c306c": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL2_ttf",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_ttf.so",
+      "runtimeFiles": [
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2.so"
+      ]
+    },
+    "SDL2main::@cc1b873799dd6c24cc1a": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL2main",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2/libSDL2main.a"
+    },
+    "box2d::@984cdc36d74f1b4836e5": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "box2d",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/box2d.dir/bin/libbox2d.a"
+    },
+    "cpufeatures-libwebp::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "cpufeatures-libwebp",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/libcpufeatures-libwebp.a"
+    },
+    "crypto::@8bec0725f26d26b0a90f": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "crypto",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/libdatachannel.dir/deps/openssl/crypto/libcrypto_1_1.a"
+    },
+    "cugl::@d4cbbc5a9c7fb51d83b7": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "cugl",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/libcugl.a"
+    },
+    "datachannel::@655936202e2b580ddf9b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "datachannel",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/libdatachannel.dir/libdatachannel.a"
+    },
+    "freetype::@4c7b79e15bcfb5bdfed5": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "freetype",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2ttf/external/freetype/libfreetyped.a"
+    },
+    "getopt::@6ed82f74a5f2c691afcb": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "getopt",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/flac/src/share/getopt/libgetopt.a"
+    },
+    "grabbag::@15cc713d8c828d8f6cdb": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "grabbag",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/flac/src/share/grabbag/libgrabbag.a"
+    },
+    "harfbuzz::@f51d28eae72e9206fc4e": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "harfbuzz",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2ttf/external/harfbuzz/libharfbuzz.a"
+    },
+    "harfbuzz-subset::@f51d28eae72e9206fc4e": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "harfbuzz-subset",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2ttf/external/harfbuzz/libharfbuzz-subset.a"
+    },
+    "juice::@86f68ca494d33377e9ec": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "juice",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/libdatachannel.dir/deps/libjuice/libjuice.a"
+    },
+    "kissfft::@9f3673508c2abc40f456": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "kissfft",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/kissfft/libkissfft-float.a"
+    },
+    "main::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "main",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libmain.so",
+      "runtimeFiles": [
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_image.so",
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_ttf.so",
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_atk.so",
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2_app.so",
+        "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/build/intermediates/cxx/Debug/1y5j1lf6/obj/arm64-v8a/libSDL2.so"
+      ]
+    },
+    "ogg::@8d925c2cbb0d4e780e78": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ogg",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/ogg/libogg.a"
+    },
+    "poly2tri::@0f871668d82e31cd7fb5": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "poly2tri",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/poly2tri.dir/libpoly2tri.a"
+    },
+    "replaygain_analysis::@31a39bc6ed0f19f4e659": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "replaygain_analysis",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/flac/src/share/replaygain_analysis/libreplaygain_analysis.a"
+    },
+    "replaygain_synthesis::@2a3e1dbf8ea755d1a2ac": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "replaygain_synthesis",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/flac/src/share/replaygain_synthesis/libreplaygain_synthesis.a"
+    },
+    "sdl_headers_copy::@cc1b873799dd6c24cc1a": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "sdl_headers_copy"
+    },
+    "srtp2::@5e5c0248c990b7300543": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "srtp2",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/libdatachannel.dir/deps/libsrtp/libsrtp2.a"
+    },
+    "ssl::@e57b51676e37372d2007": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ssl",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/libdatachannel.dir/deps/openssl/ssl/libssl_1_1.a"
+    },
+    "tiff::@7147a867349eb5437962": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "tiff",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libtiff/libtiff/libtiff.a"
+    },
+    "tiffxx::@7147a867349eb5437962": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "tiffxx",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libtiff/libtiff/libtiffxx.a"
+    },
+    "uninstall::@cc1b873799dd6c24cc1a": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "uninstall"
+    },
+    "usrsctp::@222b707369e545553aca": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "usrsctp",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/cugl.dir/libdatachannel.dir/deps/usrsctp/usrsctplib/libusrsctp.a"
+    },
+    "utf8::@79686d12972d4fc29eb1": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "utf8",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/flac/src/share/utf8/libutf8.a"
+    },
+    "vorbis::@1e61c11abda5a6fa0b0c": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "vorbis",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/vorbis/lib/libvorbis.a"
+    },
+    "vorbisenc::@1e61c11abda5a6fa0b0c": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "vorbisenc",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/vorbis/lib/libvorbisenc.a"
+    },
+    "vorbisfile::@1e61c11abda5a6fa0b0c": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "vorbisfile",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2atk/external/vorbis/lib/libvorbisfile.a"
+    },
+    "webp::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webp",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/libwebp.a"
+    },
+    "webpdecode::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webpdecode"
+    },
+    "webpdecoder::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webpdecoder",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/libwebpdecoder.a"
+    },
+    "webpdemux::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webpdemux",
+      "output": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a/sdl2pckg.dir/sdl2image/external/libwebp/libwebpdemux.a"
+    },
+    "webpdsp::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webpdsp"
+    },
+    "webpdspdecode::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webpdspdecode"
+    },
+    "webpencode::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webpencode"
+    },
+    "webputils::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webputils"
+    },
+    "webputilsdecode::@8119d2646a9d2721a8f2": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "webputilsdecode"
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp",
+    "cc",
+    "cxx"
+  ]
+}

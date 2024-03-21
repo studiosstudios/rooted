@@ -10,8 +10,8 @@
 #include "InputController.h"
 #include "AIController.h"
 #include "NetworkController.h"
-#include "DashEvent.h"
-#include "RootEvent.h"
+#include "../events/DashEvent.h"
+#include "../events/RootEvent.h"
 
 class ActionController {
 private:

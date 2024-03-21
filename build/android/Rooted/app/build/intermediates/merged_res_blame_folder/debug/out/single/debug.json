@@ -1,0 +1,78 @@
+[
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-hdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xhdpi_ic_launcher_foreground.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-mdpi_ic_launcher_foreground.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-mdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/drawable_logo.xml.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/drawable/logo.xml"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xxhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xxxhdpi/ic_launcher_foreground.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/drawable_splash.xml.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/drawable/splash.xml"
+    },
+    {
+        "merged": "edu.cornell.gdiac.rooted.G94D1D8D.app-merged_res-32:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "edu.cornell.gdiac.rooted.G94D1D8D.app-main-34:/mipmap-hdpi/ic_launcher.png"
+    }
+]

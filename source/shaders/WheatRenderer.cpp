@@ -71,10 +71,7 @@ using namespace std;
 
 bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets) {
     
-    
-    _size = Application::get()->getDisplaySize();
-    _size.width = 1024;
-    _size.height = 576;
+
     _assets = assets;
     
     _totalTime = 0;
@@ -83,6 +80,17 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets) {
     _cloudtex = _assets->get<Texture>("shader_clouds");
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
+
+    _size = _grasstex->getSize();
+
+    Size appSize = Application::get()->getDisplaySize();
+    if (appSize.height < appSize.width) {
+        _size *= appSize.width/_size.width;
+    } else {
+        _size *= appSize.height/_size.height;
+    }
+    
+    _aspectRatio = _size.width/_size.height;
     
     _textures.push_back(_grasstex);
     _textures.push_back(_cloudtex);

@@ -1,0 +1,39 @@
+{
+    "logs": [
+        {
+            "outputFile": "edu.cornell.gdiac.rooted.G94D1D8D.app-mergeDebugResources-30:/values-v27/values-v27.xml",
+            "map": [
+                {
+                    "source": "/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/src/main/res/values-v27/styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "7",
+                        "endColumns": "12",
+                        "endOffsets": "347"
+                    },
+                    "to": {
+                        "startLines": "10",
+                        "startColumns": "4",
+                        "startOffsets": "593",
+                        "endLines": "15",
+                        "endColumns": "12",
+                        "endOffsets": "885"
+                    }
+                },
+                {
+                    "source": "/Users/jffzh/.gradle/caches/transforms-3/aadc693cceabe01b7084e8a9bb5c1130/transformed/jetified-core-splashscreen-1.1.0-alpha02/res/values-v27/values-v27.xml",
+                    "from": {
+                        "startLines": "2,3,4,7",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,136,229,405",
+                        "endLines": "2,3,6,9",
+                        "endColumns": "80,92,12,12",
+                        "endOffsets": "131,224,400,588"
+                    }
+                }
+            ]
+        }
+    ]
+}

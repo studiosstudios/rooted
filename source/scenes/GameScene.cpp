@@ -84,7 +84,7 @@ using namespace cugl;
 #define JOY_BACK        "joystick-back"
 
 /** Color to outline the physics nodes */
-#define DEBUG_COLOR     Color4::YELLOW
+#define DEBUG_COLOR     Color4::GREEN
 /** Opacity of the physics outlines */
 #define DEBUG_OPACITY   192
 
@@ -154,19 +154,21 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
-    addChild(_rootnode);
-    addChild(_uinode);
-    addChild(_winnode);
-    addChild(_losenode);
-
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
     
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("map")); // Obtains ownership of root.
+    _wheatrenderer = _wheatrenderer->alloc(_assets);
     
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("map"), _wheatrenderer); // Obtains ownership of root.
+
     if (!_map->populate()) {
         CULog("Failed to populate map");
         return false;
     }
+    
+    addChild(_rootnode);
+    addChild(_uinode);
+    addChild(_winnode);
+    addChild(_losenode);
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
@@ -178,7 +180,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-
+    
     _input = InputController::alloc(getBounds());
     _collision.init(_map, _network);
     _action.init(_map, _input, _network);
@@ -215,9 +217,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4(118,118,118,255));
     
-    // Shaders
-    _wheatrenderer = _wheatrenderer->alloc(_assets, _cam.getCamera(), _map, _scale);
+    _wheatrenderer->setScale(_scale);
+    _wheatrenderer->setCamera(_cam.getCamera());
     _wheatrenderer->buildShaders();
+
     return true;
 }
 
@@ -419,7 +422,29 @@ void GameScene::fixedUpdate(float step) {
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
-    _wheatrenderer->update(step);
+    
+    auto carrots = _map->getCarrots();
+    auto farmers = _map->getFarmers();
+    auto babies = _map->getBabyCarrots();
+    int size = carrots.size() + farmers.size() + babies.size();
+    float positions[2*size]; // must be 1d array
+    float velocities[size];
+    for (int i = 0; i < carrots.size(); i++) {
+        positions[2 * i] = carrots.at(i)->getX() / _scale;
+        positions[2 * i + 1] = 1 - (carrots.at(i)->getY() - carrots.at(i)->getHeight()/2) / _scale * 16/9;
+        velocities[i] = carrots.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < farmers.size(); i++) {
+        positions[2 * i + 2* carrots.size()] = farmers.at(i)->getX() / _scale;
+        positions[2 * i + 1 + 2 * carrots.size()] = 1 - (farmers.at(i)->getY() - farmers.at(i)->getHeight()/2) / _scale * 16/9;
+        velocities[i + carrots.size()] = farmers.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < babies.size(); i++) {
+        positions[2 * i + 2* (carrots.size() + farmers.size())] = babies.at(i)->getX() / _scale;
+        positions[2 * i + 1 + 2 * (carrots.size() + farmers.size())] = 1 - (babies.at(i)->getY() - babies.at(i)->getHeight()/2) / _scale * 16/9;
+        velocities[i + carrots.size() + farmers.size()] = babies.at(i)->getLinearVelocity().length();
+    }
+    _wheatrenderer->update(step, size, positions, velocities);
 //    std::cout << _map->getCarrots().at(0)->getForce() << " " <<  _map->getCarrots().at(0)->getLinearVelocity().x << "," << _map->getCarrots().at(0)->getLinearVelocity().y << "\n";
     _action.fixedUpdate();
 }
@@ -547,8 +572,8 @@ Size GameScene::computeActiveSize() const {
 }
 
 void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
-    _wheatrenderer->renderGround();
+//    _wheatrenderer->renderGround();
     Scene2::render(batch);
-    _wheatrenderer->renderWheat();
+//    _wheatrenderer->renderWheat();
 }
 

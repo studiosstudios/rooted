@@ -256,7 +256,7 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
 
     <ClInclude Include="..\..\..\source\shaders\WheatRenderer.h"/>
 
-    <ClInclude Include="..\..\..\source\shaders\GroundRenderer.h"/>
+    <ClInclude Include="..\..\..\source\shaders\ShaderNode.h"/>
 
     <ClInclude Include="..\..\..\source\events\RootEvent.h"/>
 
@@ -304,9 +304,9 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
 
     <ClCompile Include="..\..\..\source\objects\EntityModel.cpp"/>
 
-    <ClCompile Include="..\..\..\source\shaders\GroundRenderer.cpp"/>
-
     <ClCompile Include="..\..\..\source\shaders\WheatRenderer.cpp"/>
+
+    <ClCompile Include="..\..\..\source\shaders\ShaderNode.cpp"/>
 
     <ClCompile Include="..\..\..\source\events\DashEvent.cpp"/>
 

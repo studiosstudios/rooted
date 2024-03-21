@@ -67,18 +67,15 @@ const std::string groundVert =
 #include "ground_vertex.vert"
 ;
 
+using namespace std;
 
-bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera,
-                         std::shared_ptr<Map> &map, float scale) {
+bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets) {
     
     
     _size = Application::get()->getDisplaySize();
     _size.width = 1024;
     _size.height = 576;
     _assets = assets;
-    _cam = camera;
-    _map = map;
-    _scale = scale;
     
     _totalTime = 0;
     
@@ -106,33 +103,11 @@ void WheatRenderer::dispose() {
     _vertbuff = nullptr;
 }
 
-void WheatRenderer::update(float timestep) {
+void WheatRenderer::update(float timestep, int size, float *positions, float *velocities) {
 
     _totalTime += timestep;
     if (_totalTime >= 30.0) {
         _totalTime = 0;
-    }
-
-    auto carrots = _map->getCarrots();
-    auto farmers = _map->getFarmers();
-    auto babies = _map->getBabyCarrots();
-    int size = carrots.size() + farmers.size() + babies.size();
-    float positions[2*size]; // must be 1d array
-    float velocities[size];
-    for (int i = 0; i < carrots.size(); i++) {
-        positions[2 * i] = carrots.at(i)->getX() / _scale;
-        positions[2 * i + 1] = 1 - (carrots.at(i)->getY() - carrots.at(i)->getHeight()/2) / _scale * 16/9;
-        velocities[i] = carrots.at(i)->getLinearVelocity().length();
-    }
-    for (int i = 0; i < farmers.size(); i++) {
-        positions[2 * i + 2* carrots.size()] = farmers.at(i)->getX() / _scale;
-        positions[2 * i + 1 + 2 * carrots.size()] = 1 - (farmers.at(i)->getY() - farmers.at(i)->getHeight()/2) / _scale * 16/9;
-        velocities[i + carrots.size()] = farmers.at(i)->getLinearVelocity().length();
-    }
-    for (int i = 0; i < babies.size(); i++) {
-        positions[2 * i + 2* (carrots.size() + farmers.size())] = babies.at(i)->getX() / _scale;
-        positions[2 * i + 1 + 2 * (carrots.size() + farmers.size())] = 1 - (babies.at(i)->getY() - babies.at(i)->getHeight()/2) / _scale * 16/9;
-        velocities[i + carrots.size() + farmers.size()] = babies.at(i)->getLinearVelocity().length();
     }
 
     if (_wheatShader) {
@@ -140,8 +115,6 @@ void WheatRenderer::update(float timestep) {
         _wheatShader->setUniform1f("TIME", _totalTime);
         _wheatShader->setUniform1i("num_entities", size);
         _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
-        _wheatShader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX() / _scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight() / 2) / _scale * 16 / 9);
-        _wheatShader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
         _wheatShader->setUniform2fv("positions", size, positions);
         _wheatShader->setUniform1fv("velocities", size, velocities);
         _wheatShader->unbind();
@@ -152,8 +125,6 @@ void WheatRenderer::update(float timestep) {
         _groundShader->setUniform1f("TIME", _totalTime);
         _groundShader->setUniform1i("num_entities", size);
         _groundShader->setUniformMat4("uPerspective", _cam->getCombined());
-        _groundShader->setUniform2f("cam_pos", _map->getCarrots().at(0)->getX() / _scale, 1 - (_map->getCarrots().at(0)->getY() - _map->getCarrots().at(0)->getHeight() / 2) / _scale * 16 / 9);
-        _groundShader->setUniform2f("cam_vel", _map->getCarrots().at(0)->getVX(), _map->getCarrots().at(0)->getVY());
         _groundShader->setUniform2fv("positions", size, positions);
         _groundShader->unbind();
     }

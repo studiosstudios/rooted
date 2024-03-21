@@ -18,12 +18,12 @@ LOCAL_C_INCLUDES := $(CUGL_PATH)/include
 LOCAL_C_INCLUDES += $(SDL2_PATH)/include
 LOCAL_C_INCLUDES += $(CUGL_PATH)/external/box2d/include
 LOCAL_C_INCLUDES += $(CUGL_PATH)/external/poly2tri
+LOCAL_C_INCLUDES += $(PROJ_PATH)/source/scenes
 LOCAL_C_INCLUDES += $(PROJ_PATH)/source/events
 LOCAL_C_INCLUDES += $(PROJ_PATH)/source
-LOCAL_C_INCLUDES += $(PROJ_PATH)/source/scenes
-LOCAL_C_INCLUDES += $(PROJ_PATH)/source/objects
-LOCAL_C_INCLUDES += $(PROJ_PATH)/source/controllers
 LOCAL_C_INCLUDES += $(PROJ_PATH)/source/shaders
+LOCAL_C_INCLUDES += $(PROJ_PATH)/source/controllers
+LOCAL_C_INCLUDES += $(PROJ_PATH)/source/objects
 
 
 # Add your application source files here.
@@ -41,8 +41,8 @@ LOCAL_SRC_FILES := $(subst $(LOCAL_PATH)/,, \
 	$(LOCAL_PATH)/source/objects/Carrot.cpp \
 	$(LOCAL_PATH)/source/objects/Wheat.cpp \
 	$(LOCAL_PATH)/source/objects/EntityModel.cpp \
-	$(LOCAL_PATH)/source/shaders/GroundRenderer.cpp \
 	$(LOCAL_PATH)/source/shaders/WheatRenderer.cpp \
+	$(LOCAL_PATH)/source/shaders/ShaderNode.cpp \
 	$(LOCAL_PATH)/source/events/DashEvent.cpp \
 	$(LOCAL_PATH)/source/events/RootEvent.cpp \
 	$(LOCAL_PATH)/source/controllers/InputController.cpp \

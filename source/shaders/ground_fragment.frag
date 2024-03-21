@@ -36,9 +36,6 @@ uniform vec2 noise_tex_size;
 uniform vec2 SCREEN_PIXEL_SIZE;
 
 /** Objects */
-uniform vec2 cam_pos;
-uniform vec2 cam_vel;
-
 uniform vec2 positions[100];
 uniform int num_entities;
 

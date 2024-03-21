@@ -10,9 +10,9 @@
 
 #include <cugl/cugl.h>
 #include "../controllers/CameraController.h"
-#include "../objects/Map.h"
-
-
+#include "../objects/Carrot.h"
+#include "../objects/BabyCarrot.h"
+#include "../objects/Farmer.h"
 
 class WheatRenderer {
 protected:
@@ -20,11 +20,8 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     
     Size _size;
-    
     /** Controller for camera */
     std::shared_ptr<cugl::OrthographicCamera> _cam;
-    
-    std::shared_ptr<Map> _map;
     
     float _scale;
     /** A shader to render wheat */
@@ -56,14 +53,12 @@ public:
 
     ~WheatRenderer() {}
     
-    static std::shared_ptr<WheatRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera,
-        std::shared_ptr<Map> &map, float scale) {
+    static std::shared_ptr<WheatRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets) {
         std::shared_ptr<WheatRenderer> result = std::make_shared<WheatRenderer>();
-        return (result->init(assets, camera, map, scale) ? result : nullptr);
+        return (result->init(assets) ? result : nullptr);
     }
     
-    bool init(const std::shared_ptr<cugl::AssetManager> &assets, const std::shared_ptr<cugl::OrthographicCamera> &camera,
-        std::shared_ptr<Map> &map, float _scale);
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets);
     
     void setSize(Size size) { _size = size; }
     
@@ -88,7 +83,7 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    void update(float timestep);
+    void update(float timestep, int size, float *positions, float *velocities);
     
     /**
      * The method called to draw the application to the screen.

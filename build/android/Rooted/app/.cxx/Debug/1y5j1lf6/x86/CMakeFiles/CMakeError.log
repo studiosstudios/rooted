@@ -1,0 +1,1733 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_8f699 && [1/2] Building C object CMakeFiles/cmTC_8f699.dir/src.c.o
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:13:3: warning: implicit declaration of function 'pthread_cancel' is invalid in C99 [-Wimplicit-function-declaration]
+  pthread_cancel(thread);
+  ^
+1 warning generated.
+[2/2] Linking C executable cmTC_8f699
+FAILED: cmTC_8f699 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_8f699.dir/src.c.o -o cmTC_8f699  -latomic -lm && :
+ld: error: undefined symbol: pthread_cancel
+>>> referenced by src.c:13
+>>>               CMakeFiles/cmTC_8f699.dir/src.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Performing C SOURCE FILE Test have_sa_len failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_981fd && [1/2] Building C object CMakeFiles/cmTC_981fd.dir/src.c.o
+FAILED: CMakeFiles/cmTC_981fd.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dhave_sa_len -I/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/../../../../external/libdatachannel/deps/usrsctp/usrsctplib -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_981fd.dir/src.c.o -MF CMakeFiles/cmTC_981fd.dir/src.c.o.d -o CMakeFiles/cmTC_981fd.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:7:40: error: no member named 'sa_len' in 'struct sockaddr'
+  (void)sizeof(((struct sockaddr *)0)->sa_len);
+               ~~~~~~~~~~~~~~~~~~~~~~  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int main()
+{
+  (void)sizeof(((struct sockaddr *)0)->sa_len);
+  return 0;
+}
+
+Performing C SOURCE FILE Test have_sin_len failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_b0131 && [1/2] Building C object CMakeFiles/cmTC_b0131.dir/src.c.o
+FAILED: CMakeFiles/cmTC_b0131.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dhave_sin_len -I/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/../../../../external/libdatachannel/deps/usrsctp/usrsctplib -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_b0131.dir/src.c.o -MF CMakeFiles/cmTC_b0131.dir/src.c.o.d -o CMakeFiles/cmTC_b0131.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:7:43: error: no member named 'sin_len' in 'struct sockaddr_in'
+  (void)sizeof(((struct sockaddr_in *)0)->sin_len);
+               ~~~~~~~~~~~~~~~~~~~~~~~~~  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+#include <sys/types.h>
+#include <netinet/in.h>
+
+int main()
+{
+  (void)sizeof(((struct sockaddr_in *)0)->sin_len);
+  return 0;
+}
+
+Performing C SOURCE FILE Test have_sin6_len failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_6e519 && [1/2] Building C object CMakeFiles/cmTC_6e519.dir/src.c.o
+FAILED: CMakeFiles/cmTC_6e519.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dhave_sin6_len -I/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/../../../../external/libdatachannel/deps/usrsctp/usrsctplib -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_6e519.dir/src.c.o -MF CMakeFiles/cmTC_6e519.dir/src.c.o.d -o CMakeFiles/cmTC_6e519.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:7:44: error: no member named 'sin6_len' in 'struct sockaddr_in6'
+  (void)sizeof(((struct sockaddr_in6 *)0)->sin6_len);
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+#include <sys/types.h>
+#include <netinet/in.h>
+
+int main()
+{
+  (void)sizeof(((struct sockaddr_in6 *)0)->sin6_len);
+  return 0;
+}
+
+Performing C SOURCE FILE Test have_sconn_len failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_92e51 && [1/2] Building C object CMakeFiles/cmTC_92e51.dir/src.c.o
+FAILED: CMakeFiles/cmTC_92e51.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dhave_sconn_len -I/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/../../../../external/libdatachannel/deps/usrsctp/usrsctplib -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_92e51.dir/src.c.o -MF CMakeFiles/cmTC_92e51.dir/src.c.o.d -o CMakeFiles/cmTC_92e51.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:6:45: error: no member named 'sconn_len' in 'struct sockaddr_conn'
+  (void)sizeof(((struct sockaddr_conn *)0)->sconn_len);
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+#include <usrsctp.h>
+
+int main()
+{
+  (void)sizeof(((struct sockaddr_conn *)0)->sconn_len);
+  return 0;
+}
+
+Determining if the include file machine/types.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_1b89c && [1/2] Building C object CMakeFiles/cmTC_1b89c.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_1b89c.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_1b89c.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_1b89c.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_1b89c.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'machine/types.h' file not found
+#include <machine/types.h>
+         ^~~~~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file sys/int_types.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_1f6e5 && [1/2] Building C object CMakeFiles/cmTC_1f6e5.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_1f6e5.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_1f6e5.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_1f6e5.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_1f6e5.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'sys/int_types.h' file not found
+#include <sys/int_types.h>
+         ^~~~~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file windows.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_b7ba2 && [1/2] Building C object CMakeFiles/cmTC_b7ba2.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_b7ba2.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_b7ba2.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_b7ba2.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_b7ba2.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'windows.h' file not found
+#include <windows.h>
+         ^~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file winsock2.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_c00e0 && [1/2] Building C object CMakeFiles/cmTC_c00e0.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_c00e0.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -fPIC  -fPIE -MD -MT CMakeFiles/cmTC_c00e0.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_c00e0.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_c00e0.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'winsock2.h' file not found
+#include <winsock2.h>
+         ^~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the __GLIBC__ exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_deffe && [1/2] Building C object CMakeFiles/cmTC_deffe.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_deffe.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fPIE -MD -MT CMakeFiles/cmTC_deffe.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_deffe.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_deffe.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: use of undeclared identifier '__GLIBC__'
+  return ((int*)(&__GLIBC__))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdlib.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef __GLIBC__
+  return ((int*)(&__GLIBC__))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Performing C SOURCE FILE Test CHECK_CPU_ARCHITECTURE_X64 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_3d33b && [1/2] Building C object CMakeFiles/cmTC_3d33b.dir/src.c.o
+FAILED: CMakeFiles/cmTC_3d33b.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DCHECK_CPU_ARCHITECTURE_X64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fPIE -MD -MT CMakeFiles/cmTC_3d33b.dir/src.c.o -MF CMakeFiles/cmTC_3d33b.dir/src.c.o.d -o CMakeFiles/cmTC_3d33b.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:6:3: error: use of undeclared identifier 'choke'
+  choke
+  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+int main(int argc, char *argv[]) {
+#if defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(_M_X64) || defined(_M_AMD64)
+  return 0;
+#else
+  choke
+#endif
+}
+
+Performing C SOURCE FILE Test CHECK_CPU_ARCHITECTURE_ARM32 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_5d8a0 && [1/2] Building C object CMakeFiles/cmTC_5d8a0.dir/src.c.o
+FAILED: CMakeFiles/cmTC_5d8a0.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DCHECK_CPU_ARCHITECTURE_ARM32  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fPIE -MD -MT CMakeFiles/cmTC_5d8a0.dir/src.c.o -MF CMakeFiles/cmTC_5d8a0.dir/src.c.o.d -o CMakeFiles/cmTC_5d8a0.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:6:3: error: use of undeclared identifier 'choke'
+  choke
+  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+int main(int argc, char *argv[]) {
+#if defined(__arm__) || defined(_M_ARM)
+  return 0;
+#else
+  choke
+#endif
+}
+
+Performing C SOURCE FILE Test CHECK_CPU_ARCHITECTURE_ARM64 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_5eeef && [1/2] Building C object CMakeFiles/cmTC_5eeef.dir/src.c.o
+FAILED: CMakeFiles/cmTC_5eeef.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DCHECK_CPU_ARCHITECTURE_ARM64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fPIE -MD -MT CMakeFiles/cmTC_5eeef.dir/src.c.o -MF CMakeFiles/cmTC_5eeef.dir/src.c.o.d -o CMakeFiles/cmTC_5eeef.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:6:3: error: use of undeclared identifier 'choke'
+  choke
+  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+int main(int argc, char *argv[]) {
+#if defined(__aarch64__) || defined(_M_ARM64)
+  return 0;
+#else
+  choke
+#endif
+}
+
+Performing C SOURCE FILE Test CHECK_CPU_ARCHITECTURE_LOONGARCH64 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_b8eef && [1/2] Building C object CMakeFiles/cmTC_b8eef.dir/src.c.o
+FAILED: CMakeFiles/cmTC_b8eef.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DCHECK_CPU_ARCHITECTURE_LOONGARCH64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fPIE -MD -MT CMakeFiles/cmTC_b8eef.dir/src.c.o -MF CMakeFiles/cmTC_b8eef.dir/src.c.o.d -o CMakeFiles/cmTC_b8eef.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:6:3: error: use of undeclared identifier 'choke'
+  choke
+  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+int main(int argc, char *argv[]) {
+#if defined(__loongarch64)
+  return 0;
+#else
+  choke
+#endif
+}
+
+Performing C SOURCE FILE Test HAVE_ALTIVEC_H_HDR failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_4efc8 && [1/2] Building C object CMakeFiles/cmTC_4efc8.dir/src.c.o
+FAILED: CMakeFiles/cmTC_4efc8.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DHAVE_ALTIVEC_H_HDR  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos" -maltivec -fPIE -MD -MT CMakeFiles/cmTC_4efc8.dir/src.c.o -MF CMakeFiles/cmTC_4efc8.dir/src.c.o.d -o CMakeFiles/cmTC_4efc8.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+clang: warning: argument unused during compilation: '-maltivec' [-Wunused-command-line-argument]
+In file included from /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:2:
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:13:2: error: "AltiVec support not enabled"
+#error "AltiVec support not enabled"
+ ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:50:19: error: unknown type name 'vector'
+static __inline__ vector signed char __ATTRS_o_ai vec_perm(
+                  ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:51:5: error: unknown type name 'vector'
+    vector signed char __a, vector signed char __b, vector unsigned char __c);
+    ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:51:29: error: unknown type name 'vector'
+    vector signed char __a, vector signed char __b, vector unsigned char __c);
+                            ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:51:53: error: unknown type name 'vector'
+    vector signed char __a, vector signed char __b, vector unsigned char __c);
+                                                    ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:53:19: error: unknown type name 'vector'
+static __inline__ vector unsigned char __ATTRS_o_ai
+                  ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:54:10: error: unknown type name 'vector'
+vec_perm(vector unsigned char __a, vector unsigned char __b,
+         ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:54:36: error: unknown type name 'vector'
+vec_perm(vector unsigned char __a, vector unsigned char __b,
+                                   ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:55:10: error: unknown type name 'vector'
+         vector unsigned char __c);
+         ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:57:19: error: unknown type name 'vector'
+static __inline__ vector bool char __ATTRS_o_ai
+                  ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:57:8: error: 'inline' can only appear on functions
+static __inline__ vector bool char __ATTRS_o_ai
+       ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:57:30: error: expected ';' after top level declarator
+static __inline__ vector bool char __ATTRS_o_ai
+                             ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:58:10: error: unknown type name 'vector'
+vec_perm(vector bool char __a, vector bool char __b, vector unsigned char __c);
+         ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:58:22: error: expected ')'
+vec_perm(vector bool char __a, vector bool char __b, vector unsigned char __c);
+                     ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:58:9: note: to match this '('
+vec_perm(vector bool char __a, vector bool char __b, vector unsigned char __c);
+        ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:60:19: error: unknown type name 'vector'
+static __inline__ vector short __ATTRS_o_ai vec_perm(vector signed short __a,
+                  ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:60:54: error: unknown type name 'vector'
+static __inline__ vector short __ATTRS_o_ai vec_perm(vector signed short __a,
+                                                     ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:61:54: error: unknown type name 'vector'
+                                                     vector signed short __b,
+                                                     ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:62:54: error: unknown type name 'vector'
+                                                     vector unsigned char __c);
+                                                     ^
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/altivec.h:64:19: error: unknown type name 'vector'
+static __inline__ vector unsigned short __ATTRS_o_ai
+                  ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+          #include <altivec.h>
+          vector unsigned int vzero() {
+              return vec_splat_u32(0);
+          }
+          int main(int argc, char **argv) { return 0; }
+Performing C SOURCE FILE Test CPU_SUPPORTS_ALTIVEC failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_e8040 && [1/2] Building C object CMakeFiles/cmTC_e8040.dir/src.c.o
+FAILED: CMakeFiles/cmTC_e8040.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DCPU_SUPPORTS_ALTIVEC  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos" -maltivec -fPIE -MD -MT CMakeFiles/cmTC_e8040.dir/src.c.o -MF CMakeFiles/cmTC_e8040.dir/src.c.o.d -o CMakeFiles/cmTC_e8040.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+clang: warning: argument unused during compilation: '-maltivec' [-Wunused-command-line-argument]
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:2:11: error: unknown type name 'vector'
+          vector unsigned int vzero() {
+          ^
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:3:22: warning: implicit declaration of function 'vec_splat_u32' is invalid in C99 [-Wimplicit-function-declaration]
+              return vec_splat_u32(0);
+                     ^
+1 warning and 1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+          vector unsigned int vzero() {
+              return vec_splat_u32(0);
+          }
+          int main(int argc, char **argv) { return 0; }
+Determining if the include file libunwind.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_db575 && [1/2] Building C object CMakeFiles/cmTC_db575.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_db575.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_db575.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_db575.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_db575.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'libunwind.h' file not found
+#include <libunwind.h>
+         ^~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the _strrev exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_71991 && [1/2] Building C object CMakeFiles/cmTC_71991.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_71991.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_71991.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_71991.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_71991.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_strrev'; did you mean 'strsep'?
+  return ((int*)(&_strrev))[argc];
+                  ^~~~~~~
+                  strsep
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/string.h:150:7: note: 'strsep' declared here
+char* strsep(char** __s_ptr, const char* __delimiter);
+      ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strrev
+  return ((int*)(&_strrev))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _strupr exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_ade85 && [1/2] Building C object CMakeFiles/cmTC_ade85.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_ade85.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_ade85.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_ade85.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_ade85.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_strupr'
+  return ((int*)(&_strupr))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strupr
+  return ((int*)(&_strupr))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _strlwr exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_b581c && [1/2] Building C object CMakeFiles/cmTC_b581c.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_b581c.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_b581c.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_b581c.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_b581c.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_strlwr'; did you mean 'strstr'?
+  return ((int*)(&_strlwr))[argc];
+                  ^~~~~~~
+                  strstr
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/string.h:112:7: note: 'strstr' declared here
+char* strstr(const char* __haystack, const char* __needle) __attribute_pure__;
+      ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strlwr
+  return ((int*)(&_strlwr))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the index exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_849b8 && [1/2] Building C object CMakeFiles/cmTC_849b8.dir/CheckSymbolExists.c.o
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: warning: implicitly declaring library function 'index' with type 'char *(const char *, int)' [-Wimplicit-function-declaration]
+  return ((int*)(&index))[argc];
+                  ^
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: include the header <strings.h> or explicitly provide a declaration for 'index'
+1 warning generated.
+[2/2] Linking C executable cmTC_849b8
+FAILED: cmTC_849b8 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_849b8.dir/CheckSymbolExists.c.o -o cmTC_849b8  -latomic -lm && :
+ld: error: undefined symbol: index
+>>> referenced by CheckSymbolExists.c:14
+>>>               CMakeFiles/cmTC_849b8.dir/CheckSymbolExists.c.o:(main)
+>>> referenced by CheckSymbolExists.c:14
+>>>               CMakeFiles/cmTC_849b8.dir/CheckSymbolExists.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef index
+  return ((int*)(&index))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the rindex exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_369af && [1/2] Building C object CMakeFiles/cmTC_369af.dir/CheckSymbolExists.c.o
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: warning: implicitly declaring library function 'rindex' with type 'char *(const char *, int)' [-Wimplicit-function-declaration]
+  return ((int*)(&rindex))[argc];
+                  ^
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: include the header <strings.h> or explicitly provide a declaration for 'rindex'
+1 warning generated.
+[2/2] Linking C executable cmTC_369af
+FAILED: cmTC_369af 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_369af.dir/CheckSymbolExists.c.o -o cmTC_369af  -latomic -lm && :
+ld: error: undefined symbol: rindex
+>>> referenced by CheckSymbolExists.c:14
+>>>               CMakeFiles/cmTC_369af.dir/CheckSymbolExists.c.o:(main)
+>>> referenced by CheckSymbolExists.c:14
+>>>               CMakeFiles/cmTC_369af.dir/CheckSymbolExists.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef rindex
+  return ((int*)(&rindex))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the itoa exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_3cba3 && [1/2] Building C object CMakeFiles/cmTC_3cba3.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_3cba3.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_3cba3.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_3cba3.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_3cba3.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier 'itoa'
+  return ((int*)(&itoa))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef itoa
+  return ((int*)(&itoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _ltoa exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_25c32 && [1/2] Building C object CMakeFiles/cmTC_25c32.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_25c32.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_25c32.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_25c32.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_25c32.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_ltoa'
+  return ((int*)(&_ltoa))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _ltoa
+  return ((int*)(&_ltoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _uitoa exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_a372e && [1/2] Building C object CMakeFiles/cmTC_a372e.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_a372e.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_a372e.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_a372e.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_a372e.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_uitoa'
+  return ((int*)(&_uitoa))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _uitoa
+  return ((int*)(&_uitoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _ultoa exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_79064 && [1/2] Building C object CMakeFiles/cmTC_79064.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_79064.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_79064.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_79064.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_79064.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_ultoa'
+  return ((int*)(&_ultoa))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _ultoa
+  return ((int*)(&_ultoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _i64toa exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_45ff9 && [1/2] Building C object CMakeFiles/cmTC_45ff9.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_45ff9.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_45ff9.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_45ff9.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_45ff9.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_i64toa'
+  return ((int*)(&_i64toa))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _i64toa
+  return ((int*)(&_i64toa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _ui64toa exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_afaae && [1/2] Building C object CMakeFiles/cmTC_afaae.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_afaae.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_afaae.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_afaae.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_afaae.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_ui64toa'
+  return ((int*)(&_ui64toa))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _ui64toa
+  return ((int*)(&_ui64toa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _stricmp exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_f73e3 && [1/2] Building C object CMakeFiles/cmTC_f73e3.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_f73e3.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_f73e3.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_f73e3.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_f73e3.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_stricmp'
+  return ((int*)(&_stricmp))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _stricmp
+  return ((int*)(&_stricmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _strnicmp exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_4c30f && [1/2] Building C object CMakeFiles/cmTC_4c30f.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_4c30f.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_4c30f.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_4c30f.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_4c30f.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_strnicmp'; did you mean 'strncmp'?
+  return ((int*)(&_strnicmp))[argc];
+                  ^~~~~~~~~
+                  strncmp
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/string.h:137:5: note: 'strncmp' declared here
+int strncmp(const char* __lhs, const char* __rhs, size_t __n) __attribute_pure__;
+    ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strnicmp
+  return ((int*)(&_strnicmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _wcsdup exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_6ccd6 && [1/2] Building C object CMakeFiles/cmTC_6ccd6.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_6ccd6.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_6ccd6.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_6ccd6.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_6ccd6.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_wcsdup'; did you mean 'wcsdup'?
+  return ((int*)(&_wcsdup))[argc];
+                  ^~~~~~~
+                  wcsdup
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/wchar.h:208:10: note: 'wcsdup' declared here
+wchar_t* wcsdup(const wchar_t* __s);
+         ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _wcsdup
+  return ((int*)(&_wcsdup))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _wcsicmp exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_861c0 && [1/2] Building C object CMakeFiles/cmTC_861c0.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_861c0.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_861c0.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_861c0.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_861c0.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_wcsicmp'
+  return ((int*)(&_wcsicmp))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _wcsicmp
+  return ((int*)(&_wcsicmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _wcsnicmp exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_5b042 && [1/2] Building C object CMakeFiles/cmTC_5b042.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_5b042.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_5b042.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_5b042.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_5b042.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: use of undeclared identifier '_wcsnicmp'; did you mean 'wcsncmp'?
+  return ((int*)(&_wcsnicmp))[argc];
+                  ^~~~~~~~~
+                  wcsncmp
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/wchar.h:117:5: note: 'wcsncmp' declared here
+int wcsncmp(const wchar_t* __lhs, const wchar_t* __rhs, size_t __n);
+    ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _wcsnicmp
+  return ((int*)(&_wcsnicmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the sysctlbyname exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_111d2 && [1/2] Building C object CMakeFiles/cmTC_111d2.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_111d2.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_111d2.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_111d2.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_111d2.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:3:10: fatal error: 'sys/sysctl.h' file not found
+#include <sys/sysctl.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef sysctlbyname
+  return ((int*)(&sysctlbyname))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the elf_aux_info exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_c0654 && [1/2] Building C object CMakeFiles/cmTC_c0654.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_c0654.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_c0654.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_c0654.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_c0654.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: use of undeclared identifier 'elf_aux_info'
+  return ((int*)(&elf_aux_info))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <sys/auxv.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef elf_aux_info
+  return ((int*)(&elf_aux_info))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the function iconv_open exists in the iconv failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_6edf1 && [1/2] Building C object CMakeFiles/cmTC_6edf1.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_6edf1
+FAILED: cmTC_6edf1 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos" -DCHECK_FUNCTION_EXISTS=iconv_open  -D_GNU_SOURCE=1 -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_6edf1.dir/CheckFunctionExists.c.o -o cmTC_6edf1  -liconv  -latomic -lm && :
+ld: error: unable to find library -liconv
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the function iconv_open exists in the c failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_85c02 && [1/2] Building C object CMakeFiles/cmTC_85c02.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_85c02
+FAILED: cmTC_85c02 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos" -DCHECK_FUNCTION_EXISTS=iconv_open  -D_GNU_SOURCE=1 -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_85c02.dir/CheckFunctionExists.c.o -o cmTC_85c02  -lc  -latomic -lm && :
+ld: error: undefined symbol: iconv_open
+>>> referenced by CheckFunctionExists.c:17 (/Users/jffzh/Library/Android/sdk/cmake/3.22.1/share/cmake-3.22/Modules/CheckFunctionExists.c:17)
+>>>               CMakeFiles/cmTC_85c02.dir/CheckFunctionExists.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the alloca exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_abe7c && [1/2] Building C object CMakeFiles/cmTC_abe7c.dir/CheckSymbolExists.c.o
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: warning: implicitly declaring library function 'alloca' with type 'void *(unsigned int)' [-Wimplicit-function-declaration]
+  return ((int*)(&alloca))[argc];
+                  ^
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: note: include the header <stdlib.h> or explicitly provide a declaration for 'alloca'
+1 warning generated.
+[2/2] Linking C executable cmTC_abe7c
+FAILED: cmTC_abe7c 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_abe7c.dir/CheckSymbolExists.c.o -o cmTC_abe7c  -latomic -lm && :
+ld: error: undefined symbol: alloca
+>>> referenced by CheckSymbolExists.c:8
+>>>               CMakeFiles/cmTC_abe7c.dir/CheckSymbolExists.c.o:(main)
+>>> referenced by CheckSymbolExists.c:8
+>>>               CMakeFiles/cmTC_abe7c.dir/CheckSymbolExists.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <malloc.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef alloca
+  return ((int*)(&alloca))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Performing C SOURCE FILE Test HAVE_ARM_MODE failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_e3b8a && [1/2] Building C object CMakeFiles/cmTC_e3b8a.dir/src.c.o
+FAILED: CMakeFiles/cmTC_e3b8a.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DHAVE_ARM_MODE  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos" -Werror=unused-command-line-argument -fPIE   -marm -MD -MT CMakeFiles/cmTC_e3b8a.dir/src.c.o -MF CMakeFiles/cmTC_e3b8a.dir/src.c.o.d -o CMakeFiles/cmTC_e3b8a.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+clang: error: argument unused during compilation: '-marm' [-Werror,-Wunused-command-line-argument]
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+int main(void) { return 0; }
+Determining if files pthread_np.h exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_309c0 && [1/2] Building C object CMakeFiles/cmTC_309c0.dir/HAVE_PTHREAD_NP_H.c.o
+FAILED: CMakeFiles/cmTC_309c0.dir/HAVE_PTHREAD_NP_H.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -idirafter "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../src/video/khronos"  -D_GNU_SOURCE=1 -fPIE -MD -MT CMakeFiles/cmTC_309c0.dir/HAVE_PTHREAD_NP_H.c.o -MF CMakeFiles/cmTC_309c0.dir/HAVE_PTHREAD_NP_H.c.o.d -o CMakeFiles/cmTC_309c0.dir/HAVE_PTHREAD_NP_H.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_PTHREAD_NP_H.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_PTHREAD_NP_H.c:2:10: fatal error: 'pthread_np.h' file not found
+#include <pthread_np.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <pthread_np.h>
+
+
+int main(void){return 0;}
+
+Performing C SOURCE FILE Test C_FLAG_Warray_parameter_0 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_c09f5 && [1/2] Building C object CMakeFiles/cmTC_c09f5.dir/src.c.o
+warning: unknown warning option '-Warray-parameter=0'; did you mean '-Wunused-parameter'? [-Wunknown-warning-option]
+1 warning generated.
+[2/2] Linking C executable cmTC_c09f5
+
+
+Source file was:
+int main(void) { return 0; }
+Determining if the include file io.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_839ab && [1/2] Building C object CMakeFiles/cmTC_839ab.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_839ab.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_839ab.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_839ab.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_839ab.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'io.h' file not found
+#include <io.h>
+         ^~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the setmode exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_d1684 && [1/2] Building C object CMakeFiles/cmTC_d1684.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_d1684.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_d1684.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_d1684.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_d1684.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: use of undeclared identifier 'setmode'
+  return ((int*)(&setmode))[argc];
+                  ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <unistd.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef setmode
+  return ((int*)(&setmode))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the jbg_newlen exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_ba10d && [1/2] Building C object CMakeFiles/cmTC_ba10d.dir/CheckSymbolExists.c.o
+FAILED: CMakeFiles/cmTC_ba10d.dir/CheckSymbolExists.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_ba10d.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_ba10d.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_ba10d.dir/CheckSymbolExists.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:2:10: fatal error: 'jbig.h' file not found
+#include <jbig.h>
+         ^~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+File /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <jbig.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef jbg_newlen
+  return ((int*)(&jbg_newlen))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the include file GL/gl.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_946a0 && [1/2] Building C object CMakeFiles/cmTC_946a0.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_946a0.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_946a0.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_946a0.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_946a0.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'GL/gl.h' file not found
+#include <GL/gl.h>
+         ^~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file GL/glu.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_8326e && [1/2] Building C object CMakeFiles/cmTC_8326e.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_8326e.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_8326e.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_8326e.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_8326e.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'GL/glu.h' file not found
+#include <GL/glu.h>
+         ^~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file GL/glut.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_f9f04 && [1/2] Building C object CMakeFiles/cmTC_f9f04.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_f9f04.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_f9f04.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_f9f04.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_f9f04.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'GL/glut.h' file not found
+#include <GL/glut.h>
+         ^~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file GLUT/glut.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_fa7fc && [1/2] Building C object CMakeFiles/cmTC_fa7fc.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_fa7fc.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_fa7fc.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_fa7fc.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_fa7fc.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'GLUT/glut.h' file not found
+#include <GLUT/glut.h>
+         ^~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file OpenGL/gl.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_0ddd0 && [1/2] Building C object CMakeFiles/cmTC_0ddd0.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_0ddd0.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_0ddd0.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_0ddd0.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_0ddd0.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'OpenGL/gl.h' file not found
+#include <OpenGL/gl.h>
+         ^~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the include file OpenGL/glu.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_fa3be && [1/2] Building C object CMakeFiles/cmTC_fa3be.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_fa3be.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Winline -W -Wformat-security -Wpointer-arith -Wdisabled-optimization -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wdeclaration-after-statement -fstrict-aliasing  -fPIE -MD -MT CMakeFiles/cmTC_fa3be.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_fa3be.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_fa3be.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'OpenGL/glu.h' file not found
+#include <OpenGL/glu.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if files OpenGL/glut.h exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_0bb5a && [1/2] Building C object CMakeFiles/cmTC_0bb5a.dir/HAVE_OPENGL_GLUT_H.c.o
+FAILED: CMakeFiles/cmTC_0bb5a.dir/HAVE_OPENGL_GLUT_H.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_0bb5a.dir/HAVE_OPENGL_GLUT_H.c.o -MF CMakeFiles/cmTC_0bb5a.dir/HAVE_OPENGL_GLUT_H.c.o.d -o CMakeFiles/cmTC_0bb5a.dir/HAVE_OPENGL_GLUT_H.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_OPENGL_GLUT_H.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_OPENGL_GLUT_H.c:2:10: fatal error: 'OpenGL/glut.h' file not found
+#include <OpenGL/glut.h>
+         ^~~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <OpenGL/glut.h>
+
+
+int main(void){return 0;}
+
+Determining if files shlwapi.h exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_c7901 && [1/2] Building C object CMakeFiles/cmTC_c7901.dir/HAVE_SHLWAPI_H.c.o
+FAILED: CMakeFiles/cmTC_c7901.dir/HAVE_SHLWAPI_H.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_c7901.dir/HAVE_SHLWAPI_H.c.o -MF CMakeFiles/cmTC_c7901.dir/HAVE_SHLWAPI_H.c.o.d -o CMakeFiles/cmTC_c7901.dir/HAVE_SHLWAPI_H.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_SHLWAPI_H.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_SHLWAPI_H.c:2:10: fatal error: 'shlwapi.h' file not found
+#include <shlwapi.h>
+         ^~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <shlwapi.h>
+
+
+int main(void){return 0;}
+
+Determining if files wincodec.h exist failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_0f419 && [1/2] Building C object CMakeFiles/cmTC_0f419.dir/HAVE_WINCODEC_H.c.o
+FAILED: CMakeFiles/cmTC_0f419.dir/HAVE_WINCODEC_H.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_0f419.dir/HAVE_WINCODEC_H.c.o -MF CMakeFiles/cmTC_0f419.dir/HAVE_WINCODEC_H.c.o.d -o CMakeFiles/cmTC_0f419.dir/HAVE_WINCODEC_H.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_WINCODEC_H.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CheckIncludeFiles/HAVE_WINCODEC_H.c:2:10: fatal error: 'wincodec.h' file not found
+#include <wincodec.h>
+         ^~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <wincodec.h>
+
+
+int main(void){return 0;}
+
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_SSE41 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_11280 && [1/2] Building C object CMakeFiles/cmTC_11280.dir/src.c.o
+FAILED: CMakeFiles/cmTC_11280.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_SSE41 -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_11280.dir/src.c.o -MF CMakeFiles/cmTC_11280.dir/src.c.o.d -o CMakeFiles/cmTC_11280.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_SSE41)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_518d2 && [1/2] Building C object CMakeFiles/cmTC_518d2.dir/src.c.o
+FAILED: CMakeFiles/cmTC_518d2.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS32 -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_518d2.dir/src.c.o -MF CMakeFiles/cmTC_518d2.dir/src.c.o.d -o CMakeFiles/cmTC_518d2.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_5edf6 && [1/2] Building C object CMakeFiles/cmTC_5edf6.dir/src.c.o
+FAILED: CMakeFiles/cmTC_5edf6.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS32 -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mips32 -fPIE -MD -MT CMakeFiles/cmTC_5edf6.dir/src.c.o -MF CMakeFiles/cmTC_5edf6.dir/src.c.o.d -o CMakeFiles/cmTC_5edf6.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+error: unknown target CPU 'mips32'
+note: valid target CPU values are: i386, i486, winchip-c6, winchip2, c3, i586, pentium, pentium-mmx, pentiumpro, i686, pentium2, pentium3, pentium3m, pentium-m, c3-2, yonah, pentium4, pentium4m, prescott, nocona, core2, penryn, bonnell, atom, silvermont, slm, goldmont, goldmont-plus, tremont, nehalem, corei7, westmere, sandybridge, corei7-avx, ivybridge, core-avx-i, haswell, core-avx2, broadwell, skylake, skylake-avx512, skx, cascadelake, cooperlake, cannonlake, icelake-client, rocketlake, icelake-server, tigerlake, sapphirerapids, alderlake, knl, knm, lakemont, k6, k6-2, k6-3, athlon, athlon-tbird, athlon-xp, athlon-mp, athlon-4, k8, athlon64, athlon-fx, opteron, k8-sse3, athlon64-sse3, opteron-sse3, amdfam10, barcelona, btver1, btver2, bdver1, bdver2, bdver3, bdver4, znver1, znver2, znver3, x86-64, x86-64-v2, x86-64-v3, x86-64-v4, geode
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_6e1aa && [1/2] Building C object CMakeFiles/cmTC_6e1aa.dir/src.c.o
+FAILED: CMakeFiles/cmTC_6e1aa.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS_DSP_R2 -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_6e1aa.dir/src.c.o -MF CMakeFiles/cmTC_6e1aa.dir/src.c.o.d -o CMakeFiles/cmTC_6e1aa.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_3f2ac && [1/2] Building C object CMakeFiles/cmTC_3f2ac.dir/src.c.o
+FAILED: CMakeFiles/cmTC_3f2ac.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS_DSP_R2 -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mdspr2 -fPIE -MD -MT CMakeFiles/cmTC_3f2ac.dir/src.c.o -MF CMakeFiles/cmTC_3f2ac.dir/src.c.o.d -o CMakeFiles/cmTC_3f2ac.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+clang: warning: argument unused during compilation: '-mdspr2' [-Wunused-command-line-argument]
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test FLAG_-mno-dspr2 failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_959c3 && [1/2] Building C object CMakeFiles/cmTC_959c3.dir/src.c.o
+clang: warning: argument unused during compilation: '-mdspr2' [-Wunused-command-line-argument]
+clang: warning: argument unused during compilation: '-mno-dspr2' [-Wunused-command-line-argument]
+In file included from <built-in>:368:
+<command line>:3:14: warning: ISO C99 requires whitespace after the macro name [-Wc99-extensions]
+#define FLAG_-mno-dspr2 1
+             ^
+1 warning generated.
+[2/2] Linking C executable cmTC_959c3
+
+
+Source file was:
+int main(void) {return 0;}
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_156fb && [1/2] Building C object CMakeFiles/cmTC_156fb.dir/src.c.o
+FAILED: CMakeFiles/cmTC_156fb.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_NEON -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_156fb.dir/src.c.o -MF CMakeFiles/cmTC_156fb.dir/src.c.o.d -o CMakeFiles/cmTC_156fb.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_de887 && [1/2] Building C object CMakeFiles/cmTC_de887.dir/src.c.o
+FAILED: CMakeFiles/cmTC_de887.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_NEON -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mfpu=neon -fPIE -MD -MT CMakeFiles/cmTC_de887.dir/src.c.o -MF CMakeFiles/cmTC_de887.dir/src.c.o.d -o CMakeFiles/cmTC_de887.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+clang: warning: argument unused during compilation: '-mfpu=neon' [-Wunused-command-line-argument]
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_c320c && [1/2] Building C object CMakeFiles/cmTC_c320c.dir/src.c.o
+FAILED: CMakeFiles/cmTC_c320c.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_MSA -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_c320c.dir/src.c.o -MF CMakeFiles/cmTC_c320c.dir/src.c.o.d -o CMakeFiles/cmTC_c320c.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_b20a1 && [1/2] Building C object CMakeFiles/cmTC_b20a1.dir/src.c.o
+FAILED: CMakeFiles/cmTC_b20a1.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DWEBP_HAVE_FLAG_MSA -I/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mmsa -fPIE -MD -MT CMakeFiles/cmTC_b20a1.dir/src.c.o -MF CMakeFiles/cmTC_b20a1.dir/src.c.o.d -o CMakeFiles/cmTC_b20a1.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+clang: warning: argument unused during compilation: '-mmsa' [-Wunused-command-line-argument]
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/../../external/libwebp/src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test FLAG_-mno-msa failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_e83bf && [1/2] Building C object CMakeFiles/cmTC_e83bf.dir/src.c.o
+clang: warning: argument unused during compilation: '-mmsa' [-Wunused-command-line-argument]
+clang: warning: argument unused during compilation: '-mno-msa' [-Wunused-command-line-argument]
+In file included from <built-in>:368:
+<command line>:3:14: warning: ISO C99 requires whitespace after the macro name [-Wc99-extensions]
+#define FLAG_-mno-msa 1
+             ^
+1 warning generated.
+[2/2] Linking C executable cmTC_e83bf
+
+
+Source file was:
+int main(void) {return 0;}
+Determining if the function FT_Get_Var_Blend_Coordinates exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_7ea88 && [1/2] Building C object CMakeFiles/cmTC_7ea88.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_7ea88
+FAILED: cmTC_7ea88 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -DCHECK_FUNCTION_EXISTS=FT_Get_Var_Blend_Coordinates -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_7ea88.dir/CheckFunctionExists.c.o -o cmTC_7ea88  -lm  -latomic -lm && :
+ld: error: undefined symbol: FT_Get_Var_Blend_Coordinates
+>>> referenced by CheckFunctionExists.c:17 (/Users/jffzh/Library/Android/sdk/cmake/3.22.1/share/cmake-3.22/Modules/CheckFunctionExists.c:17)
+>>>               CMakeFiles/cmTC_7ea88.dir/CheckFunctionExists.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the function FT_Set_Var_Blend_Coordinates exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_52176 && [1/2] Building C object CMakeFiles/cmTC_52176.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_52176
+FAILED: cmTC_52176 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -DCHECK_FUNCTION_EXISTS=FT_Set_Var_Blend_Coordinates -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_52176.dir/CheckFunctionExists.c.o -o cmTC_52176  -lm  -latomic -lm && :
+ld: error: undefined symbol: FT_Set_Var_Blend_Coordinates
+>>> referenced by CheckFunctionExists.c:17 (/Users/jffzh/Library/Android/sdk/cmake/3.22.1/share/cmake-3.22/Modules/CheckFunctionExists.c:17)
+>>>               CMakeFiles/cmTC_52176.dir/CheckFunctionExists.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the function FT_Done_MM_Var exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_15b79 && [1/2] Building C object CMakeFiles/cmTC_15b79.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_15b79
+FAILED: cmTC_15b79 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -DCHECK_FUNCTION_EXISTS=FT_Done_MM_Var -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_15b79.dir/CheckFunctionExists.c.o -o cmTC_15b79  -lm  -latomic -lm && :
+ld: error: undefined symbol: FT_Done_MM_Var
+>>> referenced by CheckFunctionExists.c:17 (/Users/jffzh/Library/Android/sdk/cmake/3.22.1/share/cmake-3.22/Modules/CheckFunctionExists.c:17)
+>>>               CMakeFiles/cmTC_15b79.dir/CheckFunctionExists.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+
+Performing C SOURCE FILE Test Iconv_IS_BUILT_IN failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_10377 && [1/2] Building C object CMakeFiles/cmTC_10377.dir/src.c.o
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:8:14: warning: implicit declaration of function 'iconv_open' is invalid in C99 [-Wimplicit-function-declaration]
+        ic = iconv_open("to", "from");
+             ^
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:8:12: warning: incompatible integer to pointer conversion assigning to 'iconv_t' (aka 'struct __iconv_t *') from 'int' [-Wint-conversion]
+        ic = iconv_open("to", "from");
+           ^ ~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:9:9: warning: implicit declaration of function 'iconv' is invalid in C99 [-Wimplicit-function-declaration]
+        iconv(ic, &a, &i, &b, &j);
+        ^
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:10:9: warning: implicit declaration of function 'iconv_close' is invalid in C99 [-Wimplicit-function-declaration]
+        iconv_close(ic);
+        ^
+4 warnings generated.
+[2/2] Linking C executable cmTC_10377
+FAILED: cmTC_10377 
+: && /Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_10377.dir/src.c.o -o cmTC_10377  -latomic -lm && :
+ld: error: undefined symbol: iconv_open
+>>> referenced by src.c:8
+>>>               CMakeFiles/cmTC_10377.dir/src.c.o:(main)
+
+ld: error: undefined symbol: iconv
+>>> referenced by src.c:9
+>>>               CMakeFiles/cmTC_10377.dir/src.c.o:(main)
+
+ld: error: undefined symbol: iconv_close
+>>> referenced by src.c:10
+>>>               CMakeFiles/cmTC_10377.dir/src.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include <stddef.h>
+      #include <iconv.h>
+      int main() {
+        char *a, *b;
+        size_t i, j;
+        iconv_t ic;
+        ic = iconv_open("to", "from");
+        iconv(ic, &a, &i, &b, &j);
+        iconv_close(ic);
+      }
+      
+Determining if the include file arm_neon.h exists failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_2f08b && [1/2] Building C object CMakeFiles/cmTC_2f08b.dir/CheckIncludeFile.c.o
+FAILED: CMakeFiles/cmTC_2f08b.dir/CheckIncludeFile.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot   -Wall -Wextra -Wstrict-prototypes -Wmissing-prototypes -Waggregate-return -Wcast-align -Wnested-externs -Wshadow -Wundef -Wmissing-declarations -Winline -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fPIE -MD -MT CMakeFiles/cmTC_2f08b.dir/CheckIncludeFile.c.o -MF CMakeFiles/cmTC_2f08b.dir/CheckIncludeFile.c.o.d -o CMakeFiles/cmTC_2f08b.dir/CheckIncludeFile.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+In file included from /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.6/include/arm_neon.h:28:2: error: "NEON intrinsics not available with the soft-float ABI. Please use -mfloat-abi=softfp or -mfloat-abi=hard"
+#error "NEON intrinsics not available with the soft-float ABI. Please use -mfloat-abi=softfp or -mfloat-abi=hard"
+ ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+
+Performing C SOURCE FILE Test Intl_IS_BUILT_IN failed with the following output:
+Change Dir: /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/Users/jffzh/Library/Android/sdk/cmake/3.22.1/bin/ninja cmTC_6d967 && [1/2] Building C object CMakeFiles/cmTC_6d967.dir/src.c.o
+FAILED: CMakeFiles/cmTC_6d967.dir/src.c.o 
+/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=i686-none-linux-android26 --sysroot=/Users/jffzh/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DIntl_IS_BUILT_IN  -Wall -Wextra -Wstrict-prototypes -Wmissing-prototypes -Waggregate-return -Wcast-align -Wnested-externs -Wshadow -Wundef -Wmissing-declarations -Winline -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fPIE -MD -MT CMakeFiles/cmTC_6d967.dir/src.c.o -MF CMakeFiles/cmTC_6d967.dir/src.c.o.d -o CMakeFiles/cmTC_6d967.dir/src.c.o -c /Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c
+/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/CMakeFiles/CMakeTmp/src.c:1:10: fatal error: 'libintl.h' file not found
+#include <libintl.h>
+         ^~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+#include <libintl.h>
+int main(void) {
+  gettext("");
+  dgettext("", "");
+  dcgettext("", "", 0);
+  return 0;
+}
+

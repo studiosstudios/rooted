@@ -89,8 +89,6 @@ const float PI = 3.1415926535f;
 
 /** Objects */
 //uniform vec2 farmer_pos;
-uniform vec2 cam_pos;
-uniform vec2 cam_vel;
 uniform vec2 positions[100];
 uniform float velocities[100];
 uniform int num_entities;
@@ -186,12 +184,6 @@ void main(void) {
         baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0f);
     }
     else {
-//        baseColor = vec4(0.5333, 0.7529, 0.5176, 1.0);
-        //baseColor = vec4(0.819608, 0.819608, 0.219608, 1.0);
-//        baseColor = vec4(0.0);
-//        if (distance(fragUV, cam_pos) < 0.03) {
-//            baseColor = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
-//        }
         baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0f);
     }
 

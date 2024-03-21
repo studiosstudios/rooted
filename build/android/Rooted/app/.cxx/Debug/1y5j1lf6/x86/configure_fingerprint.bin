@@ -1,0 +1,100 @@
+C/C++ Structured LogU
+S
+Q/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/android/jni/cugl/CMakeLists.txtC
+A
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ªŸä”æ1Ú ğ¯íËÙ1Y
+W
+U/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/box2d/CMakeLists.txt	ªŸä”æ1ü øĞĞĞ1]
+[
+Y/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/box2d/src/CMakeLists.txt	ªŸä”æ1—- øĞĞĞ1b
+`
+^/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/CMakeLists.txt	ªŸä”æ1ŞM øĞĞĞ1p
+n
+l/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/libjuice/CMakeLists.txt	ªŸä”æ1Å øĞĞĞ1o
+m
+k/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/libsrtp/CMakeLists.txt	ªŸä”æ1‡? øĞĞĞ1o
+m
+k/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/openssl/CMakeLists.txt	ªŸä”æ1¨; øĞĞĞ1v
+t
+r/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/openssl/crypto/CMakeLists.txt	«Ÿä”æ1	Òh øĞĞĞ1s
+q
+o/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/openssl/ssl/CMakeLists.txt	«Ÿä”æ1
+ù øĞĞĞ1l
+j
+h/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/plog/CMakeLists.txt	«Ÿä”æ1å øĞĞĞ1o
+m
+k/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/usrsctp/CMakeLists.txt	«Ÿä”æ1”N øĞĞĞ1z
+x
+v/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/libdatachannel/deps/usrsctp/usrsctplib/CMakeLists.txt	«Ÿä”æ1³: øĞĞĞ1\
+Z
+X/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/poly2tri/CMakeLists.txt	«Ÿä”æ1¬ øĞĞĞ1Q
+O
+M/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/CMakeLists.txt	«Ÿä”æ1´ ˆ¨íËÙ1V
+T
+R/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2/CMakeLists.txt	«Ÿä”æ1½÷ ˆ¨íËÙ1Y
+W
+U/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2app/CMakeLists.txt	«Ÿä”æ1Ã0 ˆ¨íËÙ1Y
+W
+U/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/CMakeLists.txt	«Ÿä”æ1¸‚ ˆ¨íËÙ1g
+e
+c/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/CMakeLists.txt	«Ÿä”æ1ÄA ˆ¨íËÙ1k
+i
+g/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/CMakeLists.txt	«Ÿä”æ1Æ ˆ™ÓĞ1s
+q
+o/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/libFLAC/CMakeLists.txt	«Ÿä”æ1ÿ# ˆ™ÓĞ1x
+v
+t/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/getopt/CMakeLists.txt	«Ÿä”æ1™ ˆ™ÓĞ1y
+w
+u/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/grabbag/CMakeLists.txt	«Ÿä”æ1î ˆ™ÓĞ1‡
+„
+/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/replaygain_analysis/CMakeLists.txt	«Ÿä”æ1l ˆ™ÓĞ1ˆ
+…
+‚/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/replaygain_synthesis/CMakeLists.txt	«Ÿä”æ1o ˆ™ÓĞ1v
+t
+r/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/flac/src/share/utf8/CMakeLists.txt	«Ÿä”æ1Š ˆ™ÓĞ1j
+h
+f/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/kissfft/CMakeLists.txt	«Ÿä”æ1ÓC ˆ¨íËÙ1f
+d
+b/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/ogg/CMakeLists.txt	«Ÿä”æ1Î5 ˆ¨íËÙ1i
+g
+e/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/vorbis/CMakeLists.txt	«Ÿä”æ1Û ˆ¨íËÙ1m
+k
+i/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2atk/external/vorbis/lib/CMakeLists.txt	«Ÿä”æ1+ ˆ™ÓĞ1[
+Y
+W/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/CMakeLists.txt	«Ÿä”æ1ıù ˆ¨íËÙ1l
+j
+h/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libtiff/CMakeLists.txt	«Ÿä”æ1 Ê¸ ˆ¨íËÙ1t
+r
+p/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libtiff/libtiff/CMakeLists.txt	«Ÿä”æ1!2 ˆ™ÓĞ1l
+j
+h/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2image/external/libwebp/CMakeLists.txt	«Ÿä”æ1"¾Á ˆ¨íËÙ1Y
+W
+U/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2ttf/CMakeLists.txt	«Ÿä”æ1#Åv ˆ¨íËÙ1k
+i
+g/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2ttf/external/freetype/CMakeLists.txt	«Ÿä”æ1$­¨ ˆ¨íËÙ1k
+i
+g/Users/jffzh/Cornell/23-24/CS4152/cugl/sdlapp/buildfiles/cmake/sdl2ttf/external/harfbuzz/CMakeLists.txt	«Ÿä”æ1%¥Å ˆ¨íËÙ1z
+x
+v/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/additional_project_files.txt	«Ÿä”æ1&øç öáŒæ1w
+u
+s/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/android_gradle_build.json	«Ÿä”æ1'Á ıáŒæ1|
+z
+x/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/android_gradle_build_mini.json	«Ÿä”æ1(û† Â“áŒæ1i
+g
+e/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/build.ninja	«Ÿä”æ1)˜ŸÙ …áŒæ1m
+k
+i/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/build.ninja.txt	«Ÿä”æ1*r
+p
+n/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/build_file_index.txt	«Ÿä”æ1+É É“áŒæ1s
+q
+o/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/compile_commands.json	«Ÿä”æ1,§ú  …áŒæ1w
+u
+s/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/compile_commands.json.bin	«Ÿä”æ1-ÖÅ …áŒæ1}
+{
+y/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/metadata_generation_command.txt	«Ÿä”æ1.ó È“áŒæ1p
+n
+l/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/prefab_config.json	«Ÿä”æ1/( È“áŒæ1u
+s
+q/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/x86/symbol_folder_index.txt	«Ÿä”æ10p È“áŒæ1X
+V
+T/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/jni/CMakeLists.txt	«Ÿä”æ11 ÖñİŒæ1

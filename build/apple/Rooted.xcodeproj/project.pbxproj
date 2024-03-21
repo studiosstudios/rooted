@@ -82,10 +82,10 @@
 		BCBFDF4CBC567647216C819D /* Wheat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA5F6693A3BAD01DFF33EDE8 /* Wheat.cpp */; };
 		BBCE995936C6E2021DECC8F4 /* EntityModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAAFFC5FE0E34A4DF9C8AF0B /* EntityModel.cpp */; };
 		BCCE66CFDF0117B82C384CE6 /* EntityModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAAFFC5FE0E34A4DF9C8AF0B /* EntityModel.cpp */; };
-		BBCFB4FC19ED149684F7CED8 /* GroundRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAB43FEA0FDE20FF6E2164D9 /* GroundRenderer.cpp */; };
-		BCFE4CE1EA5ECFFAD671B7D9 /* GroundRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAB43FEA0FDE20FF6E2164D9 /* GroundRenderer.cpp */; };
 		BBF40C439FADDEA73D8BBCB9 /* WheatRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA226FE6B7AA15C74EFEA34C /* WheatRenderer.cpp */; };
 		BC385ADACFF15FD6E3AE94DF /* WheatRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA226FE6B7AA15C74EFEA34C /* WheatRenderer.cpp */; };
+		BBBCBEFA8FB5EEB17B78FEFA /* ShaderNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA0F6BFA8D36C1998B367AE8 /* ShaderNode.cpp */; };
+		BC9FFBC86E6F9138BFE0E6AC /* ShaderNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA0F6BFA8D36C1998B367AE8 /* ShaderNode.cpp */; };
 		BBCE75E1D7DCAF7DD1FD7C2D /* DashEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAFD02EE04E05E9D4089FF2E /* DashEvent.cpp */; };
 		BCBCFA0F0CDB15DE59D1A4C6 /* DashEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAFD02EE04E05E9D4089FF2E /* DashEvent.cpp */; };
 		BBF4B9BE00FFCD3FFE1CDFAD /* RootEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA0BBDA5CCCACD51DFBD5B4B /* RootEvent.cpp */; };
@@ -197,10 +197,10 @@
 		BA3DEF8E176B6B5AC1FB694F /* EntityModel.h */ = {isa = PBXFileReference; fileEncoding = 4; path = EntityModel.h; sourceTree = "<group>"; };
 		BAC77DD2DDA0A6FE8AD55D4C /* Farmer.h */ = {isa = PBXFileReference; fileEncoding = 4; path = Farmer.h; sourceTree = "<group>"; };
 		BA6DFEFE012B5C6660BE57FE /* Wheat.h */ = {isa = PBXFileReference; fileEncoding = 4; path = Wheat.h; sourceTree = "<group>"; };
-		BAB43FEA0FDE20FF6E2164D9 /* GroundRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; path = GroundRenderer.cpp; sourceTree = "<group>"; };
 		BA226FE6B7AA15C74EFEA34C /* WheatRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; path = WheatRenderer.cpp; sourceTree = "<group>"; };
+		BA0F6BFA8D36C1998B367AE8 /* ShaderNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; path = ShaderNode.cpp; sourceTree = "<group>"; };
 		BACB5750AD5BB2FB04E4EFB9 /* WheatRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; path = WheatRenderer.h; sourceTree = "<group>"; };
-		BACB6DB3E7DEE2BDF08675EE /* GroundRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; path = GroundRenderer.h; sourceTree = "<group>"; };
+		BA8CEC1EFF31097BC0471A92 /* ShaderNode.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ShaderNode.h; sourceTree = "<group>"; };
 		BAFD02EE04E05E9D4089FF2E /* DashEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; path = DashEvent.cpp; sourceTree = "<group>"; };
 		BA0BBDA5CCCACD51DFBD5B4B /* RootEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; path = RootEvent.cpp; sourceTree = "<group>"; };
 		BA24AD3B5E56FACBC8AAAE64 /* RootEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RootEvent.h; sourceTree = "<group>"; };
@@ -440,10 +440,10 @@
 		CD5CD3275ABEC5D81FBEB51F /* shaders */ = {
 			isa = PBXGroup;
 			children = (
-				BAB43FEA0FDE20FF6E2164D9 /* GroundRenderer.cpp */,
 				BA226FE6B7AA15C74EFEA34C /* WheatRenderer.cpp */,
+				BA0F6BFA8D36C1998B367AE8 /* ShaderNode.cpp */,
 				BACB5750AD5BB2FB04E4EFB9 /* WheatRenderer.h */,
-				BACB6DB3E7DEE2BDF08675EE /* GroundRenderer.h */,
+				BA8CEC1EFF31097BC0471A92 /* ShaderNode.h */,
 			);
 			path = shaders;
 			sourceTree = "<group>";
@@ -628,8 +628,8 @@
 				BB2A3E00B4DEB2267DC339D4 /* Carrot.cpp in Sources */,
 				BBEFFCD8C9F9E95AFB2E64A6 /* Wheat.cpp in Sources */,
 				BBCE995936C6E2021DECC8F4 /* EntityModel.cpp in Sources */,
-				BBCFB4FC19ED149684F7CED8 /* GroundRenderer.cpp in Sources */,
 				BBF40C439FADDEA73D8BBCB9 /* WheatRenderer.cpp in Sources */,
+				BBBCBEFA8FB5EEB17B78FEFA /* ShaderNode.cpp in Sources */,
 				BBCE75E1D7DCAF7DD1FD7C2D /* DashEvent.cpp in Sources */,
 				BBF4B9BE00FFCD3FFE1CDFAD /* RootEvent.cpp in Sources */,
 				BB0E7CECDD74CF64AA8AEED0 /* InputController.cpp in Sources */,
@@ -660,8 +660,8 @@
 				BCF70B3E5D2C931E7ED8EF6C /* Carrot.cpp in Sources */,
 				BCBFDF4CBC567647216C819D /* Wheat.cpp in Sources */,
 				BCCE66CFDF0117B82C384CE6 /* EntityModel.cpp in Sources */,
-				BCFE4CE1EA5ECFFAD671B7D9 /* GroundRenderer.cpp in Sources */,
 				BC385ADACFF15FD6E3AE94DF /* WheatRenderer.cpp in Sources */,
+				BC9FFBC86E6F9138BFE0E6AC /* ShaderNode.cpp in Sources */,
 				BCBCFA0F0CDB15DE59D1A4C6 /* DashEvent.cpp in Sources */,
 				BCD4FFFFA0C509755702D54C /* RootEvent.cpp in Sources */,
 				BC377A8AA1A206D81BA4F5D5 /* InputController.cpp in Sources */,

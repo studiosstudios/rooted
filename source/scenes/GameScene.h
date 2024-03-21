@@ -19,8 +19,6 @@
 #include "../controllers/NetworkController.h"
 #include "../objects/Map.h"
 #include "../shaders/WheatRenderer.h"
-#include "../shaders/GroundRenderer.h"
-
 
 /**
  * This class is the primary gameplay constroller for the demo.

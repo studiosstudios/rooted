@@ -12,6 +12,8 @@
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
+#include "../shaders/ShaderNode.h"
+#include "../shaders/WheatRenderer.h"
 
 class Map {
 private:
@@ -47,10 +49,25 @@ private:
     std::shared_ptr<scene2::SceneNode> _worldnode;
     /** Reference to the debug root of the scene graph */
     std::shared_ptr<scene2::SceneNode> _debugnode;
+    /** Reference to the wheat node of the scene graph */
+    std::shared_ptr<ShaderNode> _wheatnode;
+    /** Reference to the ground node of the scene graph */
+    std::shared_ptr<ShaderNode> _groundnode;
     bool _farmerPlaying = false;
     bool _showPlayer = false;
 
-
+    /**
+     * Enum representing the draw order of scene nodes. Nodes will be drawn in the order they are listed in the enum.
+     */
+    enum class DrawOrder : int {
+        GROUND,
+        PLANTINGSPOT,
+        ENTITIES,
+        PLAYER,
+        WHEAT,
+        WALLS
+    };
+    
 public:
 
 #pragma mark -
@@ -58,7 +75,7 @@ public:
 
     Map(void);
 
-    virtual ~Map(void);
+    ~Map(void);
 
     /**
      * Creates a new Map with the given source file.
@@ -70,14 +87,16 @@ public:
      */
     static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets,
                                       const std::shared_ptr<scene2::SceneNode> &root,
-                                      const std::shared_ptr<cugl::JsonValue> &json) {
+                                      const std::shared_ptr<cugl::JsonValue> &json,
+                                      const std::shared_ptr<WheatRenderer> &renderer) {
         std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init(assets, root, json) ? result : nullptr);
+        return (result->init(assets, root, json, renderer) ? result : nullptr);
     }
 
     bool init(const std::shared_ptr<AssetManager> &assets,
               const std::shared_ptr<scene2::SceneNode> &root,
-              const std::shared_ptr<cugl::JsonValue> &json);
+              const std::shared_ptr<cugl::JsonValue> &json,
+              const std::shared_ptr<WheatRenderer> &renderer);
 
     bool populate();
 

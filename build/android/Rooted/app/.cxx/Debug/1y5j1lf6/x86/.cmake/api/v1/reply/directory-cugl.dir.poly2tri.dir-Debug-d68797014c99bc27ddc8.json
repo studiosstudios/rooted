@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "cugl.dir/poly2tri.dir",
+		"source" : "/Users/jffzh/Cornell/23-24/CS4152/cugl/buildfiles/cmake/external/poly2tri"
+	}
+}

@@ -68,7 +68,7 @@
     <ClInclude Include="..\..\..\source\shaders\WheatRenderer.h">
       <Filter>Source Files\shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\shaders\GroundRenderer.h">
+    <ClInclude Include="..\..\..\source\shaders\ShaderNode.h">
       <Filter>Source Files\shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\events\RootEvent.h">
@@ -139,10 +139,10 @@
     <ClCompile Include="..\..\..\source\objects\EntityModel.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\shaders\GroundRenderer.cpp">
+    <ClCompile Include="..\..\..\source\shaders\WheatRenderer.cpp">
       <Filter>Source Files\shaders</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\shaders\WheatRenderer.cpp">
+    <ClCompile Include="..\..\..\source\shaders\ShaderNode.cpp">
       <Filter>Source Files\shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\events\DashEvent.cpp">

@@ -101,6 +101,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _gameid->addExitListener([this](const std::string& name, const std::string& value) {
     // call the network controller to connect as a client (Remember to convert the string from decimal to hex)
         if (!value.empty()) {
+            CULog("connected client weehee");
             _network->connectAsClient(dec2hex(value));
         }
     });
@@ -143,6 +144,7 @@ void ClientScene::setActive(bool value) {
          */
         if (value) {
             _gameid->activate();
+            _gameid->setText("");
             _backout->activate();
             _player->setText("1");
             configureStartButton();

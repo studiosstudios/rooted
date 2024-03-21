@@ -145,7 +145,9 @@ void HostScene::setActive(bool value) {
             _backout->activate();
             _network->disconnect();
             _network->connectAsHost();
+            updateText(_startgame, "Start Game");
             _backClicked = false;
+            _startGameClicked = false;
         } else {
             _gameid->setText("");
             _startgame->deactivate();

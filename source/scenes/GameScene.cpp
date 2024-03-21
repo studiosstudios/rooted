@@ -293,18 +293,9 @@ void GameScene::reset() {
     _collision.init(_map, _network);
     _action.init(_map, _input, _network);
 
-    _cam.setPosition(_initCamera);
-    if(_isHost){
-        _cam.setTarget(_map->getFarmers().at(0));
-    }
-    else{
-        for(auto carrot : _map->getCarrots()){
-            if(carrot->getUUID() == _map->getCharacter()->getUUID()){
-                _cam.setTarget(carrot);
-            }
-        }
-    }
-
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    
+    setDebug(false);
     setComplete(false);
     setFailure(false);
 }
@@ -456,46 +447,48 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Since items may be deleted, garbage collect
-
-    _action.postUpdate(remain);
-
-    _map->getWorld()->garbageCollect();
-
-    auto avatar = _map->getCarrots().at(0);
-
-    bool farmerWin = true;
-    for(auto carrot : _map->getCarrots()){
-        if(!carrot->isRooted()){
-            farmerWin = false;
-        }
-    }
-    if(farmerWin){
-        if(_isHost){
-            setComplete(true);
-        }
-        else{
-            setFailure(true);
-        }
-    }
-    bool carrotWin = true;
-    for(auto babyCarrot : _map->getBabyCarrots()){
-        if(!babyCarrot->isCaptured()){
-            carrotWin = false;
-        }
-    }
-    if(carrotWin){
-        if(_isHost){
-            setFailure(true);
-        }
-        else{
-            setComplete(true);
-        }
-    }
     // Reset the game if we win or lose.
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0) {
-        reset();
+        setGameOver(true);
+    }
+    else{
+        _action.postUpdate(remain);
+        
+        _map->getWorld()->garbageCollect();
+        
+        bool farmerWin = true;
+        for(auto carrot : _map->getCarrots()){
+            if(!carrot->isRooted()){
+                farmerWin = false;
+            }
+        }
+        if(farmerWin){
+            if(_isHost){
+                setComplete(true);
+            }
+            else{
+                setFailure(true);
+            }
+        }
+        bool carrotWin = true;
+        for(auto babyCarrot : _map->getBabyCarrots()){
+            if(!babyCarrot->isCaptured()){
+                carrotWin = false;
+            }
+        }
+        if(carrotWin){
+            if(_isHost){
+                setFailure(true);
+            }
+            else{
+                setComplete(true);
+            }
+        }
+        if(farmerWin || carrotWin){
+            _network->disconnect();
+        }
     }
 }
 

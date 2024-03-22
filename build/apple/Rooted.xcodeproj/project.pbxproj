@@ -36,7 +36,7 @@
 		BBC4DA9BDFB6DBB6E666E9F0 /* Farmer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF0FC13BD2CE6D42C5BAEF7 /* Farmer.cpp */; };
 		BBC5FDAF595ADCD4C2874266 /* HostScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA8A9B372A8BBF1EF2A33E61 /* HostScene.cpp */; };
 		BBCE995936C6E2021DECC8F4 /* EntityModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAAFFC5FE0E34A4DF9C8AF0B /* EntityModel.cpp */; };
-		BBD70CCFFEF762AC3604BCAD /* GameOverEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF2BCACBBD7C1DE02CC5DC8 /* GameOverEvent.cpp */; };
+		BBD70CCFFEF762AC3604BCAD /* ResetEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF2BCACBBD7C1DE02CC5DC8 /* ResetEvent.cpp */; };
 		BBDC43E77C68E0188F9C9E7E /* CollisionController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAC53DE0FF890DDB2A4ACE53 /* CollisionController.cpp */; };
 		BBDF0E5CAFD05FFCFFE16EF3 /* ClientScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAA8F5C98BCD5DE41AD756CD /* ClientScene.cpp */; };
 		BBE8A6EEE4706B79E8C96D44 /* PlantingSpot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA48FF0D0732C90B1DBB70C6 /* PlantingSpot.cpp */; };
@@ -69,7 +69,7 @@
 		BCEE3EFDBBAFEB5A47AFDC9A /* PlantingSpot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA48FF0D0732C90B1DBB70C6 /* PlantingSpot.cpp */; };
 		BCF05DECABCFCEED216E1C84 /* AIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BABE8BB7FAD233E438BF5D8E /* AIController.cpp */; };
 		BCF70B3E5D2C931E7ED8EF6C /* Carrot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAAAE0D9DCEDD10D2C18BF8D /* Carrot.cpp */; };
-		BCFB0B8ADDD99DAA3CE8FB64 /* GameOverEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF2BCACBBD7C1DE02CC5DC8 /* GameOverEvent.cpp */; };
+		BCFB0B8ADDD99DAA3CE8FB64 /* ResetEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF2BCACBBD7C1DE02CC5DC8 /* ResetEvent.cpp */; };
 		BCFBE5839E044C15BEB7C86E /* RootedApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAAA9268AC4ECDA3EE1BADE8 /* RootedApp.cpp */; };
 		C04BD7162BADCF3D00C8DCF8 /* CaptureBarrotEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04BD7142BADCF3D00C8DCF8 /* CaptureBarrotEvent.cpp */; };
 		C04BD7172BADCF3D00C8DCF8 /* CaptureBarrotEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04BD7142BADCF3D00C8DCF8 /* CaptureBarrotEvent.cpp */; };
@@ -182,8 +182,8 @@
 		BAE9FDFAC3E55CC5AEB7B8CA /* RootedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootedApp.h; sourceTree = "<group>"; };
 		BAECE6ECC7C96441FD3BD823 /* CameraController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraController.cpp; sourceTree = "<group>"; };
 		BAF0FC13BD2CE6D42C5BAEF7 /* Farmer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Farmer.cpp; sourceTree = "<group>"; };
-		BAF2BCACBBD7C1DE02CC5DC8 /* GameOverEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameOverEvent.cpp; sourceTree = "<group>"; };
-		BAFC4558BED87CAD1FF3ABEF /* GameOverEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverEvent.h; sourceTree = "<group>"; };
+		BAF2BCACBBD7C1DE02CC5DC8 /* ResetEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ResetEvent.cpp; sourceTree = "<group>"; };
+		BAFC4558BED87CAD1FF3ABEF /* ResetEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetEvent.h; sourceTree = "<group>"; };
 		BAFE042E627F6BDDDD2EEAAB /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameScene.cpp; sourceTree = "<group>"; };
 		BAFE88579CD9EEAA2C48DB9E /* BabyCarrot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BabyCarrot.cpp; sourceTree = "<group>"; };
 		BAFF5C123C900E700F9EAABD /* CollisionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollisionController.h; sourceTree = "<group>"; };
@@ -299,11 +299,11 @@
 				BAD70D29A92ED64CB15B21EA /* UnrootEvent.cpp */,
 				BA3070442DCF860C27D9ECED /* CaptureEvent.cpp */,
 				BA0BBDA5CCCACD51DFBD5B4B /* RootEvent.cpp */,
-				BAF2BCACBBD7C1DE02CC5DC8 /* GameOverEvent.cpp */,
+				BAF2BCACBBD7C1DE02CC5DC8 /* ResetEvent.cpp */,
 				BA8BE47AE0AE3BDA8B09BCED /* UnrootEvent.h */,
 				BA24AD3B5E56FACBC8AAAE64 /* RootEvent.h */,
 				BAE1A6F675DADD1BE6B4C2C6 /* CaptureEvent.h */,
-				BAFC4558BED87CAD1FF3ABEF /* GameOverEvent.h */,
+				BAFC4558BED87CAD1FF3ABEF /* ResetEvent.h */,
 				C04BD7142BADCF3D00C8DCF8 /* CaptureBarrotEvent.cpp */,
 				C04BD7152BADCF3D00C8DCF8 /* CaptureBarrotEvent.h */,
 			);
@@ -649,7 +649,7 @@
 				BBA85821D2AFD0EE59008CF2 /* UnrootEvent.cpp in Sources */,
 				BBA14AE31E6C8FEBA40BFAEE /* CaptureEvent.cpp in Sources */,
 				BBF4B9BE00FFCD3FFE1CDFAD /* RootEvent.cpp in Sources */,
-				BBD70CCFFEF762AC3604BCAD /* GameOverEvent.cpp in Sources */,
+				BBD70CCFFEF762AC3604BCAD /* ResetEvent.cpp in Sources */,
 				BB0E7CECDD74CF64AA8AEED0 /* InputController.cpp in Sources */,
 				BBA48F7AA65F214DB7EC191B /* NetworkController.cpp in Sources */,
 				BBDC43E77C68E0188F9C9E7E /* CollisionController.cpp in Sources */,
@@ -684,7 +684,7 @@
 				BC147BF1C30ADCB16A8AE9C3 /* UnrootEvent.cpp in Sources */,
 				BCBB961C9ED5EBFFB4A40A2C /* CaptureEvent.cpp in Sources */,
 				BCD4FFFFA0C509755702D54C /* RootEvent.cpp in Sources */,
-				BCFB0B8ADDD99DAA3CE8FB64 /* GameOverEvent.cpp in Sources */,
+				BCFB0B8ADDD99DAA3CE8FB64 /* ResetEvent.cpp in Sources */,
 				BC377A8AA1A206D81BA4F5D5 /* InputController.cpp in Sources */,
 				BC0E8584C65BAB00DC3DE10A /* NetworkController.cpp in Sources */,
 				BCB91AF199D17AD459DDD401 /* CollisionController.cpp in Sources */,

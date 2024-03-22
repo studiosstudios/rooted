@@ -210,6 +210,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         }
     }
     
+    _network->attachEventType<ResetEvent>();
+    
     // set the camera after all of the network is loaded
     _ui.init(_uinode, _offset, CAMERA_ZOOM);
     
@@ -379,7 +381,7 @@ void GameScene::preUpdate(float dt) {
     // Process the toggled key commands
     if (_input->didDebug()) { setDebug(!isDebug()); }
     if (_input->didReset()) {
-        reset();
+        _network->pushOutEvent(ResetEvent::allocResetEvent());
         return;
     }
     if (_input->didExit()) {
@@ -478,7 +480,26 @@ void GameScene::fixedUpdate(float step) {
         velocities[i + carrots.size() + farmers.size()] = babies.at(i)->getLinearVelocity().length();
     }
     _wheatrenderer->update(step, size, positions, velocities);
-    _action.fixedUpdate();
+    if(_network->isInAvailable()){
+        auto e = _network->popInEvent();
+        if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
+//            CULog("Received dash event");
+            _action.processCaptureEvent(captureEvent);
+        }
+        if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
+//            std::cout<<"got a root event\n";
+            _action.processRootEvent(rootEvent);
+        }
+        if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
+            _action.processUnrootEvent(unrootEvent);
+        }
+        if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
+            _action.processBarrotEvent(captureBarrotEvent);
+        }
+        if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
+            processResetEvent(resetEvent);
+        }
+    }
 }
 
 /**
@@ -632,5 +653,9 @@ void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
 //    _wheatrenderer->renderGround();
     Scene2::render(batch);
 //    _wheatrenderer->renderWheat();
+}
+
+void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){
+    reset();
 }
 

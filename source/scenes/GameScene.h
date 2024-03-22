@@ -19,6 +19,7 @@
 #include "../controllers/NetworkController.h"
 #include "../objects/Map.h"
 #include "../shaders/WheatRenderer.h"
+#include "../events/ResetEvent.h"
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -326,6 +327,8 @@ public:
     void unload();
 
     void render(const std::shared_ptr<SpriteBatch> &batch);
+    
+    void processResetEvent(const std::shared_ptr<ResetEvent>& event);
 };
 
 #endif /* RootedGameScene_h */

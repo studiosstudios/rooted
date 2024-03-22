@@ -111,26 +111,6 @@ void ActionController::preUpdate(float dt) {
     }
 }
 
-void ActionController::fixedUpdate(){
-    if(_network->isInAvailable()){
-        auto e = _network->popInEvent();
-        if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
-//            CULog("Received dash event");
-            processCaptureEvent(captureEvent);
-        }
-        if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
-//            std::cout<<"got a root event\n";
-            processRootEvent(rootEvent);
-        }
-        if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
-            processUnrootEvent(unrootEvent);
-        }
-        if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
-            processBarrotEvent(captureBarrotEvent);
-        }
-    }
-}
-
 /**
  * The method called to indicate the end of a deterministic loop.
  *

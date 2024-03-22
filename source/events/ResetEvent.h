@@ -2,6 +2,7 @@
 //  Gameover.hpp
 //  Rooted
 //
+// ONLY FOR DEBUGGING
 //  Created by Kimmy Lin on 3/20/24.
 //
 
@@ -13,7 +14,7 @@ using namespace cugl::physics2::net;
 using namespace cugl::net;
 using namespace cugl;
 
-class GameOverEvent : public NetEvent {
+class ResetEvent : public NetEvent {
     
 protected:
     NetcodeSerializer _serializer;
@@ -31,7 +32,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocGameOverEvent(std::string roomid);
+    static std::shared_ptr<NetEvent> allocResetEvent();
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -48,7 +49,7 @@ public:
      */
     void deserialize(const std::vector<std::byte>& data) override;
     
-    std::string getRoomId() { return _roomid; }
+//    std::string getRoomId() { return _roomid; }
 };
 
 #endif /* Gameover_h */

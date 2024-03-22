@@ -48,11 +48,11 @@ using namespace cugl;
 /** The font for victory/failure messages */
 #define MESSAGE_FONT    "gyparody"
 /** The message for winning the game */
-#define WIN_MESSAGE     "VICTORY!"
+#define WIN_MESSAGE     "YOU WIN!"
 /** The color of the win message */
 #define WIN_COLOR       Color4::BLUE
 /** The message for losing the game */
-#define LOSE_MESSAGE    "FAILURE!"
+#define LOSE_MESSAGE    "YOU LOSE!"
 /** The color of the lose message */
 #define LOSE_COLOR      Color4::RED
 /** The message for resetting the game */

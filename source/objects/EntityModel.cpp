@@ -80,17 +80,21 @@ using namespace cugl;
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
 bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+    
+    // Obstacle dimensions and drawing initialization
     Size nsize = size;
     nsize.width  *= DUDE_HSHRINK;
     nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
-        setFriction(0.0f);      // HE WILL STICK TO WALLS IF YOU FORGET
-        setFixedRotation(true); // OTHERWISE, HE IS A WEEBLE WOBBLE
+        setFriction(0.0f);
+        setFixedRotation(true);
         
         // Gameplay attributes
         _faceRight  = true;
+        _state = MOVING;
+        
         return true;
     }
     return false;
@@ -172,27 +176,25 @@ void EntityModel::applyForce() {
         return;
     }
     
+    switch (_state) {
+        case MOVING:
+            if (getMovement().x == 0.0f && getMovement().y == 0.0f) {
+                b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
+                _body->ApplyForce(force,_body->GetPosition(),true);
+            }
+            else if(dashTimer > 0){
+                setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * DUDE_DASH);
+            }
+            else{
+                setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
+            }
+            break;
+        default:
+            CULog("State not implemented yet");
+    }
+    
     // Don't want to be moving. Damp out player motion
-    if (getMovement().x == 0.0f && getMovement().y == 0.0f) {
-        b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
-        _body->ApplyForce(force,_body->GetPosition(),true);
-    }
-    else if(dashTimer > 0){
-        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * DUDE_DASH);
-    }
-    else{
-        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
-    }
-    // Velocity too high, clamp it
-//    
-//    if (getLinearVelocity().length() >= getMaxSpeed()) {
-//        setLinearVelocity(getLinearVelocity().normalize() * getMaxSpeed());
-//    }
-//    else{
-//        setLinearVelocity(getLinearVelocity());
-//    }
-//    b2Vec2 force(getMovement().x, getMovement().y);
-//    _body->ApplyForce(force,_body->GetPosition(),true);
+    
 }
 
 /**

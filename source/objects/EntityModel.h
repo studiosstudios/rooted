@@ -104,6 +104,25 @@ protected:
 	* the texture (e.g. a circular shape attached to a square texture).
 	*/
 	virtual void resetDebug() override;
+    
+    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
+    
+    /** State that a rooted! player entity can be in. Some of these states are specific
+        to only a certain type of character (ex. only a bunny can be PLANTING), so
+        we need to enforce the corresponding invariants for which states an entity can
+        be in. */
+    enum EntityState {
+        MOVING,
+        DASHING,
+        CARRYING,   // bunny only
+        PLANTING,   // bunny only
+        CAUGHT,     // carrot only
+        ROOTED      // carrot only
+    };
+    
+    /** Current EntityState that this entity is in. */
+    EntityState _state;
+    
 
 public:
     int dashTimer;

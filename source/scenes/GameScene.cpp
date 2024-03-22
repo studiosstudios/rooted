@@ -280,8 +280,7 @@ void GameScene::unload() {
  */
 void GameScene::reset() {
     // Load a new level
-    _network->disconnect();
-    
+    CULog("start resetting");
     _map->clearRootNode();
     _map->setRootNode(_rootnode);
     _map->dispose();
@@ -290,23 +289,43 @@ void GameScene::reset() {
     _collision.dispose();
     _action.dispose();
 
-    activateWorldCollisions(_map->getWorld());
+    std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
+    activateWorldCollisions(world);
 
     _collision.init(_map, _network);
     _action.init(_map, _input, _network);
 
+    if (_isHost) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+    
+    std::shared_ptr<NetWorld> w = _map->getWorld();
+    _network->enablePhysics(w);
+    if (!_network->isHost()) {
+        _network->getPhysController()->acquireObs(_character, 0);
+    } else {
+        for (auto baby : _babies) {
+            _network->getPhysController()->acquireObs(baby, 0);
+        }
+    }
+    
+    Size dimen = computeActiveSize();
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
+             dimen.height / world->getBounds().getMaxY();
+    _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
     
+    CULog("acquired stuff");
+    
+//
+    //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
     setDebug(false);
     setComplete(false);
     setFailure(false);
-    if(_isHost){
-        _network->connectAsHost();
-    }
-    else{
-        _network->connectAsClient(_network->getRoomID());
-        std::cout<<"room id from client end is: "<<_network->getRoomID()<<"\n";
-    }
+
+    CULog("done resetting");
 }
 
 void GameScene::switchPlayer() {
@@ -460,6 +479,7 @@ void GameScene::postUpdate(float remain) {
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0) {
+        CULog("resetting in postupdate");
         reset();
     }
     else{
@@ -469,11 +489,13 @@ void GameScene::postUpdate(float remain) {
         
         bool farmerWin = true;
         for(auto carrot : _map->getCarrots()){
+//            CULog("this is a carrot");
             if(!carrot->isRooted()){
                 farmerWin = false;
             }
         }
         if(farmerWin){
+            CULog("farmer wins");
             if(_isHost){
                 setComplete(true);
             }

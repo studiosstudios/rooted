@@ -90,7 +90,6 @@ void ActionController::preUpdate(float dt) {
         // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
         for (auto carrot : _map->getCarrots()) {
             if (carrot->isCaptured()) {
-                carrot->gotRooted();
                 _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID()));
             }
         }
@@ -183,7 +182,7 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
 //            std::cout<<"carrot rooted\n";
-//            std::cout<<_map->getFarmers().at(0)->isHoldingCarrot()<<"\n";
+            std::cout<<"network event received and carrot rooted \n";
             carrot->gotRooted();
         }
     }

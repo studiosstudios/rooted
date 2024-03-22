@@ -324,7 +324,9 @@ void GameScene::reset() {
     setDebug(false);
     setComplete(false);
     setFailure(false);
-
+    
+//    std::cout<<_map->getCarrots().at(0)->isRooted()<<"\n";
+    
     CULog("done resetting");
 }
 
@@ -486,6 +488,8 @@ void GameScene::postUpdate(float remain) {
         _action.postUpdate(remain);
         
         _map->getWorld()->garbageCollect();
+        
+//        std::cout<<(_map->getCarrots().at(0)->isRooted());
         
         bool farmerWin = true;
         for(auto carrot : _map->getCarrots()){

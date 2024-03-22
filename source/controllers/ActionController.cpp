@@ -19,8 +19,10 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _map = map;
     _input = input;
     _world = _map->getWorld();
-    _ai.init(map);
     _network = network;
+    if (_network->isHost()) {
+        _ai.init(map);
+    }
     _network->attachEventType<DashEvent>();
     _network->attachEventType<RootEvent>();
     return true;

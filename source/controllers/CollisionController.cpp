@@ -64,7 +64,9 @@ void CollisionController::beginContact(b2Contact* contact) {
         if (name1 == "baby") {
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
+                BabyCarrot* b1babycarrot = dynamic_cast<BabyCarrot*>(bd1);
                 wheat->rustle(bd1->getLinearVelocity().length());
+                b1babycarrot->changeWheatContacts(1);
             }
         }
         
@@ -145,13 +147,13 @@ void CollisionController::endContact(b2Contact* contact) {
             }
             
             if (name2 == "baby") {
-            
             }
         }
         
         if (name1 == "baby") {
             if (name2 == "wheat") {
-                
+                BabyCarrot* baby = dynamic_cast<BabyCarrot*>(bd1);
+                baby->changeWheatContacts(-1);
             }
         }
         

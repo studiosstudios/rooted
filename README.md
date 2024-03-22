@@ -2,7 +2,7 @@
 *Take control of either a bunny farmer or a carrot on a massive wheat field, where the tall wheat stalks hide most of the chaos that occurs within. The bunnies are desperate to secure their next week’s worth of dinner while the carrots are constantly running to save themselves and their children from their rooted fate!* 
 
 ### Controls:
-Movement | Desktop | Mobile 
+Movement | Desktop | Mobile *(unsupported for this prototype)*
 | ---- | ---- | ----
 Move  | ↑,↓,←,→ | Joystick
 Dash  | X | Swipe up
@@ -11,6 +11,7 @@ Toggle player character  | 	S | N/A
 Toggle player visibility  | V | Swipe right
 Reset | R | Multitouch swipe
 Toggle debug | D | Double tap
+
 
 This technical release demonstrates the first prototype of our game with working a functioning network architecture, with the ability for a farmer to play concurrently with up to four carrots. The capturing interaction has been added along with rooting, allowing a farmer to dash into a carrot and then bring them into the slightly transparent rooting zones in the map to plant the carrots.
 

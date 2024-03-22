@@ -46,7 +46,6 @@
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
 
-
 #pragma mark -
 #pragma mark Physics Constants
 /** The amount to shrink the body fixture (vertically) relative to the image */
@@ -208,7 +207,7 @@ void EntityModel::update(float dt) {
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
-        if (isInWheat()) {
+        if (isInWheat() && (int(_node->getPriority()) == 4)) {
             _node->setColor(Color4(255, 255, 255, 255.0/2));
         }
         else {

@@ -18,9 +18,8 @@ private:
     bool _isRooted;
     /** number of baby carrots this carrot has caught so far */
     int _numBabyCarrots;
-    
+        
 public:
-
 #pragma mark -
 #pragma mark Constructors
     /**
@@ -83,11 +82,9 @@ public:
     bool isCaptured() {return _isCaptured; };
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
-
+    
 #pragma mark -
 #pragma mark Interactions
-
-    
     void captureBabyCarrot() { _numBabyCarrots++; };
     
     void gotCaptured();

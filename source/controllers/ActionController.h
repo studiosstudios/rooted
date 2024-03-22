@@ -13,6 +13,7 @@
 #include "CaptureEvent.h"
 #include "RootEvent.h"
 #include "UnrootEvent.h"
+#include "CaptureBarrotEvent.h"
 
 class ActionController {
 private:
@@ -77,6 +78,8 @@ public:
     void processRootEvent(const std::shared_ptr<RootEvent>& event);
     
     void processUnrootEvent(const std::shared_ptr<UnrootEvent>& event);
+    
+    void processBarrotEvent(const std::shared_ptr<CaptureBarrotEvent>& event);
 };
 
 

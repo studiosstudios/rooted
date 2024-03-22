@@ -73,5 +73,17 @@ public:
     void setSceneNode(const std::shared_ptr<cugl::scene2::PolygonNode>& node) {
         _node = node;
     }
+    
+    /**
+     * Returns the scene graph node representing this PlantingSpot.
+     *
+     * By storing a reference to the scene graph node, the model can update
+     * the node to be in sync with the physics info. It does this via the
+     * {@link Obstacle#update(float)} method.
+     *
+     * @return the scene graph node representing this PlantingSpot.
+     */
+    const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+
 };
 #endif /* PlantingSpot_h */

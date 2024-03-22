@@ -16,6 +16,7 @@
 #include "NetworkController.h"
 #include "../events/CaptureEvent.h"
 #include "../events/UnrootEvent.h"
+#include "../events/CaptureBarrotEvent.h"
 
 
 class CollisionController {

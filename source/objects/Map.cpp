@@ -1,10 +1,10 @@
-//
+
 // Created by Jeffrey Zhou on 2/22/24.
 //
 
 #include "Map.h"
 #include "../objects/EntityModel.h"
-#include "NetworkController.h"
+#include "../controllers/NetworkController.h"
 
 // TODO: put all constants into JSON
 
@@ -47,7 +47,7 @@ float PLANTING_SPOT_SIZE[2] = {3.0f, 3.0f};
 float FARMER_SIZE[2] = {1.0f, 1.0f};
 
 /** Color to outline the physics nodes */
-#define DEBUG_COLOR     Color4::YELLOW
+#define DEBUG_COLOR     Color4::GREEN
 
 using namespace cugl;
 
@@ -142,9 +142,12 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _scale.set(_root->getContentSize().width / _bounds.size.width,
                _root->getContentSize().height / _bounds.size.height);
 
+    
     // Create, but transfer ownership to root
     // needs to be an ordered node in order to reorder some elements
     _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _worldnode->addChild(_wheatnode);
+    _worldnode->addChild(_groundnode);
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(Vec2::ZERO);
 
@@ -185,7 +188,8 @@ void Map::showDebug(bool flag) {
  */
 bool Map::init(const std::shared_ptr<AssetManager> &assets,
                const std::shared_ptr<scene2::SceneNode> &root,
-               const std::shared_ptr<cugl::JsonValue> &json) {
+               const std::shared_ptr<cugl::JsonValue> &json,
+               const std::shared_ptr<WheatRenderer> &renderer) {
     setAssets(assets);
 
     if (json == nullptr) {
@@ -198,6 +202,11 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     float w = json->get("width")->asFloat();
     float h = json->get("height")->asFloat();
     _bounds.size.set(w, h);
+    
+    _groundnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::GROUND);
+    _wheatnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::WHEAT);
+    _groundnode->setPriority(float(Map::DrawOrder::GROUND));
+    _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
 
     setRootNode(root);
 
@@ -210,17 +219,6 @@ bool Map::populate() {
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
 
     _farmerPlaying = false;
-
-    auto walls = _json->get("walls");
-    if (walls != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int wsize = (int) walls->size();
-        for (int ii = 0; ii < wsize; ii++) {
-            loadWall(walls->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load walls");
-    }
 
     auto carrots = _json->get("carrots");
     if (carrots != nullptr) {
@@ -255,16 +253,16 @@ bool Map::populate() {
         CUAssertLog(false, "Failed to load farmers");
     }
 
-    auto wheat = _json->get("wheat");
-    if (wheat != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int wsize = (int) wheat->size();
-        for (int ii = 0; ii < wsize; ii++) {
-            loadWheat(wheat->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load wheat");
-    }
+//    auto wheat = _json->get("wheat");
+//    if (wheat != nullptr) {
+//        // Convert the object to an array so we can see keys and values
+//        int wsize = (int) wheat->size();
+//        for (int ii = 0; ii < wsize; ii++) {
+//            loadWheat(wheat->get(ii));
+//        }
+//    } else {
+//        CUAssertLog(false, "Failed to load wheat");
+//    }
     
     auto plantingSpots = _json->get("plantingSpots");
     if(plantingSpots != nullptr) {
@@ -276,7 +274,25 @@ bool Map::populate() {
     } else {
         CUAssertLog(false, "Failed to load planting spots");
     }
+    
+    auto walls = _json->get("walls");
+    if (walls != nullptr) {
+        // Convert the object to an array so we can see keys and values
+        int wsize = (int) walls->size();
+        for (int ii = 0; ii < wsize; ii++) {
+            loadWall(walls->get(ii));
+        }
+    } else {
+        CUAssertLog(false, "Failed to load walls");
+    }
     return true;
+}
+
+void Map::populateWithCarrots(int numCarrots) {
+    for (int ii = 0; ii < numCarrots; ii++) {
+        Vec2 position = Vec2(_carrotPosList.at(ii * 2), _carrotPosList.at(ii * 2 + 1));
+        spawnCarrot(position);
+    }
 }
 
 /**
@@ -331,8 +347,7 @@ void Map::dispose() {
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
     std::shared_ptr<EntityModel> ret;
     bool isHost = hostUUID == thisUUID;
-    
-    _carrots.resize(players.size()-1);
+
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != hostUUID) {
@@ -352,7 +367,8 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     }
     
     _character = ret;
-    _character->getSceneNode()->setPriority(2);
+
+    _character->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
     
     return ret;
 }
@@ -438,6 +454,7 @@ bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
     auto sprite = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(EARTH_TEXTURE),
             wallobj->getPolygon() * _scale);
+    sprite->setPriority(float(Map::DrawOrder::WALLS));
     addObstacle(wallobj, sprite);  // All walls share the same texture
 
     vertices.clear();
@@ -461,29 +478,11 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
 
     auto posArray = json->get("position");
     success = posArray->isArray();
-    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
-    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
-    carrot->setDebugColor(DEBUG_COLOR);
-    carrot->setName("carrot");
-//    carrot->setEnabled(false);  Initially disabled
-    _carrots.push_back(carrot);
-
-    auto carrotNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(CARROT_TEXTURE));
-//        carrotNode->setColor(Color4::ORANGE);
-    carrot->setSceneNode(carrotNode);
-    carrot->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    _worldnode->addChild(carrotNode);
-    carrot->setDebugScene(_debugnode);
-
-    if (success) { //Do not immediately add, wait until we check network players
-        _world->initObstacle(carrot);
-    }
+    
+    _carrotPosList.push_back(posArray->get(0)->asFloat());
+    _carrotPosList.push_back(posArray->get(1)->asFloat());
 
     return success;
-
 }
 
 /**
@@ -527,7 +526,6 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
  * @return true if the baby carrot was successfully loaded
  */
 bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
-
     bool success = true;
 
     auto posArray = json->get("position");
@@ -536,6 +534,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
     baby->setName("baby");
+    baby->setID(_babies.size());
     _babies.push_back(baby);
 
     auto babyNode = scene2::PolygonNode::allocWithTexture(
@@ -545,6 +544,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     baby->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
+    babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
     _worldnode->addChild(babyNode);
     baby->setDebugScene(_debugnode);
 
@@ -553,7 +553,6 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     }
 
     return success;
-
 }
 
 /**
@@ -583,6 +582,7 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     farmer->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
+    farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
     _worldnode->addChild(farmerNode);
     farmer->setDebugScene(_debugnode);
 
@@ -619,6 +619,7 @@ bool Map::loadPlantingSpot(const std::shared_ptr<JsonValue> &json) {
     auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
     plantingSpot->setSceneNode(spotNode);
     spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
+    spotNode->setPriority(float(Map::DrawOrder::PLANTINGSPOT));
     addObstacle(plantingSpot, spotNode);
 
     return success;
@@ -652,6 +653,25 @@ void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
             weak->setAngle(obs->getAngle());
         });
     }
+}
+
+void Map::spawnCarrot(Vec2 position) {
+    std::shared_ptr<Carrot> carrot = Carrot::alloc(position, CARROT_SIZE, _scale.x);
+    carrot->setDebugColor(DEBUG_COLOR);
+    carrot->setName("carrot");
+    _carrots.push_back(carrot);
+
+    auto carrotNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROT_TEXTURE));
+    carrot->setSceneNode(carrotNode);
+    carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    carrot->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(carrotNode);
+    carrot->setDebugScene(_debugnode);
+
+    _world->initObstacle(carrot);
 }
 
 /**

@@ -57,13 +57,11 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     // Program the buttons
     _hostbutton->addListener([this](const std::string& name, bool down) {
         if (down) {
-            CULog("host button down");
             _choice = Choice::HOST;
         }
     });
     _joinbutton->addListener([this](const std::string& name, bool down) {
         if (down) {
-            CULog("client button down");
             _choice = Choice::JOIN;
         }
     });
@@ -99,7 +97,6 @@ void MenuScene::setActive(bool value) {
         Scene2::setActive(value);
         if (value) {
             _choice = NONE;
-            CULog("activating menu buttons");
             _hostbutton->activate();
             _joinbutton->activate();
         } else {

@@ -18,6 +18,7 @@
 #include "../controllers/CameraController.h"
 #include "../controllers/NetworkController.h"
 #include "../objects/Map.h"
+#include "../shaders/WheatRenderer.h"
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -87,6 +88,11 @@ protected:
 
     /** Initial camera position */
     Vec3 _initCamera;
+    
+    std::shared_ptr<WheatRenderer> _wheatrenderer;
+    
+    
+
 
 #pragma mark Internal Object Management
 
@@ -319,6 +325,7 @@ public:
     
     void unload();
 
+    void render(const std::shared_ptr<SpriteBatch> &batch);
 };
 
 #endif /* RootedGameScene_h */

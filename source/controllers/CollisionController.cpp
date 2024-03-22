@@ -12,6 +12,7 @@ using namespace cugl;
 bool CollisionController::init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network) {
     _map = map;
     _network = network;
+    _network->attachEventType<CaptureBarrotEvent>();
     return true;
 }
 
@@ -55,8 +56,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             if (name2 == "baby") {
                 BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
                 if(!(carrot->isCaptured() || carrot->isRooted())){
-                    carrot->captureBabyCarrot();
-                    b2babycarrot->gotCaptured();
+                    _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), b2babycarrot->getID()));
                 }
             }
         }

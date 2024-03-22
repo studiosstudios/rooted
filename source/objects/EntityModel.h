@@ -56,6 +56,7 @@
 #define FARMER_TEXTURE   "farmer"
 #define BABY_TEXTURE   "baby"
 #define VISIBLE_PRIORITY 2
+#define ENTITY_PRIORITY 0
 
 #pragma mark -
 #pragma mark Physics Constants

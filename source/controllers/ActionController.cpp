@@ -172,10 +172,10 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             if (_map->getFarmers().at(0)->getUUID() == _map->getCharacter()->getUUID()) {
-                carrot->getSceneNode()->setPriority(0);
+                carrot->getSceneNode()->setPriority(ENTITY_PRIORITY);
             }
             if (_map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID()) {
-                _map->getFarmers().at(0)->getSceneNode()->setPriority(0);
+                _map->getFarmers().at(0)->getSceneNode()->setPriority(ENTITY_PRIORITY);
             }
             std::cout<<"carrot rooted\n";
             std::cout<<_map->getFarmers().at(0)->isHoldingCarrot()<<"\n";

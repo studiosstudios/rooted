@@ -471,26 +471,6 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
     _carrotPosList.push_back(posArray->get(0)->asFloat());
     _carrotPosList.push_back(posArray->get(1)->asFloat());
 
-//    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
-//    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
-//    carrot->setDebugColor(DEBUG_COLOR);
-//    carrot->setName("carrot");
-////    carrot->setEnabled(false);  Initially disabled
-//    _carrots.push_back(carrot);
-//
-//    auto carrotNode = scene2::PolygonNode::allocWithTexture(
-//            _assets->get<Texture>(CARROT_TEXTURE));
-////        carrotNode->setColor(Color4::ORANGE);
-//    carrot->setSceneNode(carrotNode);
-//    carrot->setDrawScale(
-//            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-//    // Create the polygon node (empty, as the model will initialize)
-//    _worldnode->addChild(carrotNode);
-//    carrot->setDebugScene(_debugnode);
-//
-//    if (success) { //Do not immediately add, wait until we check network players
-//        _world->initObstacle(carrot);
-//    }
     return success;
 }
 
@@ -518,6 +498,7 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
     auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
                                                           1, WHEAT_FRAMES, WHEAT_FRAMES);
     wheat->setSceneNode(spriteImage);
+    wheat->getSceneNode()->setPriority(WHEAT_PRIORITY);
     addObstacle(wheat, spriteImage);  // All walls share the same texture
 
     return success;
@@ -549,6 +530,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
             _assets->get<Texture>(BABY_TEXTURE));
 //        babyNode->setColor(Color4::BLUE);
     baby->setSceneNode(babyNode);
+    baby->getSceneNode()->setPriority(ENTITY_PRIORITY);
     baby->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
@@ -586,6 +568,7 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
     auto farmerNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(FARMER_TEXTURE));
     farmer->setSceneNode(farmerNode);
+    farmer->getSceneNode()->setPriority(ENTITY_PRIORITY);
     farmer->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
@@ -624,6 +607,7 @@ bool Map::loadPlantingSpot(const std::shared_ptr<JsonValue> &json) {
 
     auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
     plantingSpot->setSceneNode(spotNode);
+    plantingSpot->getSceneNode()->setPriority(WHEAT_PRIORITY);
     spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
     addObstacle(plantingSpot, spotNode);
 
@@ -669,6 +653,7 @@ void Map::spawnCarrot(Vec2 position) {
     auto carrotNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(CARROT_TEXTURE));
     carrot->setSceneNode(carrotNode);
+    carrot->getSceneNode()->setPriority(ENTITY_PRIORITY);
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)

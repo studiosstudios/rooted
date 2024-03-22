@@ -167,6 +167,24 @@ void EntityModel::dispose() {
 }
 
 /**
+ *  Steps the state machine of this EntityModel.
+ *
+ *  This method should be called after all relevant input attributes are set.
+ */
+void EntityModel::updateState() {
+    if (!isEnabled()) {
+        return;
+    }
+    
+    switch (_state) {
+        case MOVING:
+            break;
+        default:
+            CULog("updateState: Not implemented yet");
+    }
+}
+
+/**
  * Applies the force to the body of this dude
  *
  * This method should be called after the force attribute is set.
@@ -176,21 +194,25 @@ void EntityModel::applyForce() {
         return;
     }
     
+    Vec2 speed;
+    
     switch (_state) {
-        case MOVING:
-            if (getMovement().x == 0.0f && getMovement().y == 0.0f) {
-                b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
-                _body->ApplyForce(force,_body->GetPosition(),true);
+        case MOVING: {
+            if (getMovement() == Vec2::ZERO) {
+                speed = Vec2::ZERO;
             }
-            else if(dashTimer > 0){
-                setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * DUDE_DASH);
+            else if(dashTimer > 0){ // TODO: Move this to DASHING
+                Vec2::normalize(getMovement(), &speed)->scale( DUDE_DASH);
             }
             else{
-                setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
+                Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
             }
+            setLinearVelocity(speed);
             break;
-        default:
+        }
+        default: {
             CULog("State not implemented yet");
+        }
     }
     
     // Don't want to be moving. Damp out player motion

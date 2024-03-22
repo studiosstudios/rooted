@@ -440,6 +440,14 @@ public:
      */
     void update(float dt) override;
     
+    
+    /**
+     *  Steps the state machine of this EntityModel.
+     *
+     *  This method should be called after all relevant input attributes are set.
+     */
+    void updateState();
+    
     /**
      * Applies the force to the body of this dude
      *

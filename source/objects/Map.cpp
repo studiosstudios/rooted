@@ -146,8 +146,6 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     // Create, but transfer ownership to root
     // needs to be an ordered node in order to reorder some elements
     _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
-    _worldnode->addChild(_wheatnode);
-    _worldnode->addChild(_groundnode);
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(Vec2::ZERO);
 
@@ -188,8 +186,7 @@ void Map::showDebug(bool flag) {
  */
 bool Map::init(const std::shared_ptr<AssetManager> &assets,
                const std::shared_ptr<scene2::SceneNode> &root,
-               const std::shared_ptr<cugl::JsonValue> &json,
-               const std::shared_ptr<WheatRenderer> &renderer) {
+               const std::shared_ptr<cugl::JsonValue> &json) {
     setAssets(assets);
 
     if (json == nullptr) {
@@ -200,23 +197,18 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
 
     // Initial geometry
     _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
-    
-    _groundnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::GROUND);
-    _wheatnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::WHEAT);
-    _groundnode->setPriority(float(Map::DrawOrder::GROUND));
-    _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
 
     setRootNode(root);
 
     return true;
 }
 
-void Map::populateTiled() {
+void Map::populate() {
     
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
     
-    int width = _json->getFloat("width");
+    int     width = _json->getFloat("width");
     int height = _json->getFloat("height");
     int tileSize = _json->getInt("tilewidth");
     
@@ -230,23 +222,25 @@ void Map::populateTiled() {
             std::string type = std::any_cast<std::string>(_propertiesMap.at("type"));
             float x = std::any_cast<float>(_propertiesMap.at("x"));
             float y = std::any_cast<float>(_propertiesMap.at("y"));
+            float width = std::any_cast<float>(_propertiesMap.at("width"));
+            float height = std::any_cast<float>(_propertiesMap.at("height"));
             
             if (name == "wheat") {
                 loadWheat();
                 break;
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
-                    loadPlantingSpot(x, y);
+                    loadPlantingSpot(x, y, width, height);
                 } else {
                     CUWarn("Unrecognized environmental object: %s", type.c_str());
                 }
             } else if (name == "entities"){
                 if (type == "Farmer") {
-                    loadFarmer(x, y);
+                    loadFarmer(x, y, width, height);
                 } else if (type == "Baby") {
-                    loadBabyCarrot(x, y);
+                    loadBabyCarrot(x, y, width, height);
                 } else if (type == "Carrot") {
-                    loadCarrot(x, y);
+                    loadCarrot(x, y, width, height);
                 } else {
                     CUWarn("Unrecognized entity: %s", type.c_str());
                 }
@@ -261,13 +255,24 @@ void Map::populateTiled() {
 }
 
 void Map::loadWheat(){
+    std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
+    float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
+    _wheatrenderer = WheatRenderer::alloc(_assets, name, bladeColorScale);
+    _wheatrenderer->setScale(_scale.x);
+    _wheatrenderer->buildShaders();
+    _groundnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::GROUND);
+    _wheatnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::WHEAT);
+    _groundnode->setPriority(float(Map::DrawOrder::GROUND));
+    _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     
+    _worldnode->addChild(_wheatnode);
+    _worldnode->addChild(_groundnode);
 }
 
-void Map::loadPlantingSpot(float x, float y) {
-    Vec2 spotPos = Vec2(x, y) + Vec2::ANCHOR_CENTER;
+void Map::loadPlantingSpot(float x, float y, float width, float height) {
+    Vec2 spotPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
     
-    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, PLANTING_SPOT_SIZE, _scale.x);
+    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, {width, height}, _scale.x);
     plantingSpot->setDebugColor(DEBUG_COLOR);
     plantingSpot->setName("planting spot");
     _plantingSpot.push_back(plantingSpot);
@@ -279,8 +284,8 @@ void Map::loadPlantingSpot(float x, float y) {
     addObstacle(plantingSpot, spotNode);
 }
 
-void Map::loadFarmer(float x, float y) {
-    Vec2 farmerPos = Vec2(x, y);
+void Map::loadFarmer(float x, float y, float width, float height) {
+    Vec2 farmerPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
     std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, FARMER_SIZE, _scale.x);
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
@@ -300,8 +305,8 @@ void Map::loadFarmer(float x, float y) {
     _world->initObstacle(farmer);
 }
 
-void Map::loadBabyCarrot(float x, float y) {
-    Vec2 carrotPos = Vec2(x, y);
+void Map::loadBabyCarrot(float x, float y, float width, float height) {
+    Vec2 carrotPos = Vec2(x, y)  + Vec2::ANCHOR_CENTER * Vec2(width, height);;
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
     baby->setName("baby");
@@ -321,102 +326,27 @@ void Map::loadBabyCarrot(float x, float y) {
     _world->initObstacle(baby);
 }
 
-void Map::loadCarrot(float x, float y) {
-    Vec2 carrotPos = Vec2(x, y);
+void Map::loadCarrot(float x, float y, float width, float height) {
+    Vec2 carrotPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
     std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     carrot->setDebugColor(DEBUG_COLOR);
     carrot->setName("carrot");
-//    carrot->setEnabled(false);  Initially disabled
+    //    carrot->setEnabled(false);  Initially disabled
     _carrots.push_back(carrot);
-
+    
     auto carrotNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(CARROT_TEXTURE));
-//        carrotNode->setColor(Color4::ORANGE);
+                                                            _assets->get<Texture>(CARROT_TEXTURE));
+    //        carrotNode->setColor(Color4::ORANGE);
     carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
     carrot->setSceneNode(carrotNode);
     carrot->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+                         _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     _worldnode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
-
+    
     _world->initObstacle(carrot);
-
-}
-
-bool Map::populate() {
-
-    /** Create the physics world */
-    _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
-
-    _farmerPlaying = false;
-
-    auto carrots = _json->get("carrots");
-    if (carrots != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int csize = (int) carrots->size();
-        for (int ii = 0; ii < csize; ii++) {
-            loadCarrot(carrots->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load carrots");
-    }
-
-    auto babies = _json->get("babies");
-    if (babies != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int bsize = (int) babies->size();
-        for (int ii = 0; ii < bsize; ii++) {
-            loadBabyCarrot(babies->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load babies");
-    }
-
-    auto farmers = _json->get("farmers");
-    if (farmers != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int fsize = (int) farmers->size();
-        for (int ii = 0; ii < fsize; ii++) {
-            loadFarmer(farmers->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load farmers");
-    }
-
-//    auto wheat = _json->get("wheat");
-//    if (wheat != nullptr) {
-//        // Convert the object to an array so we can see keys and values
-//        int wsize = (int) wheat->size();
-//        for (int ii = 0; ii < wsize; ii++) {
-//            loadWheat(wheat->get(ii));
-//        }
-//    } else {
-//        CUAssertLog(false, "Failed to load wheat");
-//    }
     
-    auto plantingSpots = _json->get("plantingSpots");
-    if(plantingSpots != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int wsize = (int) plantingSpots->size();
-        for (int ii = 0; ii < wsize; ii++) {
-            loadPlantingSpot(plantingSpots->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load planting spots");
-    }
-    
-    auto walls = _json->get("walls");
-    if (walls != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int wsize = (int) walls->size();
-        for (int ii = 0; ii < wsize; ii++) {
-            loadWall(walls->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load walls");
-    }
-    return true;
 }
 
 /**
@@ -466,6 +396,7 @@ void Map::dispose() {
         _world->clear();
         _world = nullptr;
     }
+    _wheatrenderer->dispose();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
@@ -805,6 +736,8 @@ bool Map::readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileS
     
     _propertiesMap.emplace("x", json->getFloat("x")/tileSize);
     _propertiesMap.emplace("y", levelHeight - json->getFloat("y")/tileSize);
+    _propertiesMap.emplace("width", json->getFloat("width")/tileSize);
+    _propertiesMap.emplace("height", json->getFloat("height")/tileSize);
     _propertiesMap.emplace("type", json->getString("type"));
     
     auto properties = json->get("properties");
@@ -861,4 +794,27 @@ void Map::togglePlayer() {
  */
 void Map::toggleShowPlayer() {
     _showPlayer = !_showPlayer;
+}
+
+void Map::updateShader(float step, const Mat4 &perspective) {
+    int size = _carrots.size() + _farmers.size() + _babies.size();
+    float positions[2*size]; // must be 1d array
+    float velocities[size];
+    float ratio = _wheatrenderer->getAspectRatio();
+    for (int i = 0; i < _carrots.size(); i++) {
+        positions[2 * i] = _carrots.at(i)->getX() / _scale.x;
+        positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / _scale.x * ratio;
+        velocities[i] = _carrots.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < _farmers.size(); i++) {
+        positions[2 * i + 2* _carrots.size()] = _farmers.at(i)->getX() / _scale.x;
+        positions[2 * i + 1 + 2 * _carrots.size()] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / _scale.x * ratio;
+        velocities[i + _carrots.size()] = _farmers.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < _babies.size(); i++) {
+        positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / _scale.x;
+        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / _scale.x * ratio;
+        velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
+    }
+    _wheatrenderer->update(step, perspective, size, positions, velocities);
 }

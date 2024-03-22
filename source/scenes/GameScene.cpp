@@ -165,6 +165,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         return false;
     }
     
+    _map->populateWithCarrots(_network->getNumPlayers() - 1);
+
     addChild(_rootnode);
     addChild(_uinode);
     addChild(_winnode);
@@ -477,13 +479,6 @@ void GameScene::postUpdate(float remain) {
     _action.postUpdate(remain);
 
     _map->getWorld()->garbageCollect();
-
-    auto avatar = _map->getCarrots().at(0);
-
-    // Record failure if necessary.
-    if (!_failed && avatar->getY() < 0) {
-        setFailure(true);
-    }
 
     // Reset the game if we win or lose.
     if (_countdown > 0) {

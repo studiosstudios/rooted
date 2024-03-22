@@ -338,7 +338,7 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\cugl\\buildfiles\windows\cugl\cugl.vcxproj">
+    <ProjectReference Include="..\..\..\..\..\cugl\\buildfiles\windows\cugl\cugl.vcxproj">
       <Project>{60c028a4-977f-44e9-a709-d79a153d6f69}</Project>
     </ProjectReference>
   </ItemGroup>

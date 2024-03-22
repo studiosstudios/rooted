@@ -55,7 +55,11 @@ private:
     std::shared_ptr<ShaderNode> _groundnode;
     bool _farmerPlaying = false;
     bool _showPlayer = false;
-
+    /** Possible init positions of carrots */
+    std::vector<float> _carrotPosList;
+    
+public:
+    
     /**
      * Enum representing the draw order of scene nodes. Nodes will be drawn in the order they are listed in the enum.
      */
@@ -67,8 +71,6 @@ private:
         WHEAT,
         WALLS
     };
-    
-public:
 
 #pragma mark -
 #pragma mark Constructors and Destructors
@@ -200,6 +202,16 @@ public:
      */
     void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
                      const std::shared_ptr<cugl::scene2::SceneNode> &node);
+    
+    /**
+     * populate the map with Carrots
+     */
+    void populateWithCarrots(int numCarrots);
+    
+    /**
+     * Adds a carrot to the game (adds to the carrot vector)
+     */
+    void spawnCarrot(const Vec2 position);
 
 #pragma mark Physics Attributes
 

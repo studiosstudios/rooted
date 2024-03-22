@@ -1,2 +1,0 @@
-ninja: Entering directory `/Users/jffzh/Cornell/23-24/CS4152/rooted/build/android/Rooted/app/.cxx/Debug/1y5j1lf6/arm64-v8a'
-ninja: no work to do.

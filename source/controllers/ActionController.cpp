@@ -86,6 +86,7 @@ void ActionController::preUpdate(float dt) {
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
 //        std::cout<<"farmer did the rooting\n";
         _map->getFarmers().at(0)->rootCarrot();
+
         // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
         for (auto carrot : _map->getCarrots()) {
             if (carrot->isCaptured()) {
@@ -155,6 +156,12 @@ void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event)
         if(carrot->getUUID() == event->getUUID()){
             carrot->setSensor(true);
             carrot->gotCaptured();
+            if (_map->getFarmers().at(0)->getUUID() == _map->getCharacter()->getUUID()) {
+                carrot->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
+            }
+            if (carrot->getUUID() == _map->getCharacter()->getUUID()) {
+                _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
+            }
         }
     }
 //    _map->getCarrots().at(0)->setSensor(true);
@@ -165,6 +172,12 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
     _map->getFarmers().at(0)->rootCarrot();
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
+            if (_map->getFarmers().at(0)->getUUID() == _map->getCharacter()->getUUID()) {
+                carrot->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
+            }
+            if (_map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID()) {
+                _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
+            }
             std::cout<<"carrot rooted\n";
             std::cout<<_map->getFarmers().at(0)->isHoldingCarrot()<<"\n";
             carrot->gotRooted();

@@ -144,8 +144,8 @@
 		EB0F3CD227FBA2190037CC66 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		EB0F3CD327FBA2190037CC66 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		EB0F3CD427FBA2190037CC66 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		EB163904295693D90090F7D4 /* cugl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cugl.xcodeproj; path = ../../../cugl/buildfiles/apple/cugl.xcodeproj; sourceTree = "<group>"; };
-		EB6E0E5D298C1A3300704E87 /* licenses */ = {isa = PBXFileReference; lastKnownFileType = folder; name = licenses; path = "../../../../cugl/licenses"; sourceTree = "<group>"; };
+		EB163904295693D90090F7D4 /* cugl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cugl.xcodeproj; path = ../../../../cugl/buildfiles/apple/cugl.xcodeproj; sourceTree = "<group>"; };
+		EB6E0E5D298C1A3300704E87 /* licenses */ = {isa = PBXFileReference; lastKnownFileType = folder; name = licenses; path = "../../../../../cugl/licenses"; sourceTree = "<group>"; };
 		EBC7AEC227FBB41F001F1467 /* rooted!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "rooted!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC7AEF027FBBEF5001F1467 /* ios.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ios.plist; sourceTree = "<group>"; };
 		EBDD8138293CE9F8000BED3C /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreHaptics.framework; sourceTree = DEVELOPER_DIR; };
@@ -681,7 +681,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BOX2D_INCLUDES = "$(SRCROOT)/../../../cugl/external/box2d/include";
+				BOX2D_INCLUDES = "$(SRCROOT)/../../../../cugl/external/box2d/include";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
@@ -711,8 +711,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CUGL_INCLUDES = "$(SRCROOT)/../../../cugl/include";
-				DATACH_INCLUDES = "$(SRCROOT)/../../../cugl/external/libdatachannel/include";
+				CUGL_INCLUDES = "$(SRCROOT)/../../../../cugl/include";
+				DATACH_INCLUDES = "$(SRCROOT)/../../../../cugl/external/libdatachannel/include";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -730,7 +730,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				POLY2_INCLUDES = "$(SRCROOT)/../../../cugl/external/poly2tri";
+				POLY2_INCLUDES = "$(SRCROOT)/../../../../cugl/external/poly2tri";
 				HEADER_SEARCH_PATHS = (
 					"$(SDL_INCLUDES)",
 					"$(POLY2_INCLUDES)",
@@ -744,7 +744,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SDL_INCLUDES = "$(SRCROOT)/../../../cugl/sdlapp/include";
+				SDL_INCLUDES = "$(SRCROOT)/../../../../cugl/sdlapp/include";
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = "OpenGL OpenGLES";
 			};
 			name = Debug;
@@ -753,7 +753,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BOX2D_INCLUDES = "$(SRCROOT)/../../../cugl/external/box2d/include";
+				BOX2D_INCLUDES = "$(SRCROOT)/../../../../cugl/external/box2d/include";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
@@ -783,8 +783,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CUGL_INCLUDES = "$(SRCROOT)/../../../cugl/include";
-				DATACH_INCLUDES = "$(SRCROOT)/../../../cugl/external/libdatachannel/include";
+				CUGL_INCLUDES = "$(SRCROOT)/../../../../cugl/include";
+				DATACH_INCLUDES = "$(SRCROOT)/../../../../cugl/external/libdatachannel/include";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -796,7 +796,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				POLY2_INCLUDES = "$(SRCROOT)/../../../cugl/external/poly2tri";
+				POLY2_INCLUDES = "$(SRCROOT)/../../../../cugl/external/poly2tri";
 				HEADER_SEARCH_PATHS = (
 					"$(SDL_INCLUDES)",
 					"$(POLY2_INCLUDES)",
@@ -809,7 +809,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
-				SDL_INCLUDES = "$(SRCROOT)/../../../cugl/sdlapp/include";
+				SDL_INCLUDES = "$(SRCROOT)/../../../../cugl/sdlapp/include";
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = "OpenGL OpenGLES";
 			};
 			name = Release;

@@ -82,8 +82,6 @@ private:
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
 
 protected:
-	/** The current horizontal movement of the character */
-	cugl::Vec2 _movement;
 	/** Which direction is the character facing */
 	bool _faceRight;
 
@@ -122,6 +120,16 @@ protected:
     
     /** Current EntityState that this entity is in. */
     EntityState _state;
+    
+    /** The current movement (horizontal and vertical) of the character */
+    cugl::Vec2 _movement;
+    
+    bool _dashInput;
+    
+    bool _plantInput;
+    
+    cugl::Vec2 _dashCache;
+       
     
 
 public:
@@ -369,6 +377,10 @@ public:
      * @param value left/right movement of this character.
      */
     void setMovement(cugl::Vec2 value);
+    
+    void setDashInput(bool dashInput);
+    
+    void setPlantInput(bool plantInput);
     
     /**
      * Returns how much force to apply to get the dude moving

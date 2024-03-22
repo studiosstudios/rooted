@@ -34,46 +34,52 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void ActionController::preUpdate(float dt) {
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setMovement(Vec2::ZERO);
-        if (_map->getCharacter()->getUUID() == carrot->getUUID() && !carrot->isCaptured() && !carrot->isRooted()) {
-            if(carrot->dashTimer > 0){
-                carrot->dashTimer -= 1;
-            }
-            if (_input->didDash()) {
-                carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
-                carrot->dashTimer=DASH_TIME;
-                
-            } else {
-                carrot->setMovement(_input->getMovement() * carrot ->getForce());
-            }
-        }
-        carrot->applyForce();
-    }
+    auto playerEntity = _map->getCharacter();
+    playerEntity->setMovement(_input->getMovement());
+    playerEntity->setDashInput(_input->didDash());
     
-    for (auto farmer : _map->getFarmers()) {
-        farmer->setMovement(Vec2::ZERO);
-        if (_map->getCharacter()->getUUID() == farmer->getUUID()){
-            if(farmer->dashTimer > 0){
-                farmer->dashTimer -= 1;
-            }
-            if(farmer->captureTime == 0){
-                farmer->setDash(false);
-            }
-            else{
-                farmer->captureTime -= 1;
-            }
-            if (_input->didDash() && !farmer->isHoldingCarrot()) {
-                farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
-                farmer->dashTimer=DASH_TIME;
-                farmer->captureTime=CAPTURE_TIME;
-                farmer->setDash(true);
-            } else {
-                farmer->setMovement(_input->getMovement() * farmer ->getForce());
-            }
-        }
-        farmer->applyForce();
-    }
+    playerEntity->updateState();
+    playerEntity->applyForce();
+//    for (auto carrot : _map->getCarrots()) {
+//        carrot->setMovement(Vec2::ZERO);
+//        if (_map->getCharacter()->getUUID() == carrot->getUUID() && !carrot->isCaptured() && !carrot->isRooted()) {
+//            if(carrot->dashTimer > 0){
+//                carrot->dashTimer -= 1;
+//            }
+//            if (_input->didDash()) {
+//                carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
+//                carrot->dashTimer=DASH_TIME;
+//                
+//            } else {
+//                carrot->setMovement(_input->getMovement() * carrot ->getForce());
+//            }
+//        }
+//        carrot->applyForce();
+//    }
+//    
+//    for (auto farmer : _map->getFarmers()) {
+//        farmer->setMovement(Vec2::ZERO);
+//        if (_map->getCharacter()->getUUID() == farmer->getUUID()){
+//            if(farmer->dashTimer > 0){
+//                farmer->dashTimer -= 1;
+//            }
+//            if(farmer->captureTime == 0){
+//                farmer->setDash(false);
+//            }
+//            else{
+//                farmer->captureTime -= 1;
+//            }
+//            if (_input->didDash() && !farmer->isHoldingCarrot()) {
+//                farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
+//                farmer->dashTimer=DASH_TIME;
+//                farmer->captureTime=CAPTURE_TIME;
+//                farmer->setDash(true);
+//            } else {
+//                farmer->setMovement(_input->getMovement() * farmer ->getForce());
+//            }
+//        }
+//        farmer->applyForce();
+//    }
 
     if (_network->isHost()) {
         for (auto babyCarrot : _map->getBabyCarrots()) {

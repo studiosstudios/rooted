@@ -127,6 +127,14 @@ void EntityModel::setMovement(Vec2 movement) {
     _faceRight = face;
 }
 
+void EntityModel::setDashInput(bool dashInput) {
+    _dashInput = dashInput;
+}
+
+void EntityModel::setPlantInput(bool plantInput) {
+    _plantInput = plantInput;
+}
+
 
 #pragma mark -
 #pragma mark Physics Methods
@@ -177,10 +185,25 @@ void EntityModel::updateState() {
     }
     
     switch (_state) {
-        case MOVING:
+        case MOVING: {
+            // Moving -> Dashing
+            if (dashTimer == 0 && _dashInput) {
+                _state = DASHING;
+                dashTimer = 2;
+            }
             break;
-        default:
+        }
+        case DASHING: {
+            // Dashing -> Moving
+            dashTimer--;
+            if (dashTimer == 0) {
+                _state = MOVING;
+            }
+            break;
+        }
+        default: {
             CULog("updateState: Not implemented yet");
+        }
     }
 }
 
@@ -201,13 +224,14 @@ void EntityModel::applyForce() {
             if (getMovement() == Vec2::ZERO) {
                 speed = Vec2::ZERO;
             }
-            else if(dashTimer > 0){ // TODO: Move this to DASHING
-                Vec2::normalize(getMovement(), &speed)->scale( DUDE_DASH);
-            }
             else{
                 Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
             }
             setLinearVelocity(speed);
+            break;
+        }
+        case DASHING: {
+            setLinearVelocity(Vec2::normalize(getMovement(), &speed)->scale(DUDE_DASH));
             break;
         }
         default: {

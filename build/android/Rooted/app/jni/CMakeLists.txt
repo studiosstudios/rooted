@@ -22,7 +22,7 @@ if (ANDROID)
 endif()
 
 # Set the correct directories
-set(CUGL_DIR  ../../../../../../../cugl)
+set(CUGL_DIR  ../../../../../../cugl)
 set(SDL2_DIR  "${CUGL_DIR}/sdlapp")
 set(ASSET_DIR  ../../../../../assets)
 

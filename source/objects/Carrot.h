@@ -90,7 +90,8 @@ public:
     void gotCaptured();
     
     void gotRooted();
-        
+    
+    void gotUnrooted();
 };
 
 

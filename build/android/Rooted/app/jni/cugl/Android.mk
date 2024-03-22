@@ -1,6 +1,6 @@
 LOCAL_PATH  := $(call my-dir)
 CURR_DEPTH  := ..
-CUGL_OFFSET := ../../../../../../../cugl
+CUGL_OFFSET := ../../../../../../cugl
 
 ###########################
 #

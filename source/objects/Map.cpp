@@ -347,7 +347,7 @@ void Map::dispose() {
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
     std::shared_ptr<EntityModel> ret;
     bool isHost = hostUUID == thisUUID;
-    
+
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != hostUUID) {
@@ -534,6 +534,7 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
     baby->setName("baby");
+    baby->setID(_babies.size());
     _babies.push_back(baby);
 
     auto babyNode = scene2::PolygonNode::allocWithTexture(

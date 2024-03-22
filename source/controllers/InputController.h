@@ -53,6 +53,8 @@ private:
     bool _keyDash;
     /** Whether the root key is down*/
     bool _keyRoot;
+    /** Whether the unroot key is down*/
+    bool _keyUnroot;
     
     /** Whether the dash key was pressed in previous frame */
     bool _keyDashPressed;
@@ -75,6 +77,8 @@ protected:
     bool _dashPressed;
     /** Whether the root action was chosen */
     bool _rootPressed;
+    /** Whether the unroot action was chosen */
+    bool _unrootPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
     
@@ -327,6 +331,8 @@ public:
     bool didDash() const { return _dashPressed; }
     
     bool didRoot() const { return _rootPressed; }
+    
+    bool didUnroot() const { return _unrootPressed; }
 
     bool didSwitch() const { return _switchPressed; }
 

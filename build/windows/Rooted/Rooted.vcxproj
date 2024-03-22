@@ -258,9 +258,13 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
 
     <ClInclude Include="..\..\..\source\shaders\ShaderNode.h"/>
 
+    <ClInclude Include="..\..\..\source\events\UnrootEvent.h"/>
+
     <ClInclude Include="..\..\..\source\events\RootEvent.h"/>
 
-    <ClInclude Include="..\..\..\source\events\DashEvent.h"/>
+    <ClInclude Include="..\..\..\source\events\CaptureEvent.h"/>
+
+    <ClInclude Include="..\..\..\source\events\GameOverEvent.h"/>
 
     <ClInclude Include="..\..\..\source\controllers\CollisionController.h"/>
 
@@ -308,9 +312,13 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
 
     <ClCompile Include="..\..\..\source\shaders\ShaderNode.cpp"/>
 
-    <ClCompile Include="..\..\..\source\events\DashEvent.cpp"/>
+    <ClCompile Include="..\..\..\source\events\UnrootEvent.cpp"/>
+
+    <ClCompile Include="..\..\..\source\events\CaptureEvent.cpp"/>
 
     <ClCompile Include="..\..\..\source\events\RootEvent.cpp"/>
+
+    <ClCompile Include="..\..\..\source\events\GameOverEvent.cpp"/>
 
     <ClCompile Include="..\..\..\source\controllers\InputController.cpp"/>
 
@@ -338,7 +346,7 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\cugl\\buildfiles\windows\cugl\cugl.vcxproj">
+    <ProjectReference Include="..\..\..\..\cugl\\buildfiles\windows\cugl\cugl.vcxproj">
       <Project>{60c028a4-977f-44e9-a709-d79a153d6f69}</Project>
     </ProjectReference>
   </ItemGroup>

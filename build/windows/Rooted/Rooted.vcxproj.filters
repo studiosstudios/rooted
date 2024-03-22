@@ -71,10 +71,16 @@
     <ClInclude Include="..\..\..\source\shaders\ShaderNode.h">
       <Filter>Source Files\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\source\events\UnrootEvent.h">
+      <Filter>Source Files\events</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\source\events\RootEvent.h">
       <Filter>Source Files\events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\events\DashEvent.h">
+    <ClInclude Include="..\..\..\source\events\CaptureEvent.h">
+      <Filter>Source Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\events\GameOverEvent.h">
       <Filter>Source Files\events</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\controllers\CollisionController.h">
@@ -145,10 +151,16 @@
     <ClCompile Include="..\..\..\source\shaders\ShaderNode.cpp">
       <Filter>Source Files\shaders</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\events\DashEvent.cpp">
+    <ClCompile Include="..\..\..\source\events\UnrootEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\events\CaptureEvent.cpp">
       <Filter>Source Files\events</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\events\RootEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\events\GameOverEvent.cpp">
       <Filter>Source Files\events</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\controllers\InputController.cpp">

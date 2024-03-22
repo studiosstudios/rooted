@@ -41,7 +41,7 @@ android {
     sourceSets.main {
         jniLibs.srcDir 'libs'
         assets.srcDirs += "../../../../assets"
-        assets.srcDirs += "../../../../../../cugl/licenses"
+        assets.srcDirs += "../../../../../cugl/licenses"
     }
     externalNativeBuild {
         // ONLY PICK ONE OF THE TWO

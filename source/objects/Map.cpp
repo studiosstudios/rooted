@@ -279,6 +279,13 @@ bool Map::populate() {
     return true;
 }
 
+void Map::populateWithCarrots(int numCarrots) {
+    for (int ii = 0; ii < numCarrots; ii++) {
+        Vec2 position = Vec2(_carrotPosList.at(ii * 2), _carrotPosList.at(ii * 2 + 1));
+        spawnCarrot(position);
+    }
+}
+
 /**
 * Unloads this game level, releasing all sources
 *
@@ -460,29 +467,31 @@ bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
 
     auto posArray = json->get("position");
     success = posArray->isArray();
-    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
-    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
-    carrot->setDebugColor(DEBUG_COLOR);
-    carrot->setName("carrot");
-//    carrot->setEnabled(false);  Initially disabled
-    _carrots.push_back(carrot);
+    
+    _carrotPosList.push_back(posArray->get(0)->asFloat());
+    _carrotPosList.push_back(posArray->get(1)->asFloat());
 
-    auto carrotNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(CARROT_TEXTURE));
-//        carrotNode->setColor(Color4::ORANGE);
-    carrot->setSceneNode(carrotNode);
-    carrot->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    _worldnode->addChild(carrotNode);
-    carrot->setDebugScene(_debugnode);
-
-    if (success) { //Do not immediately add, wait until we check network players
-        _world->initObstacle(carrot);
-    }
-
+//    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
+//    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+//    carrot->setDebugColor(DEBUG_COLOR);
+//    carrot->setName("carrot");
+////    carrot->setEnabled(false);  Initially disabled
+//    _carrots.push_back(carrot);
+//
+//    auto carrotNode = scene2::PolygonNode::allocWithTexture(
+//            _assets->get<Texture>(CARROT_TEXTURE));
+////        carrotNode->setColor(Color4::ORANGE);
+//    carrot->setSceneNode(carrotNode);
+//    carrot->setDrawScale(
+//            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+//    // Create the polygon node (empty, as the model will initialize)
+//    _worldnode->addChild(carrotNode);
+//    carrot->setDebugScene(_debugnode);
+//
+//    if (success) { //Do not immediately add, wait until we check network players
+//        _world->initObstacle(carrot);
+//    }
     return success;
-
 }
 
 /**
@@ -526,7 +535,6 @@ bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
  * @return true if the baby carrot was successfully loaded
  */
 bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
-
     bool success = true;
 
     auto posArray = json->get("position");
@@ -552,7 +560,6 @@ bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
     }
 
     return success;
-
 }
 
 /**
@@ -651,6 +658,24 @@ void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
             weak->setAngle(obs->getAngle());
         });
     }
+}
+
+void Map::spawnCarrot(Vec2 position) {
+    std::shared_ptr<Carrot> carrot = Carrot::alloc(position, CARROT_SIZE, _scale.x);
+    carrot->setDebugColor(DEBUG_COLOR);
+    carrot->setName("carrot");
+    _carrots.push_back(carrot);
+
+    auto carrotNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROT_TEXTURE));
+    carrot->setSceneNode(carrotNode);
+    carrot->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(carrotNode);
+    carrot->setDebugScene(_debugnode);
+
+    _world->initObstacle(carrot);
 }
 
 /**

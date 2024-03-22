@@ -167,6 +167,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         CULog("Failed to populate map");
         return false;
     }
+    
+    _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
@@ -445,13 +447,6 @@ void GameScene::postUpdate(float remain) {
     _action.postUpdate(remain);
 
     _map->getWorld()->garbageCollect();
-
-    auto avatar = _map->getCarrots().at(0);
-
-    // Record failure if necessary.
-    if (!_failed && avatar->getY() < 0) {
-        setFailure(true);
-    }
 
     // Reset the game if we win or lose.
     if (_countdown > 0) {

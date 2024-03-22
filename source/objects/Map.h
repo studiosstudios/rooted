@@ -49,7 +49,8 @@ private:
     std::shared_ptr<scene2::SceneNode> _debugnode;
     bool _farmerPlaying = false;
     bool _showPlayer = false;
-
+    /** Possible init positions of carrots */
+    std::vector<float> _carrotPosList;
 
 public:
 
@@ -181,6 +182,16 @@ public:
      */
     void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
                      const std::shared_ptr<cugl::scene2::SceneNode> &node);
+    
+    /**
+     * populate the map with Carrots
+     */
+    void populateWithCarrots(int numCarrots);
+    
+    /**
+     * Adds a carrot to the game (adds to the carrot vector)
+     */
+    void spawnCarrot(const Vec2 position);
 
 #pragma mark Physics Attributes
 

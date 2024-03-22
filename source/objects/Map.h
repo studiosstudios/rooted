@@ -6,6 +6,7 @@
 #define ROOTED_MAP_H
 
 #include <cugl/cugl.h>
+#include <any>
 
 #include "BabyCarrot.h"
 #include "Carrot.h"
@@ -55,7 +56,9 @@ private:
     std::shared_ptr<ShaderNode> _groundnode;
     bool _farmerPlaying = false;
     bool _showPlayer = false;
-
+    
+    std::unordered_map<std::string, std::any> _propertiesMap;
+    
     /**
      * Enum representing the draw order of scene nodes. Nodes will be drawn in the order they are listed in the enum.
      */
@@ -68,15 +71,16 @@ private:
         WALLS
     };
     
+    
 public:
-
+    
 #pragma mark -
 #pragma mark Constructors and Destructors
-
+    
     Map(void);
-
+    
     ~Map(void);
-
+    
     /**
      * Creates a new Map with the given source file.
      *
@@ -92,23 +96,23 @@ public:
         std::shared_ptr<Map> result = std::make_shared<Map>();
         return (result->init(assets, root, json, renderer) ? result : nullptr);
     }
-
+    
     bool init(const std::shared_ptr<AssetManager> &assets,
               const std::shared_ptr<scene2::SceneNode> &root,
               const std::shared_ptr<cugl::JsonValue> &json,
               const std::shared_ptr<WheatRenderer> &renderer);
-
+    
     bool populate();
-
-
+    
+    
 #pragma mark -
 #pragma mark Internal Helper Methods
-
+    
     /**
      * Clears the root scene graph node for this level
      */
     void clearRootNode();
-
+    
     /**
      * Loads a single wall
      *
@@ -121,7 +125,7 @@ public:
      * @return true if the crate was successfully loaded
      */
     bool loadWall(const std::shared_ptr<JsonValue> &json);
-
+    
     /**
      * Loads a single farmer
      *
@@ -134,7 +138,7 @@ public:
      * @return true if the crate was successfully loaded
      */
     bool loadFarmer(const std::shared_ptr<JsonValue> &json);
-
+    
     /**
      * Loads a single carrot
      *
@@ -147,7 +151,7 @@ public:
      * @return true if the carrot was successfully loaded
      */
     bool loadCarrot(const std::shared_ptr<JsonValue> &json);
-
+    
     /**
      * Loads a single baby carrot
      *
@@ -160,7 +164,7 @@ public:
      * @return true if the baby carrot was successfully loaded
      */
     bool loadBabyCarrot(const std::shared_ptr<JsonValue> &json);
-
+    
     /**
      * Loads a single wheat
      *
@@ -173,7 +177,7 @@ public:
      * @return true if the wheat was successfully loaded
      */
     bool loadWheat(const std::shared_ptr<JsonValue> &json);
-
+    
     /**
      * Loads a single planting spot
      *
@@ -200,18 +204,18 @@ public:
      */
     void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
                      const std::shared_ptr<cugl::scene2::SceneNode> &node);
-
+    
 #pragma mark Physics Attributes
-
+    
     /**
      * Returns the bounds of this level in physics coordinates
      *
      * @return the bounds of this level in physics coordinates
      */
     const Rect &getBounds() const { return _bounds; }
-
+    
 #pragma mark Drawing Methods
-
+    
     /**
      * Returns the drawing scale for this game level
      *
@@ -225,7 +229,7 @@ public:
      * @return the drawing scale for this game level
      */
     const Vec2 &getDrawScale() const { return _scale; }
-
+    
     /**
      * Sets the drawing scale for this game level
      *
@@ -239,7 +243,7 @@ public:
      * @param value  the drawing scale for this game level
      */
     void setDrawScale(float value);
-
+    
     /**
      * Returns the scene graph node for drawing purposes.
      *
@@ -250,7 +254,7 @@ public:
      * @return the scene graph node for drawing purposes.
      */
     const std::shared_ptr<scene2::SceneNode> &getRootNode() const { return _root; }
-
+    
     /**
      * Sets the scene graph node for drawing purposes.
      *
@@ -264,14 +268,14 @@ public:
      * @release the previous scene graph node used by this object
      */
     void setRootNode(const std::shared_ptr<scene2::SceneNode> &root);
-
+    
     /**
      * Sets the loaded assets for this game level
      *
      * @param assets the loaded assets for this game level
      */
     void setAssets(const std::shared_ptr<AssetManager> &assets) { _assets = assets; }
-
+    
     /**
      * Toggles whether to show the debug layer of this game world.
      *
@@ -280,10 +284,10 @@ public:
      * @param  flag whether to show the debug layer of this game world
      */
     void showDebug(bool flag);
-
+    
 #pragma mark -
 #pragma mark Asset Loading
-
+    
     /**
      * Unloads this game level, releasing all sources
      *
@@ -292,7 +296,7 @@ public:
      * references to other assets, then these should be disconnected earlier.
      */
     void dispose();
-
+    
     /**
      * Loads the players as a bunny farmer or carrot depending on whether they are the host or not.
      */
@@ -301,36 +305,50 @@ public:
     std::vector<std::shared_ptr<EntityModel>> loadBabyEntities();
     
     void acquireMapOwnership();
-
+    
 #pragma mark -
 #pragma mark Getters and Setters
-
+    
     std::vector<std::shared_ptr<BabyCarrot>> &getBabyCarrots() { return _babies; }
-
+    
     std::vector<std::shared_ptr<Carrot>> &getCarrots() { return _carrots; }
     
     std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
     
     std::shared_ptr<EntityModel> &getCharacter() { return _character; }
-
+    
     std::vector<std::shared_ptr<Wheat>> &getWheat() { return _wheat; }
     
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
-
+    
     std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
-        
+    
     bool isFarmerPlaying() { return _farmerPlaying; }
-
+    
     bool isShowingPlayer() { return _showPlayer; }
-
+    
     void rustleWheats(float amount);
-
+    
     void clearRustling();
-
+    
     void togglePlayer();
-
+    
     void toggleShowPlayer();
+    
+    void populateTiled();
+
+private:
+    bool readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight);
+    
+    void loadPlantingSpot(float x, float y);
+    
+    void loadWheat();
+    
+    void loadFarmer(float x, float y);
+    
+    void loadBabyCarrot(float x, float y);
+    
+    void loadCarrot(float x, float y);
+    
 };
-
-
 #endif //ROOTED_MAP_H

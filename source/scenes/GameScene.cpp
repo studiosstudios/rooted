@@ -158,12 +158,14 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     _wheatrenderer = _wheatrenderer->alloc(_assets);
     
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("map"), _wheatrenderer); // Obtains ownership of root.
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("tiled_map"), _wheatrenderer); // Obtains ownership of root.
 
-    if (!_map->populate()) {
-        CULog("Failed to populate map");
-        return false;
-    }
+//    if (!_map->populate()) {
+//        CULog("Failed to populate map");
+//        return false;
+//    }
+    
+    _map->populateTiled();
     
     addChild(_rootnode);
     addChild(_uinode);

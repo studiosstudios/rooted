@@ -199,9 +199,7 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     _json = json;
 
     // Initial geometry
-    float w = json->get("width")->asFloat();
-    float h = json->get("height")->asFloat();
-    _bounds.size.set(w, h);
+    _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
     
     _groundnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::GROUND);
     _wheatnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::WHEAT);
@@ -211,6 +209,139 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     setRootNode(root);
 
     return true;
+}
+
+void Map::populateTiled() {
+    
+    /** Create the physics world */
+    _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
+    
+    int width = _json->getFloat("width");
+    int height = _json->getFloat("height");
+    int tileSize = _json->getInt("tilewidth");
+    
+    std::shared_ptr<JsonValue> layers = _json->get("layers");
+    for (auto layer : layers->children()) {
+        std::string name = layer->getString("name");
+        auto objects = layer->get("objects");
+        for (auto object : objects->children()) {
+            readProperties(object, tileSize, height);
+            
+            std::string type = std::any_cast<std::string>(_propertiesMap.at("type"));
+            float x = std::any_cast<float>(_propertiesMap.at("x"));
+            float y = std::any_cast<float>(_propertiesMap.at("y"));
+            
+            if (name == "wheat") {
+                loadWheat();
+                break;
+            } else if (name == "environment") {
+                if (type == "PlantingSpot") {
+                    loadPlantingSpot(x, y);
+                } else {
+                    CUWarn("Unrecognized environmental object: %s", type.c_str());
+                }
+            } else if (name == "entities"){
+                if (type == "Farmer") {
+                    loadFarmer(x, y);
+                } else if (type == "Baby") {
+                    loadBabyCarrot(x, y);
+                } else if (type == "Carrot") {
+                    loadCarrot(x, y);
+                } else {
+                    CUWarn("Unrecognized entity: %s", type.c_str());
+                }
+            } else {
+                CUWarn("Unrecognized layer name: %s", name.c_str());
+                break;
+            }
+        }
+        
+    }
+    
+}
+
+void Map::loadWheat(){
+    
+}
+
+void Map::loadPlantingSpot(float x, float y) {
+    Vec2 spotPos = Vec2(x, y) + Vec2::ANCHOR_CENTER;
+    
+    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, PLANTING_SPOT_SIZE, _scale.x);
+    plantingSpot->setDebugColor(DEBUG_COLOR);
+    plantingSpot->setName("planting spot");
+    _plantingSpot.push_back(plantingSpot);
+
+    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
+    plantingSpot->setSceneNode(spotNode);
+    spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
+    spotNode->setPriority(float(Map::DrawOrder::PLANTINGSPOT));
+    addObstacle(plantingSpot, spotNode);
+}
+
+void Map::loadFarmer(float x, float y) {
+    Vec2 farmerPos = Vec2(x, y);
+    std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, FARMER_SIZE, _scale.x);
+    farmer->setDebugColor(DEBUG_COLOR);
+    farmer->setName("farmer");
+
+    auto farmerNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(FARMER_TEXTURE));
+    farmer->setSceneNode(farmerNode);
+    farmer->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    _worldnode->addChild(farmerNode);
+    farmer->setDebugScene(_debugnode);
+
+    _farmers.push_back(farmer);
+
+    _world->initObstacle(farmer);
+}
+
+void Map::loadBabyCarrot(float x, float y) {
+    Vec2 carrotPos = Vec2(x, y);
+    std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+    baby->setDebugColor(DEBUG_COLOR);
+    baby->setName("baby");
+    _babies.push_back(baby);
+
+    auto babyNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(BABY_TEXTURE));
+//        babyNode->setColor(Color4::BLUE);
+    baby->setSceneNode(babyNode);
+    baby->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    _worldnode->addChild(babyNode);
+    baby->setDebugScene(_debugnode);
+
+    _world->initObstacle(baby);
+}
+
+void Map::loadCarrot(float x, float y) {
+    Vec2 carrotPos = Vec2(x, y);
+    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
+    carrot->setDebugColor(DEBUG_COLOR);
+    carrot->setName("carrot");
+//    carrot->setEnabled(false);  Initially disabled
+    _carrots.push_back(carrot);
+
+    auto carrotNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROT_TEXTURE));
+//        carrotNode->setColor(Color4::ORANGE);
+    carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    carrot->setSceneNode(carrotNode);
+    carrot->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(carrotNode);
+    carrot->setDebugScene(_debugnode);
+
+    _world->initObstacle(carrot);
+
 }
 
 bool Map::populate() {
@@ -665,6 +796,36 @@ void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
             weak->setAngle(obs->getAngle());
         });
     }
+}
+
+// this is copied from nine lives but might be a bit unnecessary
+bool Map::readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight) {
+    
+    _propertiesMap.clear();
+    
+    _propertiesMap.emplace("x", json->getFloat("x")/tileSize);
+    _propertiesMap.emplace("y", levelHeight - json->getFloat("y")/tileSize);
+    _propertiesMap.emplace("type", json->getString("type"));
+    
+    auto properties = json->get("properties");
+    if (properties == nullptr) { return true; }
+    
+    for (auto property : properties->children()){
+        std::string name = property->getString("name");
+        std::string type = property->getString("type");
+        
+        if (type == "string") {
+            _propertiesMap.emplace(name, property->getString("value"));
+        } else if (type == "int") {
+            _propertiesMap.emplace(name, property->getInt("value"));
+        } else if (type == "bool") {
+            _propertiesMap.emplace(name, property->getBool("value"));
+        } else if (type == "float") {
+            _propertiesMap.emplace(name, property->getFloat("value"));
+        }
+        
+    }
+    return true;
 }
 
 /**

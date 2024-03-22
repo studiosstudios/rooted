@@ -1,0 +1,50 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "testMap.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "entities.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "environment.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "maps.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "testMap.tmx": {
+            "scale": 0.37109375,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 481.01052631578943,
+                "y": 322.021052631579
+            }
+        }
+    },
+    "last.exportedFilePath": "/Users/jffzh/Cornell/23-24/CS4152/rooted/assets/level-editor",
+    "last.imagePath": "/Users/jffzh/Cornell/23-24/CS4152/rooted/assets/level-editor",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "testMap.tmx"
+    ],
+    "project": "mapTest.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "environment.tsx",
+        "entities.tsx",
+        "testMap.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.type": 1
+}

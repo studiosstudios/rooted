@@ -56,7 +56,10 @@
             }
         },
         "shader_base": {
-            "file":     "textures/base.png"
+            "file":     "textures/maps/base.png"
+        },
+        "testMap": {
+            "file":     "level-editor/testMap.png"
         },
         "shader_clouds": {
             "file":     "textures/clouds.png",
@@ -74,7 +77,8 @@
 	},
     "jsons": {
         "server": "json/server.json",
-        "map": "json/map.json"
+        "map": "json/map.json",
+        "tiled_map": "level-editor/testMap.json"
     },
     "sounds": {
         "game": {

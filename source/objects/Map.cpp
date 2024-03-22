@@ -153,6 +153,26 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setScale(_scale); // Debug node draws in PHYSICS coordinates
     _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugnode->setPosition(Vec2::ZERO);
+    
+    
+    bool showGrid = false; //change this to show the grid in debug
+    if (showGrid) {
+        for (int x = 0; x < _bounds.size.width; x++) {
+            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
+            rect->setColor(Color4::WHITE);
+            rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            rect->setPosition(Vec2(x, 0));
+            _debugnode->addChild(rect);
+        }
+        
+        for (int y = 0; y < _bounds.size.height; y++) {
+            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(_bounds.size.width, 1)));
+            rect->setColor(Color4::WHITE);
+            rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            rect->setPosition(Vec2(0, y));
+            _debugnode->addChild(rect);
+        }
+    }
 
     _root->addChild(_worldnode);
     _root->addChild(_debugnode);

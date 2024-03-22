@@ -20,7 +20,8 @@ in vec4 outColor;
 // Texture result from vertex shader
 in vec2 outTexCoord;
 
-uniform float TIME;
+uniform float WIND_TIME;
+uniform float CLOUD_TIME;
 
 // Textures
 uniform sampler2D uTexture;
@@ -60,19 +61,21 @@ void main(void) {
     
     vec2 cloud_uv = uv;
     
-    cloud_uv += cloud_speed * normalize(wind_direction) * TIME;
+    cloud_uv += cloud_speed * normalize(wind_direction) * CLOUD_TIME;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1 * TIME);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1 * WIND_TIME);
 
     vec2 fragUV = uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
     
     vec2 cloud_fragUV = cloud_uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
     
-    frag_color = vec4(0.819608, 0.819608, 0.219608, 1.0);
+//    frag_color = vec4(0.819608, 0.819608, 0.219608, 1.0);
+    frag_color = vec4(0.70196, 0.83529, 0.0, 1.0);
 
     for (int i = 0; i < num_entities; i++ ){
         if (distance(fragUV, positions[i]) < 0.012) {
             frag_color = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
+            break;
         }
     }
     

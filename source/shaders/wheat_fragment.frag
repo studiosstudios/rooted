@@ -46,24 +46,12 @@ in vec2 outTexCoord;
 // Gradient result from vertex shader
 in vec2 outGradCoord;
 
-// GRADIENT UNIFORM
-// The gradient matrix
-uniform mat3 gdMatrix;
-// The gradient inner color
-uniform vec4 gdInner;
-// The gradient outer color
-uniform vec4 gdOuter;
-// The gradient extent
-uniform vec2 gdExtent;
-// The gradient radius
-uniform float gdRadius;
-// The gradient feather
-uniform float gdFeathr;
-
 // What to output
 uniform int uType;
 
-uniform float TIME;
+uniform float WIND_TIME;
+uniform float CLOUD_TIME;
+
 
 // Textures
 uniform sampler2D uTexture;
@@ -112,13 +100,6 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
  - dist: distance from base
  */
 vec4 sampleColor(float dist, float bladeLen) {
-//    if (dist/bladeLen > 0.6) {
-//        return texture(gradient_tex, vec2(2.1f, 0.0f) / 3.0f);
-//    }
-//    else if (dist/bladeLen > 0.4) {
-//        return texture(gradient_tex, vec2(1.1f, 0.0f) / 3.0f);
-//    }
-//    return texture(gradient_tex, vec2(0.2f, 0.0f) / 3.0f);
     return texture(gradient_tex, vec2(dist + 0.5f, 0.0f) / 3.0f);
 }
 
@@ -128,10 +109,8 @@ vec4 sampleColor(float dist, float bladeLen) {
  - uv: position to evaluate blade length at
  */
 float sampleBladeLength(vec2 uv) {
-    if (texture(grass_tex, uv).r > 0.0f) {
-        return texture(grass_tex, uv).r * 255.0f + 2.0f;
-    }
-    return 0.0f;
+    float r = texture(grass_tex, uv).r;
+    return r > 0.0f ? r * 255.0f + 2.0f : 0.0f;
 }
 
 /**
@@ -168,9 +147,9 @@ void main(void) {
     
     vec2 cloud_uv = uv;
     
-    cloud_uv += cloud_speed * normalize(wind_direction) * TIME;
+    cloud_uv += cloud_speed * normalize(wind_direction) * CLOUD_TIME;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1f * TIME);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1f * WIND_TIME);
 
     vec2 fragUV = uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     
@@ -188,7 +167,7 @@ void main(void) {
     }
 
     // Sample the wind
-    float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, TIME);
+    float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, WIND_TIME);
     for (float dist = 0.0f; dist < MAX_BLADE_LENGTH; ++dist) {
 
         // Get the height of the blade originating at the current pixel
@@ -214,9 +193,10 @@ void main(void) {
             if (abs(dist - bladeLength) < 0.0001f) {
                 // Color grass tips
                 if (windValue <= 0.5f) {
-                    baseColor = windValue > 0.49 ? sampleColor(dist, bladeLength) : tip_color;
+                    baseColor = tip_color;
+//                    baseColor = windValue > 0.49 ? sampleColor(dist, bladeLength) : tip_color;
                 } else {
-                    baseColor = vec4(1.0, 0.984314, 0.639216, 1.0);
+                    baseColor = wind_color;
                 }
                 // Add the cloud shadow
                 baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);

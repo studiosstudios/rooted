@@ -37,7 +37,9 @@ protected:
     /** The second texture to try */
     std::shared_ptr<cugl::Texture> _texture2;
     
-    float _totalTime;
+    float _windTime;
+    float _cloudTime;
+    
     std::shared_ptr<cugl::Texture> _grasstex;
     std::shared_ptr<cugl::Texture> _noisetex;
     std::shared_ptr<cugl::Texture> _cloudtex;

@@ -74,7 +74,8 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets) {
 
     _assets = assets;
     
-    _totalTime = 0;
+    _windTime = 0;
+    _cloudTime = 0;
     
     _grasstex = _assets->get<Texture>("shader_base");
     _cloudtex = _assets->get<Texture>("shader_clouds");
@@ -113,14 +114,20 @@ void WheatRenderer::dispose() {
 
 void WheatRenderer::update(float timestep, int size, float *positions, float *velocities) {
 
-    _totalTime += timestep;
-    if (_totalTime >= 30.0) {
-        _totalTime = 0;
+    _windTime += timestep;
+    if (_windTime >= 12.53) {
+        _windTime = 0;
+    }
+    
+    _cloudTime += timestep;
+    if (_cloudTime >= 28.3) {
+        _cloudTime = 0;
     }
 
     if (_wheatShader) {
         _wheatShader->bind();
-        _wheatShader->setUniform1f("TIME", _totalTime);
+        _wheatShader->setUniform1f("WIND_TIME", _windTime);
+        _wheatShader->setUniform1f("CLOUD_TIME", _cloudTime);
         _wheatShader->setUniform1i("num_entities", size);
         _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
         _wheatShader->setUniform2fv("positions", size, positions);
@@ -130,7 +137,8 @@ void WheatRenderer::update(float timestep, int size, float *positions, float *ve
 
     if (_groundShader) {
         _groundShader->bind();
-        _groundShader->setUniform1f("TIME", _totalTime);
+        _groundShader->setUniform1f("WIND_TIME", _windTime);
+        _groundShader->setUniform1f("CLOUD_TIME", _cloudTime);
         _groundShader->setUniform1i("num_entities", size);
         _groundShader->setUniformMat4("uPerspective", _cam->getCombined());
         _groundShader->setUniform2fv("positions", size, positions);
@@ -205,10 +213,14 @@ void WheatRenderer::buildShaders() {
     _wheatShader->setSampler("noise_tex", _noisetex);
     _wheatShader->setSampler("gradient_tex", _gradienttex);
     _wheatShader->setSampler("wheat_details_tex", _wheatdetails);
-    _wheatShader->setUniform1f("TIME", _totalTime);
+    _wheatShader->setUniform1f("WIND_TIME", _windTime);
+    _wheatShader->setUniform1f("CLOUD_TIME", _cloudTime);
 //    _wheatShader->setUniform4f("tip_color", 0.96863, 0.8, 0.294118, 1.0);
-    _wheatShader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
-    _wheatShader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
+//    _wheatShader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
+    _wheatShader->setUniform4f("tip_color", 1.0, 0.866667, 0.231373, 1.0);
+//    _wheatShader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
+    
+    _wheatShader->setUniform4f("wind_color", 1.0, 0.9058824, 0.309804, 1.0);
     _wheatShader->setUniform1f("wind_speed", 1.0);
     _wheatShader->setUniform1f("cloud_speed", 0.05);
     _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
@@ -221,7 +233,8 @@ void WheatRenderer::buildShaders() {
     _groundShader->setSampler("cloud_tex", _cloudtex);
     _groundShader->setSampler("noise_tex", _noisetex);
     _groundShader->setSampler("grass_tex", _grasstex);
-    _groundShader->setUniform1f("TIME", _totalTime);
+    _groundShader->setUniform1f("WIND_TIME", _windTime);
+    _groundShader->setUniform1f("CLOUD_TIME", _cloudTime);
     _groundShader->setUniform1f("cloud_speed", 0.05);
     _groundShader->setUniform2f("wind_direction", 1.0, 1.0);
     _groundShader->setUniform2f("noise_tex_size", 50.0, 1.0);

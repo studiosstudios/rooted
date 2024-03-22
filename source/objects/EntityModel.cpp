@@ -45,7 +45,7 @@
 #include <cugl/scene2/graph/CUPolygonNode.h>
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
-
+#include "Map.h"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -208,7 +208,7 @@ void EntityModel::update(float dt) {
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
-        if (isInWheat() && ((int) _node->getPriority()) == VISIBLE_PRIORITY) {
+        if (isInWheat() && (_node->getPriority() == float(Map::DrawOrder::PLAYER))) {
             _node->setColor(Color4(255, 255, 255, 255.0/2));
         }
         else {

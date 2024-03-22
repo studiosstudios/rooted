@@ -6,6 +6,7 @@
 
 using namespace cugl;
 
+
 #pragma mark -
 #pragma mark Application State
 /**
@@ -130,6 +131,7 @@ void RootedApp::onResume() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void RootedApp::update(float dt) {
+
 //    if (!_loaded && _loading.isActive()) {
 //        _loading.update(0.01f);
 //    } else if (!_loaded) {

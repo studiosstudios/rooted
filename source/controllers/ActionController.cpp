@@ -128,6 +128,7 @@ void ActionController::postUpdate(float dt) {
     while (it != _map->getBabyCarrots().end()) {
         if ((*it)->isRemoved()) {
             (*it)->getSceneNode()->dispose();
+            (*it)->getDebugNode()->dispose();
             _map->getBabyCarrots().erase(it);
         }
         else ++it;
@@ -156,10 +157,10 @@ void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event)
             carrot->setSensor(true);
             carrot->gotCaptured();
             if (_map->getFarmers().at(0)->getUUID() == _map->getCharacter()->getUUID()) {
-                carrot->getSceneNode()->setPriority(VISIBLE_PRIORITY);
+                carrot->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
             }
             if (carrot->getUUID() == _map->getCharacter()->getUUID()) {
-                _map->getFarmers().at(0)->getSceneNode()->setPriority(VISIBLE_PRIORITY);
+                _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
             }
         }
     }
@@ -172,10 +173,10 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             if (_map->getFarmers().at(0)->getUUID() == _map->getCharacter()->getUUID()) {
-                carrot->getSceneNode()->setPriority(ENTITY_PRIORITY);
+                carrot->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
             }
             if (_map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID()) {
-                _map->getFarmers().at(0)->getSceneNode()->setPriority(ENTITY_PRIORITY);
+                _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
             }
             std::cout<<"carrot rooted\n";
             std::cout<<_map->getFarmers().at(0)->isHoldingCarrot()<<"\n";

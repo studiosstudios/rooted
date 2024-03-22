@@ -9,7 +9,7 @@
 #define CameraController_hpp
 
 #include <cugl/cugl.h>
-#include "EntityModel.h"
+#include "../objects/EntityModel.h"
 
 using namespace cugl;
 

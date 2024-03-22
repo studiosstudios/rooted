@@ -54,6 +54,22 @@
                 "left" : [0,   128, 127, 255],
                 "right": [128, 128, 255, 255]
             }
+        },
+        "shader_base": {
+            "file":     "textures/base.png"
+        },
+        "shader_clouds": {
+            "file":     "textures/clouds.png",
+            "wrapS":    "repeat",
+            "wrapT":    "repeat"
+        },
+        "shader_noise": {
+            "file":     "textures/noise.png",
+            "wrapS":    "repeat",
+            "wrapT":    "repeat"
+        },
+        "shader_gradient": {
+            "file":     "textures/gradient.png"
         }
 	},
     "jsons": {

@@ -240,7 +240,7 @@ void Map::populate() {
                 if (type == "PlantingSpot") {
                     loadPlantingSpot(x, y, width, height);
                 } else {
-                    CUWarn("Unrecognized environmental object: %s", type.c_str());
+                    CUWarn("TILED JSON: Unrecognized environmental object: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
                 }
             } else if (name == "entities"){
                 if (type == "Farmer") {
@@ -250,10 +250,10 @@ void Map::populate() {
                 } else if (type == "Carrot") {
                     loadCarrot(x, y, width, height);
                 } else {
-                    CUWarn("Unrecognized entity: %s", type.c_str());
+                    CUWarn("TILED JSON: Unrecognized entity: %s. Are you sure you have placed the objected in the correct layer?", type.c_str());
                 }
             } else {
-                CUWarn("Unrecognized layer name: %s", name.c_str());
+                CUWarn("TILED JSON: Unrecognized layer name: %s", name.c_str());
                 break;
             }
         }

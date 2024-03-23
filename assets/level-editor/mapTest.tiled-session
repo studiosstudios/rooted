@@ -23,16 +23,32 @@
             "scaleInDock": 1
         },
         "testMap.tmx": {
-            "scale": 0.37109375,
-            "selectedLayer": 1,
+            "expandedObjectLayers": [
+                8,
+                9,
+                7
+            ],
+            "scale": 0.55,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 481.01052631578943,
-                "y": 322.021052631579
+                "x": 477.27272727272725,
+                "y": 539.0909090909091
+            }
+        },
+        "testMap2.tmx": {
+            "expandedObjectLayers": [
+                9
+            ],
+            "scale": 0.63,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 513.4920634920635,
+                "y": 288.09523809523813
             }
         }
     },
     "last.exportedFilePath": "/Users/jffzh/Cornell/23-24/CS4152/rooted/assets/level-editor",
-    "last.imagePath": "/Users/jffzh/Cornell/23-24/CS4152/rooted/assets/level-editor",
+    "last.imagePath": "/Users/jffzh/Cornell/23-24/CS4152/rooted/assets/textures/maps",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "openFiles": [

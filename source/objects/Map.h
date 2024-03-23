@@ -61,6 +61,10 @@ private:
 
     std::shared_ptr<WheatRenderer> _wheatrenderer;
 
+    /** Possible init positions of carrots */
+    std::vector<float> _carrotPosList;
+    
+public:
     /**
      * Enum representing the draw order of scene nodes. Nodes will be drawn in the order they are listed in the enum.
      */
@@ -72,9 +76,6 @@ private:
         WHEAT,
         WALLS
     };
-
-
-public:
 
 #pragma mark -
 #pragma mark Constructors and Destructors
@@ -103,6 +104,16 @@ public:
               const std::shared_ptr<cugl::JsonValue> &json);
 
     void populate();
+    
+    /**
+     * populate the map with Carrots
+     */
+    void populateWithCarrots(int numCarrots);
+    
+    /**
+     * Adds a carrot to the game (adds to the carrot vector)
+     */
+    void spawnCarrot(const Vec2 position, float width, float height);
 
 #pragma mark Physics Attributes
 

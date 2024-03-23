@@ -268,6 +268,13 @@ void Map::populate() {
     
 }
 
+void Map::populateWithCarrots(int numCarrots) {
+    for (int ii = 0; ii < numCarrots; ii++) {
+        Vec2 position = Vec2(_carrotPosList.at(ii * 2), _carrotPosList.at(ii * 2 + 1));
+        spawnCarrot(position, 1, 1);
+    }
+}
+
 /**
 * Unloads this game level, releasing all sources
 *
@@ -321,7 +328,7 @@ void Map::dispose() {
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
     std::shared_ptr<EntityModel> ret;
     bool isHost = hostUUID == thisUUID;
-    
+
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != hostUUID) {
@@ -341,6 +348,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     }
     
     _character = ret;
+
     _character->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
     
     return ret;
@@ -401,7 +409,9 @@ void Map::loadBoundary(Vec2 pos, Size size){
 }
 
 /**
- * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world node. This method should only be called once per initialization, any subsequent calls will override previous calls.
+ * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world
+ * node. This method should only be called once per initialization, any subsequent calls will
+ * override previous calls.
  */
 void Map::loadWheat(){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
@@ -485,29 +495,11 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
 }
 
 /**
- * Loads a single carrot into the world.
+ * Adds a possible carrot spawn location to the world.
  */
 void Map::loadCarrot(float x, float y, float width, float height) {
-    Vec2 carrotPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
-    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, {width, height}, _scale.x);
-    carrot->setDebugColor(DEBUG_COLOR);
-    carrot->setName("carrot");
-    //    carrot->setEnabled(false);  Initially disabled
-    _carrots.push_back(carrot);
-    
-    auto carrotNode = scene2::PolygonNode::allocWithTexture(
-                                                            _assets->get<Texture>(CARROT_TEXTURE));
-    //        carrotNode->setColor(Color4::ORANGE);
-    carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    carrot->setSceneNode(carrotNode);
-    carrot->setDrawScale(
-                         _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    _worldnode->addChild(carrotNode);
-    carrot->setDebugScene(_debugnode);
-    
-    _world->initObstacle(carrot);
-    
+    _carrotPosList.push_back(x + 0.5 * width);
+    _carrotPosList.push_back(y + 0.5 * height);
 }
 
 /**
@@ -540,24 +532,25 @@ void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
     }
 }
 
+
 bool Map::readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight) {
     // this is copied from nine lives but might be a bit unnecessary
-    
+
     _propertiesMap.clear();
-    
+
     _propertiesMap.emplace("x", json->getFloat("x")/tileSize);
     _propertiesMap.emplace("y", levelHeight - json->getFloat("y")/tileSize);
     _propertiesMap.emplace("width", json->getFloat("width")/tileSize);
     _propertiesMap.emplace("height", json->getFloat("height")/tileSize);
     _propertiesMap.emplace("type", json->getString("type"));
-    
+
     auto properties = json->get("properties");
     if (properties == nullptr) { return true; }
-    
+
     for (auto property : properties->children()){
         std::string name = property->getString("name");
         std::string type = property->getString("type");
-        
+
         if (type == "string") {
             _propertiesMap.emplace(name, property->getString("value"));
         } else if (type == "int") {
@@ -567,10 +560,31 @@ bool Map::readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileS
         } else if (type == "float") {
             _propertiesMap.emplace(name, property->getFloat("value"));
         }
-        
+
     }
     return true;
 }
+
+void Map::spawnCarrot(Vec2 position, float width, float height) {
+    std::shared_ptr<Carrot> carrot = Carrot::alloc(position, {width, height}, _scale.x);
+    carrot->setDebugColor(DEBUG_COLOR);
+    carrot->setName("carrot");
+    _carrots.push_back(carrot);
+
+    auto carrotNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROT_TEXTURE));
+    carrot->setSceneNode(carrotNode);
+    carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    carrot->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(carrotNode);
+    carrot->setDebugScene(_debugnode);
+
+    _world->initObstacle(carrot);
+}
+
+
 
 void Map::updateShader(float step, const Mat4 &perspective) {
     int size = _carrots.size() + _farmers.size() + _babies.size();

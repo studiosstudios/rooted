@@ -10,8 +10,10 @@
 #include "InputController.h"
 #include "AIController.h"
 #include "NetworkController.h"
-#include "../events/DashEvent.h"
-#include "../events/RootEvent.h"
+#include "CaptureEvent.h"
+#include "RootEvent.h"
+#include "UnrootEvent.h"
+#include "CaptureBarrotEvent.h"
 
 class ActionController {
 private:
@@ -71,9 +73,13 @@ public:
     
     void networkQueuePositions();
     
-    void processDashEvent(const std::shared_ptr<DashEvent>& event);
+    void processCaptureEvent(const std::shared_ptr<CaptureEvent>& event);
     
     void processRootEvent(const std::shared_ptr<RootEvent>& event);
+    
+    void processUnrootEvent(const std::shared_ptr<UnrootEvent>& event);
+    
+    void processBarrotEvent(const std::shared_ptr<CaptureBarrotEvent>& event);
 };
 
 

@@ -1,26 +1,26 @@
 //
-//  DashEvent.hpp
+//  Gameover.hpp
 //  Rooted
 //
-//  Created by Kimmy Lin on 3/14/24.
+// ONLY FOR DEBUGGING
+//  Created by Kimmy Lin on 3/20/24.
 //
 
-#ifndef DashEvent_h
-#define DashEvent_h
-
+#ifndef Gameover_h
+#define Gameover_h
 
 #include <cugl/cugl.h>
 using namespace cugl::physics2::net;
-using namespace cugl;
 using namespace cugl::net;
+using namespace cugl;
 
-class DashEvent : public NetEvent {
+class ResetEvent : public NetEvent {
     
 protected:
     NetcodeSerializer _serializer;
     NetcodeDeserializer _deserializer;
     
-    std::string _uuid;
+    std::string _roomid;
     
 public:
     /**
@@ -32,7 +32,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocDashEvent(std::string uuid);
+    static std::shared_ptr<NetEvent> allocResetEvent();
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -49,9 +49,7 @@ public:
      */
     void deserialize(const std::vector<std::byte>& data) override;
     
-    /** Gets the uuid of carrot associated with the event. */
-    std::string getUUID() { return _uuid; }
-
+//    std::string getRoomId() { return _roomid; }
 };
 
-#endif /* DashEvent_hpp */
+#endif /* Gameover_h */

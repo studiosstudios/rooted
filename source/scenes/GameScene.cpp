@@ -46,13 +46,13 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Asset Constants
 /** The font for victory/failure messages */
-#define MESSAGE_FONT    "retro"
+#define MESSAGE_FONT    "gyparody"
 /** The message for winning the game */
-#define WIN_MESSAGE     "VICTORY!"
+#define WIN_MESSAGE     "YOU WIN!"
 /** The color of the win message */
-#define WIN_COLOR       Color4::YELLOW
+#define WIN_COLOR       Color4::BLUE
 /** The message for losing the game */
-#define LOSE_MESSAGE    "FAILURE!"
+#define LOSE_MESSAGE    "YOU LOSE!"
 /** The color of the lose message */
 #define LOSE_COLOR      Color4::RED
 /** The message for resetting the game */
@@ -144,13 +144,15 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _winnode->setPosition(dimen / 2.0f);
+    _winnode->setPosition(dimen / 1.8f/ CAMERA_ZOOM);
+    _winnode->setScale(1/CAMERA_ZOOM);
     _winnode->setForeground(WIN_COLOR);
     setComplete(false);
 
     _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _losenode->setAnchor(Vec2::ANCHOR_CENTER);
-    _losenode->setPosition(dimen.width / 2.0f, dimen.height / 2.0f);
+    _losenode->setPosition(dimen.width / 1.8f / CAMERA_ZOOM, dimen.height / 1.8f / CAMERA_ZOOM);
+    _losenode->setScale(1/CAMERA_ZOOM);
     _losenode->setForeground(LOSE_COLOR);
     setFailure(false);
 
@@ -165,10 +167,12 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     _map->populate();
     
+    _map->populateWithCarrots(_network->getNumPlayers() - 1);
+
     addChild(_rootnode);
     addChild(_uinode);
-    addChild(_winnode);
-    addChild(_losenode);
+    _uinode->addChild(_winnode);
+    _uinode->addChild(_losenode);
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
@@ -205,6 +209,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
     }
+    
+    _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
     _ui.init(_uinode, _offset, CAMERA_ZOOM);
@@ -286,19 +292,44 @@ void GameScene::reset() {
     _map->setRootNode(_rootnode);
     _map->dispose();
     _map->populate();
+    _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
     _collision.dispose();
     _action.dispose();
 
-    activateWorldCollisions(_map->getWorld());
+    std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
+    activateWorldCollisions(world);
 
     _collision.init(_map, _network);
     _action.init(_map, _input, _network);
 
-    _cam.setPosition(_initCamera);
-    _cam.setTarget(_map->getCarrots().at(0));
-
+    if (_isHost) {
+        _map->acquireMapOwnership();
+    }
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
+    
+    std::shared_ptr<NetWorld> w = _map->getWorld();
+    _network->enablePhysics(w);
+    if (!_network->isHost()) {
+        _network->getPhysController()->acquireObs(_character, 0);
+    } else {
+        for (auto baby : _babies) {
+            _network->getPhysController()->acquireObs(baby, 0);
+        }
+    }
+    
+    Size dimen = computeActiveSize();
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
+             dimen.height / world->getBounds().getMaxY();
+    _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    
+//
+    //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
+    setDebug(false);
     setComplete(false);
+    setFailure(false);
 }
 
 #pragma mark -
@@ -325,7 +356,7 @@ void GameScene::reset() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void GameScene::preUpdate(float dt) {
-    if (_map == nullptr) {
+    if (_map == nullptr || (_countdown >= 0 && _network->getNumPlayers() > 1)) {
         return;
     }
 
@@ -334,7 +365,7 @@ void GameScene::preUpdate(float dt) {
     // Process the toggled key commands
     if (_input->didDebug()) { setDebug(!isDebug()); }
     if (_input->didReset()) {
-        reset();
+        _network->pushOutEvent(ResetEvent::allocResetEvent());
         return;
     }
     if (_input->didExit()) {
@@ -378,13 +409,15 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    if (_countdown >= 0 && _network->getNumPlayers() > 1){
+        return;
+    }
     if (_network->isInAvailable()) {
 //        CULog("NetEvent in queue, discarding for now");
     }
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
-    _action.fixedUpdate();
 }
 
 /**
@@ -410,26 +443,52 @@ void GameScene::fixedUpdate(float step) {
  * @param remain    The amount of time (in seconds) last fixedUpdate
  */
 void GameScene::postUpdate(float remain) {
-    // Since items may be deleted, garbage collect
-
-    _action.postUpdate(remain);
-
-    _map->getWorld()->garbageCollect();
+    // Reset the game if we win or lose.
     
     _map->updateShader(remain, _cam.getCamera()->getCombined());
-
-    auto avatar = _map->getCarrots().at(0);
-
-    // Record failure if necessary.
-    if (!_failed && avatar->getY() < 0) {
-        setFailure(true);
-    }
-
-    // Reset the game if we win or lose.
+    
     if (_countdown > 0) {
         _countdown--;
-    } else if (_countdown == 0) {
+    } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
         reset();
+    }
+    else{
+        _action.postUpdate(remain);
+
+        // Since items may be deleted, garbage collect
+        _map->getWorld()->garbageCollect();
+        
+        bool farmerWin = _map->getCarrots().size() > 0;
+        for(auto carrot : _map->getCarrots()){
+            if(!carrot->isRooted()){
+                farmerWin = false;
+            }
+        }
+        if(farmerWin){
+            if(_isHost){
+                setComplete(true);
+            }
+            else{
+                setFailure(true);
+            }
+        }
+        bool carrotWin = true;
+        for(auto babyCarrot : _map->getBabyCarrots()){
+            if(!babyCarrot->isCaptured()){
+                carrotWin = false;
+            }
+        }
+        if(carrotWin){
+            if(_isHost){
+                setFailure(true);
+            }
+            else{
+                setComplete(true);
+            }
+        }
+//        if(farmerWin || carrotWin){
+//            _network->disconnect();
+//        }
     }
 }
 
@@ -513,5 +572,9 @@ Size GameScene::computeActiveSize() const {
 
 void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
     Scene2::render(batch);
+}
+
+void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){
+    reset();
 }
 

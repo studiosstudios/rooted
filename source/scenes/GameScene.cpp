@@ -301,17 +301,6 @@ void GameScene::reset() {
     setComplete(false);
 }
 
-void GameScene::switchPlayer() {
-    _map->togglePlayer();
-    _map->clearRustling();
-    if(_map->isFarmerPlaying()){
-        _cam.setTarget(_map->getFarmers().at(0));
-    }
-    else{
-        _cam.setTarget(_map->getCarrots().at(0));
-    }
-}
-
 #pragma mark -
 #pragma mark Physics Handling
 
@@ -351,28 +340,6 @@ void GameScene::preUpdate(float dt) {
     if (_input->didExit()) {
         CULog("Shutting down");
         Application::get()->quit();
-    }
-    
-    if (_input->didShowPlayer()) { 
-        _map->toggleShowPlayer();
-    }
-        
-    // Test out wheat rustling via a key
-    if (_input->didRustle()) {
-        for (auto w : _map->getWheat()) {
-            // Random number generator for testing
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dis(0, DASH_INTENSITY);
-
-            // Generate and print random number
-            int randomNumber = dis(gen);
-            w->rustle(randomNumber);
-        }
-    }
-    
-    if(_input->didSwitch()) {
-        switchPlayer();
     }
 
     // Process the movement

@@ -26,8 +26,6 @@ private:
     std::vector<std::shared_ptr<Carrot>> _carrots;
     /** references to the farmer */
     std::vector<std::shared_ptr<Farmer>> _farmers;
-    /** references to the wheat */
-    std::vector<std::shared_ptr<Wheat>> _wheat;
     /** references to the boundaries around the world **/
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
@@ -106,107 +104,6 @@ public:
 
     void populate();
 
-
-#pragma mark -
-#pragma mark Internal Helper Methods
-
-    /**
-     * Clears the root scene graph node for this level
-     */
-    void clearRootNode();
-
-    /**
-     * Loads a single wall
-     *
-     * The crate will be retained and stored in the vector _walls.  If the
-     * wall fails to load, then it will not be added to _walls.
-     *
-     * @param  reader   a JSON reader with cursor ready to read the wall
-     *
-     * @retain the wall
-     * @return true if the crate was successfully loaded
-     */
-    bool loadWall(const std::shared_ptr<JsonValue> &json);
-
-    /**
-     * Loads a single farmer
-     *
-     * The farmer will be retained and stored in the vector _farmers.  If the
-     * farmer fails to load, then it will not be added to _farmers.
-     *
-     * @param  reader   a JSON reader with cursor ready to read the farmer
-     *
-     * @retain the farmer
-     * @return true if the crate was successfully loaded
-     */
-    bool loadFarmer(const std::shared_ptr<JsonValue> &json);
-
-    /**
-     * Loads a single carrot
-     *
-     * The carrots will be retained and stored in the vector _carrots.  If the
-     * carrot fails to load, then it will not be added to _carrots.
-     *
-     * @param  reader   a JSON reader with cursor ready to read the carrot
-     *
-     * @retain the carrot
-     * @return true if the carrot was successfully loaded
-     */
-    bool loadCarrot(const std::shared_ptr<JsonValue> &json);
-
-    /**
-     * Loads a single baby carrot
-     *
-     * The baby carrot will be retained and stored in the vector _babies.  If the
-     * baby carrot fails to load, then it will not be added to _babies.
-     *
-     * @param  reader   a JSON reader with cursor ready to read the baby carrot
-     *
-     * @retain the baby carrot
-     * @return true if the baby carrot was successfully loaded
-     */
-    bool loadBabyCarrot(const std::shared_ptr<JsonValue> &json);
-
-    /**
-     * Loads a single wheat
-     *
-     * The wheat will be retained and stored in the vector _wheat.  If the
-     * wheat fails to load, then it will not be added to _wheat.
-     *
-     * @param  reader   a JSON reader with cursor ready to read the wheat
-     *
-     * @retain the wheat
-     * @return true if the wheat was successfully loaded
-     */
-    bool loadWheat(const std::shared_ptr<JsonValue> &json);
-
-    /**
-     * Loads a single planting spot
-     *
-     * The wheat will be retained and stored in the vector _wheat.  If the
-     * wheat fails to load, then it will not be added to _wheat.
-     *
-     * @param  reader   a JSON reader with cursor ready to read the wheat
-     *
-     * @retain the planting spot
-     * @return true if the planting spot was successfully loaded
-     */
-    bool loadPlantingSpot(const std::shared_ptr<JsonValue> &json);
-
-    /**
-     * Adds the physics object to the physics world and loosely couples it to the scene graph
-     *
-     * There are two ways to link a physics object to a scene graph node on the
-     * screen.  One way is to make a subclass of a physics object, like we did
-     * with dude.  The other is to use callback functions to loosely couple
-     * the two.  This function is an example of the latter.
-     *
-     * @param obj   The physics object to add
-     * @param node  The scene graph node to attach it to
-     */
-    void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
-                     const std::shared_ptr<cugl::scene2::SceneNode> &node);
-
 #pragma mark Physics Attributes
 
     /**
@@ -218,6 +115,11 @@ public:
 
 #pragma mark Drawing Methods
 
+    /**
+     * Clears the root scene graph node for this level
+     */
+    void clearRootNode();
+    
     /**
      * Returns the drawing scale for this game level
      *
@@ -321,8 +223,6 @@ public:
 
     std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 
-    std::vector<std::shared_ptr<Wheat>> &getWheat() { return _wheat; }
-
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
     std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
@@ -331,30 +231,62 @@ public:
 
     bool isShowingPlayer() { return _showPlayer; }
 
-    void rustleWheats(float amount);
-
-    void clearRustling();
-
-    void togglePlayer();
-
-    void toggleShowPlayer();
-
     void updateShader(float step, const Mat4 &perspective);
 
 private:
-    bool
-    readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight);
+#pragma mark -
+#pragma mark Internal Helper Methods
+    
+    /**
+     * Adds the physics object to the physics world and loosely couples it to the scene graph
+     *
+     * There are two ways to link a physics object to a scene graph node on the
+     * screen.  One way is to make a subclass of a physics object, like we did
+     * with dude.  The other is to use callback functions to loosely couple
+     * the two.  This function is an example of the latter.
+     *
+     * @param obj   The physics object to add
+     * @param node  The scene graph node to attach it to
+     */
+    void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj, const std::shared_ptr<cugl::scene2::SceneNode> &node);
+    
+    /**
+     * Reads the JSON of an object in a Tiled JSON, and puts it into _propertiesMap.
+     *
+     * @param json  JSON of the object
+     * @param tileSize   (Pixel) size of the Tiled tiles in the JSON
+     * @param levelHeight   Height of the map in physics coordinates
+     */
+    bool readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight);
 
+    /**
+     * Loads a single planting spot of variable size into the world.
+     */
     void loadPlantingSpot(float x, float y, float width, float height);
 
+    /**
+     * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world node. This method should only be called once per initialization, any subsequent calls will override previous calls.
+     */
     void loadWheat();
-
+    
+    /**
+     * Loads a single farmer into the world.
+     */
     void loadFarmer(float x, float y, float width, float height);
-
+    
+    /**
+     * Loads a single baby carrot into the world.
+     */
     void loadBabyCarrot(float x, float y, float width, float height);
 
+    /**
+     * Loads a single carrot into the world.
+     */
     void loadCarrot(float x, float y, float width, float height);
     
+    /**
+     * Adds a boundary box obstacle to the world.
+     */
     void loadBoundary(Vec2 pos, Size size);
 
 };

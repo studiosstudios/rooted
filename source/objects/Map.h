@@ -28,6 +28,8 @@ private:
     std::vector<std::shared_ptr<Farmer>> _farmers;
     /** references to the wheat */
     std::vector<std::shared_ptr<Wheat>> _wheat;
+    /** references to the boundaries around the world **/
+    std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the walls */
@@ -352,6 +354,8 @@ private:
     void loadBabyCarrot(float x, float y, float width, float height);
 
     void loadCarrot(float x, float y, float width, float height);
+    
+    void loadBoundary(Vec2 pos, Size size);
 
 };
 

@@ -155,7 +155,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setPosition(Vec2::ZERO);
     
     
-    bool showGrid = false; //change this to show the grid in debug
+    bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
         for (int x = 0; x < _bounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
@@ -272,6 +272,30 @@ void Map::populate() {
         
     }
     
+    //place boundary walls
+    loadBoundary(Vec2(-0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
+    loadBoundary(Vec2(_bounds.size.width+0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
+    loadBoundary(Vec2(_bounds.size.width/2, -0.5), Size(_bounds.size.width, 1));
+    loadBoundary(Vec2(_bounds.size.width/2, _bounds.size.height+0.5), Size(_bounds.size.width, 1));
+    
+}
+
+void Map::loadBoundary(Vec2 pos, Size size){
+    std::shared_ptr<physics2::BoxObstacle> boundaryobj = physics2::BoxObstacle::alloc(Vec2::ZERO, size);
+    boundaryobj->setName("boundary");
+
+    boundaryobj->setBodyType(b2_staticBody);
+    boundaryobj->setDensity(BASIC_DENSITY);
+    boundaryobj->setFriction(BASIC_FRICTION);
+    boundaryobj->setRestitution(BASIC_RESTITUTION);
+    boundaryobj->setDebugColor(DEBUG_COLOR);
+
+    _boundaries.push_back(boundaryobj);
+    
+    auto sprite = scene2::PolygonNode::alloc(); //empty texture
+    sprite->setColor(Color4(0,0,0,0));
+    addObstacle(boundaryobj, sprite);
+    boundaryobj->setPosition(pos); //set position after adding to world since it is out of boundss
 }
 
 void Map::loadWheat(){
@@ -411,6 +435,13 @@ void Map::dispose() {
         }
         (*it) = nullptr;
     }
+    _boundaries.clear();
+    for (auto it = _boundaries.begin(); it != _boundaries.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
     _farmers.clear();
     if (_world != nullptr) {
         _world->clear();
@@ -472,6 +503,9 @@ void Map::acquireMapOwnership() {
         ownerMap.insert({*it, 0});
     }
     for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _boundaries.begin(); it != _boundaries.end(); ++it) {
         ownerMap.insert({*it, 0});
     }
     std::cout << "owned obstacles size: " << _world->getOwnedObstacles().size();

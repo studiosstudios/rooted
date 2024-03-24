@@ -478,6 +478,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, {width, height}, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
     baby->setName("baby");
+    baby->setID(_babies.size());
     _babies.push_back(baby);
 
     auto babyNode = scene2::PolygonNode::allocWithTexture(

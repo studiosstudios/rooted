@@ -418,6 +418,30 @@ void GameScene::fixedUpdate(float step) {
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
+    
+    if(_network->isInAvailable()){
+        auto e = _network->popInEvent();
+        while (e != nullptr) {
+            if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
+                //            CULog("Received dash event");
+                _action.processCaptureEvent(captureEvent);
+            }
+            if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
+                //            std::cout<<"got a root event\n";
+                _action.processRootEvent(rootEvent);
+            }
+            if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
+                _action.processUnrootEvent(unrootEvent);
+            }
+            if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
+                _action.processBarrotEvent(captureBarrotEvent);
+            }
+            if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
+                processResetEvent(resetEvent);
+            }
+            e = _network->popInEvent();
+        }
+    }
 }
 
 /**

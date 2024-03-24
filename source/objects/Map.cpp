@@ -216,7 +216,6 @@ void Map::populate() {
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
     
-    int     width = _json->getFloat("width");
     int height = _json->getFloat("height");
     int tileSize = _json->getInt("tilewidth");
     

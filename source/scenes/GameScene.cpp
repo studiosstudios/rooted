@@ -221,7 +221,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
-    Application::get()->setClearColor(Color4(118,118,118,255));
+    Application::get()->setClearColor(Color4(209, 209, 56, 255));
 
     return true;
 }

@@ -50,6 +50,8 @@
 		ACC9DFBF349FD39DA1DA5BBC /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = AA051FCD35EC67DB8C9CBC71 /* sounds */; };
 		AB8733AC6D19D4CADC473D2A /* json in Resources */ = {isa = PBXBuildFile; fileRef = AA9A54AD20F1FDD4B0473EE5 /* json */; };
 		AC14EE384E6A1FA5E4A10B9F /* json in Resources */ = {isa = PBXBuildFile; fileRef = AA9A54AD20F1FDD4B0473EE5 /* json */; };
+		ABC31F24DC648F60B89605A3 /* level-editor in Resources */ = {isa = PBXBuildFile; fileRef = AADFBF8E2AEFFE3EA3D7F875 /* level-editor */; };
+		AC69CD20C2625C158ECB2522 /* level-editor in Resources */ = {isa = PBXBuildFile; fileRef = AADFBF8E2AEFFE3EA3D7F875 /* level-editor */; };
 		ABCEE9218F3D4271D7FB3AFF /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = AAA1D9FC9F3ED19A1DDAAC56 /* fonts */; };
 		ACFDF906562C051CAB803FBE /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = AAA1D9FC9F3ED19A1DDAAC56 /* fonts */; };
 		ABBAE39DFEE62CE7627EA362 /* widgets in Resources */ = {isa = PBXBuildFile; fileRef = AA24DB8331768D3D5AB4CFEA /* widgets */; };
@@ -174,6 +176,7 @@
 		AA259BFAAEFDFD1998A32E0B /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = textures; sourceTree = "<group>"; };
 		AA051FCD35EC67DB8C9CBC71 /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		AA9A54AD20F1FDD4B0473EE5 /* json */ = {isa = PBXFileReference; lastKnownFileType = folder; path = json; sourceTree = "<group>"; };
+		AADFBF8E2AEFFE3EA3D7F875 /* level-editor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = level-editor; sourceTree = "<group>"; };
 		AAA1D9FC9F3ED19A1DDAAC56 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		AA24DB8331768D3D5AB4CFEA /* widgets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = widgets; sourceTree = "<group>"; };
 		BAAA9268AC4ECDA3EE1BADE8 /* RootedApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; path = RootedApp.cpp; sourceTree = "<group>"; };
@@ -380,6 +383,7 @@
 				AA259BFAAEFDFD1998A32E0B /* textures */,
 				AA051FCD35EC67DB8C9CBC71 /* sounds */,
 				AA9A54AD20F1FDD4B0473EE5 /* json */,
+				AADFBF8E2AEFFE3EA3D7F875 /* level-editor */,
 				AAA1D9FC9F3ED19A1DDAAC56 /* fonts */,
 				AA24DB8331768D3D5AB4CFEA /* widgets */,
 			);
@@ -602,6 +606,7 @@
 				AB4FAACEAE24C0FFDD3358D5 /* textures in Resources */,
 				ABEAE5B65AE53E76AF84C6A9 /* sounds in Resources */,
 				AB8733AC6D19D4CADC473D2A /* json in Resources */,
+				ABC31F24DC648F60B89605A3 /* level-editor in Resources */,
 				ABCEE9218F3D4271D7FB3AFF /* fonts in Resources */,
 				ABBAE39DFEE62CE7627EA362 /* widgets in Resources */,
 				EB6E0E61298C1A3E00704E87 /* licenses in Resources */,
@@ -616,6 +621,7 @@
 				ACBA1DE4B2DFC58A39F3E1CD /* textures in Resources */,
 				ACC9DFBF349FD39DA1DA5BBC /* sounds in Resources */,
 				AC14EE384E6A1FA5E4A10B9F /* json in Resources */,
+				AC69CD20C2625C158ECB2522 /* level-editor in Resources */,
 				ACFDF906562C051CAB803FBE /* fonts in Resources */,
 				ACFAC7BCAB482BCC0C9C2A68 /* widgets in Resources */,
 				EB6E0E60298C1A3300704E87 /* licenses in Resources */,

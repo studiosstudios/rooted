@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 /build/
+=======
+build/
+*.tiled-session
+
+>>>>>>> alpha
 
 .DS_Store
 

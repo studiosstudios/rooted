@@ -14,6 +14,7 @@ class BabyCarrot : public EntityModel {
 private:
     bool _isCaptured;
     Vec2 _target = Vec2::ZERO;
+    int _id;
     
 public:
     
@@ -28,6 +29,10 @@ public:
         std::shared_ptr<BabyCarrot> result = std::make_shared<BabyCarrot>();
         return (result->init(pos, size, scale) ? result : nullptr);
     }
+    
+    int getID() { return _id; };
+
+    void setID(int num) { _id = num; };
     
     void gotCaptured();
     

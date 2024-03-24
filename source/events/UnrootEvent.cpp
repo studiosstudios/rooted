@@ -1,11 +1,11 @@
 //
-//  DashEvent.cpp
+//  UnrootEvent.cpp
 //  Rooted
 //
-//  Created by Kimmy Lin on 3/14/24.
+//  Created by Kimmy Lin on 3/19/24.
 //
 
-#include "DashEvent.h"
+#include "UnrootEvent.h"
 
 /**
  * This method is used by the NetEventController to create a new event of using a
@@ -14,14 +14,13 @@
  * Not that this method is not static, it differs from the static alloc() method
  * and all methods must implement this method.
  */
-std::shared_ptr<NetEvent> DashEvent::newEvent(){
-    return std::make_shared<DashEvent>();
+std::shared_ptr<NetEvent> UnrootEvent::newEvent(){
+    return std::make_shared<UnrootEvent>();
 }
 
-std::shared_ptr<NetEvent> DashEvent::allocDashEvent(std::string uuid){
-    //TODO: make a new shared copy of the event and set its _pos to pos.
+std::shared_ptr<NetEvent> UnrootEvent::allocUnrootEvent(std::string uuid){
 #pragma mark BEGIN SOLUTION
-    auto event = std::make_shared<DashEvent>();
+    auto event = std::make_shared<UnrootEvent>();
     event->_uuid = uuid;
     return event;
 #pragma mark END SOLUTION
@@ -30,13 +29,11 @@ std::shared_ptr<NetEvent> DashEvent::allocDashEvent(std::string uuid){
 /**
  * Serialize any paramater that the event contains to a vector of bytes.
  */
-std::vector<std::byte> DashEvent::serialize(){
+std::vector<std::byte> UnrootEvent::serialize(){
     //TODO: serialize _pos
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
     _serializer.writeString(_uuid);
-//    _serializer.writeFloat(_pos.x);
-//    _serializer.writeFloat(_pos.y);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -49,10 +46,7 @@ std::vector<std::byte> DashEvent::serialize(){
  * should be able to recreate a serialized event entirely, setting all the
  * useful parameters of this class.
  */
-void DashEvent::deserialize(const std::vector<std::byte>& data){
-    //TODO: deserialize data and set _pos
-    //NOTE: You might be tempted to write Vec2(_deserializer.readFloat(),_deserializer.readFloat()), however, C++ doesn't specify the order in which function arguments are evaluated, so you might end up with <y,x> instead of <x,y>.
-    
+void UnrootEvent::deserialize(const std::vector<std::byte>& data){
 #pragma mark BEGIN SOLUTION
     _deserializer.reset();
     _deserializer.receive(data);
@@ -60,3 +54,4 @@ void DashEvent::deserialize(const std::vector<std::byte>& data){
     _uuid = uuid;
 #pragma mark END SOLUTION
 }
+

@@ -40,7 +40,67 @@
          "draworder":"topdown",
          "id":8,
          "name":"environment",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":6,
+                 "height":96,
+                 "id":108,
+                 "name":"",
+                 "rotation":0,
+                 "type":"PlantingSpot",
+                 "visible":true,
+                 "width":96,
+                 "x":96,
+                 "y":160
+                }, 
+                {
+                 "gid":6,
+                 "height":96,
+                 "id":109,
+                 "name":"",
+                 "rotation":0,
+                 "type":"PlantingSpot",
+                 "visible":true,
+                 "width":96,
+                 "x":448,
+                 "y":224
+                }, 
+                {
+                 "gid":6,
+                 "height":96,
+                 "id":110,
+                 "name":"",
+                 "rotation":0,
+                 "type":"PlantingSpot",
+                 "visible":true,
+                 "width":96,
+                 "x":896,
+                 "y":352
+                }, 
+                {
+                 "gid":6,
+                 "height":96,
+                 "id":111,
+                 "name":"",
+                 "rotation":0,
+                 "type":"PlantingSpot",
+                 "visible":true,
+                 "width":96,
+                 "x":768,
+                 "y":160
+                }, 
+                {
+                 "gid":6,
+                 "height":96,
+                 "id":112,
+                 "name":"",
+                 "rotation":0,
+                 "type":"PlantingSpot",
+                 "visible":true,
+                 "width":96,
+                 "x":192,
+                 "y":576
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -239,7 +299,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":108,
+ "nextobjectid":114,
  "orientation":"orthogonal",
  "properties":[
         {

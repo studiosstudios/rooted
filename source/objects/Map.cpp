@@ -216,7 +216,6 @@ void Map::populate() {
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
     
-    int     width = _json->getFloat("width");
     int height = _json->getFloat("height");
     int tileSize = _json->getInt("tilewidth");
     
@@ -478,6 +477,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, {width, height}, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
     baby->setName("baby");
+    baby->setID(_babies.size());
     _babies.push_back(baby);
 
     auto babyNode = scene2::PolygonNode::allocWithTexture(

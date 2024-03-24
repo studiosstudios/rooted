@@ -127,6 +127,10 @@ protected:
     
     bool _plantInput;
     
+    bool _rootInput;
+    
+    bool _unrootInput;
+    
     cugl::Vec2 _dashCache;
        
     
@@ -380,6 +384,10 @@ public:
     void setDashInput(bool dashInput);
     
     void setPlantInput(bool plantInput);
+    
+    void setRootInput(bool rootInput);
+    
+    void setUnrootInput(bool unrootInput);
     
     /**
      * Returns how much force to apply to get the dude moving

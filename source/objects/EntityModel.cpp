@@ -134,6 +134,14 @@ void EntityModel::setPlantInput(bool plantInput) {
     _plantInput = plantInput;
 }
 
+void EntityModel::setRootInput(bool rootInput) {
+    _rootInput = rootInput;
+}
+
+void EntityModel::setUnrootInput(bool unrootInput) {
+    _unrootInput = unrootInput;
+}
+
 
 #pragma mark -
 #pragma mark Physics Methods

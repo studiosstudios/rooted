@@ -339,9 +339,10 @@
  "orientation":"orthogonal",
  "properties":[
         {
-         "name":"zoom",
-         "type":"float",
-         "value":1
+         "name":"map-type",
+         "propertytype":"MapType",
+         "type":"string",
+         "value":"middle-middle"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

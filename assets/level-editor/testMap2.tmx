@@ -4,7 +4,7 @@
   <export target="testMap2.json" format="json"/>
  </editorsettings>
  <properties>
-  <property name="zoom" type="float" value="1"/>
+  <property name="map-type" propertytype="MapType" value="middle-middle"/>
  </properties>
  <tileset firstgid="1" source="entities.tsx"/>
  <tileset firstgid="4" source="maps.tsx"/>

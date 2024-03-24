@@ -69,14 +69,13 @@ const std::string groundVert =
 
 using namespace std;
 
-bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets) {
+bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
     
-
     _assets = assets;
-    
+    _bladeColorScale = bladeColorScale;
     _totalTime = 0;
     
-    _grasstex = _assets->get<Texture>("shader_base");
+    _grasstex = _assets->get<Texture>(name);
     _cloudtex = _assets->get<Texture>("shader_clouds");
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
@@ -111,7 +110,7 @@ void WheatRenderer::dispose() {
     _vertbuff = nullptr;
 }
 
-void WheatRenderer::update(float timestep, int size, float *positions, float *velocities) {
+void WheatRenderer::update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities) {
 
     _totalTime += timestep;
     if (_totalTime >= 30.0) {
@@ -122,7 +121,7 @@ void WheatRenderer::update(float timestep, int size, float *positions, float *ve
         _wheatShader->bind();
         _wheatShader->setUniform1f("TIME", _totalTime);
         _wheatShader->setUniform1i("num_entities", size);
-        _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
+        _wheatShader->setUniformMat4("uPerspective", perspective);
         _wheatShader->setUniform2fv("positions", size, positions);
         _wheatShader->setUniform1fv("velocities", size, velocities);
         _wheatShader->unbind();
@@ -132,7 +131,7 @@ void WheatRenderer::update(float timestep, int size, float *positions, float *ve
         _groundShader->bind();
         _groundShader->setUniform1f("TIME", _totalTime);
         _groundShader->setUniform1i("num_entities", size);
-        _groundShader->setUniformMat4("uPerspective", _cam->getCombined());
+        _groundShader->setUniformMat4("uPerspective", perspective);
         _groundShader->setUniform2fv("positions", size, positions);
         _groundShader->unbind();
     }
@@ -197,9 +196,6 @@ void WheatRenderer::buildShaders() {
 //        CULog("ERROR 1: %s",gl_error_name(error).c_str());
 //    }
     
-    // Attach the camera to the shader
-    _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
-    
     _wheatShader->setSampler("grass_tex", _grasstex);
     _wheatShader->setSampler("cloud_tex", _cloudtex);
     _wheatShader->setSampler("noise_tex", _noisetex);
@@ -214,10 +210,10 @@ void WheatRenderer::buildShaders() {
     _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
     _wheatShader->setUniform2f("noise_tex_size", 50.0, 1.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _grasstex->getWidth(), 1.0 / _grasstex->getHeight());
+    _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
 
     _groundShader = Shader::alloc(SHADER(groundVert), SHADER(groundFrag));
-
-    _groundShader->setUniformMat4("uPerspective",_cam->getCombined());
+    
     _groundShader->setSampler("cloud_tex", _cloudtex);
     _groundShader->setSampler("noise_tex", _noisetex);
     _groundShader->setSampler("grass_tex", _grasstex);

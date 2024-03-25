@@ -10,10 +10,10 @@
 #include "InputController.h"
 #include "AIController.h"
 #include "NetworkController.h"
-#include "CaptureEvent.h"
-#include "RootEvent.h"
-#include "UnrootEvent.h"
-#include "CaptureBarrotEvent.h"
+#include "../events/CaptureEvent.h"
+#include "../events/RootEvent.h"
+#include "../events/UnrootEvent.h"
+#include "../events/CaptureBarrotEvent.h"
 
 class ActionController {
 private:

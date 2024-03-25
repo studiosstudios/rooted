@@ -19,6 +19,9 @@ using namespace cugl;
 /** The name of a platform (for object identification) */
 #define GRADIENT_TEXTURE    "shader_gradient"
 
+#define SCENE_WIDTH 1024
+#define SCENE_HEIGHT 576
+
 /**
  * Default fragment shader
  *
@@ -82,7 +85,7 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, stri
 
     _size = _grasstex->getSize();
 
-    Size appSize = Application::get()->getDisplaySize();
+    Size appSize = Size(SCENE_WIDTH, SCENE_HEIGHT);
     if (appSize.height < appSize.width) {
         _size *= appSize.width/_size.width;
     } else {
@@ -184,7 +187,6 @@ void WheatRenderer::renderGround() {
 
 void WheatRenderer::buildShaders() {
 
-    
     CULog("scale: %f \t size: (%f, %f)", _scale, _size.width, _size.height);
     
     

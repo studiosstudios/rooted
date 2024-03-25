@@ -55,7 +55,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
             if (name2 == "baby") {
                 BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
-                if(!(carrot->isCaptured() || carrot->isRooted())){
+                if(_map->getCharacter()->getUUID() == carrot->getUUID() && !(carrot->isCaptured() || carrot->isRooted())){
                     _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), b2babycarrot->getID()));
                 }
             }

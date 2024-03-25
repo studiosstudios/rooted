@@ -24,7 +24,9 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
         _ai.init(map);
     }
     _network->attachEventType<DashEvent>();
+    _network->attachEventType<CaptureEvent>();
     _network->attachEventType<RootEvent>();
+    _network->attachEventType<UnrootEvent>();
     return true;
 }
 
@@ -85,29 +87,29 @@ void ActionController::preUpdate(float dt) {
     
     networkQueuePositions();
     
-    if(_input->didRoot() && _map->getFarmers().at(0)->canPlant()){
+    if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID()){
 //        std::cout<<"farmer did the rooting\n";
         _map->getFarmers().at(0)->rootCarrot();
+
         // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
         for (auto carrot : _map->getCarrots()) {
             if (carrot->isCaptured()) {
-                carrot->gotRooted();
                 _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID()));
             }
         }
     }
-}
-
-void ActionController::fixedUpdate(){
-    if(_network->isInAvailable()){
-        auto e = _network->popInEvent();
-        if(auto dashEvent = std::dynamic_pointer_cast<DashEvent>(e)){
-//            CULog("Received dash event");
-            processDashEvent(dashEvent);
+    
+    if(_input->didUnroot() && _map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID()){
+        auto currPos = _map->getCharacter()->getPosition();
+        std::shared_ptr<Carrot> closestCarrot = nullptr;
+        for (auto carrot : _map->getCarrots()){
+            if(carrot->getUUID() != _map->getCharacter()->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
+                closestCarrot = carrot;
+            }
         }
-        if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
-//            std::cout<<"got a root event\n";
-            processRootEvent(rootEvent);
+        if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
+            _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID()));
+            closestCarrot->gotUnrooted();
         }
     }
 }
@@ -151,12 +153,18 @@ void ActionController::networkQueuePositions() {
     
 }
 
-void ActionController::processDashEvent(const std::shared_ptr<DashEvent>& event){
+void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
     std::cout<<event->getUUID();
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             carrot->setSensor(true);
             carrot->gotCaptured();
+            if (_map->getFarmers().at(0)->getUUID() == _map->getCharacter()->getUUID()) {
+                carrot->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
+            }
+            if (carrot->getUUID() == _map->getCharacter()->getUUID()) {
+                _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
+            }
         }
     }
 //    _map->getCarrots().at(0)->setSensor(true);
@@ -167,9 +175,34 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
     _map->getFarmers().at(0)->rootCarrot();
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
-            std::cout<<"carrot rooted\n";
-            std::cout<<_map->getFarmers().at(0)->isHoldingCarrot()<<"\n";
+            if (_map->getFarmers().at(0)->getUUID() == _map->getCharacter()->getUUID()) {
+                carrot->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
+            }
+            if (_map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID()) {
+                _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
+            }
             carrot->gotRooted();
+        }
+    }
+}
+
+void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& event){
+    for(auto carrot : _map->getCarrots()){
+        if(carrot->getUUID() == event->getUUID()){
+            carrot->gotUnrooted();
+        }
+    }
+}
+
+void ActionController::processBarrotEvent(const std::shared_ptr<CaptureBarrotEvent>& event){
+    for(auto carrot : _map->getCarrots()){
+        if(carrot->getUUID() == event->getCarrotUUID()){
+            carrot->captureBabyCarrot();
+            for(auto barrot : _map->getBabyCarrots()){
+                if(barrot->getID() == event->getBarrotID()){
+                    barrot->gotCaptured();
+                }
+            }
         }
     }
 }

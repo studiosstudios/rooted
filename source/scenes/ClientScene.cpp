@@ -143,6 +143,7 @@ void ClientScene::setActive(bool value) {
          */
         if (value) {
             _gameid->activate();
+            _gameid->setText("");
             _backout->activate();
             _player->setText("1");
             configureStartButton();

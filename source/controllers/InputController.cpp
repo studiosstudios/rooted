@@ -173,6 +173,7 @@ void InputController::update(float dt) {
     _keyDash   = keys->keyPressed(KeyCode::X);
     _keySwitch = keys->keyPressed(KeyCode::S);
     _keyRoot   = keys->keyPressed(KeyCode::Z);
+    _keyUnroot = keys->keyPressed(KeyCode::Z);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -204,6 +205,8 @@ void InputController::update(float dt) {
     _keyDashPressed = _keyDash;
     
     _rootPressed = _keyRoot;
+    
+    _unrootPressed = _keyUnroot;
 
     // _movement is now updated directly in processJoystick
 
@@ -432,6 +435,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _keyDash = false;
 //        _keySwitch = false;
         _keyRoot = false;
+        _keyUnroot = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
     } else if (zone == Zone::MAIN) {
@@ -464,6 +468,7 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             else if ((pos.y-_rtouch.position.y) > SWITCH_SWIPE_LENGTH) {
 //                _keySwitch = true;
                 _keyRoot = true;
+                _keyUnroot = true;
                 _rtouch.position = pos;
             }
             else if ((pos.x-_rtouch.position.x) > SWITCH_SWIPE_LENGTH) {

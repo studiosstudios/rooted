@@ -1,0 +1,136 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        "."
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 11,
+            "members": [
+            ],
+            "name": "Baby",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 10,
+            "members": [
+            ],
+            "name": "Carrot",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 9,
+            "members": [
+            ],
+            "name": "Farmer",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "blade_color_scale",
+                    "type": "float",
+                    "value": 25
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Map",
+            "type": "class",
+            "useAs": [
+                "object",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 8,
+            "members": [
+            ],
+            "name": "PlantingSpot",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "id": 13,
+            "name": "MapType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "top-left",
+                "top-middle",
+                "top-right",
+                "middle-left",
+                "middle-middle",
+                "middle-right",
+                "bottom-left",
+                "bottom-middle",
+                "bottom-right"
+            ],
+            "valuesAsFlags": true
+        }
+    ]
+}

@@ -46,8 +46,8 @@ int main(int argc, char * argv[]) {
     RootedApp app;
     
     // Set the properties of your application
-    app.setName("Rooted");
-    app.setOrganization("GDIAC");
+    app.setName("rooted!");
+    app.setOrganization("studios studios");
     app.setHighDPI(true);
 
     //app.setFullscreen(true);

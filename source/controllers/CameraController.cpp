@@ -7,6 +7,9 @@
 
 #include "CameraController.h"
 
+#define SCENE_WIDTH 1024
+#define SCENE_HEIGHT 576
+
 using namespace cugl;
 
 #pragma mark -
@@ -28,10 +31,10 @@ bool CameraController::init(const std::shared_ptr<EntityModel> target, const std
 #pragma mark Camera Handling
 
 void CameraController::update(float dt) {
-    int sceneWidth = _camera->getViewport().getMaxX();
-    int sceneHeight = _camera->getViewport().getMaxY();
-    float new_x = std::min(std::max((_target->getPosition()*_scale).x, (float) ((sceneWidth/2)/_camera->getZoom())), (float) (sceneWidth-(sceneWidth/2)/_camera->getZoom()));
-    float new_y = std::min(std::max((_target->getPosition()*_scale).y, (float) ((sceneHeight/2)/_camera->getZoom())), (float) (sceneHeight-(sceneHeight/2)/_camera->getZoom()));
+    int viewWidth = _camera->getViewport().getMaxX();
+    int viewHeight = _camera->getViewport().getMaxY();
+    float new_x = std::min(std::max((_target->getPosition()*_scale).x, (float) ((viewWidth/2)/_camera->getZoom())), (float) (SCENE_WIDTH-(viewWidth/2)/_camera->getZoom()));
+    float new_y = std::min(std::max((_target->getPosition()*_scale).y, (float) ((viewHeight/2)/_camera->getZoom())), (float) (SCENE_HEIGHT-(viewHeight/2)/_camera->getZoom()));
     float curr_x = _camera->getPosition().x;
     float curr_y = _camera->getPosition().y;
     _camera->setPosition(Vec3(curr_x + (new_x-curr_x) * _lerp, curr_y + (new_y-curr_y) * _lerp, _camera->getPosition().z));

@@ -18,7 +18,6 @@
 #include "../controllers/CameraController.h"
 #include "../controllers/NetworkController.h"
 #include "../objects/Map.h"
-#include "../shaders/WheatRenderer.h"
 #include "../events/ResetEvent.h"
 
 /**
@@ -89,8 +88,6 @@ protected:
 
     /** Initial camera position */
     Vec3 _initCamera;
-    
-    std::shared_ptr<WheatRenderer> _wheatrenderer;
     
     
 

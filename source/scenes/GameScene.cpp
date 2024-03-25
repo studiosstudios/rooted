@@ -157,15 +157,15 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     setFailure(false);
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
-    
-    _wheatrenderer = _wheatrenderer->alloc(_assets);
-    
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("map"), _wheatrenderer); // Obtains ownership of root.
+        
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("testMap2")); // Obtains ownership of root.
 
-    if (!_map->populate()) {
-        CULog("Failed to populate map");
-        return false;
-    }
+//    if (!_map->populate()) {
+//        CULog("Failed to populate map");
+//        return false;
+//    }
+    
+    _map->populate();
     
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
@@ -221,11 +221,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
-    Application::get()->setClearColor(Color4(118,118,118,255));
-    
-    _wheatrenderer->setScale(_scale);
-    _wheatrenderer->setCamera(_cam.getCamera());
-    _wheatrenderer->buildShaders();
+    Application::get()->setClearColor(Color4(209, 209, 56, 255));
 
     return true;
 }
@@ -268,7 +264,6 @@ void GameScene::dispose() {
         _complete = false;
         _debug = false;
         _map = nullptr;
-        _wheatrenderer->dispose();
         _character = nullptr;
         unload();
         Scene2::dispose();
@@ -337,17 +332,6 @@ void GameScene::reset() {
     setFailure(false);
 }
 
-void GameScene::switchPlayer() {
-    _map->togglePlayer();
-    _map->clearRustling();
-    if(_map->isFarmerPlaying()){
-        _cam.setTarget(_map->getFarmers().at(0));
-    }
-    else{
-        _cam.setTarget(_map->getCarrots().at(0));
-    }
-}
-
 #pragma mark -
 #pragma mark Physics Handling
 
@@ -372,7 +356,7 @@ void GameScene::switchPlayer() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void GameScene::preUpdate(float dt) {
-    if (_map == nullptr || _countdown >= 0) {
+    if (_map == nullptr || (_countdown >= 0 && _network->getNumPlayers() > 1)) {
         return;
     }
 
@@ -387,28 +371,6 @@ void GameScene::preUpdate(float dt) {
     if (_input->didExit()) {
         CULog("Shutting down");
         Application::get()->quit();
-    }
-    
-    if (_input->didShowPlayer()) { 
-        _map->toggleShowPlayer();
-    }
-        
-    // Test out wheat rustling via a key
-    if (_input->didRustle()) {
-        for (auto w : _map->getWheat()) {
-            // Random number generator for testing
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dis(0, DASH_INTENSITY);
-
-            // Generate and print random number
-            int randomNumber = dis(gen);
-            w->rustle(randomNumber);
-        }
-    }
-    
-    if(_input->didSwitch()) {
-        switchPlayer();
     }
 
     // Process the movement
@@ -447,7 +409,7 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
-    if (_countdown >= 0){
+    if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
     }
     if (_network->isInAvailable()) {
@@ -457,37 +419,14 @@ void GameScene::fixedUpdate(float step) {
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
     
-    auto carrots = _map->getCarrots();
-    auto farmers = _map->getFarmers();
-    auto babies = _map->getBabyCarrots();
-    int size = carrots.size() + farmers.size() + babies.size();
-    float positions[2*size]; // must be 1d array
-    float velocities[size];
-    float ratio = _wheatrenderer->getAspectRatio();
-    for (int i = 0; i < carrots.size(); i++) {
-        positions[2 * i] = carrots.at(i)->getX() / _scale;
-        positions[2 * i + 1] = 1 - (carrots.at(i)->getY() - carrots.at(i)->getHeight()/2) / _scale * ratio;
-        velocities[i] = carrots.at(i)->getLinearVelocity().length();
-    }
-    for (int i = 0; i < farmers.size(); i++) {
-        positions[2 * i + 2* carrots.size()] = farmers.at(i)->getX() / _scale;
-        positions[2 * i + 1 + 2 * carrots.size()] = 1 - (farmers.at(i)->getY() - farmers.at(i)->getHeight()/2) / _scale * ratio;
-        velocities[i + carrots.size()] = farmers.at(i)->getLinearVelocity().length();
-    }
-    for (int i = 0; i < babies.size(); i++) {
-        positions[2 * i + 2* (carrots.size() + farmers.size())] = babies.at(i)->getX() / _scale;
-        positions[2 * i + 1 + 2 * (carrots.size() + farmers.size())] = 1 - (babies.at(i)->getY() - babies.at(i)->getHeight()/2) / _scale * ratio;
-        velocities[i + carrots.size() + farmers.size()] = babies.at(i)->getLinearVelocity().length();
-    }
-    _wheatrenderer->update(step, size, positions, velocities);
-    if(_network->isInAvailable()){
+    while(_network->isInAvailable()){
         auto e = _network->popInEvent();
         if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
-//            CULog("Received dash event");
+            //            CULog("Received dash event");
             _action.processCaptureEvent(captureEvent);
         }
         if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
-//            std::cout<<"got a root event\n";
+            //            std::cout<<"got a root event\n";
             _action.processRootEvent(rootEvent);
         }
         if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
@@ -525,19 +464,22 @@ void GameScene::fixedUpdate(float step) {
  * @param remain    The amount of time (in seconds) last fixedUpdate
  */
 void GameScene::postUpdate(float remain) {
-    // Since items may be deleted, garbage collect
     // Reset the game if we win or lose.
+    
+    _map->updateShader(remain, _cam.getCamera()->getCombined());
+    
     if (_countdown > 0) {
         _countdown--;
-    } else if (_countdown == 0) {
+    } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
         reset();
     }
     else{
         _action.postUpdate(remain);
-        
+
+        // Since items may be deleted, garbage collect
         _map->getWorld()->garbageCollect();
         
-        bool farmerWin = true;
+        bool farmerWin = _map->getCarrots().size() > 0;
         for(auto carrot : _map->getCarrots()){
             if(!carrot->isRooted()){
                 farmerWin = false;
@@ -650,9 +592,7 @@ Size GameScene::computeActiveSize() const {
 }
 
 void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
-//    _wheatrenderer->renderGround();
     Scene2::render(batch);
-//    _wheatrenderer->renderWheat();
 }
 
 void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){

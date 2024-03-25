@@ -81,8 +81,8 @@ uniform vec4 tip_color;
 uniform vec4 wind_color;
 
 uniform vec2 noise_tex_size;
-
 uniform vec2 SCREEN_PIXEL_SIZE;
+uniform float blade_color_scale;
 
 const float MAX_BLADE_LENGTH = 20.0f;
 const float PI = 3.14f;
@@ -129,7 +129,7 @@ vec4 sampleColor(float dist, float bladeLen) {
  */
 float sampleBladeLength(vec2 uv) {
     if (texture(grass_tex, uv).r > 0.0f) {
-        return texture(grass_tex, uv).r * 255.0f + 2.0f;
+        return texture(grass_tex, uv).r * 255.0f/blade_color_scale + 2.0f;
     }
     return 0.0f;
 }

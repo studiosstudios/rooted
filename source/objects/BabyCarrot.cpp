@@ -21,7 +21,7 @@
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
 bool BabyCarrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
-    _state = State::HOLD;
+    _state = State::ROAM;
     return EntityModel::init(pos, size, scale);
 }
 

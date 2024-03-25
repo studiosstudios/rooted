@@ -23,7 +23,6 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     if (_network->isHost()) {
         _ai.init(map);
     }
-    _network->attachEventType<DashEvent>();
     _network->attachEventType<CaptureEvent>();
     _network->attachEventType<RootEvent>();
     _network->attachEventType<UnrootEvent>();
@@ -56,6 +55,7 @@ void ActionController::preUpdate(float dt) {
     }
     
     for (auto farmer : _map->getFarmers()) {
+//        std::cout << farmer->isInWheat() << '\n';
         farmer->setMovement(Vec2::ZERO);
         if (_map->getCharacter()->getUUID() == farmer->getUUID()){
             if(farmer->dashTimer > 0){

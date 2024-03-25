@@ -29,19 +29,16 @@ protected:
     std::shared_ptr<cugl::VertexBuffer> _vertbuff;
     /** The mesh for storing the drawing data */
     cugl::Mesh<cugl::SpriteVertex2> _mesh;
-    /** The first texture to try */
-    std::shared_ptr<cugl::Texture> _texture1;
-    /** The second texture to try */
-    std::shared_ptr<cugl::Texture> _texture2;
     
     float _windTime;
     float _cloudTime;
     
-    std::shared_ptr<cugl::Texture> _grasstex;
+    std::shared_ptr<cugl::Texture> _wheattex;
     std::shared_ptr<cugl::Texture> _noisetex;
     std::shared_ptr<cugl::Texture> _cloudtex;
     std::shared_ptr<cugl::Texture> _gradienttex;
-    std::shared_ptr<cugl::Texture> _wheatdetails;
+    std::shared_ptr<cugl::Texture> _grasstex;
+    std::shared_ptr<cugl::Texture> _grassgradienttex;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
     float _aspectRatio;
     float _bladeColorScale;

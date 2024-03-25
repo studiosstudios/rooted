@@ -59,7 +59,6 @@ uniform sampler2D grass_tex;
 uniform sampler2D cloud_tex;
 uniform sampler2D noise_tex;
 uniform sampler2D gradient_tex;
-uniform sampler2D wheat_details_tex;
 
 uniform float wind_speed;
 uniform float cloud_speed;

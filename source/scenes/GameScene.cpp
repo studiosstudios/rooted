@@ -439,6 +439,8 @@ void GameScene::fixedUpdate(float step) {
             processResetEvent(resetEvent);
         }
     }
+    
+    _map->updateShader(step, _cam.getCamera()->getCombined());
 }
 
 /**
@@ -465,8 +467,6 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
-    
-    _map->updateShader(remain, _cam.getCamera()->getCombined());
     
     if (_countdown > 0) {
         _countdown--;

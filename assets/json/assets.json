@@ -58,6 +58,9 @@
         "shader_base": {
             "file":     "textures/maps/base.png"
         },
+        "shader_grass_base": {
+            "file":     "textures/grass_base.png"
+        },
         "testMap": {
             "file":     "textures/maps/testmap.png"
         },
@@ -73,6 +76,9 @@
         },
         "shader_gradient": {
             "file":     "textures/gradient.png"
+        },
+        "shader_grass_gradient": {
+            "file":     "textures/grass_gradient.png"
         }
 	},
     "jsons": {

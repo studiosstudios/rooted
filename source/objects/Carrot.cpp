@@ -21,6 +21,9 @@
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
 bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+    _isCaptured = false;
+    _isRooted = false;
+    _numBabyCarrots = 0;
     return EntityModel::init(pos, size, scale);
 }
 
@@ -37,4 +40,11 @@ void Carrot::gotCaptured(){
 void Carrot::gotRooted(){
     _isCaptured = false;
     _isRooted = true;
+}
+
+/**
+ * Sets carrot state after getting unrooted
+ */
+void Carrot::gotUnrooted(){
+    _isRooted = false;
 }

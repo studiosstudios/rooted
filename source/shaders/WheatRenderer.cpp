@@ -19,6 +19,9 @@ using namespace cugl;
 /** The name of a platform (for object identification) */
 #define GRADIENT_TEXTURE    "shader_gradient"
 
+#define SCENE_WIDTH 1024
+#define SCENE_HEIGHT 576
+
 /**
  * Default fragment shader
  *
@@ -69,22 +72,23 @@ const std::string groundVert =
 
 using namespace std;
 
-bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets) {
+bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
     
-
     _assets = assets;
     
     _windTime = 0;
     _cloudTime = 0;
+
+    _bladeColorScale = bladeColorScale;
     
-    _grasstex = _assets->get<Texture>("shader_base");
+    _grasstex = _assets->get<Texture>(name);
     _cloudtex = _assets->get<Texture>("shader_clouds");
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
 
     _size = _grasstex->getSize();
 
-    Size appSize = Application::get()->getDisplaySize();
+    Size appSize = Size(SCENE_WIDTH, SCENE_HEIGHT);
     if (appSize.height < appSize.width) {
         _size *= appSize.width/_size.width;
     } else {
@@ -112,7 +116,7 @@ void WheatRenderer::dispose() {
     _vertbuff = nullptr;
 }
 
-void WheatRenderer::update(float timestep, int size, float *positions, float *velocities) {
+void WheatRenderer::update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities) {
 
     _windTime += timestep;
     if (_windTime >= 12.53) {
@@ -129,7 +133,7 @@ void WheatRenderer::update(float timestep, int size, float *positions, float *ve
         _wheatShader->setUniform1f("WIND_TIME", _windTime);
         _wheatShader->setUniform1f("CLOUD_TIME", _cloudTime);
         _wheatShader->setUniform1i("num_entities", size);
-        _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
+        _wheatShader->setUniformMat4("uPerspective", perspective);
         _wheatShader->setUniform2fv("positions", size, positions);
         _wheatShader->setUniform1fv("velocities", size, velocities);
         _wheatShader->unbind();
@@ -140,7 +144,7 @@ void WheatRenderer::update(float timestep, int size, float *positions, float *ve
         _groundShader->setUniform1f("WIND_TIME", _windTime);
         _groundShader->setUniform1f("CLOUD_TIME", _cloudTime);
         _groundShader->setUniform1i("num_entities", size);
-        _groundShader->setUniformMat4("uPerspective", _cam->getCombined());
+        _groundShader->setUniformMat4("uPerspective", perspective);
         _groundShader->setUniform2fv("positions", size, positions);
         _groundShader->unbind();
     }
@@ -193,7 +197,6 @@ void WheatRenderer::renderGround() {
 
 void WheatRenderer::buildShaders() {
 
-    
     CULog("scale: %f \t size: (%f, %f)", _scale, _size.width, _size.height);
     
     
@@ -204,9 +207,6 @@ void WheatRenderer::buildShaders() {
 //    if (error) {
 //        CULog("ERROR 1: %s",gl_error_name(error).c_str());
 //    }
-    
-    // Attach the camera to the shader
-    _wheatShader->setUniformMat4("uPerspective", _cam->getCombined());
     
     _wheatShader->setSampler("grass_tex", _grasstex);
     _wheatShader->setSampler("cloud_tex", _cloudtex);
@@ -226,10 +226,10 @@ void WheatRenderer::buildShaders() {
     _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
     _wheatShader->setUniform2f("noise_tex_size", 50.0, 1.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _grasstex->getWidth(), 1.0 / _grasstex->getHeight());
+    _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
 
     _groundShader = Shader::alloc(SHADER(groundVert), SHADER(groundFrag));
-
-    _groundShader->setUniformMat4("uPerspective",_cam->getCombined());
+    
     _groundShader->setSampler("cloud_tex", _cloudtex);
     _groundShader->setSampler("noise_tex", _noisetex);
     _groundShader->setSampler("grass_tex", _grasstex);

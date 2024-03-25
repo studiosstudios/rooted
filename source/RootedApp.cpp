@@ -165,6 +165,7 @@ void RootedApp::update(float dt) {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void RootedApp::preUpdate(float dt) {
+//    std::cout<<_status<<"\n";
     if (!_loaded && _loading.isActive()) {
         _loading.update(0.01f);
     } else if (_status == LOAD) {
@@ -187,11 +188,6 @@ void RootedApp::preUpdate(float dt) {
         updateClientScene(dt);
     }
     else if (_status == GAME){
-        if(_gameplay.isComplete()){
-            _gameplay.reset();
-            _status = MENU;
-            _mainmenu.setActive(true);
-        }
         _gameplay.preUpdate(dt);
     }
     if(_network){
@@ -273,16 +269,19 @@ void RootedApp::updateMenuScene(float timestep) {
     _mainmenu.update(timestep);
     switch (_mainmenu.getChoice()) {
         case MenuScene::Choice::HOST:
+//            std::cout<<"chose to host";
             _mainmenu.setActive(false);
             _hostgame.setActive(true);
             _status = HOST;
             break;
         case MenuScene::Choice::JOIN:
+//            std::cout<<"chose to join";
             _mainmenu.setActive(false);
             _joingame.setActive(true);
             _status = CLIENT;
             break;
         case MenuScene::Choice::NONE:
+//            std::cout<<"do nothing";
             // DO NOTHING
             break;
     }
@@ -330,6 +329,27 @@ void RootedApp::updateHostScene(float timestep) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void RootedApp::updateClientScene(float timestep) {
+//    if(_network->getStatus() == NetEventController::Status::HANDSHAKE){
+//        CULog("in handshake mode");
+//    }
+//    if(_network->getStatus() == NetEventController::Status::IDLE){
+//        CULog("in idle mode");
+//    }
+//    if(_network->getStatus() == NetEventController::Status::CONNECTING){
+//        CULog("in connecting mode");
+//    }
+//    if(_network->getStatus() == NetEventController::Status::CONNECTED){
+//        CULog("in connected mode");
+//    }
+//    if(_network->getStatus() == NetEventController::Status::READY){
+//        CULog("in ready mode");
+//    }
+//    if(_network->getStatus() == NetEventController::Status::INGAME){
+//        CULog("in ingame mode");
+//    }
+//    if(_network->getStatus() == NetEventController::Status::NETERROR){
+//        CULog("in error mode");
+//    }
     _joingame.update(timestep);
     if(_joingame.getBackClicked()){
         _status = MENU;

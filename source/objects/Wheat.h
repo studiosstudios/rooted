@@ -24,6 +24,7 @@ using namespace cugl;
 #define RUN_TRANSPARENCY    0.8f
 #define DASH_INTENSITY      5.1f
 #define DASH_TRANSPARENCY   0.4f
+#define WHEAT_PRIORITY 1
 
 
 class Wheat : public cugl::physics2::BoxObstacle {

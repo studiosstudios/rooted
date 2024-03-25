@@ -9,7 +9,6 @@
 #define WheatRenderer_h
 
 #include <cugl/cugl.h>
-#include "../controllers/CameraController.h"
 #include "../objects/Carrot.h"
 #include "../objects/BabyCarrot.h"
 #include "../objects/Farmer.h"
@@ -20,8 +19,6 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     
     Size _size;
-    /** Controller for camera */
-    std::shared_ptr<cugl::OrthographicCamera> _cam;
     
     float _scale;
     /** A shader to render wheat */
@@ -47,6 +44,7 @@ protected:
     std::shared_ptr<cugl::Texture> _wheatdetails;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
     float _aspectRatio;
+    float _bladeColorScale;
 
     
     
@@ -56,12 +54,12 @@ public:
 
     ~WheatRenderer() {}
     
-    static std::shared_ptr<WheatRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets) {
+    static std::shared_ptr<WheatRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale) {
         std::shared_ptr<WheatRenderer> result = std::make_shared<WheatRenderer>();
-        return (result->init(assets) ? result : nullptr);
+        return (result->init(assets, name, bladeColorScale) ? result : nullptr);
     }
     
-    bool init(const std::shared_ptr<cugl::AssetManager> &assets);
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale);
     
     void setSize(Size size) { _size = size; }
     
@@ -70,8 +68,6 @@ public:
     float getAspectRatio() { return _aspectRatio; }
     
     void setAssets(const std::shared_ptr<cugl::AssetManager> &assets) { _assets = assets; }
-    
-    void setCamera(const std::shared_ptr<cugl::OrthographicCamera> &camera) { _cam = camera; }
         
     void dispose();
     
@@ -88,7 +84,7 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    void update(float timestep, int size, float *positions, float *velocities);
+    void update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities);
     
     /**
      * The method called to draw the application to the screen.

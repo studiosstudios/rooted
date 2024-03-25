@@ -38,14 +38,6 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 #define WALL_NAME       "wall"
 /** The name of a platform (for object identification) */
 #define PLATFORM_NAME   "platform"
-float CARROT_SIZE[2] = {1.0f, 1.0f}; //TODO: make json constants file
-
-float WHEAT_SIZE[2] = {1.0f, 1.0f};
-
-float PLANTING_SPOT_SIZE[2] = {3.0f, 3.0f};
-
-float FARMER_SIZE[2] = {1.0f, 1.0f};
-
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
 
@@ -97,10 +89,6 @@ void Map::setDrawScale(float value) {
     for (auto farmer: _farmers) {
         farmer->setDrawScale(value);
     }
-
-    for (auto wheat: _wheat) {
-        wheat->setDrawScale(value);
-    }
 }
 
 /**
@@ -146,8 +134,6 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     // Create, but transfer ownership to root
     // needs to be an ordered node in order to reorder some elements
     _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
-    _worldnode->addChild(_wheatnode);
-    _worldnode->addChild(_groundnode);
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(Vec2::ZERO);
 
@@ -155,6 +141,26 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setScale(_scale); // Debug node draws in PHYSICS coordinates
     _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugnode->setPosition(Vec2::ZERO);
+    
+    
+    bool showGrid = true; //change this to show the grid in debug
+    if (showGrid) {
+        for (int x = 0; x < _bounds.size.width; x++) {
+            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
+            rect->setColor(Color4::WHITE);
+            rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            rect->setPosition(Vec2(x, 0));
+            _debugnode->addChild(rect);
+        }
+        
+        for (int y = 0; y < _bounds.size.height; y++) {
+            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(_bounds.size.width, 1)));
+            rect->setColor(Color4::WHITE);
+            rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            rect->setPosition(Vec2(0, y));
+            _debugnode->addChild(rect);
+        }
+    }
 
     _root->addChild(_worldnode);
     _root->addChild(_debugnode);
@@ -188,8 +194,7 @@ void Map::showDebug(bool flag) {
  */
 bool Map::init(const std::shared_ptr<AssetManager> &assets,
                const std::shared_ptr<scene2::SceneNode> &root,
-               const std::shared_ptr<cugl::JsonValue> &json,
-               const std::shared_ptr<WheatRenderer> &renderer) {
+               const std::shared_ptr<cugl::JsonValue> &json) {
     setAssets(assets);
 
     if (json == nullptr) {
@@ -199,93 +204,74 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     _json = json;
 
     // Initial geometry
-    float w = json->get("width")->asFloat();
-    float h = json->get("height")->asFloat();
-    _bounds.size.set(w, h);
-    
-    _groundnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::GROUND);
-    _wheatnode = ShaderNode::alloc(renderer, ShaderNode::ShaderType::WHEAT);
-    _groundnode->setPriority(float(Map::DrawOrder::GROUND));
-    _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
+    _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
 
     setRootNode(root);
 
     return true;
 }
 
-bool Map::populate() {
-
+void Map::populate() {
+    
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
-
-    _farmerPlaying = false;
-
-    auto carrots = _json->get("carrots");
-    if (carrots != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int csize = (int) carrots->size();
-        for (int ii = 0; ii < csize; ii++) {
-            loadCarrot(carrots->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load carrots");
-    }
-
-    auto babies = _json->get("babies");
-    if (babies != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int bsize = (int) babies->size();
-        for (int ii = 0; ii < bsize; ii++) {
-            loadBabyCarrot(babies->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load babies");
-    }
-
-    auto farmers = _json->get("farmers");
-    if (farmers != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int fsize = (int) farmers->size();
-        for (int ii = 0; ii < fsize; ii++) {
-            loadFarmer(farmers->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load farmers");
-    }
-
-//    auto wheat = _json->get("wheat");
-//    if (wheat != nullptr) {
-//        // Convert the object to an array so we can see keys and values
-//        int wsize = (int) wheat->size();
-//        for (int ii = 0; ii < wsize; ii++) {
-//            loadWheat(wheat->get(ii));
-//        }
-//    } else {
-//        CUAssertLog(false, "Failed to load wheat");
-//    }
     
-    auto plantingSpots = _json->get("plantingSpots");
-    if(plantingSpots != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int wsize = (int) plantingSpots->size();
-        for (int ii = 0; ii < wsize; ii++) {
-            loadPlantingSpot(plantingSpots->get(ii));
+    int height = _json->getFloat("height");
+    int tileSize = _json->getInt("tilewidth");
+    
+    std::shared_ptr<JsonValue> layers = _json->get("layers");
+    for (auto layer : layers->children()) {
+        std::string name = layer->getString("name");
+        auto objects = layer->get("objects");
+        for (auto object : objects->children()) {
+            readProperties(object, tileSize, height);
+            
+            std::string type = std::any_cast<std::string>(_propertiesMap.at("type"));
+            float x = std::any_cast<float>(_propertiesMap.at("x"));
+            float y = std::any_cast<float>(_propertiesMap.at("y"));
+            float width = std::any_cast<float>(_propertiesMap.at("width"));
+            float height = std::any_cast<float>(_propertiesMap.at("height"));
+            
+            if (name == "wheat") {
+                loadWheat();
+                break;
+            } else if (name == "environment") {
+                if (type == "PlantingSpot") {
+                    loadPlantingSpot(x, y, width, height);
+                } else {
+                    CUWarn("TILED JSON: Unrecognized environmental object: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
+                }
+            } else if (name == "entities"){
+                if (type == "Farmer") {
+                    loadFarmer(x, y, width, height);
+                } else if (type == "Baby") {
+                    loadBabyCarrot(x, y, width, height);
+                } else if (type == "Carrot") {
+                    loadCarrot(x, y, width, height);
+                } else {
+                    CUWarn("TILED JSON: Unrecognized entity: %s. Are you sure you have placed the objected in the correct layer?", type.c_str());
+                }
+            } else {
+                CUWarn("TILED JSON: Unrecognized layer name: %s", name.c_str());
+                break;
+            }
         }
-    } else {
-        CUAssertLog(false, "Failed to load planting spots");
+        
     }
     
-    auto walls = _json->get("walls");
-    if (walls != nullptr) {
-        // Convert the object to an array so we can see keys and values
-        int wsize = (int) walls->size();
-        for (int ii = 0; ii < wsize; ii++) {
-            loadWall(walls->get(ii));
-        }
-    } else {
-        CUAssertLog(false, "Failed to load walls");
+    //place boundary walls
+    loadBoundary(Vec2(-0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
+    loadBoundary(Vec2(_bounds.size.width+0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
+    loadBoundary(Vec2(_bounds.size.width/2, -0.5), Size(_bounds.size.width, 1));
+    loadBoundary(Vec2(_bounds.size.width/2, _bounds.size.height+0.5), Size(_bounds.size.width, 1));
+    
+}
+
+void Map::populateWithCarrots(int numCarrots) {
+    for (int ii = 0; ii < numCarrots; ii++) {
+        Vec2 position = Vec2(_carrotPosList.at(ii * 2), _carrotPosList.at(ii * 2 + 1));
+        spawnCarrot(position, 1, 1);
     }
-    return true;
 }
 
 /**
@@ -323,8 +309,8 @@ void Map::dispose() {
         }
         (*it) = nullptr;
     }
-    _wheat.clear();
-    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+    _boundaries.clear();
+    for (auto it = _boundaries.begin(); it != _boundaries.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
         }
@@ -335,12 +321,13 @@ void Map::dispose() {
         _world->clear();
         _world = nullptr;
     }
+    _wheatrenderer->dispose();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
     std::shared_ptr<EntityModel> ret;
     bool isHost = hostUUID == thisUUID;
-    
+
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != hostUUID) {
@@ -360,6 +347,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     }
     
     _character = ret;
+
     _character->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
     
     return ret;
@@ -389,7 +377,7 @@ void Map::acquireMapOwnership() {
     for (auto it = _farmers.begin(); it != _farmers.end(); ++it) {
         ownerMap.insert({*it, 0});
     }
-    for (auto it = _wheat.begin(); it != _wheat.end(); ++it) {
+    for (auto it = _boundaries.begin(); it != _boundaries.end(); ++it) {
         ownerMap.insert({*it, 0});
     }
     std::cout << "owned obstacles size: " << _world->getOwnedObstacles().size();
@@ -399,192 +387,70 @@ void Map::acquireMapOwnership() {
 #pragma mark Individual Loaders
 
 /**
- * Loads a single wall
- *
- * The crate will be retained and stored in the vector _walls.  If the
- * wall fails to load, then it will not be added to _walls.
- *
- * @param  reader   a JSON reader with cursor ready to read the wall
- *
- * @retain the wall
- * @return true if the crate was successfully loaded
+ * Adds a boundary box obstacle to the world.
  */
-bool Map::loadWall(const std::shared_ptr<JsonValue> &json) {
-    bool success = true;
+void Map::loadBoundary(Vec2 pos, Size size){
+    std::shared_ptr<physics2::BoxObstacle> boundaryobj = physics2::BoxObstacle::alloc(Vec2::ZERO, size);
+    boundaryobj->setName("boundary");
 
-    int polysize = json->getInt("vertices");
-    success = polysize > 0;
+    boundaryobj->setBodyType(b2_staticBody);
+    boundaryobj->setDensity(BASIC_DENSITY);
+    boundaryobj->setFriction(BASIC_FRICTION);
+    boundaryobj->setRestitution(BASIC_RESTITUTION);
+    boundaryobj->setDebugColor(DEBUG_COLOR);
 
-    std::vector<float> vertices = json->get("boundary")->asFloatArray();
-    success = success && 2 * polysize == vertices.size();
-
-    Vec2 *verts = reinterpret_cast<Vec2 *>(&vertices[0]);
-    Poly2 wall(verts, (int) vertices.size() / 2);
-    EarclipTriangulator triangulator;
-    triangulator.set(wall.vertices);
-    triangulator.calculate();
-    wall.setIndices(triangulator.getTriangulation());
-    triangulator.clear();
-
-    // Get the object, which is automatically retained
-    std::shared_ptr<physics2::PolygonObstacle> wallobj = physics2::PolygonObstacle::allocWithAnchor(
-            wall, Vec2::ANCHOR_CENTER);
-    wallobj->setName("wall");
-
-    wallobj->setBodyType(b2_staticBody);
-    wallobj->setDensity(BASIC_DENSITY);
-    wallobj->setFriction(BASIC_FRICTION);
-    wallobj->setRestitution(BASIC_RESTITUTION);
-    wallobj->setDebugColor(DEBUG_COLOR);
-
-    if (success) {
-        _walls.push_back(wallobj);
-    } else {
-        wallobj = nullptr;
-    }
-
-    auto sprite = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(EARTH_TEXTURE),
-            wallobj->getPolygon() * _scale);
-    sprite->setPriority(float(Map::DrawOrder::WALLS));
-    addObstacle(wallobj, sprite);  // All walls share the same texture
-
-    vertices.clear();
-    return success;
-
+    _boundaries.push_back(boundaryobj);
+    
+    auto sprite = scene2::PolygonNode::alloc(); //empty texture
+    sprite->setColor(Color4(0,0,0,0));
+    addObstacle(boundaryobj, sprite);
+    boundaryobj->setPosition(pos); //set position after adding to world since it is out of boundss
 }
 
 /**
- * Loads a single carrot
- *
- * The carrots will be retained and stored in the vector _carrots.  If the
- * carrot fails to load, then it will not be added to _carrots.
- *
- * @param  reader   a JSON reader with cursor ready to read the carrot
- *
- * @retain the carrot
- * @return true if the carrot was successfully loaded
+ * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world
+ * node. This method should only be called once per initialization, any subsequent calls will
+ * override previous calls.
  */
-bool Map::loadCarrot(const std::shared_ptr<JsonValue> &json) {
-    bool success = true;
-
-    auto posArray = json->get("position");
-    success = posArray->isArray();
-    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
-    std::shared_ptr<Carrot> carrot = Carrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
-    carrot->setDebugColor(DEBUG_COLOR);
-    carrot->setName("carrot");
-//    carrot->setEnabled(false);  Initially disabled
-    _carrots.push_back(carrot);
-
-    auto carrotNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(CARROT_TEXTURE));
-//        carrotNode->setColor(Color4::ORANGE);
-    carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    carrot->setSceneNode(carrotNode);
-    carrot->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    _worldnode->addChild(carrotNode);
-    carrot->setDebugScene(_debugnode);
-
-    if (success) { //Do not immediately add, wait until we check network players
-        _world->initObstacle(carrot);
-    }
-
-    return success;
-
+void Map::loadWheat(){
+    std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
+    float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
+    _wheatrenderer = WheatRenderer::alloc(_assets, name, bladeColorScale);
+    _wheatrenderer->setScale(_scale.x);
+    _wheatrenderer->buildShaders();
+    _groundnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::GROUND);
+    _wheatnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::WHEAT);
+    _groundnode->setPriority(float(Map::DrawOrder::GROUND));
+    _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
+    
+    _worldnode->addChild(_wheatnode);
+    _worldnode->addChild(_groundnode);
 }
 
 /**
- * Loads a single wheat
- *
- * The wheat will be retained and stored in the vector _wheat.  If the
- * wheat fails to load, then it will not be added to _wheat.
- *
- * @param  reader   a JSON reader with cursor ready to read the wheat
- *
- * @retain the baby carrot
- * @return true if the baby carrot was successfully loaded
+ * Loads a single planting spot of variable size into the world.
  */
-bool Map::loadWheat(const std::shared_ptr<JsonValue> &json) {
+void Map::loadPlantingSpot(float x, float y, float width, float height) {
+    Vec2 spotPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
+    
+    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, {width, height}, _scale.x);
+    plantingSpot->setDebugColor(DEBUG_COLOR);
+    plantingSpot->setName("planting spot");
+    _plantingSpot.push_back(plantingSpot);
 
-    bool success = true;
-    success = json->isArray();
-    Vec2 wheatPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
-    std::shared_ptr<Wheat> wheat = Wheat::alloc(wheatPos, WHEAT_SIZE, _scale.x);
-    wheat->setDebugColor(DEBUG_COLOR);
-    wheat->setName("wheat");
-    _wheat.push_back(wheat);
-
-    auto spriteImage = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(WHEAT_TEXTURE),
-                                                          1, WHEAT_FRAMES, WHEAT_FRAMES);
-    wheat->setSceneNode(spriteImage);
-    addObstacle(wheat, spriteImage);  // All walls share the same texture
-
-    return success;
+    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
+    plantingSpot->setSceneNode(spotNode);
+    spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
+    spotNode->setPriority(float(Map::DrawOrder::PLANTINGSPOT));
+    addObstacle(plantingSpot, spotNode);
 }
 
 /**
- * Loads a single baby carrot
- *
- * The baby carrot will be retained and stored in the vector _babies.  If the
- * baby carrot fails to load, then it will not be added to _babies.
- *
- * @param  reader   a JSON reader with cursor ready to read the baby carrot
- *
- * @retain the baby carrot
- * @return true if the baby carrot was successfully loaded
+ * Loads a single farmer into the world.
  */
-bool Map::loadBabyCarrot(const std::shared_ptr<JsonValue> &json) {
-
-    bool success = true;
-
-    auto posArray = json->get("position");
-    success = posArray->isArray();
-    Vec2 carrotPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
-    std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, CARROT_SIZE, _scale.x);
-    baby->setDebugColor(DEBUG_COLOR);
-    baby->setName("baby");
-    _babies.push_back(baby);
-
-    auto babyNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(BABY_TEXTURE));
-//        babyNode->setColor(Color4::BLUE);
-    baby->setSceneNode(babyNode);
-    baby->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _worldnode->addChild(babyNode);
-    baby->setDebugScene(_debugnode);
-
-    if (success) {
-        _world->initObstacle(baby);
-    }
-
-    return success;
-
-}
-
-/**
- * Loads a single farmer
- *
- * The farmer will be retained and stored in the vector _farmers.  If the
- * farmer fails to load, then it will not be added to _farmers.
- *
- * @param  reader   a JSON reader with cursor ready to read the farmer
- *
- * @retain the farmer
- * @return true if the farmer was successfully loaded
- */
-bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
-    bool success = true;
-
-    auto posArray = json->get("position");
-    success = posArray->isArray();
-    Vec2 farmerPos = Vec2(posArray->get(0)->asFloat(), posArray->get(1)->asFloat());
-    std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, FARMER_SIZE, _scale.x);
+void Map::loadFarmer(float x, float y, float width, float height) {
+    Vec2 farmerPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
+    std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, {width, height}, _scale.x);
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
 
@@ -600,41 +466,40 @@ bool Map::loadFarmer(const std::shared_ptr<JsonValue> &json) {
 
     _farmers.push_back(farmer);
 
-    if (success) {
-        _world->initObstacle(farmer);
-    }
-
-    return success;
-
+    _world->initObstacle(farmer);
 }
 
 /**
- * Loads a single planting spot
- *
- * The farmer will be retained and stored in the vector _plantingSpot.  If the
- * farmer fails to load, then it will not be added to _plantingSpot.
- *
- * @param  reader   a JSON reader with cursor ready to read the planting spots
- *
- * @retain the planting spot
- * @return true if the planting spot was successfully loaded
+ * Loads a single baby carrot into the world.
  */
-bool Map::loadPlantingSpot(const std::shared_ptr<JsonValue> &json) {
-    bool success = true;
-    success = json->isArray();
-    Vec2 spotPos = Vec2(json->get(0)->asFloat(), json->get(1)->asFloat()) + Vec2::ANCHOR_CENTER;
-    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, PLANTING_SPOT_SIZE, _scale.x);
-    plantingSpot->setDebugColor(DEBUG_COLOR);
-    plantingSpot->setName("planting spot");
-    _plantingSpot.push_back(plantingSpot);
+void Map::loadBabyCarrot(float x, float y, float width, float height) {
+    Vec2 carrotPos = Vec2(x, y)  + Vec2::ANCHOR_CENTER * Vec2(width, height);;
+    std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, {width, height}, _scale.x);
+    baby->setDebugColor(DEBUG_COLOR);
+    baby->setName("baby");
+    baby->setID(_babies.size());
+    _babies.push_back(baby);
 
-    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
-    plantingSpot->setSceneNode(spotNode);
-    spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
-    spotNode->setPriority(float(Map::DrawOrder::PLANTINGSPOT));
-    addObstacle(plantingSpot, spotNode);
+    auto babyNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(BABY_TEXTURE));
+//        babyNode->setColor(Color4::BLUE);
+    baby->setSceneNode(babyNode);
+    baby->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    _worldnode->addChild(babyNode);
+    baby->setDebugScene(_debugnode);
 
-    return success;
+    _world->initObstacle(baby);
+}
+
+/**
+ * Adds a possible carrot spawn location to the world.
+ */
+void Map::loadCarrot(float x, float y, float width, float height) {
+    _carrotPosList.push_back(x + 0.5 * width);
+    _carrotPosList.push_back(y + 0.5 * height);
 }
 
 /**
@@ -667,37 +532,79 @@ void Map::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle> &obj,
     }
 }
 
-/**
- * Rustle wheats if in contact with an object
- */
-void Map::rustleWheats(float amount) {
-    for (auto w: _wheat) {
-        if (w->getRustling()) {
-            w->rustle(amount);
+
+bool Map::readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight) {
+    // this is copied from nine lives but might be a bit unnecessary
+
+    _propertiesMap.clear();
+
+    _propertiesMap.emplace("x", json->getFloat("x")/tileSize);
+    _propertiesMap.emplace("y", levelHeight - json->getFloat("y")/tileSize);
+    _propertiesMap.emplace("width", json->getFloat("width")/tileSize);
+    _propertiesMap.emplace("height", json->getFloat("height")/tileSize);
+    _propertiesMap.emplace("type", json->getString("type"));
+
+    auto properties = json->get("properties");
+    if (properties == nullptr) { return true; }
+
+    for (auto property : properties->children()){
+        std::string name = property->getString("name");
+        std::string type = property->getString("type");
+
+        if (type == "string") {
+            _propertiesMap.emplace(name, property->getString("value"));
+        } else if (type == "int") {
+            _propertiesMap.emplace(name, property->getInt("value"));
+        } else if (type == "bool") {
+            _propertiesMap.emplace(name, property->getBool("value"));
+        } else if (type == "float") {
+            _propertiesMap.emplace(name, property->getFloat("value"));
         }
+
     }
+    return true;
 }
 
-/**
- * Stops all wheat from rustling and clear any signs of occupancy
- */
-void Map::clearRustling() {
-    for (auto w: _wheat) {
-        w->setRustling(false);
-        w->setOccupied(false);
+void Map::spawnCarrot(Vec2 position, float width, float height) {
+    std::shared_ptr<Carrot> carrot = Carrot::alloc(position, {width, height}, _scale.x);
+    carrot->setDebugColor(DEBUG_COLOR);
+    carrot->setName("carrot");
+    _carrots.push_back(carrot);
+
+    auto carrotNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROT_TEXTURE));
+    carrot->setSceneNode(carrotNode);
+    carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    carrot->setDrawScale(
+            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    // Create the polygon node (empty, as the model will initialize)
+    _worldnode->addChild(carrotNode);
+    carrot->setDebugScene(_debugnode);
+
+    _world->initObstacle(carrot);
+}
+
+
+
+void Map::updateShader(float step, const Mat4 &perspective) {
+    int size = _carrots.size() + _farmers.size() + _babies.size();
+    float positions[2*size]; // must be 1d array
+    float velocities[size];
+    float ratio = _wheatrenderer->getAspectRatio();
+    for (int i = 0; i < _carrots.size(); i++) {
+        positions[2 * i] = _carrots.at(i)->getX() / _scale.x;
+        positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / _scale.x * ratio;
+        velocities[i] = _carrots.at(i)->getLinearVelocity().length();
     }
-}
-
-/**
- * TEMP: Switches current player between carrot and farmer
- */
-void Map::togglePlayer() {
-    _farmerPlaying = !_farmerPlaying;
-}
-
-/**
- * TEMP: Switches whether we want to see player or not
- */
-void Map::toggleShowPlayer() {
-    _showPlayer = !_showPlayer;
+    for (int i = 0; i < _farmers.size(); i++) {
+        positions[2 * i + 2* _carrots.size()] = _farmers.at(i)->getX() / _scale.x;
+        positions[2 * i + 1 + 2 * _carrots.size()] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / _scale.x * ratio;
+        velocities[i + _carrots.size()] = _farmers.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < _babies.size(); i++) {
+        positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / _scale.x;
+        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / _scale.x * ratio;
+        velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
+    }
+    _wheatrenderer->update(step, perspective, size, positions, velocities);
 }

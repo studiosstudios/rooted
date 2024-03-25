@@ -56,7 +56,6 @@
 #define FARMER_TEXTURE   "farmer"
 #define BABY_TEXTURE   "baby"
 
-
 #pragma mark -
 #pragma mark Physics Constants
 /** The factor to multiply by the input */

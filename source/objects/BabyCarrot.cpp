@@ -22,6 +22,7 @@
  */
 bool BabyCarrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     _state = State::ROAM;
+    _target = pos;
     return EntityModel::init(pos, size, scale);
 }
 

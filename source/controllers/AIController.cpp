@@ -18,27 +18,24 @@ bool AIController::init(std::shared_ptr<Map> &map) {
 }
 
 void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &babyCarrot) {
-    if (!babyCarrot->hasTarget()) {
-        if (babyCarrot->getState() == State::HOLD) {
-            if (((float) std::rand()/ RAND_MAX) < 0.5) {
-                babyCarrot->setState(State::HOLD);
-                Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));
-                babyCarrot->setTarget(newTarget);
-            } else {
-                babyCarrot->setState(State::ROAM);
-                Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
-                babyCarrot->setTarget(newTarget);
-            }
+    if (babyCarrot->getState() == State::HOLD) {
+        if (((float) std::rand()/ RAND_MAX) < 0.5) {
+            Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));
+            babyCarrot->setTarget(newTarget);
         } else {
-            if (((float) std::rand()/ RAND_MAX) < 0.2) {
-                babyCarrot->setState(State::HOLD);
-                Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));
-                babyCarrot->setTarget(newTarget);
-            } else {
-                babyCarrot->setState(State::ROAM);
-                Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
-                babyCarrot->setTarget(newTarget);
-            }
+            babyCarrot->setState(State::ROAM);
+            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
+            babyCarrot->setTarget(newTarget);
+        }
+    } else {
+        if (((float) std::rand()/ RAND_MAX) < 0.2) {
+            babyCarrot->setState(State::HOLD);
+            Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));
+            babyCarrot->setTarget(newTarget);
+        } else {
+            babyCarrot->setState(State::ROAM);
+            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
+            babyCarrot->setTarget(newTarget);
         }
     }
 }
@@ -47,8 +44,8 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
     if (nearTarget(babyCarrot->getPosition(), babyCarrot->getTarget())) {
         babyCarrot->setTarget(Vec2::ZERO);
         babyCarrot->setLinearVelocity(Vec2::ZERO);
+        updateBabyCarrotState(babyCarrot);
     }
-    updateBabyCarrotState(babyCarrot);
     switch (babyCarrot->getState()) {
         case State::EVADE:
             // SHOULD DISCUSS IF WE WANT THIS

@@ -89,6 +89,25 @@ using namespace cugl;
 #define DEBUG_OPACITY   192
 
 
+
+const std::string spriteFrag =
+#include "../shaders/sprite_fragment.frag"
+;
+
+/**
+ * Default vertex shader
+ *
+ * This trick uses C++11 raw string literals to put the shader in a separate
+ * file without having to guarantee its presence in the asset directory.
+ * However, to work properly, the #include statement below MUST be on its
+ * own separate line.
+ */
+const std::string spriteVertex =
+#include "../shaders/wheat_vertex.vert"
+;
+
+
+
 #pragma mark -
 #pragma mark Constructors
 
@@ -592,7 +611,14 @@ Size GameScene::computeActiveSize() const {
 }
 
 void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
+//    const std::shared_ptr<Shader> spriteShader = Shader::alloc(SHADER(spriteVertex), SHADER(spriteFrag));
+//    spriteShader->setSampler("grass_tex", _assets->get<Texture>("shader_base"));
+//    spriteShader->setSampler("sprite_tex", batch->getTexture());
+    
+//    spriteShader->bind();
+//    batch->setShader(spriteShader);
     Scene2::render(batch);
+//    spriteShader->unbind();
 }
 
 void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){

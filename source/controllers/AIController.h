@@ -23,6 +23,8 @@ public:
     
     void updateBabyCarrot(const std::shared_ptr<BabyCarrot> &baby);
     
+    void updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby);
+    
     bool nearTarget(const Vec2 vec1, const Vec2 vec2);
 
 };

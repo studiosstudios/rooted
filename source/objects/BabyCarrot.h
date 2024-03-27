@@ -9,11 +9,19 @@
 
 using namespace cugl;
 
+enum class State {
+    EVADE,
+    ROAM,
+    SIT,
+    HOLD
+};
+
 class BabyCarrot : public EntityModel {
     
 private:
     bool _isCaptured;
     Vec2 _target = Vec2::ZERO;
+    State _state;
     int _id;
     
 public:
@@ -43,6 +51,11 @@ public:
     Vec2 getTarget() { return _target; };
     
     void setTarget(const Vec2 newTarget) { _target = newTarget; };
+    
+    State getState() { return _state; };
+    
+    void setState(State state) { _state = state; };
+    
 };
 
 #endif //ROOTED_BABYCARROT_H

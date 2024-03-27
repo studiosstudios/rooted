@@ -24,7 +24,7 @@ private:
     std::shared_ptr<InputController> _input;
     /** reference to the map */
     std::shared_ptr<Map> _map;
-    /** ai controller for baby carrots */
+    /** ai controller for baby carrots, only for host */
     AIController _ai;
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;

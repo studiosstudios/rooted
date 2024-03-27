@@ -43,7 +43,6 @@ void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby
 void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarrot) {
     if (nearTarget(babyCarrot->getPosition(), babyCarrot->getTarget())) {
         babyCarrot->setTarget(Vec2::ZERO);
-        babyCarrot->setLinearVelocity(Vec2::ZERO);
         updateBabyCarrotState(babyCarrot);
     }
     switch (babyCarrot->getState()) {
@@ -54,8 +53,8 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
 //            std::cout << "ROAMING ROAMING" << '\n';
             if (babyCarrot->hasTarget()) {
                 Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
-                movement *= 2.5;
-                babyCarrot->setLinearVelocity(movement);
+//                movement *= 2.5;
+                babyCarrot->setLinearVelocity((babyCarrot->getLinearVelocity() + movement * 0.25) * 0.93);
             }
             break;
         case State::SIT:

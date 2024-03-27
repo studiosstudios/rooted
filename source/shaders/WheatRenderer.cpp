@@ -189,17 +189,19 @@ void WheatRenderer::renderGround() {
     if (_wheatShader) {
         _vertbuff->attach(_groundShader);
 
-        _grasstex->bind();
-        _cloudtex->bind();
-        _noisetex->bind();
-        _grassgradienttex->bind();
+        for (auto texture : _textures) {
+            if (texture) {
+                texture->bind();
+            }
+        }
 
         _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
 
-        _grasstex->unbind();
-        _cloudtex->unbind();
-        _noisetex->unbind();
-        _grassgradienttex->unbind();
+        for (auto texture : _textures) {
+            if (texture) {
+                texture->unbind();
+            }
+        }
         _vertbuff->detach();
     }
 }
@@ -240,7 +242,7 @@ void WheatRenderer::buildShaders() {
     
     _groundShader->setSampler("cloud_tex", _cloudtex);
     _groundShader->setSampler("noise_tex", _noisetex);
-    _groundShader->setSampler("grass_tex", _grasstex);
+    _groundShader->setSampler("grass_tex", _wheattex);
     _groundShader->setSampler("gradient_tex", _grassgradienttex);
     _groundShader->setUniform1f("WIND_TIME", _windTime);
     _groundShader->setUniform1f("CLOUD_TIME", _cloudTime);

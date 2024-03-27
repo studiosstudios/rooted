@@ -79,7 +79,7 @@ void main(void) {
         }
     }
     
-    if (texture(grass_tex, fragUV).r != 0.0) {
+    if (texture(grass_tex, fragUV).r == 0.0) {
         // TODO: see if can factor out this cloud thing
         frag_color -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
     }

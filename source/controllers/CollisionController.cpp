@@ -80,16 +80,10 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
             if(name2 == "carrot") {
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-//                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";
                 if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
                     _network->pushOutEvent(CaptureEvent::allocCaptureEvent(carrot->getUUID()));
                     carrot->gotCaptured();
                     farmer->grabCarrot();
-//                    std::shared_ptr<cugl::physics2::DistanceJoint> joint = std::make_shared<cugl::physics2::DistanceJoint>();
-//                    std::shared_ptr<physics2::Obstacle> ptr1(bd1);
-//                    std::shared_ptr<physics2::Obstacle> ptr2(bd2);
-//                    joint->initWithObstacles(ptr1, ptr2, Vec2(0,0), Vec2(0,0));
-//                    CULog("joint created");
                 }
             }
             if(name2 == "planting spot") {

@@ -16,8 +16,13 @@ class PlantingSpot : public cugl::physics2::BoxObstacle {
 private:
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _drawScale;
+    /** Whether a carrot is planted here */
+    bool _isCarrotPlanted;
+    
+protected:
     /** The scene graph node for the planting spot. */
     std::shared_ptr<cugl::scene2::PolygonNode> _node;
+    
 public:
     /**
      * Creates a degenerate planting spot object.
@@ -83,7 +88,11 @@ public:
      *
      * @return the scene graph node representing this PlantingSpot.
      */
-    const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+    const std::shared_ptr<cugl::scene2::PolygonNode>& getSceneNode() const { return _node; }
+    
+    bool getCarrotPlanted() { return _isCarrotPlanted; }
+    
+    void setCarrotPlanted(bool b) { _isCarrotPlanted = b; }
 
 };
 #endif /* PlantingSpot_h */

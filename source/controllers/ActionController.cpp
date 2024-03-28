@@ -136,7 +136,6 @@ void ActionController::postUpdate(float dt) {
         else ++it;
     }
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
-//        std::cout<<"capture status"<< c->isCaptured() << "\n";
         if(c->isCaptured()){
             c->setSensor(true);
             c->setX(_map->getFarmers().at(0)->getX()-0.5);
@@ -166,8 +165,6 @@ void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& 
             }
         }
     }
-//    _map->getCarrots().at(0)->setSensor(true);
-//    _map->getCarrots().at(0)->gotCaptured();
 }
 
 void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event){

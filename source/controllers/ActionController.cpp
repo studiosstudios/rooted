@@ -109,7 +109,6 @@ void ActionController::preUpdate(float dt) {
         }
         if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
             _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID()));
-            closestCarrot->gotUnrooted();
         }
     }
 }

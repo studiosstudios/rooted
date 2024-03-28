@@ -18,11 +18,12 @@ std::shared_ptr<NetEvent> RootEvent::newEvent(){
     return std::make_shared<RootEvent>();
 }
 
-std::shared_ptr<NetEvent> RootEvent::allocRootEvent(std::string uuid){
+std::shared_ptr<NetEvent> RootEvent::allocRootEvent(std::string uuid, int plantingspotid){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<RootEvent>();
     event->_uuid = uuid;
+    event->_plantingspotid = plantingspotid;
     return event;
 #pragma mark END SOLUTION
 }
@@ -35,6 +36,7 @@ std::vector<std::byte> RootEvent::serialize(){
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
     _serializer.writeString(_uuid);
+    _serializer.writeSint32(_plantingspotid);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -56,5 +58,7 @@ void RootEvent::deserialize(const std::vector<std::byte>& data){
     _deserializer.receive(data);
     std::string uuid = _deserializer.readString();
     _uuid = uuid;
+    int plantingspotid = _deserializer.readSint32();
+    _plantingspotid = plantingspotid;
 #pragma mark END SOLUTION
 }

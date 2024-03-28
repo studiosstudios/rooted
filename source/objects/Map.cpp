@@ -436,6 +436,7 @@ void Map::loadPlantingSpot(float x, float y, float width, float height) {
     std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, {width, height}, _scale.x);
     plantingSpot->setDebugColor(DEBUG_COLOR);
     plantingSpot->setName("planting spot");
+    plantingSpot->setPlantingID(_plantingSpot.size());
     _plantingSpot.push_back(plantingSpot);
 
     auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));

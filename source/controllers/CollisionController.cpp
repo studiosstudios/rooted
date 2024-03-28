@@ -59,6 +59,10 @@ void CollisionController::beginContact(b2Contact* contact) {
                     _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), b2babycarrot->getID()));
                 }
             }
+            if(name2 == "planting spot" && _map->getCharacter()->getUUID() == carrot->getUUID()) {
+                PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
+                plantingSpot->setBelowAvatar(true);
+            }
         }
         
         if (name1 == "baby") {
@@ -86,8 +90,10 @@ void CollisionController::beginContact(b2Contact* contact) {
                     farmer->grabCarrot();
                 }
             }
-            if(name2 == "planting spot") {
+            if(name2 == "planting spot" && _map->getCharacter()->getUUID() == farmer->getUUID()) {
+                PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 farmer->setCanPlant(true);
+                plantingSpot->setBelowAvatar(true);
             }
         }
 
@@ -133,15 +139,20 @@ void CollisionController::endContact(b2Contact* contact) {
         std::string name2 = bd2->getName();
         
         if (name1 == "carrot") {
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                Carrot* carrot = dynamic_cast<Carrot*>(bd1);
                 wheat->setOccupied(false);
                 carrot->changeWheatContacts(-1);
             }
             
             if (name2 == "baby") {
             }
+            if(name2 == "planting spot" && _map->getCharacter()->getUUID() == carrot->getUUID()){
+                PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
+                plantingSpot->setBelowAvatar(false);
+            }
+            
         }
         
         if (name1 == "baby") {
@@ -152,15 +163,16 @@ void CollisionController::endContact(b2Contact* contact) {
         }
         
         if (name1 == "farmer") {
+            Farmer* farmer = dynamic_cast<Farmer*>(bd1);
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                Farmer* farmer = dynamic_cast<Farmer*>(bd1);
                 wheat->setOccupied(false);
                 farmer->changeWheatContacts(-1);
             }
-            if(name2 == "planting spot"){
-                Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+            if(name2 == "planting spot" && _map->getCharacter()->getUUID() == farmer->getUUID()){
+                PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 farmer->setCanPlant(false);
+                plantingSpot->setBelowAvatar(false);
             }
         }
         

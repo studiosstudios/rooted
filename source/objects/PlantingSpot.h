@@ -18,6 +18,10 @@ private:
     float _drawScale;
     /** Whether a carrot is planted here */
     bool _isCarrotPlanted;
+    /** Whether an avatar is on it */
+    bool _belowAvatar;
+    /** ID of this planting spot*/
+    int _plantingID;
     
 protected:
     /** The scene graph node for the planting spot. */
@@ -93,6 +97,14 @@ public:
     bool getCarrotPlanted() { return _isCarrotPlanted; }
     
     void setCarrotPlanted(bool b) { _isCarrotPlanted = b; }
+    
+    bool getBelowAvatar() { return _belowAvatar; }
+    
+    void setBelowAvatar(bool b) { _belowAvatar = b; }
+    
+    int getPlantingID() { return _plantingID; }
+    
+    void setPlantingID(int plantingID) { _plantingID = plantingID; }
 
 };
 #endif /* PlantingSpot_h */

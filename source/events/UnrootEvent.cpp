@@ -18,10 +18,11 @@ std::shared_ptr<NetEvent> UnrootEvent::newEvent(){
     return std::make_shared<UnrootEvent>();
 }
 
-std::shared_ptr<NetEvent> UnrootEvent::allocUnrootEvent(std::string uuid){
+std::shared_ptr<NetEvent> UnrootEvent::allocUnrootEvent(std::string uuid, int plantingspotid){
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<UnrootEvent>();
     event->_uuid = uuid;
+    event->_plantingspotid = plantingspotid;
     return event;
 #pragma mark END SOLUTION
 }
@@ -34,6 +35,7 @@ std::vector<std::byte> UnrootEvent::serialize(){
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
     _serializer.writeString(_uuid);
+    _serializer.writeSint32(_plantingspotid);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -52,6 +54,8 @@ void UnrootEvent::deserialize(const std::vector<std::byte>& data){
     _deserializer.receive(data);
     std::string uuid = _deserializer.readString();
     _uuid = uuid;
+    int plantingspotid = _deserializer.readSint32();
+    _plantingspotid = plantingspotid;
 #pragma mark END SOLUTION
 }
 

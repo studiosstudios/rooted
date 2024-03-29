@@ -47,12 +47,15 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _assets = assets;
     
     // Acquire the scene built by the asset loader and resize it the scene
-    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("menu");
+    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("mainmenu");
+        
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     _choice = Choice::NONE;
-    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_host"));
-    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_join"));
+        
+    // get the scene for each of the buttons
+    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_options"));
+    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_stats"));
     
     // Program the buttons
     _hostbutton->addListener([this](const std::string& name, bool down) {

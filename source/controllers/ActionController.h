@@ -6,6 +6,7 @@
 #define ROOTED_ACTIONCONTROLLER_H
 
 #include <cugl/cugl.h>
+#include <cugl/haptics/CUHaptics.h>
 #include "../objects/Map.h"
 #include "InputController.h"
 #include "AIController.h"
@@ -14,7 +15,6 @@
 #include "../events/RootEvent.h"
 #include "../events/UnrootEvent.h"
 #include "../events/CaptureBarrotEvent.h"
-#include "../haptics/CUHaptics.h"
 
 class ActionController {
 private:

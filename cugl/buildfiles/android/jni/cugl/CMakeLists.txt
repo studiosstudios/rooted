@@ -58,8 +58,9 @@ file(GLOB SOURCE_FILES
   ${CUGL_DIR}/source/net/*.cpp
   ${CUGL_DIR}/source/physics2/net/*.cpp
   ${CUGL_DIR}/source/external/*.c
-  ${CUGL_DIR}/source/external/*.cpp)
+  ${CUGL_DIR}/source/external/*.cpp
   ${CUGL_DIR}/source/haptics/*.cpp
+  ${CUGL_DIR}/source/haptics/platform/CUHaptics-SDL.cpp)
 
 if (ANDROID)
 	list(APPEND EXTRA_INCLUDES "${ANDROID_NDK}/sources/android/cpufeatures")

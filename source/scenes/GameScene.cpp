@@ -186,6 +186,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
     
     _input = InputController::alloc(getBounds());
+    Haptics::start();
     _collision.init(_map, _network);
     _action.init(_map, _input, _network);
     _active = true;
@@ -253,6 +254,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::sha
 void GameScene::dispose() {
     if (_active) {
         _input = nullptr;
+        Haptics::stop();
         _rootnode = nullptr;
         _winnode = nullptr;
         _uinode = nullptr;

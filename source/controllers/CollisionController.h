@@ -17,7 +17,7 @@
 #include "../events/CaptureEvent.h"
 #include "../events/UnrootEvent.h"
 #include "../events/CaptureBarrotEvent.h"
-
+#include "../haptics/CUHaptics.h"
 
 class CollisionController {
 protected:

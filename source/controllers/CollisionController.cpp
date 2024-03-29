@@ -47,6 +47,9 @@ void CollisionController::beginContact(b2Contact* contact) {
         
         if (name1 == "carrot") {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+            if(_map->getCharacter()->getUUID() == carrot->getUUID() && (name2 == "farmer" || name2 == "baby")){
+                Haptics::get()->playTransient(0.8, 0.1);
+            }
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                 wheat->rustle(bd1->getLinearVelocity().length());
@@ -76,6 +79,9 @@ void CollisionController::beginContact(b2Contact* contact) {
         
         if (name1 == "farmer") {
             Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+            if(_map->getCharacter()->getUUID() == farmer->getUUID() && (name2 == "baby" || name2 == "carrot")){
+                Haptics::get()->playTransient(0.8, 0.1);
+            }
             if (name2 == "wheat") {
                 Wheat* wheat = dynamic_cast<Wheat*>(bd2);
                 wheat->rustle(bd1->getLinearVelocity().length());

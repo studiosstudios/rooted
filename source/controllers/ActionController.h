@@ -14,6 +14,7 @@
 #include "../events/RootEvent.h"
 #include "../events/UnrootEvent.h"
 #include "../events/CaptureBarrotEvent.h"
+#include "../haptics/CUHaptics.h"
 
 class ActionController {
 private:

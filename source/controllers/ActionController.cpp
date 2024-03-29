@@ -98,7 +98,8 @@ void ActionController::preUpdate(float dt) {
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
 //        std::cout<<"farmer did the rooting\n";
         _map->getFarmers().at(0)->rootCarrot();
-
+        Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+        
         // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
         for (auto carrot : _map->getCarrots()) {
             if (carrot->isCaptured()) {
@@ -186,6 +187,9 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
                 _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
             }
             carrot->gotRooted();
+            if(carrot->getUUID() == _map->getCharacter()->getUUID()){
+                Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+            }
         }
     }
     for(auto ps : _map->getPlantingSpots()){
@@ -199,6 +203,9 @@ void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& ev
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             carrot->gotUnrooted();
+            if(carrot->getUUID() == _map->getCharacter()->getUUID()){
+                Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+            }
         }
     }
     for(auto ps : _map->getPlantingSpots()){

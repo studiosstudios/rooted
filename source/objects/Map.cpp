@@ -105,6 +105,8 @@ void Map::clearRootNode() {
     _debugnode->removeFromParent();
     _debugnode->removeAllChildren();
     _debugnode = nullptr;
+    
+    _entitiesNode->clearNode();
 
     _root = nullptr;
 }
@@ -142,6 +144,9 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugnode->setPosition(Vec2::ZERO);
     
+    _entitiesNode->allocNode();
+    _entitiesNode->setPriority(float(DrawOrder::RENDERTARGET));
+    
     
     bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
@@ -162,6 +167,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
         }
     }
 
+    _worldnode->addChild(_entitiesNode);
     _root->addChild(_worldnode);
     _root->addChild(_debugnode);
 
@@ -205,7 +211,8 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
 
     // Initial geometry
     _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
-
+    
+    _entitiesNode = EntitiesNode::alloc(1024, 576);
     setRootNode(root);
 
     return true;
@@ -461,8 +468,9 @@ void Map::loadFarmer(float x, float y, float width, float height) {
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _worldnode->addChild(farmerNode);
     farmer->setDebugScene(_debugnode);
+    
+    _entitiesNode->addEntityNode(farmerNode);
 
     _farmers.push_back(farmer);
 
@@ -488,7 +496,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _worldnode->addChild(babyNode);
+    _entitiesNode->addEntityNode(babyNode);
     baby->setDebugScene(_debugnode);
 
     _world->initObstacle(baby);
@@ -578,7 +586,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
-    _worldnode->addChild(carrotNode);
+    _entitiesNode->addEntityNode(carrotNode);
     carrot->setDebugScene(_debugnode);
 
     _world->initObstacle(carrot);
@@ -607,4 +615,8 @@ void Map::updateShader(float step, const Mat4 &perspective) {
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
     _wheatrenderer->update(step, perspective, size, positions, velocities);
+}
+
+void Map::renderToTarget(const std::shared_ptr<SpriteBatch> &batch, const Mat4 &perspective) {
+    _entitiesNode->renderToTarget(batch, perspective);
 }

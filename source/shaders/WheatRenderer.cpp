@@ -121,6 +121,7 @@ void WheatRenderer::dispose() {
     _wheatShader = nullptr;
     _groundShader = nullptr;
     _vertbuff = nullptr;
+    _textures.clear();
 }
 
 void WheatRenderer::update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities) {

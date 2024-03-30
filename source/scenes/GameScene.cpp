@@ -617,6 +617,7 @@ void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
     
 //    spriteShader->bind();
 //    batch->setShader(spriteShader);
+    _map->renderToTarget(batch, _cam.getCamera()->getCombined());
     Scene2::render(batch);
 //    spriteShader->unbind();
 }

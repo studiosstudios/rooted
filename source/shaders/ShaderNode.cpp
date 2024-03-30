@@ -4,6 +4,13 @@
 
 #include "ShaderNode.h"
 
+ShaderNode::ShaderNode() :
+        SceneNode(),
+        _renderer(nullptr) {
+    _classname = "ShaderNode";
+}
+
+
 void ShaderNode::dispose() {
     _renderer = nullptr;
     scene2::SceneNode::dispose();

@@ -13,6 +13,7 @@
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
+#include "EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
 #include "../shaders/WheatRenderer.h"
 
@@ -54,6 +55,8 @@ private:
     std::shared_ptr<ShaderNode> _wheatnode;
     /** Reference to the ground node of the scene graph */
     std::shared_ptr<ShaderNode> _groundnode;
+    
+    std::shared_ptr<EntitiesNode> _entitiesNode;
     bool _farmerPlaying = false;
     bool _showPlayer = false;
 
@@ -74,7 +77,8 @@ public:
         WHEAT,
         ENTITIES,
         PLAYER,
-        WALLS
+        WALLS,
+        RENDERTARGET
     };
 
 #pragma mark -
@@ -238,10 +242,10 @@ public:
 
     std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
 
-    bool isFarmerPlaying() { return _farmerPlaying; }
-
-    bool isShowingPlayer() { return _showPlayer; }
-
+#pragma mark -
+#pragma mark Drawing
+    void renderToTarget(const std::shared_ptr<SpriteBatch> &batch, const Mat4 &perspective);
+    
     void updateShader(float step, const Mat4 &perspective);
 
 private:

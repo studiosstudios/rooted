@@ -27,7 +27,7 @@ protected:
 
 public:
 
-    ShaderNode() {}
+    ShaderNode();
 
     ~ShaderNode() { dispose(); }
 

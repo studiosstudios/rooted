@@ -269,19 +269,16 @@ void RootedApp::updateMenuScene(float timestep) {
     _mainmenu.update(timestep);
     switch (_mainmenu.getChoice()) {
         case MenuScene::Choice::HOST:
-//            std::cout<<"chose to host";
             _mainmenu.setActive(false);
             _hostgame.setActive(true);
             _status = HOST;
             break;
         case MenuScene::Choice::JOIN:
-//            std::cout<<"chose to join";
             _mainmenu.setActive(false);
             _joingame.setActive(true);
             _status = CLIENT;
             break;
-        case MenuScene::Choice::NONE:
-//            std::cout<<"do nothing";
+        default:
             // DO NOTHING
             break;
     }

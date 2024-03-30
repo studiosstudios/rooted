@@ -25,7 +25,7 @@ public:
         HOST,
         /** User wants to join a game */
         JOIN,
-        
+
         MAIN,
         LOBBY,
         STATS,
@@ -35,12 +35,31 @@ public:
 protected:
     /** The asset manager for this scene. */
     std::shared_ptr<cugl::AssetManager> _assets;
+    
+    /** Main menu screen */
+    std::shared_ptr<cugl::scene2::SceneNode> _menuscene;
+    /** Lobby screen */
+    std::shared_ptr<cugl::scene2::SceneNode> _lobbyscene;
+    /** Stats screen */
+    std::shared_ptr<cugl::scene2::SceneNode> _statsscene;
+    /** Options scene **/
+    std::shared_ptr<cugl::scene2::SceneNode> _optionsscene;
+    
+    // TODO put scenes and their buttons together
     /** The menu button for hosting a game */
     std::shared_ptr<cugl::scene2::Button> _hostbutton;
     /** The menu button for joining a game */
     std::shared_ptr<cugl::scene2::Button> _joinbutton;
+    /** The menu button for choosing to bring to lobby selection screen */
+    std::shared_ptr<cugl::scene2::Button> _playbutton;
+    /** The menu button to see your own stats */
+    std::shared_ptr<cugl::scene2::Button> _statsbutton;
+    /** The menu button to change options */
+    std::shared_ptr<cugl::scene2::Button> _optionsbutton;
     /** The player menu choice */
     Choice _choice;
+    /** The player choice when changing menus within this scene */
+    Choice _currmenuchoice;
     
 public:
 #pragma mark -
@@ -93,6 +112,8 @@ public:
      */
     virtual void setActive(bool value) override;
     
+    void update(float timestep) override;
+    
     /**
      * Returns the user's menu choice.
      *
@@ -101,6 +122,8 @@ public:
      * @return the user's menu choice.
      */
     Choice getChoice() const { return _choice; }
+    
+    void switchScene(MenuScene::Choice sceneType);
 
 };
 

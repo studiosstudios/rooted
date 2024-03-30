@@ -51,10 +51,9 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _menuscene->setContentSize(dimen);
     _menuscene->doLayout(); // Repositions the HUD
     
-    _lobbyscene = _assets->get<scene2::SceneNode>("menu");
+    _lobbyscene = _assets->get<scene2::SceneNode>("network");
     _lobbyscene->setContentSize(dimen);
     _menuscene->doLayout();
-//    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("mainmenu");
     
     _choice = Choice::NONE;
     _currmenuchoice = Choice::MAIN;
@@ -63,23 +62,23 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _playbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_play"));
     _optionsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_options"));
     _statsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_stats"));
-    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_host"));
-    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_join"));
+    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_host"));
+    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_join"));
     
     // Program the buttons
     _playbutton->addListener([this](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             _choice = Choice::LOBBY;
             _currmenuchoice = Choice::LOBBY;
         }
     });
     _hostbutton->addListener([this](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             _choice = Choice::HOST;
         }
     });
     _joinbutton->addListener([this](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             _choice = Choice::JOIN;
         }
     });

@@ -42,7 +42,6 @@ void EntitiesNode::allocNode() {
 }
 
 void EntitiesNode::clearNode() {
-    _root->removeFromParent();
     _root->removeAllChildren();
     _root = nullptr;
 }
@@ -52,10 +51,13 @@ void EntitiesNode::addEntityNode(const shared_ptr<cugl::scene2::SceneNode> &enti
 }
 
 void EntitiesNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::Affine2 &transform, cugl::Color4 tint) {
+    Mat4 perspective = Mat4(batch->getPerspective()); //copy perspective
     _renderTarget->begin();
     _root->render(batch);
-    batch->flush();
+    batch->end();
     _renderTarget->end();
 
     _renderer->draw(_renderTarget->getTexture(0));
+
+    batch->begin(perspective);
 }

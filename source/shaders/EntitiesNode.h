@@ -6,9 +6,9 @@
 #define ROOTED_ENTITIESNODE_H
 
 #include <cugl/cugl.h>
-#include "BabyCarrot.h"
-#include "Carrot.h"
-#include "Farmer.h"
+#include "../objects/BabyCarrot.h"
+#include "../objects/Carrot.h"
+#include "../objects/Farmer.h"
 
 using namespace std;
 

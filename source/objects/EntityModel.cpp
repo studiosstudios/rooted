@@ -83,6 +83,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     nsize.width  *= DUDE_HSHRINK;
     nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
+    dashTimer = 0;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
         setFriction(0.0f);      // HE WILL STICK TO WALLS IF YOU FORGET

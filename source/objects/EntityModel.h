@@ -54,6 +54,7 @@
 #define DUDE_TEXTURE    "dude"
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
+#define CARROTFARMER_TEXTURE "carrotfarmer"
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -

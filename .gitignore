@@ -1,10 +1,8 @@
-build/
-*.tiled-session
 
+*.tiled-session
+build/
 
 .DS_Store
-
-build/
 
 # Prerequisites
 *.d

@@ -82,6 +82,20 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _gameid = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("client_center_game_field_text"));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_center_players_field_text"));
     
+    std::string numbers[10]= { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+    for (std::string number : numbers) {
+        _numbers.push_back(std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_buttons_" + number)));
+    }
+    
+    for (int ii = 0; ii < _numbers.size(); ii++) {
+        auto n = _numbers.at(ii);
+        n->addListener([this, ii](const std::string& name, bool down) {
+            if (down && _gameid->getText().length() < 6) {
+                _gameid->setText(_gameid->getText() + std::to_string(ii));
+            }
+        });
+    }
+    
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
             _network->disconnect();
@@ -91,17 +105,9 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
 
     _startgame->addListener([=](const std::string& name, bool down) {
         if (down) {
-            // This will call the _gameid listener
-            _gameid->requestFocus();
-            _gameid->releaseFocus();
-        }
-    });
-
-
-    _gameid->addExitListener([this](const std::string& name, const std::string& value) {
-    // call the network controller to connect as a client (Remember to convert the string from decimal to hex)
-        if (!value.empty()) {
-            _network->connectAsClient(dec2hex(value));
+            if (!_gameid->getText().empty()) {
+                _network->connectAsClient(dec2hex(_gameid->getText()));
+            }
         }
     });
 
@@ -149,6 +155,11 @@ void ClientScene::setActive(bool value) {
             configureStartButton();
             _backClicked = false;
             // Don't reset the room id
+            
+            // activate all of the numbers
+            for (auto n : _numbers) {
+                n->activate();
+            }
         } else {
             _gameid->deactivate();
             _startgame->deactivate();
@@ -157,6 +168,11 @@ void ClientScene::setActive(bool value) {
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
+            
+            for (auto n : _numbers) {
+                n->deactivate();
+                n->setDown(false);
+            }
         }
     }
 }

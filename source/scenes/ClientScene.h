@@ -43,6 +43,9 @@ protected:
     /** The players label (for updating) */
     std::shared_ptr<cugl::scene2::Label> _player;
     
+    /** number buttons */
+    std::vector<std::shared_ptr<cugl::scene2::Button>> _numbers;
+    
     /** The network configuration */
     cugl::net::NetcodeConfig _config;
     

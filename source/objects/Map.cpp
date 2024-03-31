@@ -98,6 +98,8 @@ void Map::clearRootNode() {
     if (_root == nullptr) {
         return;
     }
+    _entitiesNode->clearNode();
+
     _worldnode->removeFromParent();
     _worldnode->removeAllChildren();
     _worldnode = nullptr;
@@ -105,8 +107,6 @@ void Map::clearRootNode() {
     _debugnode->removeFromParent();
     _debugnode->removeAllChildren();
     _debugnode = nullptr;
-    
-    _entitiesNode->clearNode();
 
     _root = nullptr;
 }
@@ -145,7 +145,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setPosition(Vec2::ZERO);
     
     _entitiesNode->allocNode();
-    _entitiesNode->setPriority(float(DrawOrder::RENDERTARGET));
+    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
     
     bool showGrid = true; //change this to show the grid in debug
@@ -615,8 +615,4 @@ void Map::updateShader(float step, const Mat4 &perspective) {
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
     _wheatrenderer->update(step, perspective, size, positions, velocities);
-}
-
-void Map::renderToTarget(const std::shared_ptr<SpriteBatch> &batch, const Mat4 &perspective) {
-    _entitiesNode->renderToTarget(batch, perspective);
 }

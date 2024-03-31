@@ -88,7 +88,6 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, stri
     _cloudtex = _assets->get<Texture>("shader_clouds");
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
-    _grasstex = _assets->get<Texture>("shader_grass_base");
     _grassgradienttex = _assets->get<Texture>("shader_grass_gradient");
 
     _size = _wheattex->getSize();
@@ -106,7 +105,6 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, stri
     _textures.push_back(_cloudtex);
     _textures.push_back(_noisetex);
     _textures.push_back(_gradienttex);
-    _textures.push_back(_grasstex);
     _textures.push_back(_grassgradienttex);
     
     for (int i = 0; i < _textures.size(); i++) {
@@ -156,6 +154,7 @@ void WheatRenderer::update(float timestep, const Mat4& perspective, int size, fl
         _groundShader->setUniform2fv("positions", size, positions);
         _groundShader->unbind();
     }
+
 }
 
 void WheatRenderer::renderWheat() {

@@ -47,12 +47,6 @@ void CollisionController::beginContact(b2Contact* contact) {
         
         if (name1 == "carrot") {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
-            if (name2 == "wheat") {
-                Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                wheat->rustle(bd1->getLinearVelocity().length());
-                wheat->setOccupied(_map->isShowingPlayer());
-                carrot->changeWheatContacts(1);
-            }
             if (name2 == "baby") {
                 BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
                 if(_map->getCharacter()->getUUID() == carrot->getUUID() && !(carrot->isCaptured() || carrot->isRooted())){
@@ -70,12 +64,6 @@ void CollisionController::beginContact(b2Contact* contact) {
         
         if (name1 == "farmer") {
             Farmer* farmer = dynamic_cast<Farmer*>(bd1);
-            if (name2 == "wheat") {
-                Wheat* wheat = dynamic_cast<Wheat*>(bd2);
-                wheat->rustle(bd1->getLinearVelocity().length());
-                wheat->setOccupied(_map->isShowingPlayer());
-                farmer->changeWheatContacts(1);
-            }
             if(name2 == "carrot") {
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
 //                std::cout<<"carrot sensor status: "<< carrot->isSensor() << "\n";

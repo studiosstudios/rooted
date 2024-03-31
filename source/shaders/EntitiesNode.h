@@ -12,6 +12,8 @@
 
 using namespace std;
 
+using namespace cugl;
+
 class EntitiesNode : public scene2::SceneNode {
 private:
     shared_ptr<RenderTarget> _renderTarget;
@@ -39,8 +41,6 @@ public:
     bool init(int width, int height);
 
     void dispose() override;
-
-    void renderToTarget(const std::shared_ptr<SpriteBatch> &batch, const Mat4& perspective);
 
     void draw(const shared_ptr<SpriteBatch> &batch, const cugl::Affine2 &transform, cugl::Color4 tint) override;
 

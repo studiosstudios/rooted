@@ -76,8 +76,8 @@ const float PI = 3.14f;
 
 /** Objects */
 //uniform vec2 farmer_pos;
-uniform vec2 positions[100];
-uniform float velocities[100];
+uniform vec2 positions[500];
+uniform float velocities[500];
 uniform int num_entities;
 
 /**

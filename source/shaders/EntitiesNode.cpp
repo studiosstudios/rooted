@@ -36,7 +36,7 @@ EntitiesNode::~EntitiesNode() {
 }
 
 void EntitiesNode::allocNode() {
-    _root = SceneNode::alloc();
+    _root = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
     _root->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _root->setPosition(Vec2::ZERO);
 }
@@ -51,31 +51,11 @@ void EntitiesNode::addEntityNode(const shared_ptr<cugl::scene2::SceneNode> &enti
     _root->addChild(entityNode);
 }
 
-//TODO: try without beginning/ending batch for performance
-void EntitiesNode::renderToTarget(const std::shared_ptr<SpriteBatch> &batch, const Mat4& perspective) {
-    batch->begin(perspective);
+void EntitiesNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::Affine2 &transform, cugl::Color4 tint) {
     _renderTarget->begin();
     _root->render(batch);
-    batch->end();
-    _renderTarget->end();
-}
-
-void EntitiesNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::Affine2 &transform, cugl::Color4 tint) {
-    Mat4 perspective = Mat4(batch->getPerspective()); //copy perspective
-    GLenum srcFactorRGB = batch->getSrcBlendRGB();
-    GLenum srcFactorAlpha = batch->getSrcBlendAlpha();
-    GLenum dstFactorRGB = batch->getDstBlendRGB();
-    GLenum dstFactorAlpha = batch->getDstBlendAlpha();
-    GLenum blendEquation = batch->getBlendEquation();
     batch->flush();
-    batch->end();
+    _renderTarget->end();
 
     _renderer->draw(_renderTarget->getTexture(0));
-
-    //restore spritebatch to previous state
-    batch->begin(perspective);
-    batch->setPerspective(perspective);
-    batch->setSrcBlendFunc(srcFactorAlpha, srcFactorRGB);
-    batch->setDstBlendFunc(dstFactorRGB, dstFactorAlpha);
-    batch->setBlendEquation(blendEquation);
 }

@@ -13,7 +13,7 @@
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
-#include "EntitiesNode.h"
+#include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
 #include "../shaders/WheatRenderer.h"
 
@@ -57,8 +57,6 @@ private:
     std::shared_ptr<ShaderNode> _groundnode;
     
     std::shared_ptr<EntitiesNode> _entitiesNode;
-    bool _farmerPlaying = false;
-    bool _showPlayer = false;
 
     std::unordered_map<std::string, std::any> _propertiesMap;
 
@@ -77,8 +75,7 @@ public:
         WHEAT,
         ENTITIES,
         PLAYER,
-        WALLS,
-        RENDERTARGET
+        WALLS
     };
 
 #pragma mark -
@@ -244,8 +241,6 @@ public:
 
 #pragma mark -
 #pragma mark Drawing
-    void renderToTarget(const std::shared_ptr<SpriteBatch> &batch, const Mat4 &perspective);
-    
     void updateShader(float step, const Mat4 &perspective);
 
 private:

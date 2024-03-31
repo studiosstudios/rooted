@@ -97,7 +97,6 @@ void ActionController::preUpdate(float dt) {
     
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
 //        std::cout<<"farmer did the rooting\n";
-        _map->getFarmers().at(0)->rootCarrot();
         Haptics::get()->playContinuous(1.0, 0.3, 0.1);
         
         // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
@@ -147,8 +146,8 @@ void ActionController::postUpdate(float dt) {
     for(std::shared_ptr<Carrot> c : _map->getCarrots()){
         if(c->isCaptured()){
             c->setSensor(true);
-            c->setX(_map->getFarmers().at(0)->getX()-0.5);
-            c->setY(_map->getFarmers().at(0)->getY()-0.5);
+            c->setX(_map->getFarmers().at(0)->getX());
+            c->setY(_map->getFarmers().at(0)->getY());
         }
         else if(!c->isRooted()){
             c->setSensor(false);
@@ -161,7 +160,7 @@ void ActionController::networkQueuePositions() {
 }
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
-    std::cout<<event->getUUID();
+    _map->getFarmers().at(0)->grabCarrot();
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             carrot->setSensor(true);
@@ -174,6 +173,8 @@ void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& 
             }
         }
     }
+//    auto farmerNode = std::dynamic_pointer_cast<scene2::PolygonNode>(_map->getFarmers().at(0)->getSceneNode());
+//    farmerNode->setTexture(CARROTFARMER_TEXTURE);
 }
 
 void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event){
@@ -197,6 +198,8 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
             ps->setCarrotPlanted(true);
         }
     }
+//    auto farmerNode = std::dynamic_pointer_cast<scene2::PolygonNode>(_map->getFarmers().at(0)->getSceneNode());
+//    farmerNode->setTexture(FARMER_TEXTURE);
 }
 
 void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& event){

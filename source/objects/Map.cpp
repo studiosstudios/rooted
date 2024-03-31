@@ -457,12 +457,17 @@ void Map::loadFarmer(float x, float y, float width, float height) {
 
     auto farmerNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(FARMER_TEXTURE));
+    auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROTFARMER_TEXTURE));
+    farmer->setNormalNode(farmerNode);
+    farmer->setCaptureNode(carrotfarmerNode);
     farmer->setSceneNode(farmerNode);
     farmer->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
     _worldnode->addChild(farmerNode);
+    _worldnode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
 
     _farmers.push_back(farmer);

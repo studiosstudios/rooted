@@ -14,6 +14,9 @@
         "farmer": {
             "file":     "textures/bunny.png"
         },
+        "carrotfarmer": {
+            "file":     "textures/carrotfarmer.png"
+        },
         "baby": {
             "file":     "textures/baby.png"
         },

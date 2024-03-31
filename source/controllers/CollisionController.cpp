@@ -92,8 +92,6 @@ void CollisionController::beginContact(b2Contact* contact) {
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
                 if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
                     _network->pushOutEvent(CaptureEvent::allocCaptureEvent(carrot->getUUID()));
-                    carrot->gotCaptured();
-                    farmer->grabCarrot();
                 }
             }
             if(name2 == "planting spot" && _map->getCharacter()->getUUID() == farmer->getUUID()) {

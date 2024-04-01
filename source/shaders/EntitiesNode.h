@@ -16,10 +16,11 @@ using namespace cugl;
 
 class EntitiesNode : public scene2::SceneNode {
 private:
-    shared_ptr<RenderTarget> _renderTarget;
+    shared_ptr<RenderTarget> _mainRenderTarget;
     shared_ptr<Shader> _coverShader;
     shared_ptr<scene2::SceneNode> _root;
-    shared_ptr<TextureRenderer> _renderer;
+    shared_ptr<Gradient> _gradient;
+    shared_ptr<RenderTarget> _heightRenderTarget;
 
 public:
 

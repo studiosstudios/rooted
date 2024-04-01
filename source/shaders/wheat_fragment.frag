@@ -218,7 +218,7 @@ void main(void) {
     }
 
     frag_color = baseColor;
-    
+
 }
 
 /////////// SHADER END //////////)"

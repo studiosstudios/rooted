@@ -37,7 +37,6 @@ protected:
     std::shared_ptr<cugl::Texture> _noisetex;
     std::shared_ptr<cugl::Texture> _cloudtex;
     std::shared_ptr<cugl::Texture> _gradienttex;
-    std::shared_ptr<cugl::Texture> _grasstex;
     std::shared_ptr<cugl::Texture> _grassgradienttex;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
     float _aspectRatio;

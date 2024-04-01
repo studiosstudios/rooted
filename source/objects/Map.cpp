@@ -148,7 +148,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
     
-    bool showGrid = true; //change this to show the grid in debug
+    bool showGrid = false; //change this to show the grid in debug
     if (showGrid) {
         for (int x = 0; x < _bounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
@@ -468,6 +468,8 @@ void Map::loadFarmer(float x, float y, float width, float height) {
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    farmerNode->setName("farmer");
+//    farmerNode->setColor(Color4::BLACK);
     farmer->setDebugScene(_debugnode);
     
     _entitiesNode->addEntityNode(farmerNode);
@@ -492,6 +494,8 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
             _assets->get<Texture>(BABY_TEXTURE));
 //        babyNode->setColor(Color4::BLUE);
     baby->setSceneNode(babyNode);
+    babyNode->setName("baby");
+//    babyNode->setColor(Color4::BLACK);
     baby->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)

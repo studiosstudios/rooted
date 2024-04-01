@@ -72,8 +72,8 @@ public:
     enum class DrawOrder : int {
         GROUND,
         PLANTINGSPOT,
-        WHEAT,
         ENTITIES,
+        WHEAT,
         PLAYER,
         WALLS
     };

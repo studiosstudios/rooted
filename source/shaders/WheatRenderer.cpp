@@ -83,9 +83,9 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, stri
     _cloudTime = 0;
 
     _bladeColorScale = bladeColorScale;
-    
-    _wheattex = _assets->get<Texture>(name);
+
     _cloudtex = _assets->get<Texture>("shader_clouds");
+    _wheattex = _assets->get<Texture>(name);
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
     _grassgradienttex = _assets->get<Texture>("shader_grass_gradient");
@@ -100,12 +100,12 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, stri
     }
     
     _aspectRatio = _size.width/_size.height;
-    
-    _textures.push_back(_wheattex);
+
     _textures.push_back(_cloudtex);
     _textures.push_back(_noisetex);
     _textures.push_back(_gradienttex);
     _textures.push_back(_grassgradienttex);
+    _textures.push_back(_wheattex);
     
     for (int i = 0; i < _textures.size(); i++) {
         _textures[i]->setBindPoint(i);
@@ -172,13 +172,14 @@ void WheatRenderer::renderWheat() {
         }
 
         _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
-        
+
+        _vertbuff->detach();
+
         for (auto texture : _textures) {
             if (texture) {
                 texture->unbind();
             }
         }
-        _vertbuff->detach();
     }
 }
 

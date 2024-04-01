@@ -33,19 +33,30 @@ R"(////////// SHADER BEGIN /////////
 precision highp float;  // highp required for gradient precision
 #endif
 
-in vec2 outUV;
+// The texture for sampling
 uniform sampler2D uTexture;
+uniform sampler2D grass_tex;
 
+uniform vec2 SCREEN_PIXEL_SIZE;
+uniform vec2 SCREEN_SIZE;
+
+uniform vec2 camera_pos;
+uniform float camera_zoom;
+
+// The output color
 out vec4 frag_color;
+
+// The inputs from the vertex shader
+in vec2 outPosition;
+in vec4 outColor;
+in vec2 outTexCoord;
+in vec2 outGradCoord;
 
 void main()
 {
-	vec4 inColor = texture(uTexture, outUV);
-	if (inColor.a > 0.0) {
-	    frag_color = vec4(inColor.rgb, 1.0);
-	} else {
-	    frag_color = inColor;
-	}
-	frag_color = inColor;
+	vec2 wheatCoord = vec2((gl_FragCoord.x/camera_zoom/2.0+camera_pos.x)/SCREEN_SIZE.x,
+	    1.0-(gl_FragCoord.y/camera_zoom/2.0+camera_pos.y)/SCREEN_SIZE.y); //do not know why it is divided by two
+
+    frag_color = vec4(mix(texture(uTexture, outTexCoord), texture(grass_tex, wheatCoord), 0.8).rgb, 1.0);
 }
 /////////// SHADER END //////////)"

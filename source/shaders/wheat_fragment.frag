@@ -54,7 +54,6 @@ uniform float CLOUD_TIME;
 
 
 // Textures
-uniform sampler2D uTexture;
 uniform sampler2D grass_tex;
 uniform sampler2D cloud_tex;
 uniform sampler2D noise_tex;
@@ -109,7 +108,7 @@ vec4 sampleColor(float dist, float bladeLen) {
  */
 float sampleBladeLength(vec2 uv) {
     float r = texture(grass_tex, uv).r;
-    return r > 0.0f ? r * 255.0f + 2.0f : 0.0f;
+    return r > 0.0f ? r * 255.0f/blade_color_scale + 2.0f : 0.0f;
 //    if (texture(grass_tex, uv).r > 0.0f) {
 //        return texture(grass_tex, uv).r * 255.0f/blade_color_scale + 2.0f;
 //    }

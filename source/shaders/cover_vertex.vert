@@ -1,10 +1,15 @@
 R"(////////// SHADER BEGIN /////////
-//  FSQShader.vert
+//  SpriteShader.vert
 //  Cornell University Game Library (CUGL)
 //
-//  This shader renders a full screen quad. The vertex shader has hardcoded
-//  positions (so that no buffer is needed), and the fragment shader has a
-//  single uniform for the texture.
+//  This is a full-power SpriteBatch vertex shader for both OpenGL and OpenGL ES.
+//  It supports textures which can be tinted per vertex. It also supports gradients
+//  (which can be used simulataneously with textures, but not with colors), as
+//  well as a scissor mask.  Gradients use the color inputs as their texture
+//  coordinates. Finally, there is support for very simple blur effects, which
+//  are used for font labels.
+//
+//  This shader was inspired by nanovg by Mikko Mononen (memon@inside.org).
 //
 //  CUGL MIT License:
 //      This software is provided 'as-is', without any express or implied
@@ -25,14 +30,40 @@ R"(////////// SHADER BEGIN /////////
 //
 //      3. This notice may not be removed or altered from any source distribution.
 //
-//  Author: Zachary Schecter
-//  Version: 4/12/23
+//  Author: Walker White
+//  Version: 3/20/20
 
-out vec2 outUV;
+// Positions
+in vec4 aPosition;
+out vec2 outPosition;
 
-void main()
-{
-    outUV = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
-    gl_Position = vec4(outUV * 2.0f + -1.0f, 0.0f, 1.0f);
+// Colors
+in  vec4 aColor;
+out vec4 outColor;
+
+// Texture coordinates
+in  vec2 aTexCoord;
+out vec2 outTexCoord;
+
+// Gradient coordinates
+in  vec2 aGradCoord;
+out vec2 outGradCoord;
+
+// Matrices
+uniform mat4 uPerspective;
+
+// Depth value (this is a 2d pipeline)
+uniform float uDepth;
+
+// Transform and pass through
+void main(void) {
+    gl_Position = uPerspective*vec4(aPosition.xy,0.0,1.0);
+    outPosition = aPosition.xy; // Need untransformed for scissor
+    outColor = aColor;
+    outTexCoord = aTexCoord;
+    outGradCoord = aGradCoord;
 }
+
 /////////// SHADER END //////////)"
+
+

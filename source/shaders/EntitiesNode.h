@@ -21,6 +21,7 @@ private:
     shared_ptr<scene2::SceneNode> _root;
     shared_ptr<Gradient> _gradient;
     shared_ptr<RenderTarget> _heightRenderTarget;
+    shared_ptr<Texture> _wheattex;
 
 public:
 
@@ -32,6 +33,10 @@ public:
         shared_ptr<EntitiesNode> result = make_shared<EntitiesNode>();
         return (result->init(width, height) ? result : nullptr);
     }
+
+    void setWheatTexture(const shared_ptr<Texture>& wheattex);
+
+    void update(float zoom, Vec2 cameraPos);
 
     void allocNode();
 

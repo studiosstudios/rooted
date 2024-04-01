@@ -265,6 +265,7 @@ void Map::populate() {
         }
         
     }
+
     
     //place boundary walls
     loadBoundary(Vec2(-0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
@@ -422,6 +423,7 @@ void Map::loadBoundary(Vec2 pos, Size size){
 void Map::loadWheat(){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
+    _entitiesNode->setWheatTexture(_assets->get<Texture>(name));
     _wheatrenderer = WheatRenderer::alloc(_assets, name, bladeColorScale);
     _wheatrenderer->setScale(_scale.x);
     _wheatrenderer->buildShaders();
@@ -461,6 +463,7 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
 
+    _assets->get<Texture>(FARMER_TEXTURE)->setName("farmer");
     auto farmerNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(FARMER_TEXTURE));
     farmer->setSceneNode(farmerNode);
@@ -490,6 +493,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     baby->setID(_babies.size());
     _babies.push_back(baby);
 
+    _assets->get<Texture>(BABY_TEXTURE)->setName("baby");
     auto babyNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(BABY_TEXTURE));
 //        babyNode->setColor(Color4::BLUE);
@@ -598,7 +602,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
 
 
 
-void Map::updateShader(float step, const Mat4 &perspective) {
+void Map::updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom) {
     int size = _carrots.size() + _farmers.size() + _babies.size();
     float positions[2*size]; // must be 1d array
     float velocities[size];
@@ -619,4 +623,5 @@ void Map::updateShader(float step, const Mat4 &perspective) {
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
     _wheatrenderer->update(step, perspective, size, positions, velocities);
+    _entitiesNode->update(camZoom, camPos);
 }

@@ -107,6 +107,8 @@ public:
     * @return The camera
     */
     std::shared_ptr<cugl::OrthographicCamera> getCamera() { return _camera; };
+    
+    const Vec2 getScreenPosition();
 };
 
 #endif

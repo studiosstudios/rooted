@@ -72,9 +72,9 @@ public:
     enum class DrawOrder : int {
         GROUND,
         PLANTINGSPOT,
-        ENTITIES,
         WHEAT,
         PLAYER,
+        ENTITIES,
         WALLS
     };
 
@@ -241,7 +241,7 @@ public:
 
 #pragma mark -
 #pragma mark Drawing
-    void updateShader(float step, const Mat4 &perspective);
+    void updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom);
 
 private:
 #pragma mark -

@@ -177,7 +177,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("testMap2")); // Obtains ownership of root.
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("testMap")); // Obtains ownership of root.
 
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
@@ -459,7 +459,7 @@ void GameScene::fixedUpdate(float step) {
         }
     }
     
-    _map->updateShader(step, _cam.getCamera()->getCombined());
+    _map->updateShaders(step, _cam.getCamera()->getCombined(), _cam.getScreenPosition(), _cam.getCamera()->getZoom());
 }
 
 /**

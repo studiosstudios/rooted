@@ -87,6 +87,8 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
         _numbers.push_back(std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_buttons_" + number)));
     }
     
+    _backspace = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_buttons_back"));
+    
     for (int ii = 0; ii < _numbers.size(); ii++) {
         auto n = _numbers.at(ii);
         n->addListener([this, ii](const std::string& name, bool down) {
@@ -95,6 +97,12 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
             }
         });
     }
+
+    _backspace->addListener([this](const std::string& name, bool down) {
+        if (down && !_gameid->getText().empty()) {
+            _gameid->setText(_gameid->getText().substr(0, _gameid->getText().length() - 1));
+        }
+    });
     
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
@@ -160,6 +168,7 @@ void ClientScene::setActive(bool value) {
             for (auto n : _numbers) {
                 n->activate();
             }
+            _backspace->activate();
         } else {
             _gameid->deactivate();
             _startgame->deactivate();
@@ -173,6 +182,8 @@ void ClientScene::setActive(bool value) {
                 n->deactivate();
                 n->setDown(false);
             }
+            _backspace->deactivate();
+            _backspace->setDown(false);
         }
     }
 }

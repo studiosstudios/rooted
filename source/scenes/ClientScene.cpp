@@ -152,12 +152,12 @@ void ClientScene::setActive(bool value) {
     if (isActive() != value) {
         Scene2::setActive(value);
         
-        /**
-         * This is similar to HostScene. if value is true, you need to activate the _backout button, and set the clicked variable to false. However, you should start a connection this time. If the value is false, you should disconnect the network controller, and reset all buttons and textfields to their original state.
-         */
         if (value) {
+            // only want to activate if you are not a touchscreen
+            #ifndef CU_TOUCH_SCREEN
             _gameid->activate();
             _gameid->setText("");
+            #endif
             _backout->activate();
             _player->setText("1");
             configureStartButton();

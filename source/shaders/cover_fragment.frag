@@ -112,7 +112,7 @@ void main()
 	vec2 wheatCoord = getWheatCoord(gl_FragCoord.xy);
 
     frag_color = texture(uTexture, outTexCoord);
-
+    float windValue = wind(wheatCoord/SCREEN_PIXEL_SIZE, WIND_TIME);
     float noise = sampleNoise(wheatCoord, SCREEN_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
 
     //note that this assume that all textures are 32x32 (not accounting for camera zoom)
@@ -120,15 +120,18 @@ void main()
     //to fix this we will have to modify spritebatch
     float height = (1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y / SCREEN_PIXEL_SIZE.y;
 
-    //vec2 wheatUV = wheatCoord - vec2(0.0, height * 1.0/32.0) - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
-
+    //vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y;
 
     for (float dist = 0.0f; dist < MAX_WHEAT_HEIGHT; ++dist) {
         //sample wheat height
         float wheat_height = sampleHeight(wheatUV);
 
-        wheat_height += noise;
+        wheat_height -= noise;
+
+        if (windValue > 0.5) {
+            wheat_height -= 3.0f;
+        }
 
         if (height + dist <= wheat_height) {
             frag_color = vec4(0.0);

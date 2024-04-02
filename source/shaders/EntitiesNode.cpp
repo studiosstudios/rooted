@@ -38,6 +38,8 @@ bool EntitiesNode::init(const std::shared_ptr<cugl::AssetManager> &assets, strin
         _coverShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
         _coverShader->setUniform2f("SCREEN_SIZE", 1024.0, 576.0);
         _coverShader->setUniform1f("blade_color_scale", _bladeColorScale);
+        _coverShader->setUniform1f("wind_speed", 1.0);
+        _coverShader->setUniform2f("wind_direction", 1.0, 1.0);
 
         _windTime = 0;
         return true;

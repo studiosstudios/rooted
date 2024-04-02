@@ -20,6 +20,7 @@ protected:
     NetcodeDeserializer _deserializer;
     
     std::string _uuid;
+    int _plantingspotid;
     
 public:
     /**
@@ -31,7 +32,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocRootEvent(std::string uuid);
+    static std::shared_ptr<NetEvent> allocRootEvent(std::string uuid, int plantingspotid);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -48,7 +49,11 @@ public:
      */
     void deserialize(const std::vector<std::byte>& data) override;
     
+    /** Gets the uuid of carrot  associated with the event */
     std::string getUUID() { return _uuid; }
+    
+    /** Gets the uuid of planting spot associated with the event */
+    int getPlantingSpotID() { return _plantingspotid; }
 };
 
 #endif /* RootEvent_h */

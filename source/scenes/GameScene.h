@@ -6,6 +6,7 @@
 #define GameScene_h
 
 #include <cugl/cugl.h>
+#include <cugl/haptics/CUHaptics.h>
 #include <box2d/b2_world_callbacks.h>
 #include <box2d/b2_fixture.h>
 #include <unordered_set>

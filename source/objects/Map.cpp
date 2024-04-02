@@ -436,6 +436,7 @@ void Map::loadPlantingSpot(float x, float y, float width, float height) {
     std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, {width, height}, _scale.x);
     plantingSpot->setDebugColor(DEBUG_COLOR);
     plantingSpot->setName("planting spot");
+    plantingSpot->setPlantingID((unsigned)_plantingSpot.size());
     _plantingSpot.push_back(plantingSpot);
 
     auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
@@ -456,12 +457,17 @@ void Map::loadFarmer(float x, float y, float width, float height) {
 
     auto farmerNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(FARMER_TEXTURE));
+    auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(
+            _assets->get<Texture>(CARROTFARMER_TEXTURE));
+    farmer->setNormalNode(farmerNode);
+    farmer->setCaptureNode(carrotfarmerNode);
     farmer->setSceneNode(farmerNode);
     farmer->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
     _worldnode->addChild(farmerNode);
+    _worldnode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
 
     _farmers.push_back(farmer);
@@ -477,7 +483,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, {width, height}, _scale.x);
     baby->setDebugColor(DEBUG_COLOR);
     baby->setName("baby");
-    baby->setID(_babies.size());
+    baby->setID((unsigned)_babies.size());
     _babies.push_back(baby);
 
     auto babyNode = scene2::PolygonNode::allocWithTexture(
@@ -587,7 +593,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
 
 
 void Map::updateShader(float step, const Mat4 &perspective) {
-    int size = _carrots.size() + _farmers.size() + _babies.size();
+    int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size());
     float positions[2*size]; // must be 1d array
     float velocities[size];
     float ratio = _wheatrenderer->getAspectRatio();

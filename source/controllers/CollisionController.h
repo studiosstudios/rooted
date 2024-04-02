@@ -9,6 +9,7 @@
 #define CollisionController_h
 
 #include <cugl/cugl.h>
+#include <cugl/haptics/CUHaptics.h>
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
@@ -17,7 +18,6 @@
 #include "../events/CaptureEvent.h"
 #include "../events/UnrootEvent.h"
 #include "../events/CaptureBarrotEvent.h"
-
 
 class CollisionController {
 protected:

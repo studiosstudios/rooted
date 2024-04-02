@@ -144,8 +144,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugnode->setPosition(Vec2::ZERO);
     
-    _entitiesNode->allocNode();
-    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
+//    _entitiesNode->allocNode();
+//    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
     
     bool showGrid = false; //change this to show the grid in debug
@@ -167,7 +167,6 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
         }
     }
 
-    _worldnode->addChild(_entitiesNode);
     _root->addChild(_worldnode);
     _root->addChild(_debugnode);
 
@@ -212,7 +211,6 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     // Initial geometry
     _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
     
-    _entitiesNode = EntitiesNode::alloc(1024, 576);
     setRootNode(root);
 
     return true;
@@ -423,7 +421,7 @@ void Map::loadBoundary(Vec2 pos, Size size){
 void Map::loadWheat(){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
-    _entitiesNode->setWheatTexture(_assets->get<Texture>(name));
+    
     _wheatrenderer = WheatRenderer::alloc(_assets, name, bladeColorScale);
     _wheatrenderer->setScale(_scale.x);
     _wheatrenderer->buildShaders();
@@ -432,8 +430,13 @@ void Map::loadWheat(){
     _groundnode->setPriority(float(Map::DrawOrder::GROUND));
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     
+    _entitiesNode = EntitiesNode::alloc(_assets, name, bladeColorScale);
+    _entitiesNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    
+    _worldnode->addChild(_entitiesNode);
     _worldnode->addChild(_wheatnode);
     _worldnode->addChild(_groundnode);
+    
 }
 
 /**
@@ -623,5 +626,5 @@ void Map::updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
     _wheatrenderer->update(step, perspective, size, positions, velocities);
-    _entitiesNode->update(camZoom, camPos);
+    _entitiesNode->update(step, camZoom, camPos);
 }

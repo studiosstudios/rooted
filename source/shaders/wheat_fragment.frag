@@ -66,7 +66,6 @@ uniform vec2 wind_direction;
 uniform vec4 tip_color;
 uniform vec4 wind_color;
 
-uniform vec2 noise_tex_size;
 uniform vec2 SCREEN_PIXEL_SIZE;
 uniform float blade_color_scale;
 
@@ -109,10 +108,6 @@ vec4 sampleColor(float dist, float bladeLen) {
 float sampleBladeLength(vec2 uv) {
     float r = texture(grass_tex, uv).r;
     return r > 0.0f ? r * 255.0f/blade_color_scale + 2.0f : 0.0f;
-//    if (texture(grass_tex, uv).r > 0.0f) {
-//        return texture(grass_tex, uv).r * 255.0f/blade_color_scale + 2.0f;
-//    }
-//    return 0.0f;
 }
 
 /**
@@ -136,7 +131,7 @@ float wind(vec2 pos, float t) {
  - offset: offset sampling along x axis for jagged look
  */
 float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
-    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x / noise_tex_size.x + offset, 0.0f)).r;
+    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x + offset, 0.0f)).r;
 }
 
 /**
@@ -151,7 +146,7 @@ void main(void) {
     
     cloud_uv += cloud_speed * normalize(wind_direction) * CLOUD_TIME;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1f * WIND_TIME);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
 
     vec2 fragUV = uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     

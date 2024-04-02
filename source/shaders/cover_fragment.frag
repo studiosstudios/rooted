@@ -36,12 +36,17 @@ precision highp float;  // highp required for gradient precision
 // The texture for sampling
 uniform sampler2D uTexture;
 uniform sampler2D grass_tex;
+uniform sampler2D noise_tex;
 
 uniform vec2 SCREEN_PIXEL_SIZE;
 uniform vec2 SCREEN_SIZE;
+uniform float WIND_TIME;
+uniform float blade_color_scale;
 
 uniform vec2 camera_pos;
 uniform float camera_zoom;
+uniform float wind_speed;
+uniform vec2 wind_direction;
 
 // The output color
 out vec4 frag_color;
@@ -52,11 +57,87 @@ in vec4 outColor;
 in vec2 outTexCoord;
 in vec2 outGradCoord;
 
+const float MAX_WHEAT_HEIGHT = 20.0f;
+const float PI = 3.14f;
+
+/**
+ Calculates a sine wave
+
+ - T: period
+ - a: amplitude
+ - phase: phase offset
+ - dir: direction
+ - pos: position to evaluate at
+ */
+float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
+    return a * sin(2.0f * PI / T * dot(dir, pos) + phase);
+}
+
+float sampleHeight(vec2 uv) {
+    float r = texture(grass_tex, uv).r;
+    return r > 0.0f ? r * 255.0f/blade_color_scale + 2.0f : 0.0f;
+}
+
+vec2 getWheatCoord(vec2 uv) {
+    return vec2((uv.x/camera_zoom/2.0+camera_pos.x)/SCREEN_SIZE.x,
+           	    1.0-(uv.y/camera_zoom/2.0+camera_pos.y)/SCREEN_SIZE.y); //do not know why it is divided by two
+}
+
+/**
+ Calculates wind
+
+ - pos: position to evaluate at
+ - t: time to evaluate at
+ */
+float wind(vec2 pos, float t) {
+    return (sineWave(200.0f, 1.8f, 1.0f * wind_speed * t, normalize(wind_direction), pos)
+           + sineWave(70.0f, 0.1f, 2.0f * wind_speed * t, normalize(wind_direction - vec2(0.0f, 0.4f)), pos)
+           + sineWave(75.0f, 0.1f, 1.5f * wind_speed * t, normalize(wind_direction + vec2(0.4f, 0.0f)), pos))
+           / 3.0f;
+}
+
+/**
+ Calculates noise from using noise texture
+
+ - uv: position to evaluate at
+ - texture_pixel_size: size of the pixel to scale at
+ - offset: offset sampling along x axis for jagged look
+ */
+float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
+    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x + offset, 0.0f)).r;
+}
+
 void main()
 {
-	vec2 wheatCoord = vec2((gl_FragCoord.x/camera_zoom/2.0+camera_pos.x)/SCREEN_SIZE.x,
-	    1.0-(gl_FragCoord.y/camera_zoom/2.0+camera_pos.y)/SCREEN_SIZE.y); //do not know why it is divided by two
+	vec2 wheatCoord = getWheatCoord(gl_FragCoord.xy);
 
-    frag_color = vec4(mix(texture(uTexture, outTexCoord), texture(grass_tex, wheatCoord), 0.8).rgb, 1.0);
+    frag_color = texture(uTexture, outTexCoord);
+
+    float noise = sampleNoise(wheatCoord, SCREEN_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
+
+    //note that this assume that all textures are 32x32 (not accounting for camera zoom)
+    //we cant pass this in as a uniform per texture since spritebatch draws in one call
+    //to fix this we will have to modify spritebatch
+    float height = (1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y / SCREEN_PIXEL_SIZE.y;
+
+    //vec2 wheatUV = wheatCoord - vec2(0.0, height * 1.0/32.0) - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
+
+    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y;
+
+    for (float dist = 0.0f; dist < MAX_WHEAT_HEIGHT; ++dist) {
+        //sample wheat height
+        float wheat_height = sampleHeight(wheatUV);
+
+        wheat_height += noise;
+
+        if (height + dist <= wheat_height) {
+            frag_color = vec4(0.0);
+            break;
+        }
+
+        wheatUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
+    }
+
+
 }
 /////////// SHADER END //////////)"

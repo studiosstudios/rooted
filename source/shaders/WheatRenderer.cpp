@@ -119,6 +119,7 @@ void WheatRenderer::dispose() {
     _wheatShader = nullptr;
     _groundShader = nullptr;
     _vertbuff = nullptr;
+    _assets = nullptr;
     _textures.clear();
 }
 
@@ -235,7 +236,6 @@ void WheatRenderer::buildShaders() {
     _wheatShader->setUniform1f("wind_speed", WIND_SPEED);
     _wheatShader->setUniform1f("cloud_speed", CLOUD_SPEED);
     _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
-    _wheatShader->setUniform2f("noise_tex_size", 50.0, 1.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
     _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
 
@@ -250,7 +250,6 @@ void WheatRenderer::buildShaders() {
     _groundShader->setUniform1f("wind_speed", WIND_SPEED);
     _groundShader->setUniform1f("cloud_speed", CLOUD_SPEED);
     _groundShader->setUniform2f("wind_direction", 1.0, 1.0);
-    _groundShader->setUniform2f("noise_tex_size", 50.0, 1.0);
     _groundShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_wheattex->getWidth(),1.0/_wheattex->getHeight());
 
 

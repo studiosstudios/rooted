@@ -16,12 +16,12 @@ using namespace cugl;
 
 class EntitiesNode : public scene2::SceneNode {
 private:
-    shared_ptr<RenderTarget> _mainRenderTarget;
     shared_ptr<Shader> _coverShader;
     shared_ptr<scene2::SceneNode> _root;
-    shared_ptr<Gradient> _gradient;
-    shared_ptr<RenderTarget> _heightRenderTarget;
     shared_ptr<Texture> _wheattex;
+    float _bladeColorScale;
+    float _windTime;
+    shared_ptr<Texture> _noisetex;
 
 public:
 
@@ -29,14 +29,12 @@ public:
 
     ~EntitiesNode();
 
-    static std::shared_ptr<EntitiesNode> alloc(int width, int height) {
+    static std::shared_ptr<EntitiesNode> alloc(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
         shared_ptr<EntitiesNode> result = make_shared<EntitiesNode>();
-        return (result->init(width, height) ? result : nullptr);
+        return (result->init(assets, name, bladeColorScale) ? result : nullptr);
     }
 
-    void setWheatTexture(const shared_ptr<Texture>& wheattex);
-
-    void update(float zoom, Vec2 cameraPos);
+    void update(float timestep, float zoom, Vec2 cameraPos);
 
     void allocNode();
 
@@ -44,7 +42,7 @@ public:
 
     void addEntityNode(const shared_ptr<SceneNode>& entityNode);
 
-    bool init(int width, int height);
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale);
 
     void dispose() override;
 

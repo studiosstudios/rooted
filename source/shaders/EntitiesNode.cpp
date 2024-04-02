@@ -14,27 +14,32 @@ const std::string coverShaderVert =
 
 EntitiesNode::EntitiesNode() :
         SceneNode(),
-        _mainRenderTarget(nullptr),
         _coverShader(nullptr),
-        _gradient(nullptr),
         _root(nullptr) {
     _classname = "EntitiesNode";
 }
 
 void EntitiesNode::dispose() {
-    _mainRenderTarget = nullptr;
     _coverShader = nullptr;
     clearNode();
     SceneNode::dispose();
 }
 
-bool EntitiesNode::init(int width, int height) {
+bool EntitiesNode::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
     if (SceneNode::init()) {
-        _mainRenderTarget = RenderTarget::alloc(width, height);
-        _mainRenderTarget->setClearColor(Color4::CLEAR);
-        _heightRenderTarget = RenderTarget::alloc(width, height, vector<Texture::PixelFormat>{Texture::PixelFormat::RED});
-        _heightRenderTarget->setClearColor(Color4::CLEAR);
-        _gradient = Gradient::allocLinear(Color4::WHITE, Color4::BLACK, Vec2::ANCHOR_BOTTOM_CENTER, Vec2::ANCHOR_TOP_CENTER);
+        _root = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+        _root->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+        _root->setPosition(Vec2::ZERO);
+
+        _wheattex = assets->get<Texture>(name);
+        _noisetex = assets->get<Texture>("shader_noise");
+        _bladeColorScale = bladeColorScale;
+        _coverShader = Shader::alloc(SHADER(coverShaderVert), SHADER(coverShaderFrag));
+        _coverShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
+        _coverShader->setUniform2f("SCREEN_SIZE", 1024.0, 576.0);
+        _coverShader->setUniform1f("blade_color_scale", _bladeColorScale);
+
+        _windTime = 0;
         return true;
     }
     return false;
@@ -46,9 +51,9 @@ EntitiesNode::~EntitiesNode() {
 }
 
 void EntitiesNode::allocNode() {
-    _root = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
-    _root->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _root->setPosition(Vec2::ZERO);
+//    _root = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+//    _root->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+//    _root->setPosition(Vec2::ZERO);
 }
 
 void EntitiesNode::clearNode() {
@@ -60,19 +65,18 @@ void EntitiesNode::addEntityNode(const shared_ptr<cugl::scene2::SceneNode> &enti
     _root->addChild(entityNode);
 }
 
-void EntitiesNode::setWheatTexture(const shared_ptr<Texture>& wheattex) {
-    _wheattex = wheattex;
-    _coverShader = Shader::alloc(SHADER(coverShaderVert), SHADER(coverShaderFrag));
-    _coverShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
-    _coverShader->setUniform2f("SCREEN_SIZE", 1024.0, 576.0);
-}
+void EntitiesNode::update(float timestep, float zoom, Vec2 cameraPos) {
+    _windTime += timestep;
+    if (_windTime >= 12.53) {
+        _windTime = 0;
+    }
 
-void EntitiesNode::update(float zoom, Vec2 cameraPos) {
     //this can definitely somehow be done with the combined mat4 but i dont really know how it
     // works and cant be bothered to figure it out
     _coverShader->bind();
     _coverShader->setUniform1f("camera_zoom", zoom);
     _coverShader->setUniform2f("camera_pos", cameraPos.x, cameraPos.y);
+    _coverShader->setUniform1f("WIND_TIME", _windTime);
     _coverShader->unbind();
 }
 
@@ -82,9 +86,10 @@ void EntitiesNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::A
     batch->end();
 
     _wheattex->bind();
-    _wheattex->setName("wheat");
+    _noisetex->bind();
     batch->setShader(_coverShader);
     _coverShader->setSampler("grass_tex", _wheattex);
+    _coverShader->setSampler("noise_tex", _noisetex);
     batch->begin(perspective);
 
     auto children = _root->getChildren();
@@ -94,8 +99,7 @@ void EntitiesNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::A
 
     batch->end();
     _wheattex->unbind();
-    GLuint error = glGetError();
-    CUAssertLog(error == GL_NO_ERROR, "Texture: %s", gl_error_name(error).c_str());
+    _noisetex->unbind();
 
     //reset to previous state
     batch->setShader(shader);

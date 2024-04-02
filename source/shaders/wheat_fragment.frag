@@ -50,17 +50,14 @@ in vec2 outGradCoord;
 uniform int uType;
 
 uniform float WIND_TIME;
-uniform float CLOUD_TIME;
 
 
 // Textures
 uniform sampler2D grass_tex;
-uniform sampler2D cloud_tex;
 uniform sampler2D noise_tex;
 uniform sampler2D gradient_tex;
 
 uniform float wind_speed;
-uniform float cloud_speed;
 uniform vec2 wind_direction;
 
 uniform vec4 tip_color;
@@ -69,7 +66,7 @@ uniform vec4 wind_color;
 uniform vec2 SCREEN_PIXEL_SIZE;
 uniform float blade_color_scale;
 
-const float MAX_BLADE_LENGTH = 20.0f;
+const float MAX_BLADE_LENGTH = 100.0f;
 const float PI = 3.14f;
 
 /** Objects */
@@ -107,7 +104,7 @@ vec4 sampleColor(float dist, float bladeLen) {
  */
 float sampleBladeLength(vec2 uv) {
     float r = texture(grass_tex, uv).r;
-    return r > 0.0f ? r * 255.0f/blade_color_scale + 2.0f : 0.0f;
+    return r > 0.0f ? r * 255.0f/blade_color_scale + 10.0f : 0.0f;
 }
 
 /**
@@ -142,25 +139,15 @@ void main(void) {
     // Convert fragCoord to UV
     vec2 uv = outTexCoord;
     
-    vec2 cloud_uv = uv;
-    
-    cloud_uv += cloud_speed * normalize(wind_direction) * CLOUD_TIME;
-    
     float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
 
     vec2 fragUV = uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     
-    vec2 cloud_fragUV = cloud_uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
-    
     // Color the base of the grass with the first gradient color
-    vec4 baseColor;
+    vec4 baseColor = vec4(0.0);
     
     if (texture(grass_tex, fragUV).r > 0.0f) {
         baseColor = sampleColor(0.0f, 0.0f);
-        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0f);
-    }
-    else {
-        baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0f);
     }
 
     // Sample the wind
@@ -173,16 +160,14 @@ void main(void) {
 
         if (bladeLength > 0.0f) {
             // push up entity positions
-            bool empty = true;
             for (int i = 0; i < num_entities; i++ ){
                 if (distance(fragUV, positions[i]) < 0.02) {
                     bladeLength += round(0.9*length(velocities[i]));
-                    empty = false;
                 }
             }
 
             // Blades are pressed down by the wind
-            if (empty && windValue > 0.5f) {
+            if (windValue > 0.5f) {
                 bladeLength -= 3.0f;
             }
 
@@ -195,14 +180,10 @@ void main(void) {
                 } else {
                     baseColor = wind_color;
                 }
-                // Add the cloud shadow
-                baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
                 break;
             } else if (dist < bladeLength) {
                 // Color grass stems
                 baseColor = sampleColor(dist, bladeLength);
-                // Add the cloud shadow
-                baseColor -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
             }
         }
 

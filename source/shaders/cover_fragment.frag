@@ -57,7 +57,7 @@ in vec4 outColor;
 in vec2 outTexCoord;
 in vec2 outGradCoord;
 
-const float MAX_WHEAT_HEIGHT = 20.0f;
+const float MAX_WHEAT_HEIGHT = 100.0f;
 const float PI = 3.14f;
 
 /**
@@ -75,7 +75,7 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
 
 float sampleHeight(vec2 uv) {
     float r = texture(grass_tex, uv).r;
-    return r > 0.0f ? r * 255.0f/blade_color_scale + 2.0f : 0.0f;
+    return r > 0.0f ? r * 255.0f/blade_color_scale + 10.0f : 0.0f;
 }
 
 vec2 getWheatCoord(vec2 uv) {
@@ -120,7 +120,6 @@ void main()
     //to fix this we will have to modify spritebatch
     float height = (1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y / SCREEN_PIXEL_SIZE.y;
 
-    //vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y;
 
     for (float dist = 0.0f; dist < MAX_WHEAT_HEIGHT; ++dist) {

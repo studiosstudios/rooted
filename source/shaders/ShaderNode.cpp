@@ -16,7 +16,7 @@ void ShaderNode::dispose() {
     scene2::SceneNode::dispose();
 }
 
-bool ShaderNode::init(const std::shared_ptr<WheatRenderer> &renderer, ShaderNode::ShaderType type) {
+bool ShaderNode::init(const std::shared_ptr<ShaderRenderer> &renderer, ShaderNode::ShaderType type) {
     if (SceneNode::init()) {
         _renderer = renderer;
         _type = type;
@@ -41,6 +41,9 @@ void ShaderNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::Aff
             break;
         case ShaderType::GROUND:
             _renderer->renderGround();
+            break;
+        case ShaderType::CLOUDS:
+            _renderer->renderClouds();
             break;
     }
 

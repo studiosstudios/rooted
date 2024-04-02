@@ -238,7 +238,7 @@ void Map::populate() {
             float height = std::any_cast<float>(_propertiesMap.at("height"));
             
             if (name == "wheat") {
-                loadWheat();
+                loadShaderNodes();
                 break;
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
@@ -327,7 +327,7 @@ void Map::dispose() {
         _world->clear();
         _world = nullptr;
     }
-    _wheatrenderer->dispose();
+    _shaderrenderer->dispose();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
@@ -418,17 +418,19 @@ void Map::loadBoundary(Vec2 pos, Size size){
  * node. This method should only be called once per initialization, any subsequent calls will
  * override previous calls.
  */
-void Map::loadWheat(){
+void Map::loadShaderNodes(){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
     
-    _wheatrenderer = WheatRenderer::alloc(_assets, name, bladeColorScale);
-    _wheatrenderer->setScale(_scale.x);
-    _wheatrenderer->buildShaders();
-    _groundnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::GROUND);
-    _wheatnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::WHEAT);
+    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale);
+    _shaderrenderer->setScale(_scale.x);
+    _shaderrenderer->buildShaders();
+    _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
+    _wheatnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::WHEAT);
+    _cloudsnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::CLOUDS);
     _groundnode->setPriority(float(Map::DrawOrder::GROUND));
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
+    _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
     _entitiesNode = EntitiesNode::alloc(_assets, name, bladeColorScale);
     _entitiesNode->setPriority(float(Map::DrawOrder::ENTITIES));
@@ -436,6 +438,7 @@ void Map::loadWheat(){
     _worldnode->addChild(_entitiesNode);
     _worldnode->addChild(_wheatnode);
     _worldnode->addChild(_groundnode);
+    _worldnode->addChild(_cloudsnode);
     
 }
 
@@ -609,7 +612,7 @@ void Map::updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom
     int size = _carrots.size() + _farmers.size() + _babies.size();
     float positions[2*size]; // must be 1d array
     float velocities[size];
-    float ratio = _wheatrenderer->getAspectRatio();
+    float ratio = _shaderrenderer->getAspectRatio();
     for (int i = 0; i < _carrots.size(); i++) {
         positions[2 * i] = _carrots.at(i)->getX() / _scale.x;
         positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / _scale.x * ratio;
@@ -625,6 +628,6 @@ void Map::updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom
         positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / _scale.x * ratio;
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
-    _wheatrenderer->update(step, perspective, size, positions, velocities);
+    _shaderrenderer->update(step, perspective, size, positions, velocities);
     _entitiesNode->update(step, camZoom, camPos);
 }

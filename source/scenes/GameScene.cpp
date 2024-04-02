@@ -89,25 +89,6 @@ using namespace cugl;
 #define DEBUG_OPACITY   192
 
 
-
-const std::string spriteFrag =
-#include "../shaders/sprite_fragment.frag"
-;
-
-/**
- * Default vertex shader
- *
- * This trick uses C++11 raw string literals to put the shader in a separate
- * file without having to guarantee its presence in the asset directory.
- * However, to work properly, the #include statement below MUST be on its
- * own separate line.
- */
-const std::string spriteVertex =
-#include "../shaders/wheat_vertex.vert"
-;
-
-
-
 #pragma mark -
 #pragma mark Constructors
 

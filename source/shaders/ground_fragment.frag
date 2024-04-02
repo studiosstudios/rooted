@@ -21,15 +21,12 @@ in vec4 outColor;
 in vec2 outTexCoord;
 
 uniform float WIND_TIME;
-uniform float CLOUD_TIME;
 
 // Textures
 uniform sampler2D uTexture;
 uniform sampler2D grass_tex;
-uniform sampler2D cloud_tex;
 uniform sampler2D noise_tex;
 
-uniform float cloud_speed;
 uniform vec2 wind_direction;
 
 uniform vec2 noise_tex_size;
@@ -59,17 +56,10 @@ void main(void) {
     // Convert fragCoord to UV
     vec2 uv = outTexCoord;
     
-    vec2 cloud_uv = uv;
-    
-    cloud_uv += cloud_speed * normalize(wind_direction) * CLOUD_TIME;
-    
     float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1 * WIND_TIME);
 
     vec2 fragUV = uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
-    
-    vec2 cloud_fragUV = cloud_uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
-    
-//    frag_color = vec4(0.819608, 0.819608, 0.219608, 1.0);
+
     frag_color = vec4(0.70196, 0.83529, 0.0, 1.0);
 
     for (int i = 0; i < num_entities; i++ ){
@@ -77,11 +67,6 @@ void main(void) {
             frag_color = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
             break;
         }
-    }
-    
-    if (texture(grass_tex, fragUV).r == 0.0) {
-        // TODO: see if can factor out this cloud thing
-        frag_color -= vec4(texture(cloud_tex, cloud_fragUV).rgb, 0.0);
     }
     
 }

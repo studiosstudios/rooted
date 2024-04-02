@@ -10,7 +10,7 @@
 #ifndef ROOTED_SHADERNODE_H
 #define ROOTED_SHADERNODE_H
 
-#include "WheatRenderer.h"
+#include "ShaderRenderer.h"
 #include <cugl/cugl.h>
 
 class ShaderNode : public scene2::SceneNode {
@@ -18,11 +18,12 @@ class ShaderNode : public scene2::SceneNode {
 public:
     enum class ShaderType : int {
         WHEAT,
-        GROUND
+        GROUND,
+        CLOUDS
     };
 
 protected:
-    std::shared_ptr<WheatRenderer> _renderer;
+    std::shared_ptr<ShaderRenderer> _renderer;
     ShaderNode::ShaderType _type;
 
 public:
@@ -31,12 +32,12 @@ public:
 
     ~ShaderNode() { dispose(); }
 
-    static std::shared_ptr<ShaderNode> alloc(const std::shared_ptr<WheatRenderer> &renderer, ShaderType type) {
+    static std::shared_ptr<ShaderNode> alloc(const std::shared_ptr<ShaderRenderer> &renderer, ShaderType type) {
         std::shared_ptr<ShaderNode> result = std::make_shared<ShaderNode>();
         return (result->init(renderer, type) ? result : nullptr);
     }
 
-    bool init (const std::shared_ptr<WheatRenderer> &renderer, ShaderType type);
+    bool init (const std::shared_ptr<ShaderRenderer> &renderer, ShaderType type);
 
     void dispose() override;
 

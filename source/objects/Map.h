@@ -15,7 +15,7 @@
 #include "PlantingSpot.h"
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
-#include "../shaders/WheatRenderer.h"
+#include "../shaders/ShaderRenderer.h"
 
 class Map {
 private:
@@ -55,12 +55,14 @@ private:
     std::shared_ptr<ShaderNode> _wheatnode;
     /** Reference to the ground node of the scene graph */
     std::shared_ptr<ShaderNode> _groundnode;
+    /** Reference to the clouds node of the scene graph */
+    std::shared_ptr<ShaderNode> _cloudsnode;
     
     std::shared_ptr<EntitiesNode> _entitiesNode;
 
     std::unordered_map<std::string, std::any> _propertiesMap;
 
-    std::shared_ptr<WheatRenderer> _wheatrenderer;
+    std::shared_ptr<ShaderRenderer> _shaderrenderer;
 
     /** Possible init positions of carrots */
     std::vector<float> _carrotPosList;
@@ -75,7 +77,7 @@ public:
         WHEAT,
         PLAYER,
         ENTITIES,
-        WALLS
+        CLOUDS
     };
 
 #pragma mark -
@@ -277,7 +279,7 @@ private:
     /**
      * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world node. This method should only be called once per initialization, any subsequent calls will override previous calls.
      */
-    void loadWheat();
+    void loadShaderNodes();
     
     /**
      * Loads a single farmer into the world.

@@ -5,7 +5,7 @@
 //  Created by Nicole Thean on 3/11/24.
 //
 
-#include "WheatRenderer.h"
+#include "ShaderRenderer.h"
 
 using namespace cugl;
 
@@ -26,12 +26,7 @@ using namespace cugl;
 #define SCENE_HEIGHT 576
 
 /**
- * Default fragment shader
- *
- * This trick uses C++11 raw string literals to put the shader in a separate
- * file without having to guarantee its presence in the asset directory.
- * However, to work properly, the #include statement below MUST be on its
- * own separate line.
+ * Wheat fragment shader
  */
 const std::string wheatFrag =
 #include "wheat_fragment.frag"
@@ -39,23 +34,13 @@ const std::string wheatFrag =
 
 /**
  * Default vertex shader
- *
- * This trick uses C++11 raw string literals to put the shader in a separate
- * file without having to guarantee its presence in the asset directory.
- * However, to work properly, the #include statement below MUST be on its
- * own separate line.
  */
 const std::string wheatVert =
 #include "wheat_vertex.vert"
 ;
 
 /**
- * Default fragment shader
- *
- * This trick uses C++11 raw string literals to put the shader in a separate
- * file without having to guarantee its presence in the asset directory.
- * However, to work properly, the #include statement below MUST be on its
- * own separate line.
+ * Ground fragment shader
  */
 const std::string groundFrag =
 #include "ground_fragment.frag"
@@ -63,19 +48,28 @@ const std::string groundFrag =
 
 /**
  * Default vertex shader
- *
- * This trick uses C++11 raw string literals to put the shader in a separate
- * file without having to guarantee its presence in the asset directory.
- * However, to work properly, the #include statement below MUST be on its
- * own separate line.
  */
 const std::string groundVert =
 #include "ground_vertex.vert"
 ;
 
+/**
+ * Cloud fragment shader
+ */
+const std::string cloudsFrag =
+#include "clouds_fragment.frag"
+;
+
+/**
+ * Default vertex shader
+ */
+const std::string cloudsVert =
+#include "clouds_vertex.vert"
+;
+
 using namespace std;
 
-bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
+bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
     
     _assets = assets;
     
@@ -115,7 +109,7 @@ bool WheatRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, stri
     
 }
 
-void WheatRenderer::dispose() {
+void ShaderRenderer::dispose() {
     _wheatShader = nullptr;
     _groundShader = nullptr;
     _vertbuff = nullptr;
@@ -123,14 +117,14 @@ void WheatRenderer::dispose() {
     _textures.clear();
 }
 
-void WheatRenderer::update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities) {
+void ShaderRenderer::update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities) {
 
     _windTime += timestep;
     if (_windTime >= 12.53) {
         _windTime = 0;
     }
     
-    _cloudTime += timestep;
+    _cloudTime += timestep/4;
     if (_cloudTime >= 28.3) {
         _cloudTime = 0;
     }
@@ -138,7 +132,6 @@ void WheatRenderer::update(float timestep, const Mat4& perspective, int size, fl
     if (_wheatShader) {
         _wheatShader->bind();
         _wheatShader->setUniform1f("WIND_TIME", _windTime);
-        _wheatShader->setUniform1f("CLOUD_TIME", _cloudTime);
         _wheatShader->setUniform1i("num_entities", size);
         _wheatShader->setUniformMat4("uPerspective", perspective);
         _wheatShader->setUniform2fv("positions", size, positions);
@@ -149,16 +142,23 @@ void WheatRenderer::update(float timestep, const Mat4& perspective, int size, fl
     if (_groundShader) {
         _groundShader->bind();
         _groundShader->setUniform1f("WIND_TIME", _windTime);
-        _groundShader->setUniform1f("CLOUD_TIME", _cloudTime);
         _groundShader->setUniform1i("num_entities", size);
         _groundShader->setUniformMat4("uPerspective", perspective);
         _groundShader->setUniform2fv("positions", size, positions);
         _groundShader->unbind();
     }
 
+    if (_cloudsShader) {
+        _cloudsShader->bind();
+        _cloudsShader->setUniform1f("WIND_TIME", _windTime);
+        _cloudsShader->setUniform1f("CLOUD_TIME", _cloudTime);
+        _cloudsShader->setUniformMat4("uPerspective", perspective);
+        _cloudsShader->unbind();
+    }
+
 }
 
-void WheatRenderer::renderWheat() {
+void ShaderRenderer::renderWheat() {
     // OpenGL commands to enable alpha blending (if needed)
 //    _shader->bind();
     
@@ -184,7 +184,7 @@ void WheatRenderer::renderWheat() {
     }
 }
 
-void WheatRenderer::renderGround() {
+void ShaderRenderer::renderGround() {
     // OpenGL commands to enable alpha blending (if needed)
 //    _shader->bind();
 
@@ -208,50 +208,69 @@ void WheatRenderer::renderGround() {
     }
 }
 
-void WheatRenderer::buildShaders() {
+void ShaderRenderer::renderClouds() {
+    // OpenGL commands to enable alpha blending (if needed)
+//    _shader->bind();
+
+    if (_cloudsShader) {
+        _vertbuff->attach(_cloudsShader);
+
+        for (auto texture : _textures) {
+            if (texture) {
+                texture->bind();
+            }
+        }
+
+        _vertbuff->draw(_mesh.command, (int)_mesh.indices.size(), 1);
+
+        for (auto texture : _textures) {
+            if (texture) {
+                texture->unbind();
+            }
+        }
+        _vertbuff->detach();
+    }
+}
+
+void ShaderRenderer::buildShaders() {
 
     CULog("scale: %f \t size: (%f, %f)", _scale, _size.width, _size.height);
     
     
     // Allocate the shader (this binds as well)
     _wheatShader = Shader::alloc(SHADER(wheatVert), SHADER(wheatFrag));
-    
-//    GLenum error = glGetError();
-//    if (error) {
-//        CULog("ERROR 1: %s",gl_error_name(error).c_str());
-//    }
-    
     _wheatShader->setSampler("grass_tex", _wheattex);
-    _wheatShader->setSampler("cloud_tex", _cloudtex);
     _wheatShader->setSampler("noise_tex", _noisetex);
     _wheatShader->setSampler("gradient_tex", _gradienttex);
     _wheatShader->setUniform1f("WIND_TIME", _windTime);
-    _wheatShader->setUniform1f("CLOUD_TIME", _cloudTime);
 //    _wheatShader->setUniform4f("tip_color", 0.96863, 0.8, 0.294118, 1.0);
 //    _wheatShader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
     _wheatShader->setUniform4f("tip_color", 1.0, 0.866667, 0.231373, 1.0);
 //    _wheatShader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
-    
     _wheatShader->setUniform4f("wind_color", 1.0, 0.9058824, 0.309804, 1.0);
     _wheatShader->setUniform1f("wind_speed", WIND_SPEED);
-    _wheatShader->setUniform1f("cloud_speed", CLOUD_SPEED);
     _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
     _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
 
     _groundShader = Shader::alloc(SHADER(groundVert), SHADER(groundFrag));
-    
-    _groundShader->setSampler("cloud_tex", _cloudtex);
     _groundShader->setSampler("noise_tex", _noisetex);
     _groundShader->setSampler("grass_tex", _wheattex);
     _groundShader->setSampler("gradient_tex", _grassgradienttex);
     _groundShader->setUniform1f("WIND_TIME", _windTime);
-    _groundShader->setUniform1f("CLOUD_TIME", _cloudTime);
     _groundShader->setUniform1f("wind_speed", WIND_SPEED);
-    _groundShader->setUniform1f("cloud_speed", CLOUD_SPEED);
     _groundShader->setUniform2f("wind_direction", 1.0, 1.0);
     _groundShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_wheattex->getWidth(),1.0/_wheattex->getHeight());
 
+    _cloudsShader = Shader::alloc(SHADER(cloudsVert), SHADER(cloudsFrag));
+    _cloudsShader->setSampler("clouds_tex", _cloudtex);
+    _cloudsShader->setSampler("noise_tex", _noisetex);
+    _cloudsShader->setUniform1f("WIND_TIME", _windTime);
+    _cloudsShader->setUniform1f("CLOUD_TIME", _cloudTime);
+    _cloudsShader->setUniform1f("cloud_speed", CLOUD_SPEED);
+    _cloudsShader->setUniform2f("wind_direction", 1.0, 1.0);
+    _cloudsShader->setUniform1f("cloud_alpha_scale", 0.5);
+    _cloudsShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_wheattex->getWidth(),1.0/_wheattex->getHeight());
 
     // Allocate the vertex buffer (this binds as well)
     _vertbuff = VertexBuffer::alloc(sizeof(SpriteVertex2));

@@ -13,7 +13,7 @@
 #include "../objects/BabyCarrot.h"
 #include "../objects/Farmer.h"
 
-class WheatRenderer {
+class ShaderRenderer {
 protected:
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
@@ -25,6 +25,8 @@ protected:
     std::shared_ptr<cugl::Shader> _wheatShader;
     /** A shader to render the ground (i.e. shadows) */
     std::shared_ptr<cugl::Shader> _groundShader;
+    /** A shader to render the clouds */
+    std::shared_ptr<cugl::Shader> _cloudsShader;
     /** A vertex buffer to receive our triangle */
     std::shared_ptr<cugl::VertexBuffer> _vertbuff;
     /** The mesh for storing the drawing data */
@@ -46,12 +48,12 @@ protected:
     
 public:
     
-    WheatRenderer() {}
+    ShaderRenderer() {}
 
-    ~WheatRenderer() {}
+    ~ShaderRenderer() {}
     
-    static std::shared_ptr<WheatRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale) {
-        std::shared_ptr<WheatRenderer> result = std::make_shared<WheatRenderer>();
+    static std::shared_ptr<ShaderRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale) {
+        std::shared_ptr<ShaderRenderer> result = std::make_shared<ShaderRenderer>();
         return (result->init(assets, name, bladeColorScale) ? result : nullptr);
     }
     
@@ -103,6 +105,17 @@ public:
      * at all. The default implmentation does nothing.
      */
     void renderGround();
+
+    /**
+     * The method called to draw the application to the screen.
+     *
+     * This is your core loop and should be replaced with your custom implementation.
+     * This method should OpenGL and related drawing calls.
+     *
+     * When overriding this method, you do not need to call the parent method
+     * at all. The default implmentation does nothing.
+     */
+    void renderClouds();
     
     /**
      * Builds the graphics pipeline.

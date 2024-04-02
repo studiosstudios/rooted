@@ -103,6 +103,9 @@ vec4 sampleColor(float dist, float bladeLen) {
  - uv: position to evaluate blade length at
  */
 float sampleBladeLength(vec2 uv) {
+    if (texture(grass_tex, uv).g > 0.0) {
+        return 0.0;
+    }
     float r = texture(grass_tex, uv).r;
     return r > 0.0f ? r * 255.0f/blade_color_scale + 10.0f : 0.0f;
 }
@@ -146,7 +149,7 @@ void main(void) {
     // Color the base of the grass with the first gradient color
     vec4 baseColor = vec4(0.0);
     
-    if (texture(grass_tex, fragUV).r > 0.0f) {
+    if (texture(grass_tex, fragUV).r > 0.0f && texture(grass_tex, fragUV).g == 0.0f) {
         baseColor = sampleColor(0.0f, 0.0f);
     }
 

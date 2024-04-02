@@ -451,14 +451,18 @@ void Map::loadPlantingSpot(float x, float y, float width, float height) {
  */
 void Map::loadFarmer(float x, float y, float width, float height) {
     Vec2 farmerPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
+    std::cout << x << " " << y;
+    std::cout << width << " " << height;
     std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, {width, height}, _scale.x);
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
 
-    auto farmerNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(FARMER_TEXTURE));
+    auto farmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_FRONT_WALK_SPRITE), 3, 4);
+//    allocWithTexture(_assets->get<Texture>(FARMER_TEXTURE));
     auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(CARROTFARMER_TEXTURE));
+//    farmerNode->setContentSize(128, 128);
+    farmerNode->setFrame(0);
     farmer->setNormalNode(farmerNode);
     farmer->setCaptureNode(carrotfarmerNode);
     farmer->setSceneNode(farmerNode);

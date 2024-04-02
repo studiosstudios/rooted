@@ -12,10 +12,13 @@
             "file":     "textures/carrot.png"
         },
         "farmer": {
-            "file":     "textures/bunny.png"
+            "file":     "textures/bunny2.png"
         },
         "carrotfarmer": {
             "file":     "textures/carrotfarmer.png"
+        },
+        "farmer-front-walk": {
+            "file":     "textures/farmer-front-walk2.png"
         },
         "baby": {
             "file":     "textures/baby.png"

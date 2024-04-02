@@ -55,6 +55,7 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
+#define FARMER_FRONT_WALK_SPRITE "farmer-front-walk"
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -
@@ -95,6 +96,8 @@ protected:
     std::string _uuid;
     
     int _wheatContacts;
+    
+    float animTime;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -329,6 +332,13 @@ public:
      * @param scale The ratio of the Dude sprite to the physics body
      */
     void setDrawScale(float scale) { _drawScale = scale; };
+    
+    void stepAnimation(float dt) {
+        animTime += dt;
+        if (animTime > 1) { animTime = 0;}
+        cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
+        sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1));
+    };
 
     
 #pragma mark -

@@ -77,6 +77,7 @@ void ActionController::preUpdate(float dt) {
             }
         }
         farmer->applyForce();
+        farmer->stepAnimation(dt);
     }
 
     if (_network->isHost()) {

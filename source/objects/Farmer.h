@@ -17,7 +17,7 @@ private:
     bool _canPlant;
     bool _dashWindow;
     bool _isDashing; //used for farmer-carrot collision when farmer dashes
-    std::shared_ptr<cugl::scene2::PolygonNode> _normalNode;
+    std::shared_ptr<cugl::scene2::SpriteNode> _normalNode;
     std::shared_ptr<cugl::scene2::PolygonNode> _captureNode;
 
 public:
@@ -53,7 +53,7 @@ public:
      */
     void setDash(bool dash) {_isDashing = dash; }
     
-    void setNormalNode(std::shared_ptr<cugl::scene2::PolygonNode> n) { _normalNode = n; }
+    void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
     void setCaptureNode(std::shared_ptr<cugl::scene2::PolygonNode> n) { _captureNode = n; }
 };
 

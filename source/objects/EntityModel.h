@@ -83,8 +83,6 @@ private:
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
 
 protected:
-	/** The current horizontal movement of the character */
-	cugl::Vec2 _movement;
 	/** Which direction is the character facing */
 	bool _faceRight;
 
@@ -107,6 +105,39 @@ protected:
 	* the texture (e.g. a circular shape attached to a square texture).
 	*/
 	virtual void resetDebug() override;
+    
+    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
+    
+    /** State that a rooted! player entity can be in. Some of these states are specific
+        to only a certain type of character (ex. only a bunny can be PLANTING), so
+        we need to enforce the corresponding invariants for which states an entity can
+        be in. */
+    enum EntityState {
+        MOVING,
+        DASHING,
+        CARRYING,   // bunny only
+        PLANTING,   // bunny only
+        CAUGHT,     // carrot only
+        ROOTED      // carrot only
+    };
+    
+    /** Current EntityState that this entity is in. */
+    EntityState _state;
+    
+    /** The current movement (horizontal and vertical) of the character */
+    cugl::Vec2 _movement;
+    
+    bool _dashInput;
+    
+    bool _plantInput;
+    
+    bool _rootInput;
+    
+    bool _unrootInput;
+    
+    cugl::Vec2 _dashCache;
+       
+    
 
 public:
     int dashTimer;
@@ -334,10 +365,12 @@ public:
     void setDrawScale(float scale) { _drawScale = scale; };
     
     void stepAnimation(float dt) {
-        animTime += dt;
-        if (animTime > 1) { animTime = 0;}
         cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
-        sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1));
+        if (sprite != nullptr) {
+            animTime += dt;
+            if (animTime > 1) { animTime = 0;}
+            sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1));
+        }
     };
 
     
@@ -360,6 +393,14 @@ public:
      * @param value left/right movement of this character.
      */
     void setMovement(cugl::Vec2 value);
+    
+    void setDashInput(bool dashInput);
+    
+    void setPlantInput(bool plantInput);
+    
+    void setRootInput(bool rootInput);
+    
+    void setUnrootInput(bool unrootInput);
     
     /**
      * Returns how much force to apply to get the dude moving
@@ -430,6 +471,14 @@ public:
      * @param delta Number of seconds since last animation frame
      */
     void update(float dt) override;
+    
+    
+    /**
+     *  Steps the state machine of this EntityModel.
+     *
+     *  This method should be called after all relevant input attributes are set.
+     */
+    void updateState();
     
     /**
      * Applies the force to the body of this dude

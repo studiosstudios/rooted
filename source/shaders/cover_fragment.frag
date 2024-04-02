@@ -38,8 +38,8 @@ uniform sampler2D uTexture;
 uniform sampler2D grass_tex;
 uniform sampler2D noise_tex;
 
-uniform vec2 SCREEN_PIXEL_SIZE;
-uniform vec2 SCREEN_SIZE;
+uniform vec2 TEXTURE_PIXEL_SIZE;
+uniform vec2 VIEWPORT_SIZE;
 uniform float WIND_TIME;
 uniform float blade_color_scale;
 
@@ -79,8 +79,8 @@ float sampleHeight(vec2 uv) {
 }
 
 vec2 getWheatCoord(vec2 uv) {
-    return vec2((uv.x/camera_zoom/2.0+camera_pos.x)/SCREEN_SIZE.x,
-           	    1.0-(uv.y/camera_zoom/2.0+camera_pos.y)/SCREEN_SIZE.y); //do not know why it is divided by two
+    return vec2((uv.x/camera_zoom/2.0+camera_pos.x)/VIEWPORT_SIZE.x,
+           	    1.0-(uv.y/camera_zoom/2.0+camera_pos.y)/VIEWPORT_SIZE.y); //do not know why it is divided by two
 }
 
 /**
@@ -109,18 +109,19 @@ float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
 
 void main()
 {
+
 	vec2 wheatCoord = getWheatCoord(gl_FragCoord.xy);
 
     frag_color = texture(uTexture, outTexCoord);
-    float windValue = wind(wheatCoord/SCREEN_PIXEL_SIZE, WIND_TIME);
-    float noise = sampleNoise(wheatCoord, SCREEN_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
+    float windValue = wind(wheatCoord/TEXTURE_PIXEL_SIZE, WIND_TIME);
+    float noise = sampleNoise(wheatCoord, TEXTURE_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
 
-    //note that this assume that all textures are 32x32 (not accounting for camera zoom)
+    //note that this assume that all textures are 32px tall (not accounting for camera zoom)
     //we cant pass this in as a uniform per texture since spritebatch draws in one call
     //to fix this we will have to modify spritebatch
-    float height = (1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y / SCREEN_PIXEL_SIZE.y;
+    float height = (1.0 - outTexCoord.y) * 32.0 / VIEWPORT_SIZE.y / TEXTURE_PIXEL_SIZE.y;
 
-    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCREEN_SIZE.y;
+    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / VIEWPORT_SIZE.y;
 
     for (float dist = 0.0f; dist < MAX_WHEAT_HEIGHT; ++dist) {
         //sample wheat height
@@ -129,7 +130,7 @@ void main()
         wheat_height -= noise;
 
         if (windValue > 0.5) {
-            wheat_height -= 3.0f;
+            wheat_height -= 3.0f + outGradCoord.x * 0.00001; //this stupid little thing is to suppress warnings
         }
 
         if (height + dist <= wheat_height) {
@@ -137,8 +138,10 @@ void main()
             break;
         }
 
-        wheatUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
+        wheatUV += vec2(0.0, TEXTURE_PIXEL_SIZE.y);
     }
+
+    frag_color *= outColor;
 
 
 }

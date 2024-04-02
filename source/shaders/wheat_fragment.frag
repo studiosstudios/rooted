@@ -192,7 +192,7 @@ void main(void) {
 
     }
 
-    frag_color = baseColor;
+    frag_color = baseColor *= outColor;
 
 }
 

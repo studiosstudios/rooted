@@ -68,7 +68,7 @@ void main(void) {
             break;
         }
     }
-    
+    frag_color *= outColor;
 }
 
 /////////// SHADER END //////////)"

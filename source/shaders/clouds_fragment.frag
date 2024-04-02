@@ -50,6 +50,7 @@ void main(void) {
     float noise = sampleNoise(outTexCoord, SCREEN_PIXEL_SIZE*50.0, 0.2f * WIND_TIME);
     vec2 cloud_uv = outTexCoord + cloud_speed * normalize(wind_direction) * CLOUD_TIME  - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     frag_color.a = texture(clouds_tex, cloud_uv).r*cloud_alpha_scale;
+    frag_color *= outColor;
 }
 
 ///////// SHADER END //////////)"

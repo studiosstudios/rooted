@@ -57,7 +57,7 @@ uniform float uDepth;
 
 // Transform and pass through
 void main(void) {
-    gl_Position = uPerspective*vec4(aPosition.xy,0.0,1.0);
+    gl_Position = uPerspective*aPosition;
     outPosition = aPosition.xy; // Need untransformed for scissor
     outColor = aColor;
     outTexCoord = aTexCoord;

@@ -54,12 +54,10 @@ void ActionController::preUpdate(float dt) {
     
     networkQueuePositions();
     
-<<<<<<< HEAD
     
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID()){
         _map->getFarmers().at(0)->rootCarrot();
 
-=======
     std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
     for(auto ps : _map->getPlantingSpots()){
         if(ps->getBelowAvatar()){
@@ -72,7 +70,6 @@ void ActionController::preUpdate(float dt) {
 //        std::cout<<"farmer did the rooting\n";
         Haptics::get()->playContinuous(1.0, 0.3, 0.1);
         
->>>>>>> alpha
         // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
         for (auto carrot : _map->getCarrots()) {
             if (carrot->isCaptured()) {

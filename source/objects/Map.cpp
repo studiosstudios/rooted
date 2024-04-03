@@ -216,7 +216,7 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     return true;
 }
 
-void Map::populate() {
+void Map::populate(Size size) {
     
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
@@ -238,7 +238,7 @@ void Map::populate() {
             float height = std::any_cast<float>(_propertiesMap.at("height"));
             
             if (name == "wheat") {
-                loadShaderNodes();
+                loadShaderNodes(size);
                 break;
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
@@ -418,11 +418,11 @@ void Map::loadBoundary(Vec2 pos, Size size){
  * node. This method should only be called once per initialization, any subsequent calls will
  * override previous calls.
  */
-void Map::loadShaderNodes(){
+void Map::loadShaderNodes(Size size){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
     
-    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale);
+    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale, size);
     _shaderrenderer->setScale(_scale.x);
     _shaderrenderer->buildShaders();
     _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
@@ -432,7 +432,7 @@ void Map::loadShaderNodes(){
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
-    _entitiesNode = EntitiesNode::alloc(_assets, name, bladeColorScale);
+    _entitiesNode = EntitiesNode::alloc(_assets, name, bladeColorScale, size);
     _entitiesNode->setPriority(float(Map::DrawOrder::ENTITIES));
     
     _worldnode->addChild(_entitiesNode);
@@ -608,7 +608,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
 
 
 
-void Map::updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom) {
+void Map::updateShaders(float step, Mat4 perspective) {
     int size = _carrots.size() + _farmers.size() + _babies.size();
     float positions[2*size]; // must be 1d array
     float velocities[size];
@@ -629,5 +629,5 @@ void Map::updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
     _shaderrenderer->update(step, perspective, size, positions, velocities);
-    _entitiesNode->update(step, camZoom, camPos);
+    _entitiesNode->update(step);
 }

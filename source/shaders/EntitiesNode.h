@@ -29,20 +29,18 @@ public:
 
     ~EntitiesNode();
 
-    static std::shared_ptr<EntitiesNode> alloc(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
+    static std::shared_ptr<EntitiesNode> alloc(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size) {
         shared_ptr<EntitiesNode> result = make_shared<EntitiesNode>();
-        return (result->init(assets, name, bladeColorScale) ? result : nullptr);
+        return (result->init(assets, name, bladeColorScale, size) ? result : nullptr);
     }
 
-    void update(float timestep, float zoom, Vec2 cameraPos);
-
-    void allocNode();
+    void update(float timestep);
 
     void clearNode();
 
     void addEntityNode(const shared_ptr<SceneNode>& entityNode);
 
-    bool init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale);
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size);
 
     void dispose() override;
 

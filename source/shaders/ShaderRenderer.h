@@ -52,12 +52,12 @@ public:
 
     ~ShaderRenderer() {}
     
-    static std::shared_ptr<ShaderRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale) {
+    static std::shared_ptr<ShaderRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale, Size size) {
         std::shared_ptr<ShaderRenderer> result = std::make_shared<ShaderRenderer>();
-        return (result->init(assets, name, bladeColorScale) ? result : nullptr);
+        return (result->init(assets, name, bladeColorScale, size) ? result : nullptr);
     }
     
-    bool init(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale);
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale, Size size);
     
     void setSize(Size size) { _size = size; }
     

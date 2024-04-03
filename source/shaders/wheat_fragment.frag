@@ -66,7 +66,7 @@ uniform vec4 wind_color;
 uniform vec2 SCREEN_PIXEL_SIZE;
 uniform float blade_color_scale;
 
-const float MAX_BLADE_LENGTH = 100.0f;
+const float MAX_BLADE_LENGTH = 25.0f;
 const float PI = 3.14f;
 
 /** Objects */

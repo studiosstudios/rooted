@@ -39,12 +39,10 @@ uniform sampler2D grass_tex;
 uniform sampler2D noise_tex;
 
 uniform vec2 TEXTURE_PIXEL_SIZE;
-uniform vec2 VIEWPORT_SIZE;
+uniform vec2 SCENE_SIZE;
 uniform float WIND_TIME;
 uniform float blade_color_scale;
 
-uniform vec2 camera_pos;
-uniform float camera_zoom;
 uniform float wind_speed;
 uniform vec2 wind_direction;
 
@@ -57,7 +55,7 @@ in vec4 outColor;
 in vec2 outTexCoord;
 in vec2 outGradCoord;
 
-const float MAX_WHEAT_HEIGHT = 100.0f;
+const float MAX_WHEAT_HEIGHT = 25.0f;
 const float PI = 3.14f;
 
 /**
@@ -78,9 +76,12 @@ float sampleHeight(vec2 uv) {
     return r > 0.0f ? r * 255.0f/blade_color_scale + 10.0f : 0.0f;
 }
 
+/**
+ * gets coordinate in wheat texture given coordinate in scene space
+ */
 vec2 getWheatCoord(vec2 uv) {
-    return vec2((uv.x/camera_zoom/2.0+camera_pos.x)/VIEWPORT_SIZE.x,
-           	    1.0-(uv.y/camera_zoom/2.0+camera_pos.y)/VIEWPORT_SIZE.y); //do not know why it is divided by two
+    return vec2((uv.x)/SCENE_SIZE.x,
+           	    1.0-(uv.y)/SCENE_SIZE.y);
 }
 
 /**
@@ -110,7 +111,7 @@ float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
 void main()
 {
 
-	vec2 wheatCoord = getWheatCoord(gl_FragCoord.xy);
+	vec2 wheatCoord = getWheatCoord(outPosition);
 
     frag_color = texture(uTexture, outTexCoord);
     float windValue = wind(wheatCoord/TEXTURE_PIXEL_SIZE, WIND_TIME);
@@ -119,9 +120,9 @@ void main()
     //note that this assume that all textures are 32px tall (not accounting for camera zoom)
     //we cant pass this in as a uniform per texture since spritebatch draws in one call
     //to fix this we will have to modify spritebatch
-    float height = (1.0 - outTexCoord.y) * 32.0 / VIEWPORT_SIZE.y / TEXTURE_PIXEL_SIZE.y;
+    float height = (1.0 - outTexCoord.y) * 32.0 / SCENE_SIZE.y / TEXTURE_PIXEL_SIZE.y;
 
-    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / VIEWPORT_SIZE.y;
+    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCENE_SIZE.y;
 
     for (float dist = 0.0f; dist < MAX_WHEAT_HEIGHT; ++dist) {
         //sample wheat height
@@ -142,7 +143,6 @@ void main()
     }
 
     frag_color *= outColor;
-
 
 }
 /////////// SHADER END //////////)"

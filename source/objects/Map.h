@@ -106,7 +106,7 @@ public:
               const std::shared_ptr<scene2::SceneNode> &root,
               const std::shared_ptr<cugl::JsonValue> &json);
 
-    void populate();
+    void populate(Size size);
     
     /**
      * populate the map with Carrots
@@ -202,6 +202,12 @@ public:
      * @param  flag whether to show the debug layer of this game world
      */
     void showDebug(bool flag);
+    
+    /**
+     * Sets the viewport size for the entities node shader. This is necessary to sync up the
+     * position of each entity being drawn and its location in the wheat field.
+     */
+    void setViewportSize(Size size);
 
 #pragma mark -
 #pragma mark Asset Loading
@@ -243,7 +249,7 @@ public:
 
 #pragma mark -
 #pragma mark Drawing
-    void updateShaders(float step, Mat4 perspective, Vec2 camPos, float camZoom);
+    void updateShaders(float step, Mat4 perspective);
 
 private:
 #pragma mark -
@@ -279,7 +285,7 @@ private:
     /**
      * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world node. This method should only be called once per initialization, any subsequent calls will override previous calls.
      */
-    void loadShaderNodes();
+    void loadShaderNodes(Size size);
     
     /**
      * Loads a single farmer into the world.

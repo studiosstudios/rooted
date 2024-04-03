@@ -165,7 +165,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //        return false;
 //    }
     
-    _map->populate();
+    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
     
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
@@ -291,7 +291,7 @@ void GameScene::reset() {
     _map->clearRootNode();
     _map->setRootNode(_rootnode);
     _map->dispose();
-    _map->populate();
+    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
     _collision.dispose();
@@ -440,7 +440,7 @@ void GameScene::fixedUpdate(float step) {
         }
     }
     
-    _map->updateShaders(step, _cam.getCamera()->getCombined(), _cam.getScreenPosition(), _cam.getCamera()->getZoom());
+    _map->updateShaders(step, _cam.getCamera()->getCombined());
 }
 
 /**
@@ -588,6 +588,7 @@ Size GameScene::computeActiveSize() const {
     } else {
         dimen *= SCENE_HEIGHT / dimen.height;
     }
+    CULog("ACTIVE SIZE: %s", dimen.toString().c_str());
     return dimen;
 }
 

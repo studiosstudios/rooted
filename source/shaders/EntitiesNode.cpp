@@ -25,7 +25,7 @@ void EntitiesNode::dispose() {
     SceneNode::dispose();
 }
 
-bool EntitiesNode::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
+bool EntitiesNode::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size) {
     if (SceneNode::init()) {
         _root = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
         _root->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -35,8 +35,8 @@ bool EntitiesNode::init(const std::shared_ptr<cugl::AssetManager> &assets, strin
         _noisetex = assets->get<Texture>("shader_noise");
         _bladeColorScale = bladeColorScale;
         _coverShader = Shader::alloc(SHADER(coverShaderVert), SHADER(coverShaderFrag));
-        _coverShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
-        _coverShader->setUniform2f("SCREEN_SIZE", 1024.0, 576.0);
+        _coverShader->setUniform2f("TEXTURE_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
+        _coverShader->setUniform2f("SCENE_SIZE", size.width, size.height);
         _coverShader->setUniform1f("blade_color_scale", _bladeColorScale);
         _coverShader->setUniform1f("wind_speed", 1.0);
         _coverShader->setUniform2f("wind_direction", 1.0, 1.0);
@@ -52,12 +52,6 @@ EntitiesNode::~EntitiesNode() {
     clearNode();
 }
 
-void EntitiesNode::allocNode() {
-//    _root = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
-//    _root->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-//    _root->setPosition(Vec2::ZERO);
-}
-
 void EntitiesNode::clearNode() {
     _root->removeAllChildren();
     _root = nullptr;
@@ -67,17 +61,13 @@ void EntitiesNode::addEntityNode(const shared_ptr<cugl::scene2::SceneNode> &enti
     _root->addChild(entityNode);
 }
 
-void EntitiesNode::update(float timestep, float zoom, Vec2 cameraPos) {
+void EntitiesNode::update(float timestep) {
     _windTime += timestep;
     if (_windTime >= 12.53) {
         _windTime = 0;
     }
 
-    //this can definitely somehow be done with the combined mat4 but i dont really know how it
-    // works and cant be bothered to figure it out
     _coverShader->bind();
-    _coverShader->setUniform1f("camera_zoom", zoom);
-    _coverShader->setUniform2f("camera_pos", cameraPos.x, cameraPos.y);
     _coverShader->setUniform1f("WIND_TIME", _windTime);
     _coverShader->unbind();
 }

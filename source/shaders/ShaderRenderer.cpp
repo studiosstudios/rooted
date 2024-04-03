@@ -22,9 +22,6 @@ using namespace cugl;
 #define WIND_SPEED 1.0
 #define CLOUD_SPEED 0.05
 
-#define SCENE_WIDTH 1024
-#define SCENE_HEIGHT 576
-
 /**
  * Wheat fragment shader
  */
@@ -69,7 +66,7 @@ const std::string cloudsVert =
 
 using namespace std;
 
-bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale) {
+bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size) {
     
     _assets = assets;
     
@@ -86,11 +83,10 @@ bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, str
 
     _size = _wheattex->getSize();
 
-    Size appSize = Size(SCENE_WIDTH, SCENE_HEIGHT);
-    if (appSize.height < appSize.width) {
-        _size *= appSize.width/_size.width;
+    if (size.height < size.width) {
+        _size *= size.width/_size.width;
     } else {
-        _size *= appSize.height/_size.height;
+        _size *= size.height/_size.height;
     }
     
     _aspectRatio = _size.width/_size.height;

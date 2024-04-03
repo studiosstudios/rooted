@@ -62,7 +62,7 @@
             "file":     "textures/grass_base.png"
         },
         "testMap": {
-            "file":     "textures/maps/testmap.png"
+            "file":     "textures/maps/grid.png"
         },
         "shader_clouds": {
             "file":     "textures/clouds.png",

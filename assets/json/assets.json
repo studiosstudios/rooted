@@ -1,10 +1,10 @@
 {
-	"textures": {
-		"earth": {
-			"file":     "textures/earthtile.png",
+    "textures": {
+        "earth": {
+            "file":     "textures/earthtile.png",
             "wrapS":    "repeat",
             "wrapT":    "repeat"
-		},
+        },
         "dude": {
             "file":     "textures/dude.png"
         },
@@ -89,7 +89,7 @@
         "wheatbkg": {
             "file": "textures/wheatbkg.png"
         }
-	},
+    },
     "jsons": {
         "server": "json/server.json",
         "map": "json/map.json",
@@ -129,13 +129,13 @@
             "type":     "sample",
             "file":     "sounds/plop.wav",
             "volume":   0.5
-        }                
+        }
     },
-	"fonts": {
-		"retro": {
-			"file":     "fonts/RetroGame.ttf",
-			"size":     64
-		},
+    "fonts": {
+        "retro": {
+            "file":     "fonts/RetroGame.ttf",
+            "size":     64
+        },
         "gyparody": {
             "file":     "fonts/gyparody-hv.ttf",
             "size":     48
@@ -148,7 +148,7 @@
             "file":     "fonts/Gaegu-Bold.ttf",
             "size":     65
         }
-	},
+    },
     "widgets": {
         "colorbutton" : "widgets/colorbutton.json",
         "textbutton" : "widgets/textbutton.json",
@@ -165,7 +165,7 @@
                 "y_alignment" : "middle"
             },
             "children":  {
-               "host": {
+                "host": {
                     "type"   : "Widget",
                     "data"   : {
                         "key"     : "textbutton",
@@ -180,7 +180,7 @@
                         "padding"  : [0,50,0,0]
                     }
                 },
-               "join": {
+                "join": {
                     "type"   : "Widget",
                     "data"   : {
                         "key"     : "textbutton",
@@ -257,10 +257,10 @@
                         "game": {
                             "type"   : "Node",
                             "format" : {
-                                   "type"         : "Float",
-                                    "orientation" : "horizontal",
-                                    "x_alignment" : "center",
-                                    "y_alignment" : "middle"
+                                "type"         : "Float",
+                                "orientation" : "horizontal",
+                                "x_alignment" : "center",
+                                "y_alignment" : "middle"
                             },
                             "data"   : {
                                 "anchor"  : [0.5,0.5],
@@ -305,10 +305,10 @@
                         "players": {
                             "type"   : "Node",
                             "format" : {
-                                   "type"         : "Float",
-                                    "orientation" : "horizontal",
-                                    "x_alignment" : "center",
-                                    "y_alignment" : "middle"
+                                "type"         : "Float",
+                                "orientation" : "horizontal",
+                                "x_alignment" : "center",
+                                "y_alignment" : "middle"
                             },
                             "data"   : {
                                 "anchor"  : [0.5,0.5],
@@ -351,19 +351,19 @@
                             }
                         },
                         "start": {
-                             "type"   : "Widget",
-                             "data"   : {
-                                 "key"     : "textbutton",
-                                 "variables" : {
-                                     "size": [400,100],
-                                     "text": "Waiting",
-                                     "color": "#000088"
-                                 }
-                             },
-                             "layout" : {
-                                 "priority" : 3,
-                                 "padding"  : [0,50,0,0]
-                             }
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [400,100],
+                                    "text": "Waiting",
+                                    "color": "#000088"
+                                }
+                            },
+                            "layout" : {
+                                "priority" : 3,
+                                "padding"  : [0,50,0,0]
+                            }
                         }
                     },
                     "layout" : {
@@ -426,17 +426,17 @@
                         "y_alignment" : "middle"
                     },
                     "data" : {
-                        "anchor"  : [0.5,0.0],
+                        "anchor"  : [1,0.0],
                         "size" : [500,500]
                     },
                     "children":  {
                         "game": {
                             "type"   : "Node",
                             "format" : {
-                                   "type"         : "Float",
-                                    "orientation" : "horizontal",
-                                    "x_alignment" : "center",
-                                    "y_alignment" : "middle"
+                                "type"         : "Float",
+                                "orientation" : "horizontal",
+                                "x_alignment" : "center",
+                                "y_alignment" : "middle"
                             },
                             "data"   : {
                                 "anchor"  : [0.5,0.5],
@@ -481,10 +481,10 @@
                         "players": {
                             "type"   : "Node",
                             "format" : {
-                                   "type"         : "Float",
-                                    "orientation" : "horizontal",
-                                    "x_alignment" : "center",
-                                    "y_alignment" : "middle"
+                                "type"         : "Float",
+                                "orientation" : "horizontal",
+                                "x_alignment" : "center",
+                                "y_alignment" : "middle"
                             },
                             "data"   : {
                                 "anchor"  : [0.5,0.5],
@@ -527,24 +527,247 @@
                             }
                         },
                         "start": {
-                             "type"   : "Widget",
-                             "data"   : {
-                                 "key"     : "textbutton",
-                                 "variables" : {
-                                     "size": [400,100],
-                                     "text": "Start Game",
-                                     "color": "#000088"
-                                 }
-                             },
-                             "layout" : {
-                                 "priority" : 3,
-                                 "padding"  : [0,50,0,0]
-                             }
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [400,100],
+                                    "text": "Start Game",
+                                    "color": "#000088"
+                                }
+                            },
+                            "layout" : {
+                                "priority" : 3,
+                                "padding"  : [0,50,0,0]
+                            }
                         }
                     },
                     "layout" : {
                         "x_anchor" : "center",
                         "y_anchor" : "bottom"
+                    }
+                },
+                "buttons" : {
+                    "type"      : "Solid",
+                    "format"    : {
+                        "type"   : "Grid",
+                        "width"  : 3,
+                        "height" : 4
+                    },
+                    "data" : {
+                        "anchor" : [0,0.5],
+                        "size":  [400,500],
+                        "color": "#bbbbbb"
+                    },
+                    "children":  {
+                        "seven": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "7",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 0,
+                                "y_index": 3,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "eight": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "8",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 1,
+                                "y_index": 3,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "nine": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "9",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 2,
+                                "y_index": 3,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "four": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "4",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 0,
+                                "y_index": 2,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "five": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "5",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 1,
+                                "y_index": 2,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "six": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "6",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 2,
+                                "y_index": 2,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "one": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "1",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 0,
+                                "y_index": 1,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "two": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "2",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 1,
+                                "y_index": 1,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "three": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "3",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 2,
+                                "y_index": 1,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "zero": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "0",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 1,
+                                "y_index": 0,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "back": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "<",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 2,
+                                "y_index": 0,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        },
+                        "clear": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "C",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 0,
+                                "y_index": 0,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle"
                     }
                 }
             }

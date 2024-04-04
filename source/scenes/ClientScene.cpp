@@ -77,6 +77,8 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     
+    // message = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_center_players_field_text"));
+    
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_center_start"));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_back"));
     _gameid = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("client_center_game_field_text"));
@@ -122,6 +124,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _startgame->addListener([=](const std::string& name, bool down) {
         if (down) {
             if (!_gameid->getText().empty()) {
+                // replace this with a new method
                 _network->connectAsClient(dec2hex(_gameid->getText()));
             }
         }

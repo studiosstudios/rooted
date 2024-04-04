@@ -395,6 +395,23 @@
                         "y_anchor" : "top"
                     }
                 },
+                "msg" : {
+                    "type"      : "Label",
+                    "data" : {
+                        "anchor"  : [0,1.0],
+                        "font"     : "gyparody",
+                        "text"     : "Hello",
+                        "halign"   : "center",
+                        "valign"   : "middle"
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "y_offset" : -100,
+                        "x_offset" : 10,
+                        "absolute" : true
+                    }
+                },
                 "back" : {
                     "type"      : "Button",
                     "data"   : {

@@ -49,12 +49,13 @@ bool EntitiesNode::init(const std::shared_ptr<cugl::AssetManager> &assets, strin
 
 EntitiesNode::~EntitiesNode() {
     dispose();
-    clearNode();
 }
 
 void EntitiesNode::clearNode() {
-    _root->removeAllChildren();
-    _root = nullptr;
+    if (_root != nullptr) {
+        _root->removeAllChildren();
+        _root = nullptr;
+    }
 }
 
 void EntitiesNode::addEntityNode(const shared_ptr<cugl::scene2::SceneNode> &entityNode) {

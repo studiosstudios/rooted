@@ -32,6 +32,7 @@ bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
  */
 void Carrot::gotCaptured(){
     _isCaptured = true;
+    getSceneNode()->setVisible(false);
 }
 
 /**
@@ -40,6 +41,7 @@ void Carrot::gotCaptured(){
 void Carrot::gotRooted(){
     _isCaptured = false;
     _isRooted = true;
+    getSceneNode()->setVisible(true);
 }
 
 /**

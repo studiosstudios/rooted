@@ -19,6 +19,8 @@ protected:
     NetcodeDeserializer _deserializer;
     
     std::string _uuid;
+    int _plantingspotid;
+    
 public:
     /**
     * This method is used by the NetEventController to create a new event of using a
@@ -29,7 +31,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocUnrootEvent(std::string uuid);
+    static std::shared_ptr<NetEvent> allocUnrootEvent(std::string uuid, int plantingspotid);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -48,6 +50,9 @@ public:
     
     /** Gets the uuid of rooted carrot associated with the event. */
     std::string getUUID() { return _uuid; }
+    
+    /** Gets the uuid of planting spot associated with the event */
+    int getPlantingSpotID() { return _plantingspotid; }
 };
 
 #endif /* UnrootEvent_h */

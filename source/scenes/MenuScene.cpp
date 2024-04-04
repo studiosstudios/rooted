@@ -47,26 +47,42 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _assets = assets;
     
     // Acquire the scene built by the asset loader and resize it the scene
-    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("menu");
-    scene->setContentSize(dimen);
-    scene->doLayout(); // Repositions the HUD
+    _menuscene = _assets->get<scene2::SceneNode>("mainmenu");
+    _menuscene->setContentSize(dimen);
+    _menuscene->doLayout(); // Repositions the HUD
+    
+    _lobbyscene = _assets->get<scene2::SceneNode>("network");
+    _lobbyscene->setContentSize(dimen);
+    _menuscene->doLayout();
+    
     _choice = Choice::NONE;
-    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_host"));
-    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_join"));
+    _currmenuchoice = Choice::MAIN;
+        
+    // add all button behaviors
+    _playbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_play"));
+    _optionsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_options"));
+    _statsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_stats"));
+    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_host"));
+    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_join"));
     
     // Program the buttons
+    _playbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _choice = Choice::LOBBY;
+            _currmenuchoice = Choice::LOBBY;
+        }
+    });
     _hostbutton->addListener([this](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             _choice = Choice::HOST;
         }
     });
     _joinbutton->addListener([this](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             _choice = Choice::JOIN;
         }
     });
 
-    addChild(scene);
     setActive(false);
     return true;
 }
@@ -93,18 +109,58 @@ void MenuScene::dispose() {
  */
 void MenuScene::setActive(bool value) {
     if (isActive() != value) {
-//        CULog("set active");
         Scene2::setActive(value);
         if (value) {
             _choice = NONE;
-            _hostbutton->activate();
-            _joinbutton->activate();
+            switchScene(_currmenuchoice);
         } else {
+            // deactivate all buttons
             _hostbutton->deactivate();
             _joinbutton->deactivate();
+            _playbutton->deactivate();
+            _statsbutton->deactivate();
+            _optionsbutton->deactivate();
             // If any were pressed, reset them
             _hostbutton->setDown(false);
             _joinbutton->setDown(false);
+            _playbutton->setDown(false);
+            _statsbutton->setDown(false);
+            _optionsbutton->setDown(false);
+        }
+    }
+}
+
+void MenuScene::update(float timestep) {
+    if (_choice != Choice::HOST && _choice != Choice::JOIN) {
+        switchScene(_choice);
+        _choice = NONE;
+    }
+}
+
+void MenuScene::switchScene(MenuScene::Choice sceneType) {
+    // TODO: this should be more automated
+    if (isActive()) {
+        switch (sceneType) {
+            case MAIN:
+                removeAllChildren();
+                addChild(_menuscene);
+                _hostbutton->deactivate();
+                _joinbutton->deactivate();
+                _playbutton->activate();
+                _statsbutton->activate();
+                _optionsbutton->activate();
+                break;
+            case LOBBY:
+                removeAllChildren();
+                addChild(_lobbyscene);
+                _hostbutton->activate();
+                _joinbutton->activate();
+                _playbutton->deactivate();
+                _statsbutton->deactivate();
+                _optionsbutton->deactivate();
+                break;
+            default:
+                break;
         }
     }
 }

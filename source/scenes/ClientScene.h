@@ -47,7 +47,8 @@ protected:
     std::vector<std::shared_ptr<cugl::scene2::Button>> _numbers;
     /** The backspace button */
     std::shared_ptr<cugl::scene2::Button> _backspace;
-
+    /** The clear input button  */
+    std::shared_ptr<cugl::scene2::Button> _clear;
     
     /** The network configuration */
     cugl::net::NetcodeConfig _config;

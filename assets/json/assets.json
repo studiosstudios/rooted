@@ -746,6 +746,23 @@
                                 "x_anchor": "center",
                                 "y_anchor": "middle"
                             }
+                        },
+                        "clear": {
+                            "type"   : "Widget",
+                            "data"   : {
+                                "key"     : "textbutton",
+                                "variables" : {
+                                    "size": [100,100],
+                                    "text": "C",
+                                    "color": "#000000"
+                                }
+                            },
+                            "layout" : {
+                                "x_index": 0,
+                                "y_index": 0,
+                                "x_anchor": "center",
+                                "y_anchor": "middle"
+                            }
                         }
                     },
                     "layout" : {

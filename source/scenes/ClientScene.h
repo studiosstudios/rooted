@@ -50,6 +50,8 @@ protected:
     /** The clear input button  */
     std::shared_ptr<cugl::scene2::Button> _clear;
     
+    std::shared_ptr<cugl::scene2::Label> _msg;
+    
     /** The network configuration */
     cugl::net::NetcodeConfig _config;
     

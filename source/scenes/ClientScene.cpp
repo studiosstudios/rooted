@@ -77,7 +77,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     
-    // message = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_center_players_field_text"));
+    _msg = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_msg"));
     
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_center_start"));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_back"));
@@ -162,7 +162,7 @@ void ClientScene::dispose() {
 void ClientScene::setActive(bool value) {
     if (isActive() != value) {
         Scene2::setActive(value);
-        
+        _msg->setText("");
         if (value) {
             // only want to activate if you are not a touchscreen
             #ifndef CU_TOUCH_SCREEN
@@ -227,11 +227,16 @@ void ClientScene::updateText(const std::shared_ptr<scene2::Button>& button, cons
 void ClientScene::update(float timestep) {
     // Do this last for button safety
     configureStartButton();
-    if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
+    if (_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
         _player->setText(std::to_string(_network->getNumPlayers()));
     }
     else {
         _player->setText("...");
+    }
+    
+    // set errors
+    if (_network->getStatus() == NetEventController::Status::NETERROR){
+        _msg->setText("something went wrong");
     }
 }
 
@@ -242,12 +247,7 @@ void ClientScene::update(float timestep) {
  * networking.
  */
 void ClientScene::configureStartButton() {
-    if (_network->getStatus() == NetEventController::Status::IDLE) {
-        _startgame->setDown(false);
-        _startgame->activate();
-        updateText(_startgame, "Start Game");
-    }
-    else if (_network->getStatus() == NetEventController::Status::CONNECTING) {
+    if (_network->getStatus() == NetEventController::Status::CONNECTING) {
         _startgame->setDown(false);
         _startgame->deactivate();
         updateText(_startgame, "Connecting");
@@ -256,5 +256,9 @@ void ClientScene::configureStartButton() {
         _startgame->setDown(false);
         _startgame->deactivate();
         updateText(_startgame, "Waiting");
+    } else {
+        _startgame->setDown(false);
+        _startgame->activate();
+        updateText(_startgame, "Start Game");
     }
 }

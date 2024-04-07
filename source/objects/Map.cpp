@@ -461,6 +461,9 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     farmerNode->setScale(0.25f, 0.25f);
     auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(CARROTFARMER_TEXTURE));
     farmerNode->setFrame(0);
+    carrotfarmerNode->setVisible(false);
+    carrotfarmerNode->setScale(0.25f, 0.25f);
+    
     farmer->setNormalNode(farmerNode);
     farmer->setCaptureNode(carrotfarmerNode);
     farmer->setSceneNode(farmerNode);

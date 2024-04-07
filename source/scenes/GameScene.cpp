@@ -414,9 +414,7 @@ void GameScene::fixedUpdate(float step) {
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
     }
-    if (_network->isInAvailable()) {
-//        CULog("NetEvent in queue, discarding for now");
-    }
+    
     _map->getWorld()->update(step);
     _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);

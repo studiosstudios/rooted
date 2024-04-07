@@ -47,49 +47,50 @@ void ActionController::preUpdate(float dt) {
     playerEntity->applyForce();
     playerEntity->stepAnimation(dt);
     
+    // Farmer (host) specific actions
     if (_network->isHost()) {
+        auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
         for (auto babyCarrot : _map->getBabyCarrots()) {
             _ai.updateBabyCarrot(babyCarrot);
         }
     }
     
-    networkQueuePositions();
-    
-    
+    std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
+    for(auto ps : _map->getPlantingSpots()){
+        if(ps->getBelowAvatar()){
+            plantingSpot = ps;
+            break;
+        }
+    }
+        
     if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID()){
         _map->getFarmers().at(0)->rootCarrot();
+    }
         
-        std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
-        for(auto ps : _map->getPlantingSpots()){
-            if(ps->getBelowAvatar()){
-                plantingSpot = ps;
-                break;
+      
+        
+    if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
+        //        std::cout<<"farmer did the rooting\n";
+        Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+        
+        // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
+        for (auto carrot : _map->getCarrots()) {
+            if (carrot->isCaptured()) {
+                _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
             }
         }
+    }
         
-        if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
-            //        std::cout<<"farmer did the rooting\n";
-            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
-            
-            // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
-            for (auto carrot : _map->getCarrots()) {
-                if (carrot->isCaptured()) {
-                    _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
-                }
+    if(_input->didUnroot() && _map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){
+        auto currPos = _map->getCharacter()->getPosition();
+        std::shared_ptr<Carrot> closestCarrot = nullptr;
+        for (auto carrot : _map->getCarrots()){
+            if(carrot->getUUID() != _map->getCharacter()->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
+                closestCarrot = carrot;
             }
         }
-        
-        if(_input->didUnroot() && _map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){
-            auto currPos = _map->getCharacter()->getPosition();
-            std::shared_ptr<Carrot> closestCarrot = nullptr;
-            for (auto carrot : _map->getCarrots()){
-                if(carrot->getUUID() != _map->getCharacter()->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
-                    closestCarrot = carrot;
-                }
-            }
-            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
-                _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
-            }
+        if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
+            _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
         }
     }
 }
@@ -126,10 +127,6 @@ void ActionController::postUpdate(float dt) {
             c->setSensor(false);
         }
     }
-}
-
-void ActionController::networkQueuePositions() {
-    
 }
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){

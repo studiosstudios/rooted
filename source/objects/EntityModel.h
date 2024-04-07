@@ -135,8 +135,7 @@ protected:
     
     bool _unrootInput;
     
-    cugl::Vec2 _dashCache;
-       
+    cugl::Vec2 _dashCache;     
     
 
 public:
@@ -364,14 +363,9 @@ public:
      */
     void setDrawScale(float scale) { _drawScale = scale; };
     
-    void stepAnimation(float dt) {
-        cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
-        if (sprite != nullptr) {
-            animTime += dt;
-            if (animTime > 1.5f) { animTime = 0;}
-            sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
-        }
-    };
+    bool animationShouldStep();
+    
+    void stepAnimation(float dt);
 
     
 #pragma mark -

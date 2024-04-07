@@ -99,6 +99,29 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     return false;
 }
 
+#pragma mark -
+#pragma mark Animation
+
+/**
+    Whether this EntityModel should step in its animation for this frame.
+ 
+    For now, we step only when there is a directional input OR the state is DASHING/PLANTING.
+    TODO: If we get idle animations, this will need to change
+ */
+bool EntityModel::animationShouldStep() {
+    return !getLinearVelocity().isZero() || _state == DASHING || _state == PLANTING;
+}
+
+void EntityModel::stepAnimation(float dt) {
+    if (animationShouldStep()) {
+        cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
+        if (sprite != nullptr) {
+            animTime += dt;
+            if (animTime > 1.5f) { animTime = 0;}
+            sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
+        }
+    }
+}
 
 #pragma mark -
 #pragma mark Attribute Properties

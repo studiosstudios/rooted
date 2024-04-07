@@ -135,7 +135,7 @@ protected:
     
     bool _unrootInput;
     
-    cugl::Vec2 _dashCache;     
+    cugl::Vec2 _dashCache;
     
 
 public:
@@ -472,7 +472,7 @@ public:
      *
      *  This method should be called after all relevant input attributes are set.
      */
-    void updateState();
+    virtual void updateState();
     
     /**
      * Applies the force to the body of this dude
@@ -481,7 +481,7 @@ public:
      */
     void applyForce();
 
-	
+    bool isDashing();
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

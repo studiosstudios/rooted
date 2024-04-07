@@ -54,7 +54,7 @@
 #define DUDE_HSHRINK  0.7f
 /** The density of the character */
 #define DUDE_DENSITY  1.0f
-#define DUDE_DASH      20.0f
+#define DUDE_DASH      12.0f
 
 
 using namespace cugl;
@@ -219,7 +219,7 @@ void EntityModel::updateState() {
             // Moving -> Dashing
             if (dashTimer == 0 && _dashInput) {
                 _state = DASHING;
-                dashTimer = 2;
+                dashTimer = 8;
             }
             break;
         }
@@ -271,6 +271,10 @@ void EntityModel::applyForce() {
     
     // Don't want to be moving. Damp out player motion
     
+}
+
+bool EntityModel::isDashing() {
+    return _state == DASHING;
 }
 
 /**

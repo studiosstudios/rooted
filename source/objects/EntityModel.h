@@ -368,8 +368,8 @@ public:
         cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
         if (sprite != nullptr) {
             animTime += dt;
-            if (animTime > 1) { animTime = 0;}
-            sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1));
+            if (animTime > 1.5f) { animTime = 0;}
+            sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
         }
     };
 

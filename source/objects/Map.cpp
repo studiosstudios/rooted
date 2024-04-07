@@ -456,13 +456,19 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, {width, height}, _scale.x);
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
+    
+    auto farmerTexture = _assets->get<Texture>(FARMER_FRONT_WALK_SPRITE);
+    
+//    Vec2 texScale = Vec2(width/farmerTexture->getWidth() * 4, height/farmerTexture->getHeight() * 3);
 
-    auto farmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_FRONT_WALK_SPRITE), 3, 4);
+    auto farmerNode = scene2::SpriteNode::allocWithSheet(farmerTexture, 3, 4);
+    farmerNode->setScale(0.25f, 0.25f);
 //    allocWithTexture(_assets->get<Texture>(FARMER_TEXTURE));
     auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(CARROTFARMER_TEXTURE));
 //    farmerNode->setContentSize(128, 128);
     farmerNode->setFrame(0);
+    farmerNode->shiftTexture()
     farmer->setNormalNode(farmerNode);
     farmer->setCaptureNode(carrotfarmerNode);
     farmer->setSceneNode(farmerNode);

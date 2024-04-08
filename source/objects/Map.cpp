@@ -455,23 +455,39 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
     
-    auto farmerTexture = _assets->get<Texture>(FARMER_FRONT_WALK_SPRITE);
+    auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_FRONT_WALK_SPRITE);
+    auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
+    auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
 
-    auto farmerNode = scene2::SpriteNode::allocWithSheet(farmerTexture, 3, 4);
-    farmerNode->setScale(0.25f, 0.25f);
+    auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
+    farmerSouthWalkNode->setScale(0.25f, 0.25f);
+    
+    auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
+    farmerNorthWalkNode->setScale(0.25f, 0.25f);
+    
+    auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
+    farmerEastWalkNode->setScale(0.25f, 0.25f);
+    
     auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(CARROTFARMER_TEXTURE));
-    farmerNode->setFrame(0);
     carrotfarmerNode->setVisible(false);
     carrotfarmerNode->setScale(0.25f, 0.25f);
     
-    farmer->setNormalNode(farmerNode);
+    farmer->setSpriteNodes(farmerNorthWalkNode,
+                           farmerSouthWalkNode,
+                           farmerEastWalkNode,
+                           farmerSouthWalkNode,
+                           farmerSouthWalkNode);
+    
+    farmer->setNormalNode(farmerSouthWalkNode);
     farmer->setCaptureNode(carrotfarmerNode);
-    farmer->setSceneNode(farmerNode);
+    farmer->setSceneNode(farmerSouthWalkNode);
     farmer->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
-    farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _worldnode->addChild(farmerNode);
+    farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    _worldnode->addChild(farmerSouthWalkNode);
+    _worldnode->addChild(farmerNorthWalkNode);
+    _worldnode->addChild(farmerEastWalkNode);
     _worldnode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
 

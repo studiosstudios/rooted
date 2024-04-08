@@ -57,17 +57,12 @@ void ActionController::preUpdate(float dt) {
         }
     }
     
-    // Farmer (host) specific actions
-    if (_network->isHost()) {
+    if (_network->isHost()) { // Farmer (host) specific actions
         auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
         
         // Step baby carrot AI
         for (auto babyCarrot : _map->getBabyCarrots()) {
             _ai.updateBabyCarrot(babyCarrot);
-        }
-        
-        if(_input->didRoot() && farmerEntity->canPlant()){
-            farmerEntity->rootCarrot();
         }
         
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
@@ -82,8 +77,7 @@ void ActionController::preUpdate(float dt) {
             }
         }
     }
-    // Carrot specific actions
-    else {
+    else { // Carrot specific actions
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(playerEntity);
         
         if(_input->didUnroot() && plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){

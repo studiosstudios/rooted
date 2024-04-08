@@ -91,7 +91,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         setFixedRotation(true);
         
         // Gameplay attributes
-        _faceRight  = true;
+        _facing = SOUTH;
         _state = MOVING;
         
         return true;
@@ -113,18 +113,53 @@ bool EntityModel::animationShouldStep() {
 }
 
 void EntityModel::stepAnimation(float dt) {
-    if (animationShouldStep()) {
-        cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
-        if (sprite != nullptr) {
-            animTime += dt;
-            if (animTime > 1.5f) { animTime = 0;}
-            sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
+    cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
+    if (sprite != nullptr) {
+        if (animationShouldStep()) {
+                animTime += dt;
+                if (animTime > 1.5f) { animTime = 0;}
+                sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
+        }
+        else if (sprite->getFrame() != 0) {
+            sprite->setFrame(0);
         }
     }
+   
+    
 }
 
 #pragma mark -
 #pragma mark Attribute Properties
+
+EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
+    EntityFacing dir = _facing;
+    float ang = atan(movement.y/movement.x);
+
+    ang = abs(ang);
+    if (movement.x < 0 && movement.y > 0) { // Top-left quadrant, excluding axes
+        ang = M_PI_2 + (M_PI_2 - ang);
+    }
+    else if (movement.x <= 0 && movement.y <= 0) { // Bottom-left quadrant, including both axes
+        ang += M_PI;
+    }
+    else if (movement.x > 0 && movement.y < 0) { // Bottom-right quadrant, excluding axes
+        ang = 3 * M_PI_2 + (M_PI_2 - ang);
+    }
+    
+    // Adjustment for the overflow for the EAST direction
+    // TODO: See if this can be simplified?
+    if (ang < M_PI / 8) {
+        ang += 2 * M_PI;
+    }
+    for (auto i = _facingMap.begin(); i != _facingMap.end(); i++) {
+        if (ang >= i->first.x && ang < i->first.y) {
+            dir = i->second;
+            break;
+        }
+    }
+    
+    return dir;
+}
 
 /**
  * Sets left/right movement of this character.
@@ -134,19 +169,35 @@ void EntityModel::stepAnimation(float dt) {
  * @param value left/right movement of this character.
  */
 void EntityModel::setMovement(Vec2 movement) {
-
     _movement = movement;
-    bool face = _movement.x > 0;
-    if (_movement.x == 0 || _faceRight == face) {
+    EntityFacing face = calculateFacing(movement);
+    if (_facing == face) {
         return;
     }
-    
-    // Change facing
-    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(_node.get());
-    if (image != nullptr) {
-        image->flipHorizontal(!image->isFlipHorizontal());
+    else if (face == SOUTH) {
+        std::cout << "Facing south now\n";
+        setSceneNode(_southWalkSprite);
     }
-    _faceRight = face;
+    else if (face == NORTH) {
+        std::cout << "Facing north now\n";
+        setSceneNode(_northWalkSprite);
+    }
+    else if (face == EAST || face == WEST) {
+        std::cout << "Facing east now\n";
+        setSceneNode(_eastWalkSprite);
+    }
+    else if (face == NORTHEAST || face == NORTHWEST) {
+        setSceneNode(_northEastWalkSprite);
+    }
+    else if (face == SOUTHEAST || face == SOUTHWEST) {
+        setSceneNode(_southEastWalkSprite);
+    }
+    // Change facing
+//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(_node.get());
+//    if (image != nullptr) {
+//        image->flipHorizontal(!image->isFlipHorizontal());
+//    }
+    _facing = face;
 }
 
 void EntityModel::setDashInput(bool dashInput) {

@@ -56,6 +56,8 @@
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
 #define FARMER_FRONT_WALK_SPRITE "farmer-front-walk"
+#define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
+#define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -
@@ -83,11 +85,40 @@ private:
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
 
 protected:
+    enum EntityFacing {
+        NORTH,
+        NORTHEAST,
+        EAST,
+        SOUTHEAST,
+        SOUTH,
+        SOUTHWEST,
+        WEST,
+        NORTHWEST
+    };
+    
+    const std::map<cugl::Vec2, EntityFacing> _facingMap = {
+        { cugl::Vec2(15 * M_PI / 8, 17 * M_PI / 8), EAST }, // Adjustment for the overflow for the EAST direction TODO: See if this can be simplified?
+        { cugl::Vec2(M_PI / 8, 3 * M_PI / 8), NORTHEAST },
+        { cugl::Vec2(3 * M_PI / 8, 5 * M_PI / 8), NORTH },
+        { cugl::Vec2(5 * M_PI / 8, 7 * M_PI / 8), NORTHWEST },
+        { cugl::Vec2(7 * M_PI / 8, 9 * M_PI / 8), WEST },
+        { cugl::Vec2(9 * M_PI / 8, 11 * M_PI / 8), SOUTHWEST },
+        { cugl::Vec2(11 * M_PI / 8, 13 * M_PI / 8), SOUTH },
+        { cugl::Vec2(13 * M_PI / 8, 15 * M_PI / 8), SOUTHEAST },
+    };
+    
 	/** Which direction is the character facing */
-	bool _faceRight;
+    EntityFacing _facing;
 
 	/** The scene graph node for the Dude. */
 	std::shared_ptr<cugl::scene2::SceneNode> _node;
+    
+    std::shared_ptr<cugl::scene2::SpriteNode> _eastWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northEastWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southEastWalkSprite;
+    
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
@@ -345,7 +376,11 @@ public:
      * @param node  The scene graph node representing this DudeModel, which has been added to the world node already.
      */
 	void setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+        if (_node != nullptr) {
+            _node->setVisible(false);
+        }
         _node = node;
+        _node->setVisible(true);
         _node->setPosition(getPosition() * _drawScale);
     }
 
@@ -365,7 +400,21 @@ public:
     
     bool animationShouldStep();
     
+    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastNode) {
+        _eastWalkSprite = eastNode;
+        _southWalkSprite = southNode;
+        _northWalkSprite = northNode;
+        _northEastWalkSprite = northEastNode;
+        _southEastWalkSprite = southEastNode;
+    }
+    
     void stepAnimation(float dt);
+    
+    EntityFacing calculateFacing(cugl::Vec2 movement);
 
     
 #pragma mark -
@@ -426,7 +475,7 @@ public:
      *
      * @return true if this character is facing right
      */
-    bool isFacingRight() const { return _faceRight; }
+    bool getFacing() const { return _facing; }
     
     std::string getUUID() const { return _uuid; }
     

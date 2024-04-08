@@ -31,34 +31,6 @@
 			remoteGlobalIDString = EB9941EE1D352B2600314460;
 			remoteInfo = sdl2image;
 		};
-		EB5D754A293D5E5F00B318A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EB5D753D293D5E5F00B318A8 /* sdl2image.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EB2337E3293D527F000129A4;
-			remoteInfo = avif;
-		};
-		EB5D754C293D5E5F00B318A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EB5D753D293D5E5F00B318A8 /* sdl2image.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EB2337B6293D5252000129A4;
-			remoteInfo = dav1d;
-		};
-		EB5D754E293D5E5F00B318A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EB5D753D293D5E5F00B318A8 /* sdl2image.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EB2337C5293D5262000129A4;
-			remoteInfo = "dav1d-8bit";
-		};
-		EB5D7550293D5E5F00B318A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EB5D753D293D5E5F00B318A8 /* sdl2image.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EB2337D4293D5272000129A4;
-			remoteInfo = "dav1d-16bit";
-		};
 		EB5D7552293D5E5F00B318A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EB5D753D293D5E5F00B318A8 /* sdl2image.xcodeproj */;
@@ -191,10 +163,6 @@
 			isa = PBXGroup;
 			children = (
 				EB5D7549293D5E5F00B318A8 /* libsdl2image.a */,
-				EB5D754B293D5E5F00B318A8 /* libavif.a */,
-				EB5D754D293D5E5F00B318A8 /* libdav1d.a */,
-				EB5D754F293D5E5F00B318A8 /* libdav1d-8bit.a */,
-				EB5D7551293D5E5F00B318A8 /* libdav1d-16bit.a */,
 				EB5D7553293D5E5F00B318A8 /* libwebp.a */,
 			);
 			name = Products;
@@ -363,7 +331,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EBC7C49E1CD512A500005ABE /* Build configuration list for PBXProject "sdlapp" */;
+			buildConfigurationList = EBC7C49E1CD512A500005ABE /* Build configuration list for PBXProject "sdl2app" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -406,34 +374,6 @@
 			fileType = archive.ar;
 			path = libsdl2image.a;
 			remoteRef = EB5D7548293D5E5F00B318A8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EB5D754B293D5E5F00B318A8 /* libavif.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libavif.a;
-			remoteRef = EB5D754A293D5E5F00B318A8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EB5D754D293D5E5F00B318A8 /* libdav1d.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libdav1d.a;
-			remoteRef = EB5D754C293D5E5F00B318A8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EB5D754F293D5E5F00B318A8 /* libdav1d-8bit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libdav1d-8bit.a";
-			remoteRef = EB5D754E293D5E5F00B318A8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EB5D7551293D5E5F00B318A8 /* libdav1d-16bit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libdav1d-16bit.a";
-			remoteRef = EB5D7550293D5E5F00B318A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		EB5D7553293D5E5F00B318A8 /* libwebp.a */ = {
@@ -808,7 +748,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EBC7C49E1CD512A500005ABE /* Build configuration list for PBXProject "sdlapp" */ = {
+		EBC7C49E1CD512A500005ABE /* Build configuration list for PBXProject "sdl2app" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EBC7C4AA1CD512A500005ABE /* Debug */,

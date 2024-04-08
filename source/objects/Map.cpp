@@ -6,19 +6,6 @@
 #include "../objects/EntityModel.h"
 #include "../controllers/NetworkController.h"
 
-// TODO: put all constants into JSON
-
-#pragma mark -
-#pragma mark Level Geography
-// Since these appear only once, we do not care about the magic numbers.
-// In an actual game, this information would go in a data file.
-// IMPORTANT: Note that Box2D units do not equal drawing units
-
-/** The initial position of the dude */
-float DUDE_POS[2] = {2.5f, 2.5f};
-
-float BABY_CARROT_POS[2] = {2.5f, 10.0f};
-
 #pragma mark -
 #pragma mark Physics Constants
 /** The density for most physics objects */
@@ -30,16 +17,11 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 
 #pragma mark -
 #pragma mark Asset Constants
-# define WHEAT_TEXTURE  "wheat"
 # define PLANTING_SPOT_TEXTURE "planting spot"
-/** The key for the earth texture in the asset manager */
-#define EARTH_TEXTURE   "earth"
-/** The name of a wall (for object identification) */
-#define WALL_NAME       "wall"
-/** The name of a platform (for object identification) */
-#define PLATFORM_NAME   "platform"
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
+
+const bool FULL_WHEAT_HEIGHT = true; //change this to turn off wheat height and make shaders more efficient (hopefully)
 
 using namespace cugl;
 
@@ -98,6 +80,7 @@ void Map::clearRootNode() {
     if (_root == nullptr) {
         return;
     }
+
     _worldnode->removeFromParent();
     _worldnode->removeAllChildren();
     _worldnode = nullptr;
@@ -142,8 +125,15 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugnode->setPosition(Vec2::ZERO);
     
+    _entitiesNode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _entitiesNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _entitiesNode->setPosition(Vec2::ZERO);
+    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
+//    _entitiesNode->allocNode();
+//    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
-    bool showGrid = true; //change this to show the grid in debug
+    
+    bool showGrid = false; //change this to show the grid in debug
     if (showGrid) {
         for (int x = 0; x < _bounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
@@ -163,6 +153,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     }
 
     _root->addChild(_worldnode);
+    _worldnode->addChild(_entitiesNode);
     _root->addChild(_debugnode);
 
 }
@@ -205,13 +196,13 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
 
     // Initial geometry
     _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
-
+    
     setRootNode(root);
 
     return true;
 }
 
-void Map::populate() {
+void Map::populate(Size size) {
     
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
@@ -233,7 +224,7 @@ void Map::populate() {
             float height = std::any_cast<float>(_propertiesMap.at("height"));
             
             if (name == "wheat") {
-                loadWheat();
+                loadShaderNodes(size);
                 break;
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
@@ -258,6 +249,7 @@ void Map::populate() {
         }
         
     }
+
     
     //place boundary walls
     loadBoundary(Vec2(-0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
@@ -321,7 +313,8 @@ void Map::dispose() {
         _world->clear();
         _world = nullptr;
     }
-    _wheatrenderer->dispose();
+    _shaderedEntitiesNode->dispose();
+    _shaderrenderer->dispose();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
@@ -412,19 +405,28 @@ void Map::loadBoundary(Vec2 pos, Size size){
  * node. This method should only be called once per initialization, any subsequent calls will
  * override previous calls.
  */
-void Map::loadWheat(){
+void Map::loadShaderNodes(Size size){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
-    _wheatrenderer = WheatRenderer::alloc(_assets, name, bladeColorScale);
-    _wheatrenderer->setScale(_scale.x);
-    _wheatrenderer->buildShaders();
-    _groundnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::GROUND);
-    _wheatnode = ShaderNode::alloc(_wheatrenderer, ShaderNode::ShaderType::WHEAT);
+    
+    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+    _shaderrenderer->setScale(_scale.x);
+    _shaderrenderer->buildShaders();
+    _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
+    _wheatnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::WHEAT);
+    _cloudsnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::CLOUDS);
     _groundnode->setPriority(float(Map::DrawOrder::GROUND));
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
+    _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
+    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+    _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
+    
+    _worldnode->addChild(_shaderedEntitiesNode);
     _worldnode->addChild(_wheatnode);
     _worldnode->addChild(_groundnode);
+    _worldnode->addChild(_cloudsnode);
+    
 }
 
 /**
@@ -455,6 +457,7 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
 
+    _assets->get<Texture>(FARMER_TEXTURE)->setName("farmer");
     auto farmerNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(FARMER_TEXTURE));
     auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(
@@ -466,9 +469,12 @@ void Map::loadFarmer(float x, float y, float width, float height) {
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _worldnode->addChild(farmerNode);
-    _worldnode->addChild(carrotfarmerNode);
+    farmerNode->setName("farmer");
+//    farmerNode->setColor(Color4::BLACK);
+    _entitiesNode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
+    
+    _entitiesNode->addChild(farmerNode);
 
     _farmers.push_back(farmer);
 
@@ -486,15 +492,18 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     baby->setID((unsigned)_babies.size());
     _babies.push_back(baby);
 
+    _assets->get<Texture>(BABY_TEXTURE)->setName("baby");
     auto babyNode = scene2::PolygonNode::allocWithTexture(
             _assets->get<Texture>(BABY_TEXTURE));
 //        babyNode->setColor(Color4::BLUE);
     baby->setSceneNode(babyNode);
+    babyNode->setName("baby");
+//    babyNode->setColor(Color4::BLACK);
     baby->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _worldnode->addChild(babyNode);
+    _entitiesNode->addChild(babyNode);
     baby->setDebugScene(_debugnode);
 
     _world->initObstacle(baby);
@@ -584,7 +593,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
-    _worldnode->addChild(carrotNode);
+    _entitiesNode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
 
     _world->initObstacle(carrot);
@@ -592,11 +601,11 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
 
 
 
-void Map::updateShader(float step, const Mat4 &perspective) {
+void Map::updateShaders(float step, Mat4 perspective) {
     int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size());
     float positions[2*size]; // must be 1d array
     float velocities[size];
-    float ratio = _wheatrenderer->getAspectRatio();
+    float ratio = _shaderrenderer->getAspectRatio();
     for (int i = 0; i < _carrots.size(); i++) {
         positions[2 * i] = _carrots.at(i)->getX() / _scale.x;
         positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / _scale.x * ratio;
@@ -612,5 +621,6 @@ void Map::updateShader(float step, const Mat4 &perspective) {
         positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / _scale.x * ratio;
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
-    _wheatrenderer->update(step, perspective, size, positions, velocities);
+    _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / _scale.x * Vec2(1.0, ratio));
+    _shaderedEntitiesNode->update(step);
 }

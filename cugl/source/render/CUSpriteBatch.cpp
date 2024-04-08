@@ -515,7 +515,7 @@ void SpriteBatch::setColor(const Color4 color) {
  * @param shader The active shader for this sprite batch
  */
 void SpriteBatch::setShader(const std::shared_ptr<Shader>& shader) {
-    CUAssertLog(_active, "Attempt to reassign shader while drawing is active");
+    CUAssertLog(!_active, "Attempt to reassign shader while drawing is active");
     CUAssertLog(shader != nullptr, "Shader cannot be null");
     _vertbuff->detach();
     _shader = shader;

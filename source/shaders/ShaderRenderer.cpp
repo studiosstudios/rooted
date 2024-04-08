@@ -113,7 +113,7 @@ void ShaderRenderer::dispose() {
     _textures.clear();
 }
 
-void ShaderRenderer::update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities) {
+void ShaderRenderer::update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities, Vec2 playerPos) {
 
     _windTime += timestep;
     if (_windTime >= 12.53) {
@@ -132,6 +132,7 @@ void ShaderRenderer::update(float timestep, const Mat4& perspective, int size, f
         _wheatShader->setUniformMat4("uPerspective", perspective);
         _wheatShader->setUniform2fv("positions", size, positions);
         _wheatShader->setUniform1fv("velocities", size, velocities);
+        _wheatShader->setUniform2f("player_pos", playerPos.x, 1 - playerPos.y);
         _wheatShader->unbind();
     }
 
@@ -246,6 +247,8 @@ void ShaderRenderer::buildShaders() {
     _wheatShader->setUniform4f("wind_color", 1.0, 0.9058824, 0.309804, 1.0);
     _wheatShader->setUniform1f("wind_speed", WIND_SPEED);
     _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
+    _wheatShader->setUniform1f("player_transparency", 0.6);
+    _wheatShader->setUniform1f("transparency_radius",20.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
     _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
 

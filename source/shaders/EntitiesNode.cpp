@@ -25,11 +25,10 @@ void EntitiesNode::dispose() {
     SceneNode::dispose();
 }
 
-bool EntitiesNode::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size) {
+bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, const std::shared_ptr<cugl::AssetManager> &assets,
+                        string name, float bladeColorScale, Size size) {
     if (SceneNode::init()) {
-        _root = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
-        _root->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-        _root->setPosition(Vec2::ZERO);
+        _root = entitiesNode;
 
         _wheattex = assets->get<Texture>(name);
         _noisetex = assets->get<Texture>("shader_noise");

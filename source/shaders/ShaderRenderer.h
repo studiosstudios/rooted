@@ -82,7 +82,7 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    void update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities);
+    void update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities, Vec2 playerPos);
     
     /**
      * The method called to draw the application to the screen.

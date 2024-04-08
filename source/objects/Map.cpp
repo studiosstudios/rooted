@@ -98,7 +98,7 @@ void Map::clearRootNode() {
     if (_root == nullptr) {
         return;
     }
-    _entitiesNode->clearNode();
+    _shaderedEntitiesNode->clearNode();
 
     _worldnode->removeFromParent();
     _worldnode->removeAllChildren();
@@ -144,6 +144,10 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugnode->setPosition(Vec2::ZERO);
     
+    _entitiesNode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _entitiesNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _entitiesNode->setPosition(Vec2::ZERO);
+    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
 //    _entitiesNode->allocNode();
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
@@ -168,6 +172,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     }
 
     _root->addChild(_worldnode);
+    _worldnode->addChild(_entitiesNode);
     _root->addChild(_debugnode);
 
 }
@@ -432,10 +437,10 @@ void Map::loadShaderNodes(Size size){
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
-    _entitiesNode = EntitiesNode::alloc(_assets, name, bladeColorScale, size);
-    _entitiesNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _assets, name, bladeColorScale, size);
+    _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
     
-    _worldnode->addChild(_entitiesNode);
+    _worldnode->addChild(_shaderedEntitiesNode);
     _worldnode->addChild(_wheatnode);
     _worldnode->addChild(_groundnode);
     _worldnode->addChild(_cloudsnode);
@@ -484,10 +489,10 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
     farmerNode->setName("farmer");
 //    farmerNode->setColor(Color4::BLACK);
-    _entitiesNode->addEntityNode(carrotfarmerNode);
+    _entitiesNode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
     
-    _entitiesNode->addEntityNode(farmerNode);
+    _entitiesNode->addChild(farmerNode);
 
     _farmers.push_back(farmer);
 
@@ -516,7 +521,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
     babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _entitiesNode->addEntityNode(babyNode);
+    _entitiesNode->addChild(babyNode);
     baby->setDebugScene(_debugnode);
 
     _world->initObstacle(baby);
@@ -606,7 +611,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
-    _entitiesNode->addEntityNode(carrotNode);
+    _entitiesNode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
 
     _world->initObstacle(carrot);
@@ -634,6 +639,6 @@ void Map::updateShaders(float step, Mat4 perspective) {
         positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / _scale.x * ratio;
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
-    _shaderrenderer->update(step, perspective, size, positions, velocities);
-    _entitiesNode->update(step);
+    _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / _scale.x * Vec2(1.0, ratio));
+    _shaderedEntitiesNode->update(step);
 }

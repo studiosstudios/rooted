@@ -58,7 +58,9 @@ private:
     /** Reference to the clouds node of the scene graph */
     std::shared_ptr<ShaderNode> _cloudsnode;
     
-    std::shared_ptr<EntitiesNode> _entitiesNode;
+    std::shared_ptr<EntitiesNode> _shaderedEntitiesNode;
+    
+    std::shared_ptr<scene2::SceneNode> _entitiesNode;
 
     std::unordered_map<std::string, std::any> _propertiesMap;
 
@@ -74,9 +76,10 @@ public:
     enum class DrawOrder : int {
         GROUND,
         PLANTINGSPOT,
-        WHEAT,
-        PLAYER,
         ENTITIES,
+        PLAYER,
+        WHEAT,
+        ENTITIESSHADER, //the entities drawn with the wheat cover shader
         CLOUDS
     };
 

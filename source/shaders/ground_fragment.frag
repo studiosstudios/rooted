@@ -29,8 +29,6 @@ uniform sampler2D noise_tex;
 
 uniform vec2 wind_direction;
 
-uniform vec2 noise_tex_size;
-
 uniform vec2 SCREEN_PIXEL_SIZE;
 
 /** Objects */
@@ -45,7 +43,7 @@ uniform int num_entities;
  - offset: offset sampling along x axis for jagged look
  */
 float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
-    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x / noise_tex_size.x + offset, 0.0)).r;
+    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x + offset, 0.0)).r;
 }
 
 /**
@@ -56,7 +54,7 @@ void main(void) {
     // Convert fragCoord to UV
     vec2 uv = outTexCoord;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE, 0.1 * WIND_TIME);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE * 50.0, 0.1 * WIND_TIME);
 
     vec2 fragUV = uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
 

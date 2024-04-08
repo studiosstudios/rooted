@@ -65,12 +65,14 @@ uniform vec4 wind_color;
 
 uniform vec2 SCREEN_PIXEL_SIZE;
 uniform float blade_color_scale;
+uniform float player_transparency;
+uniform float transparency_radius;
 
-const float MAX_BLADE_LENGTH = 25.0f;
+const float MAX_BLADE_LENGTH = 30.0f;
 const float PI = 3.14f;
 
 /** Objects */
-//uniform vec2 farmer_pos;
+uniform vec2 player_pos;
 uniform vec2 positions[500];
 uniform float velocities[500];
 uniform int num_entities;
@@ -148,7 +150,9 @@ void main(void) {
     
     // Color the base of the grass with the first gradient color
     vec4 baseColor = vec4(0.0);
-    
+
+    float dist = distance(fragUV / SCREEN_PIXEL_SIZE, player_pos / SCREEN_PIXEL_SIZE);
+    float alpha = clamp(smoothstep(0.0, transparency_radius, dist), player_transparency, 1.0);
     if (texture(grass_tex, fragUV).r > 0.0f && texture(grass_tex, fragUV).g == 0.0f) {
         baseColor = sampleColor(0.0f, 0.0f);
     }
@@ -195,7 +199,12 @@ void main(void) {
 
     }
 
-    frag_color = baseColor *= outColor;
+    if (baseColor.rgb == vec3(0.0)) {
+        frag_color = vec4(0.0);
+    } else {
+        frag_color = baseColor * outColor;
+        frag_color.a = alpha;
+    }
 
 }
 

@@ -435,7 +435,7 @@ public:
      *
      * @param value left/right movement of this character.
      */
-    void setMovement(cugl::Vec2 value);
+    virtual void setMovement(cugl::Vec2 value);
     
     void setDashInput(bool dashInput);
     

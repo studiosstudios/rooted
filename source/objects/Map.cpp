@@ -598,13 +598,18 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     carrot->setName("carrot");
     _carrots.push_back(carrot);
 
-    auto carrotNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(CARROT_TEXTURE));
+    auto carrotNode = scene2::SpriteNode::allocWithSheet(
+            _assets->get<Texture>(CARROT_TEXTURE), 1, 1);
     carrot->setSceneNode(carrotNode);
     carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
+    carrot->setSpriteNodes(carrotNode,
+                           carrotNode,
+                           carrotNode,
+                           carrotNode,
+                           carrotNode);
     _worldnode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
 

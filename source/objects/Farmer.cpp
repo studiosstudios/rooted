@@ -21,3 +21,11 @@ void Farmer::rootCarrot(){
 //    _normalNode->setVisible(true);
     setSceneNode(_normalNode);
 }
+
+void Farmer::setMovement(Vec2 movement) {
+    _movement = movement;
+    if (_isHoldingCarrot) {
+        return;
+    }
+    EntityModel::setMovement(movement);
+}

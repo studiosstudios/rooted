@@ -48,6 +48,8 @@ public:
     void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
     void setCaptureNode(std::shared_ptr<cugl::scene2::PolygonNode> n) { _captureNode = n; }
     
+    void setMovement(cugl::Vec2 movement) override;
+    
 };
 
 

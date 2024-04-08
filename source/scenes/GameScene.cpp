@@ -411,14 +411,6 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
-    if (_countdown >= 0 && _network->getNumPlayers() > 1){
-        return;
-    }
-    
-    _map->getWorld()->update(step);
-    _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
-    _cam.update(step);
-    
     while(_network->isInAvailable()){
         auto e = _network->popInEvent();
         if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
@@ -439,6 +431,13 @@ void GameScene::fixedUpdate(float step) {
             processResetEvent(resetEvent);
         }
     }
+    if (_countdown >= 0 && _network->getNumPlayers() > 1){
+        return;
+    }
+    
+    _map->getWorld()->update(step);
+    _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
+    _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
 }
@@ -471,7 +470,7 @@ void GameScene::postUpdate(float remain) {
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        reset();
+        _network->pushOutEvent(ResetEvent::allocResetEvent());
     }
     else{
         _action.postUpdate(remain);
@@ -604,6 +603,10 @@ void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
 }
 
 void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){
+    _network->disablePhysics();
+    while(_network->isInAvailable()){
+        _network->popInEvent();
+    }
     reset();
 }
 

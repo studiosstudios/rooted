@@ -157,7 +157,7 @@ EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
             break;
         }
     }
-    
+//    std::cout << "Ang: " << ang << " | Dir: " << dir << "\n";
     return dir;
 }
 
@@ -174,29 +174,29 @@ void EntityModel::setMovement(Vec2 movement) {
     if (_facing == face) {
         return;
     }
-    else if (face == SOUTH) {
-        std::cout << "Facing south now\n";
-        setSceneNode(_southWalkSprite);
+    // Grab the correct sprite
+    auto sprite = _southWalkSprite;
+    if (face == SOUTH) {
+        sprite = _southWalkSprite;
     }
     else if (face == NORTH) {
-        std::cout << "Facing north now\n";
-        setSceneNode(_northWalkSprite);
+        sprite = _northWalkSprite;
     }
     else if (face == EAST || face == WEST) {
-        std::cout << "Facing east now\n";
-        setSceneNode(_eastWalkSprite);
+        sprite = _eastWalkSprite;
     }
     else if (face == NORTHEAST || face == NORTHWEST) {
-        setSceneNode(_northEastWalkSprite);
+        sprite = _northEastWalkSprite;
     }
     else if (face == SOUTHEAST || face == SOUTHWEST) {
-        setSceneNode(_southEastWalkSprite);
+        sprite = _southEastWalkSprite;
     }
-    // Change facing
-//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(_node.get());
-//    if (image != nullptr) {
-//        image->flipHorizontal(!image->isFlipHorizontal());
-//    }
+    // Change facing for the sprite
+    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
+    if (image->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+        image->flipHorizontal(!image->isFlipHorizontal());
+    }
+    setSceneNode(sprite);
     _facing = face;
 }
 

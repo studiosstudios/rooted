@@ -473,9 +473,9 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     carrotfarmerNode->setScale(0.25f, 0.25f);
     
     farmer->setSpriteNodes(farmerNorthWalkNode,
-                           farmerSouthWalkNode,
                            farmerEastWalkNode,
-                           farmerSouthWalkNode,
+                           farmerEastWalkNode,
+                           farmerEastWalkNode,
                            farmerSouthWalkNode);
     
     farmer->setNormalNode(farmerSouthWalkNode);

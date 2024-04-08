@@ -86,14 +86,14 @@ private:
 
 protected:
     enum EntityFacing {
-        NORTH,
-        NORTHEAST,
         EAST,
-        SOUTHEAST,
-        SOUTH,
-        SOUTHWEST,
+        NORTHEAST,
+        NORTH,
+        NORTHWEST,
         WEST,
-        NORTHWEST
+        SOUTHWEST,
+        SOUTH,
+        SOUTHEAST
     };
     
     const std::map<cugl::Vec2, EntityFacing> _facingMap = {
@@ -401,15 +401,15 @@ public:
     bool animationShouldStep();
     
     void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastNode) {
-        _eastWalkSprite = eastNode;
-        _southWalkSprite = southNode;
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southNode) {
         _northWalkSprite = northNode;
         _northEastWalkSprite = northEastNode;
+        _eastWalkSprite = eastNode;
         _southEastWalkSprite = southEastNode;
+        _southWalkSprite = southNode;
     }
     
     void stepAnimation(float dt);

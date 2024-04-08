@@ -68,7 +68,7 @@ uniform float blade_color_scale;
 uniform float player_transparency;
 uniform float transparency_radius;
 
-const float MAX_BLADE_LENGTH = 30.0f;
+uniform float MAX_BLADE_LENGTH;
 const float PI = 3.14f;
 
 /** Objects */

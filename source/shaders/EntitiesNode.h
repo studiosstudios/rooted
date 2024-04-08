@@ -22,6 +22,7 @@ private:
     float _bladeColorScale;
     float _windTime;
     shared_ptr<Texture> _noisetex;
+    bool _fullHeight;
 
 public:
 
@@ -30,19 +31,17 @@ public:
     ~EntitiesNode();
 
     static std::shared_ptr<EntitiesNode> alloc(const std::shared_ptr<scene2::SceneNode> &node, const std::shared_ptr<cugl::AssetManager> &assets,
-                                               string name, float bladeColorScale, Size size) {
+                                               string name, float bladeColorScale, Size size, bool fullHeight) {
         shared_ptr<EntitiesNode> result = make_shared<EntitiesNode>();
-        return (result->init(node, assets, name, bladeColorScale, size) ? result : nullptr);
+        return (result->init(node, assets, name, bladeColorScale, size, fullHeight) ? result : nullptr);
     }
 
     void update(float timestep);
 
     void clearNode();
 
-    void addEntityNode(const shared_ptr<SceneNode>& entityNode);
-
     bool init(const std::shared_ptr<scene2::SceneNode> &node, const std::shared_ptr<cugl::AssetManager> &assets,
-              string name, float bladeColorScale, Size size);
+              string name, float bladeColorScale, Size size, bool fullHeight);
 
     void dispose() override;
 

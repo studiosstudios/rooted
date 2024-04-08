@@ -66,10 +66,11 @@ const std::string cloudsVert =
 
 using namespace std;
 
-bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size) {
+bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size, bool fullHeight) {
     
     _assets = assets;
-    
+    _fullHeight = fullHeight;
+
     _windTime = 0;
     _cloudTime = 0;
 
@@ -251,6 +252,7 @@ void ShaderRenderer::buildShaders() {
     _wheatShader->setUniform1f("transparency_radius",20.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
     _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
+    _wheatShader->setUniform1f("MAX_BLADE_LENGTH", 30 * _fullHeight);
 
     _groundShader = Shader::alloc(SHADER(groundVert), SHADER(groundFrag));
     _groundShader->setSampler("noise_tex", _noisetex);

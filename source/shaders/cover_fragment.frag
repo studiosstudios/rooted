@@ -55,7 +55,7 @@ in vec4 outColor;
 in vec2 outTexCoord;
 in vec2 outGradCoord;
 
-const float MAX_WHEAT_HEIGHT = 25.0f;
+uniform float MAX_WHEAT_HEIGHT;
 const float PI = 3.14f;
 
 /**

@@ -6,19 +6,6 @@
 #include "../objects/EntityModel.h"
 #include "../controllers/NetworkController.h"
 
-// TODO: put all constants into JSON
-
-#pragma mark -
-#pragma mark Level Geography
-// Since these appear only once, we do not care about the magic numbers.
-// In an actual game, this information would go in a data file.
-// IMPORTANT: Note that Box2D units do not equal drawing units
-
-/** The initial position of the dude */
-float DUDE_POS[2] = {2.5f, 2.5f};
-
-float BABY_CARROT_POS[2] = {2.5f, 10.0f};
-
 #pragma mark -
 #pragma mark Physics Constants
 /** The density for most physics objects */
@@ -30,16 +17,11 @@ float BABY_CARROT_POS[2] = {2.5f, 10.0f};
 
 #pragma mark -
 #pragma mark Asset Constants
-# define WHEAT_TEXTURE  "wheat"
 # define PLANTING_SPOT_TEXTURE "planting spot"
-/** The key for the earth texture in the asset manager */
-#define EARTH_TEXTURE   "earth"
-/** The name of a wall (for object identification) */
-#define WALL_NAME       "wall"
-/** The name of a platform (for object identification) */
-#define PLATFORM_NAME   "platform"
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
+
+const bool FULL_WHEAT_HEIGHT = true; //change this to turn off wheat height and make shaders more efficient (hopefully)
 
 using namespace cugl;
 
@@ -98,7 +80,6 @@ void Map::clearRootNode() {
     if (_root == nullptr) {
         return;
     }
-    _shaderedEntitiesNode->clearNode();
 
     _worldnode->removeFromParent();
     _worldnode->removeAllChildren();
@@ -332,6 +313,7 @@ void Map::dispose() {
         _world->clear();
         _world = nullptr;
     }
+    _shaderedEntitiesNode->dispose();
     _shaderrenderer->dispose();
 }
 
@@ -427,7 +409,7 @@ void Map::loadShaderNodes(Size size){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
     
-    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale, size);
+    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
     _shaderrenderer->setScale(_scale.x);
     _shaderrenderer->buildShaders();
     _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
@@ -437,7 +419,7 @@ void Map::loadShaderNodes(Size size){
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
-    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _assets, name, bladeColorScale, size);
+    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
     _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
     
     _worldnode->addChild(_shaderedEntitiesNode);

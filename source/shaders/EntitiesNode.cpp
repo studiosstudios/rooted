@@ -21,14 +21,17 @@ EntitiesNode::EntitiesNode() :
 
 void EntitiesNode::dispose() {
     _coverShader = nullptr;
-    clearNode();
+    _root = nullptr;
+    _wheattex = nullptr;
+    _noisetex = nullptr;
     SceneNode::dispose();
 }
 
 bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, const std::shared_ptr<cugl::AssetManager> &assets,
-                        string name, float bladeColorScale, Size size) {
+                        string name, float bladeColorScale, Size size, bool fullHeight) {
     if (SceneNode::init()) {
         _root = entitiesNode;
+        _fullHeight = fullHeight;
 
         _wheattex = assets->get<Texture>(name);
         _noisetex = assets->get<Texture>("shader_noise");
@@ -39,7 +42,7 @@ bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, 
         _coverShader->setUniform1f("blade_color_scale", _bladeColorScale);
         _coverShader->setUniform1f("wind_speed", 1.0);
         _coverShader->setUniform2f("wind_direction", 1.0, 1.0);
-
+        _coverShader->setUniform1f("MAX_WHEAT_HEIGHT", 30 * _fullHeight);
         _windTime = 0;
         return true;
     }
@@ -48,17 +51,6 @@ bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, 
 
 EntitiesNode::~EntitiesNode() {
     dispose();
-}
-
-void EntitiesNode::clearNode() {
-    if (_root != nullptr) {
-        _root->removeAllChildren();
-        _root = nullptr;
-    }
-}
-
-void EntitiesNode::addEntityNode(const shared_ptr<cugl::scene2::SceneNode> &entityNode) {
-    _root->addChild(entityNode);
 }
 
 void EntitiesNode::update(float timestep) {
@@ -84,10 +76,7 @@ void EntitiesNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::A
     _coverShader->setSampler("noise_tex", _noisetex);
     batch->begin(perspective);
 
-    auto children = _root->getChildren();
-    for(auto it = children.begin(); it != children.end(); ++it) {
-        (*it)->render(batch, transform, tint);
-    }
+    _root->render(batch, transform, tint);
 
     batch->end();
     _wheattex->unbind();

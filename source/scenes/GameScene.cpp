@@ -165,7 +165,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //        return false;
 //    }
     
-    _map->populate();
+    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
     
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
@@ -222,7 +222,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
-    Application::get()->setClearColor(Color4(209, 209, 56, 255));
+    Application::get()->setClearColor(Color4::CLEAR);
 
     return true;
 }
@@ -293,7 +293,7 @@ void GameScene::reset() {
     _map->clearRootNode();
     _map->setRootNode(_rootnode);
     _map->dispose();
-    _map->populate();
+    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
     _collision.dispose();
@@ -439,6 +439,8 @@ void GameScene::fixedUpdate(float step) {
             processResetEvent(resetEvent);
         }
     }
+    
+    _map->updateShaders(step, _cam.getCamera()->getCombined());
 }
 
 /**
@@ -465,8 +467,6 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
-    
-    _map->updateShader(remain, _cam.getCamera()->getCombined());
     
     if (_countdown > 0) {
         _countdown--;
@@ -588,11 +588,19 @@ Size GameScene::computeActiveSize() const {
     } else {
         dimen *= SCENE_HEIGHT / dimen.height;
     }
+    CULog("ACTIVE SIZE: %s", dimen.toString().c_str());
     return dimen;
 }
 
 void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
+//    const std::shared_ptr<Shader> spriteShader = Shader::alloc(SHADER(spriteVertex), SHADER(spriteFrag));
+//    spriteShader->setSampler("grass_tex", _assets->get<Texture>("shader_base"));
+//    spriteShader->setSampler("sprite_tex", batch->getTexture());
+    
+//    spriteShader->bind();
+//    batch->setShader(spriteShader);
     Scene2::render(batch);
+//    spriteShader->unbind();
 }
 
 void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){

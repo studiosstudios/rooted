@@ -13,7 +13,7 @@
 #include "../objects/BabyCarrot.h"
 #include "../objects/Farmer.h"
 
-class WheatRenderer {
+class ShaderRenderer {
 protected:
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
@@ -25,39 +25,40 @@ protected:
     std::shared_ptr<cugl::Shader> _wheatShader;
     /** A shader to render the ground (i.e. shadows) */
     std::shared_ptr<cugl::Shader> _groundShader;
+    /** A shader to render the clouds */
+    std::shared_ptr<cugl::Shader> _cloudsShader;
     /** A vertex buffer to receive our triangle */
     std::shared_ptr<cugl::VertexBuffer> _vertbuff;
     /** The mesh for storing the drawing data */
     cugl::Mesh<cugl::SpriteVertex2> _mesh;
-    /** The first texture to try */
-    std::shared_ptr<cugl::Texture> _texture1;
-    /** The second texture to try */
-    std::shared_ptr<cugl::Texture> _texture2;
     
-    float _totalTime;
-    std::shared_ptr<cugl::Texture> _grasstex;
+    float _windTime;
+    float _cloudTime;
+    
+    std::shared_ptr<cugl::Texture> _wheattex;
     std::shared_ptr<cugl::Texture> _noisetex;
     std::shared_ptr<cugl::Texture> _cloudtex;
     std::shared_ptr<cugl::Texture> _gradienttex;
-    std::shared_ptr<cugl::Texture> _wheatdetails;
+    std::shared_ptr<cugl::Texture> _grassgradienttex;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
     float _aspectRatio;
     float _bladeColorScale;
-
+    bool _fullHeight;
     
     
 public:
     
-    WheatRenderer() {}
+    ShaderRenderer() {}
 
-    ~WheatRenderer() {}
+    ~ShaderRenderer() {}
     
-    static std::shared_ptr<WheatRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale) {
-        std::shared_ptr<WheatRenderer> result = std::make_shared<WheatRenderer>();
-        return (result->init(assets, name, bladeColorScale) ? result : nullptr);
+    static std::shared_ptr<ShaderRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets,
+                                                 std::string name, float bladeColorScale, Size size, bool fullHeight) {
+        std::shared_ptr<ShaderRenderer> result = std::make_shared<ShaderRenderer>();
+        return (result->init(assets, name, bladeColorScale, size, fullHeight) ? result : nullptr);
     }
     
-    bool init(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale);
+    bool init(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale, Size size, bool fullHeight);
     
     void setSize(Size size) { _size = size; }
     
@@ -82,7 +83,7 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    void update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities);
+    void update(float timestep, const Mat4& perspective, int size, float *positions, float *velocities, Vec2 playerPos);
     
     /**
      * The method called to draw the application to the screen.
@@ -105,6 +106,17 @@ public:
      * at all. The default implmentation does nothing.
      */
     void renderGround();
+
+    /**
+     * The method called to draw the application to the screen.
+     *
+     * This is your core loop and should be replaced with your custom implementation.
+     * This method should OpenGL and related drawing calls.
+     *
+     * When overriding this method, you do not need to call the parent method
+     * at all. The default implmentation does nothing.
+     */
+    void renderClouds();
     
     /**
      * Builds the graphics pipeline.

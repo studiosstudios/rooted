@@ -1,4 +1,6 @@
 *.tiled-session
+cugl/__pycache__/
+cugl/scripts/__pycache__/
 build/
 
 .DS_Store

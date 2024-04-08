@@ -43,6 +43,12 @@ void CameraController::update(float dt) {
 //    _ui->setPosition(uiPos);
 }
 
+const Vec2 CameraController::getScreenPosition(){
+    int viewWidth = _camera->getViewport().getMaxX();
+    int viewHeight = _camera->getViewport().getMaxY();
+    return _camera->getPosition()-Vec2(viewWidth, viewHeight)/2/_camera->getZoom();
+}
+
 void CameraController::setZoom(float zoom) {
     float originalZoom = _camera->getZoom();
     // Don't let it be greater than max zoom

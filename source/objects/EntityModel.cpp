@@ -54,7 +54,7 @@
 #define DUDE_HSHRINK  0.7f
 /** The density of the character */
 #define DUDE_DENSITY  1.0f
-#define DUDE_DASH      20.0f
+#define DUDE_DASH      12.0f
 
 
 using namespace cugl;
@@ -79,6 +79,8 @@ using namespace cugl;
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
 bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+    
+    // Obstacle dimensions and drawing initialization
     Size nsize = size;
     nsize.width  *= DUDE_HSHRINK;
     nsize.height *= DUDE_VSHRINK;
@@ -86,19 +88,79 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     dashTimer = 0;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
-        setFriction(0.0f);      // HE WILL STICK TO WALLS IF YOU FORGET
-        setFixedRotation(true); // OTHERWISE, HE IS A WEEBLE WOBBLE
+        setFriction(0.0f);
+        setFixedRotation(true);
         
         // Gameplay attributes
-        _faceRight  = true;
+        _facing = SOUTH;
+        _state = MOVING;
+        
         return true;
     }
     return false;
 }
 
+#pragma mark -
+#pragma mark Animation
+
+/**
+    Whether this EntityModel should step in its animation for this frame.
+ 
+    For now, we step only when there is a directional input OR the state is DASHING/PLANTING.
+    TODO: If we get idle animations, this will need to change
+ */
+bool EntityModel::animationShouldStep() {
+    return !getLinearVelocity().isZero() || _state == DASHING || _state == PLANTING;
+}
+
+void EntityModel::stepAnimation(float dt) {
+    cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
+    if (sprite != nullptr) {
+        if (animationShouldStep()) {
+                animTime += dt;
+                if (animTime > 1.5f) { animTime = 0;}
+                sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
+        }
+        else if (sprite->getFrame() != 0) {
+            sprite->setFrame(0);
+        }
+    }
+   
+    
+}
 
 #pragma mark -
 #pragma mark Attribute Properties
+
+EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
+    EntityFacing dir = _facing;
+    float ang = atan(movement.y/movement.x);
+
+    ang = abs(ang);
+    if (movement.x < 0 && movement.y > 0) { // Top-left quadrant, excluding axes
+        ang = M_PI_2 + (M_PI_2 - ang);
+    }
+    else if (movement.x <= 0 && movement.y <= 0) { // Bottom-left quadrant, including both axes
+        ang += M_PI;
+    }
+    else if (movement.x > 0 && movement.y < 0) { // Bottom-right quadrant, excluding axes
+        ang = 3 * M_PI_2 + (M_PI_2 - ang);
+    }
+    
+    // Adjustment for the overflow for the EAST direction
+    // TODO: See if this can be simplified?
+    if (ang < M_PI / 8) {
+        ang += 2 * M_PI;
+    }
+    for (auto i = _facingMap.begin(); i != _facingMap.end(); i++) {
+        if (ang >= i->first.x && ang < i->first.y) {
+            dir = i->second;
+            break;
+        }
+    }
+//    std::cout << "Ang: " << ang << " | Dir: " << dir << "\n";
+    return dir;
+}
 
 /**
  * Sets left/right movement of this character.
@@ -108,19 +170,51 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
  * @param value left/right movement of this character.
  */
 void EntityModel::setMovement(Vec2 movement) {
-
     _movement = movement;
-    bool face = _movement.x > 0;
-    if (_movement.x == 0 || _faceRight == face) {
+    EntityFacing face = calculateFacing(movement);
+    if (_facing == face) {
         return;
     }
-    
-    // Change facing
-    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(_node.get());
-    if (image != nullptr) {
+    // Grab the correct sprite
+    auto sprite = _southWalkSprite;
+    if (face == SOUTH) {
+        sprite = _southWalkSprite;
+    }
+    else if (face == NORTH) {
+        sprite = _northWalkSprite;
+    }
+    else if (face == EAST || face == WEST) {
+        sprite = _eastWalkSprite;
+    }
+    else if (face == NORTHEAST || face == NORTHWEST) {
+        sprite = _northEastWalkSprite;
+    }
+    else if (face == SOUTHEAST || face == SOUTHWEST) {
+        sprite = _southEastWalkSprite;
+    }
+    // Change facing for the sprite
+    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
+    if (image->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
         image->flipHorizontal(!image->isFlipHorizontal());
     }
-    _faceRight = face;
+    setSceneNode(sprite);
+    _facing = face;
+}
+
+void EntityModel::setDashInput(bool dashInput) {
+    _dashInput = dashInput;
+}
+
+void EntityModel::setPlantInput(bool plantInput) {
+    _plantInput = plantInput;
+}
+
+void EntityModel::setRootInput(bool rootInput) {
+    _rootInput = rootInput;
+}
+
+void EntityModel::setUnrootInput(bool unrootInput) {
+    _unrootInput = unrootInput;
 }
 
 
@@ -163,6 +257,39 @@ void EntityModel::dispose() {
 }
 
 /**
+ *  Steps the state machine of this EntityModel.
+ *
+ *  This method should be called after all relevant input attributes are set.
+ */
+void EntityModel::updateState() {
+    if (!isEnabled()) {
+        return;
+    }
+    
+    switch (_state) {
+        case MOVING: {
+            // Moving -> Dashing
+            if (dashTimer == 0 && _dashInput) {
+                _state = DASHING;
+                dashTimer = 8;
+            }
+            break;
+        }
+        case DASHING: {
+            // Dashing -> Moving
+            dashTimer--;
+            if (dashTimer == 0) {
+                _state = MOVING;
+            }
+            break;
+        }
+        default: {
+            CULog("updateState: Not implemented yet");
+        }
+    }
+}
+
+/**
  * Applies the force to the body of this dude
  *
  * This method should be called after the force attribute is set.
@@ -172,27 +299,34 @@ void EntityModel::applyForce() {
         return;
     }
     
+    Vec2 speed;
+    
+    switch (_state) {
+        case MOVING: {
+            if (getMovement() == Vec2::ZERO) {
+                speed = Vec2::ZERO;
+            }
+            else{
+                Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
+            }
+            setLinearVelocity(speed);
+            break;
+        }
+        case DASHING: {
+            setLinearVelocity(Vec2::normalize(getMovement(), &speed)->scale(DUDE_DASH));
+            break;
+        }
+        default: {
+            CULog("State not implemented yet");
+        }
+    }
+    
     // Don't want to be moving. Damp out player motion
-    if (getMovement().x == 0.0f && getMovement().y == 0.0f) {
-        b2Vec2 force(-getDamping()*getVX(),-getDamping()*getVY());
-        _body->ApplyForce(force,_body->GetPosition(),true);
-    }
-    else if(dashTimer > 0){
-        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * DUDE_DASH);
-    }
-    else{
-        setLinearVelocity(Vec2(getMovement().x, getMovement().y).normalize() * getMaxSpeed());
-    }
-    // Velocity too high, clamp it
-//    
-//    if (getLinearVelocity().length() >= getMaxSpeed()) {
-//        setLinearVelocity(getLinearVelocity().normalize() * getMaxSpeed());
-//    }
-//    else{
-//        setLinearVelocity(getLinearVelocity());
-//    }
-//    b2Vec2 force(getMovement().x, getMovement().y);
-//    _body->ApplyForce(force,_body->GetPosition(),true);
+    
+}
+
+bool EntityModel::isDashing() {
+    return _state == DASHING;
 }
 
 /**

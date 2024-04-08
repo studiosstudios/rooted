@@ -55,6 +55,9 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
+#define FARMER_FRONT_WALK_SPRITE "farmer-front-walk"
+#define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
+#define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -
@@ -82,19 +85,48 @@ private:
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
 
 protected:
-	/** The current horizontal movement of the character */
-	cugl::Vec2 _movement;
+    enum EntityFacing {
+        EAST,
+        NORTHEAST,
+        NORTH,
+        NORTHWEST,
+        WEST,
+        SOUTHWEST,
+        SOUTH,
+        SOUTHEAST
+    };
+    
+    const std::map<cugl::Vec2, EntityFacing> _facingMap = {
+        { cugl::Vec2(15 * M_PI / 8, 17 * M_PI / 8), EAST }, // Adjustment for the overflow for the EAST direction TODO: See if this can be simplified?
+        { cugl::Vec2(M_PI / 8, 3 * M_PI / 8), NORTHEAST },
+        { cugl::Vec2(3 * M_PI / 8, 5 * M_PI / 8), NORTH },
+        { cugl::Vec2(5 * M_PI / 8, 7 * M_PI / 8), NORTHWEST },
+        { cugl::Vec2(7 * M_PI / 8, 9 * M_PI / 8), WEST },
+        { cugl::Vec2(9 * M_PI / 8, 11 * M_PI / 8), SOUTHWEST },
+        { cugl::Vec2(11 * M_PI / 8, 13 * M_PI / 8), SOUTH },
+        { cugl::Vec2(13 * M_PI / 8, 15 * M_PI / 8), SOUTHEAST },
+    };
+    
 	/** Which direction is the character facing */
-	bool _faceRight;
+    EntityFacing _facing;
 
 	/** The scene graph node for the Dude. */
 	std::shared_ptr<cugl::scene2::SceneNode> _node;
+    
+    std::shared_ptr<cugl::scene2::SpriteNode> _eastWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northEastWalkSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southEastWalkSprite;
+    
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
     std::string _uuid;
     
     int _wheatContacts;
+    
+    float animTime;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -104,6 +136,38 @@ protected:
 	* the texture (e.g. a circular shape attached to a square texture).
 	*/
 	virtual void resetDebug() override;
+    
+    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
+    
+    /** State that a rooted! player entity can be in. Some of these states are specific
+        to only a certain type of character (ex. only a bunny can be PLANTING), so
+        we need to enforce the corresponding invariants for which states an entity can
+        be in. */
+    enum EntityState {
+        MOVING,
+        DASHING,
+        CARRYING,   // bunny only
+        PLANTING,   // bunny only
+        CAUGHT,     // carrot only
+        ROOTED      // carrot only
+    };
+    
+    /** Current EntityState that this entity is in. */
+    EntityState _state;
+    
+    /** The current movement (horizontal and vertical) of the character */
+    cugl::Vec2 _movement;
+    
+    bool _dashInput;
+    
+    bool _plantInput;
+    
+    bool _rootInput;
+    
+    bool _unrootInput;
+    
+    cugl::Vec2 _dashCache;
+    
 
 public:
     int dashTimer;
@@ -312,7 +376,11 @@ public:
      * @param node  The scene graph node representing this DudeModel, which has been added to the world node already.
      */
 	void setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+        if (_node != nullptr) {
+            _node->setVisible(false);
+        }
         _node = node;
+        _node->setVisible(true);
         _node->setPosition(getPosition() * _drawScale);
     }
 
@@ -329,6 +397,24 @@ public:
      * @param scale The ratio of the Dude sprite to the physics body
      */
     void setDrawScale(float scale) { _drawScale = scale; };
+    
+    bool animationShouldStep();
+    
+    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southNode) {
+        _northWalkSprite = northNode;
+        _northEastWalkSprite = northEastNode;
+        _eastWalkSprite = eastNode;
+        _southEastWalkSprite = southEastNode;
+        _southWalkSprite = southNode;
+    }
+    
+    void stepAnimation(float dt);
+    
+    EntityFacing calculateFacing(cugl::Vec2 movement);
 
     
 #pragma mark -
@@ -349,7 +435,15 @@ public:
      *
      * @param value left/right movement of this character.
      */
-    void setMovement(cugl::Vec2 value);
+    virtual void setMovement(cugl::Vec2 value);
+    
+    void setDashInput(bool dashInput);
+    
+    void setPlantInput(bool plantInput);
+    
+    void setRootInput(bool rootInput);
+    
+    void setUnrootInput(bool unrootInput);
     
     /**
      * Returns how much force to apply to get the dude moving
@@ -381,7 +475,7 @@ public:
      *
      * @return true if this character is facing right
      */
-    bool isFacingRight() const { return _faceRight; }
+    bool getFacing() const { return _facing; }
     
     std::string getUUID() const { return _uuid; }
     
@@ -421,6 +515,14 @@ public:
      */
     void update(float dt) override;
     
+    
+    /**
+     *  Steps the state machine of this EntityModel.
+     *
+     *  This method should be called after all relevant input attributes are set.
+     */
+    virtual void updateState();
+    
     /**
      * Applies the force to the body of this dude
      *
@@ -428,7 +530,7 @@ public:
      */
     void applyForce();
 
-	
+    bool isDashing();
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

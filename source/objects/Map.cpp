@@ -456,25 +456,43 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, {width, height}, _scale.x);
     farmer->setDebugColor(DEBUG_COLOR);
     farmer->setName("farmer");
+    
+    auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_FRONT_WALK_SPRITE);
+    auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
+    auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
 
-    _assets->get<Texture>(FARMER_TEXTURE)->setName("farmer");
-    auto farmerNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(FARMER_TEXTURE));
-    auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(CARROTFARMER_TEXTURE));
-    farmer->setNormalNode(farmerNode);
+    auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
+    farmerSouthWalkNode->setScale(0.23f, 0.23f);
+    
+    auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
+    farmerNorthWalkNode->setScale(0.23f, 0.23f);
+    
+    auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
+    farmerEastWalkNode->setScale(0.23f, 0.23f);
+    
+    auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(CARROTFARMER_TEXTURE));
+    carrotfarmerNode->setVisible(false);
+    carrotfarmerNode->setScale(0.23f, 0.23f);
+    
+    farmer->setSpriteNodes(farmerNorthWalkNode,
+                           farmerEastWalkNode,
+                           farmerEastWalkNode,
+                           farmerEastWalkNode,
+                           farmerSouthWalkNode);
+    
+    farmer->setNormalNode(farmerSouthWalkNode);
+
     farmer->setCaptureNode(carrotfarmerNode);
-    farmer->setSceneNode(farmerNode);
+    farmer->setSceneNode(farmerSouthWalkNode);
     farmer->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
-    farmerNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    farmerNode->setName("farmer");
-//    farmerNode->setColor(Color4::BLACK);
+    farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    _entitiesNode->addChild(farmerSouthWalkNode);
+    _entitiesNode->addChild(farmerNorthWalkNode);
+    _entitiesNode->addChild(farmerEastWalkNode);
     _entitiesNode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
-    
-    _entitiesNode->addChild(farmerNode);
 
     _farmers.push_back(farmer);
 
@@ -586,13 +604,18 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     carrot->setName("carrot");
     _carrots.push_back(carrot);
 
-    auto carrotNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(CARROT_TEXTURE));
+    auto carrotNode = scene2::SpriteNode::allocWithSheet(
+            _assets->get<Texture>(CARROT_TEXTURE), 1, 1);
     carrot->setSceneNode(carrotNode);
     carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
+    carrot->setSpriteNodes(carrotNode,
+                           carrotNode,
+                           carrotNode,
+                           carrotNode,
+                           carrotNode);
     _entitiesNode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
 

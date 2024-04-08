@@ -16,8 +16,7 @@ private:
     bool _isHoldingCarrot;
     bool _canPlant;
     bool _dashWindow;
-    bool _isDashing; //used for farmer-carrot collision when farmer dashes
-    std::shared_ptr<cugl::scene2::PolygonNode> _normalNode;
+    std::shared_ptr<cugl::scene2::SpriteNode> _normalNode;
     std::shared_ptr<cugl::scene2::PolygonNode> _captureNode;
 
 public:
@@ -36,8 +35,6 @@ public:
         return (result->init(pos, size, scale) ? result : nullptr);
     }
     
-    bool isDashing(){ return _isDashing; }
-    
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
     void grabCarrot();
@@ -48,13 +45,11 @@ public:
     
     void setCanPlant(bool plant) { _canPlant = plant; };
     
-    /**
-     * Used to detect whether farmer collides with carrot while dashing.
-     */
-    void setDash(bool dash) {_isDashing = dash; }
-    
-    void setNormalNode(std::shared_ptr<cugl::scene2::PolygonNode> n) { _normalNode = n; }
+    void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
     void setCaptureNode(std::shared_ptr<cugl::scene2::PolygonNode> n) { _captureNode = n; }
+    
+    void setMovement(cugl::Vec2 movement) override;
+    
 };
 
 

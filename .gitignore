@@ -1,4 +1,3 @@
-
 *.tiled-session
 cugl/__pycache__/
 cugl/scripts/__pycache__/

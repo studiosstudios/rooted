@@ -37,56 +37,18 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void ActionController::preUpdate(float dt) {
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setMovement(Vec2::ZERO);
-        if (_map->getCharacter()->getUUID() == carrot->getUUID() && !carrot->isCaptured() && !carrot->isRooted()) {
-            if(carrot->dashTimer > 0){
-                carrot->dashTimer -= 1;
-            }
-            if (_input->didDash()) {
-                carrot->setMovement(_input->getMovement() * carrot->getForce() * 100);
-                carrot->dashTimer=DASH_TIME;
-                
-            } else {
-                carrot->setMovement(_input->getMovement() * carrot ->getForce());
-            }
-        }
-        carrot->applyForce();
-    }
+    auto playerEntity = _map->getCharacter();
+    playerEntity->setMovement(_input->getMovement());
+    playerEntity->setDashInput(_input->didDash());
+    playerEntity->setRootInput(_input->didRoot());
+    playerEntity->setUnrootInput(_input->didUnroot());
     
-    for (auto farmer : _map->getFarmers()) {
-//        std::cout << farmer->isInWheat() << '\n';
-        farmer->setMovement(Vec2::ZERO);
-        if (_map->getCharacter()->getUUID() == farmer->getUUID()){
-            if(farmer->dashTimer > 0){
-                farmer->dashTimer -= 1;
-            }
-            if(farmer->captureTime == 0){
-                farmer->setDash(false);
-            }
-            else{
-                farmer->captureTime -= 1;
-            }
-            if (_input->didDash() && !farmer->isHoldingCarrot()) {
-                farmer->setMovement(_input->getMovement() * farmer->getForce() * 100);
-                farmer->dashTimer=DASH_TIME;
-                farmer->captureTime=CAPTURE_TIME;
-                farmer->setDash(true);
-            } else {
-                farmer->setMovement(_input->getMovement() * farmer ->getForce());
-            }
-        }
-        farmer->applyForce();
-    }
-
-    if (_network->isHost()) {
-        for (auto babyCarrot : _map->getBabyCarrots()) {
-            _ai.updateBabyCarrot(babyCarrot);
-        }
-    }
+    playerEntity->updateState();
+    playerEntity->applyForce();
+    playerEntity->stepAnimation(dt);
     
-    networkQueuePositions();
-    
+    // Find current character's planting spot
+    // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
     std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
     for(auto ps : _map->getPlantingSpots()){
         if(ps->getBelowAvatar()){
@@ -95,28 +57,40 @@ void ActionController::preUpdate(float dt) {
         }
     }
     
-    if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && _map->getCharacter()->getUUID() == _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
-//        std::cout<<"farmer did the rooting\n";
-        Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+    if (_network->isHost()) { // Farmer (host) specific actions
+        auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
         
-        // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
-        for (auto carrot : _map->getCarrots()) {
-            if (carrot->isCaptured()) {
-                _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
+        // Step baby carrot AI
+        for (auto babyCarrot : _map->getBabyCarrots()) {
+            _ai.updateBabyCarrot(babyCarrot);
+        }
+        
+        if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
+            //        std::cout<<"farmer did the rooting\n";
+            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+            
+            // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
+            for (auto carrot : _map->getCarrots()) {
+                if (carrot->isCaptured()) {
+                    _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
+                }
             }
         }
     }
-    
-    if(_input->didUnroot() && _map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID() && plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){
-        auto currPos = _map->getCharacter()->getPosition();
-        std::shared_ptr<Carrot> closestCarrot = nullptr;
-        for (auto carrot : _map->getCarrots()){
-            if(carrot->getUUID() != _map->getCharacter()->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
-                closestCarrot = carrot;
+    else { // Carrot specific actions
+        auto carrotEntity = std::dynamic_pointer_cast<Carrot>(playerEntity);
+        
+        if(_input->didUnroot() && plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){
+            auto currPos = carrotEntity->getPosition();
+            std::shared_ptr<Carrot> closestCarrot = nullptr;
+            for (auto carrot : _map->getCarrots()){
+                if(carrot->getUUID() != carrotEntity->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
+                    closestCarrot = carrot;
+                }
             }
-        }
-        if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
-            _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
+            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
+                _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
+            }
         }
     }
 }
@@ -153,10 +127,6 @@ void ActionController::postUpdate(float dt) {
             c->setSensor(false);
         }
     }
-}
-
-void ActionController::networkQueuePositions() {
-    
 }
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){

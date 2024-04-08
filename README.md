@@ -2,7 +2,7 @@
 *Take control of either a bunny farmer or a carrot on a massive wheat field, where the tall wheat stalks hide most of the chaos that occurs within. The bunnies are desperate to secure their next week’s worth of dinner while the carrots are constantly running to save themselves and their children from their rooted fate!* 
 
 ### Controls:
-Movement | Desktop | Mobile *(unsupported for this prototype)*
+Movement | Desktop | Mobile
 | ---- | ---- | ----
 Move  | ↑,↓,←,→ | Joystick
 Dash  | X | Swipe up

@@ -1,4 +1,5 @@
 *.tiled-session
+cugl/buildfiles
 cugl/__pycache__/
 cugl/scripts/__pycache__/
 build/

@@ -1,5 +1,4 @@
 *.tiled-session
-*.xcodeproj
 cugl/__pycache__/
 cugl/scripts/__pycache__/
 build/

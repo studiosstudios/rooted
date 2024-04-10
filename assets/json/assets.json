@@ -159,6 +159,11 @@
             "type":     "sample",
             "file":     "sounds/unroot.wav",
             "volume":   0.5
+        },
+        "dash": {
+            "type":     "sample",
+            "file":     "sounds/dash.wav",
+            "volume":   0.5
         }
     },
     "fonts": {

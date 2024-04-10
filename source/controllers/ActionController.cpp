@@ -14,6 +14,7 @@ using namespace cugl;
 #define ROOTING_BUNNY_EFFECT      "bunny-root"
 #define ROOTING_CARROT_EFFECT     "carrot-root"
 #define UNROOTING_EFFECT          "unroot"
+#define DASH_EFFECT               "dash"
 
 /**
  * Initializes an ActionController
@@ -44,7 +45,12 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
 void ActionController::preUpdate(float dt) {
     auto playerEntity = _map->getCharacter();
     playerEntity->setMovement(_input->getMovement());
-    playerEntity->setDashInput(_input->didDash());
+    bool didDash = _input->didDash();
+    playerEntity->setDashInput(didDash);
+    if(didDash){
+        std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
+        AudioEngine::get()->play("dash", source);
+    }
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     

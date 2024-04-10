@@ -144,6 +144,21 @@
             "type":     "sample",
             "file":     "sounds/plop.wav",
             "volume":   0.5
+        },
+        "bunny-root": {
+            "type":     "sample",
+            "file":     "sounds/rooting-bunny.wav",
+            "volume":   0.5
+        },
+        "carrot-root": {
+            "type":     "sample",
+            "file":     "sounds/rooting-carrot.wav",
+            "volume":   0.5
+        },
+        "unroot": {
+            "type":     "sample",
+            "file":     "sounds/unroot.wav",
+            "volume":   0.5
         }
     },
     "fonts": {

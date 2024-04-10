@@ -188,7 +188,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _input = InputController::alloc(getBounds());
     Haptics::start();
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network);
+    _action.init(_map, _input, _network, _assets);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -303,7 +303,7 @@ void GameScene::reset() {
     activateWorldCollisions(world);
 
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network);
+    _action.init(_map, _input, _network, _assets);
 
     if (_isHost) {
         _map->acquireMapOwnership();

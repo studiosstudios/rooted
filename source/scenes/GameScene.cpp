@@ -587,7 +587,6 @@ Size GameScene::computeActiveSize() const {
     } else {
         dimen *= SCENE_HEIGHT / dimen.height;
     }
-    CULog("ACTIVE SIZE: %s", dimen.toString().c_str());
     return dimen;
 }
 
@@ -597,7 +596,7 @@ void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
 //    spriteShader->setSampler("sprite_tex", batch->getTexture());
     
 //    spriteShader->bind();
-//    batch->setShader(spriteShader);
+    _map->renderWheatScene(batch);
     Scene2::render(batch);
 //    spriteShader->unbind();
 }

@@ -155,9 +155,7 @@ public:
      *
      * @return true if initialization was successful.
      */
-    bool init(const Vec2 origin, const Size size) {
-        return init(origin.x,origin.y,size.width, size.height);
-    }
+    bool init(const Vec2 origin, const Size size);
     
     /**
      * Initializes a Scene2Texture with the given viewport.
@@ -174,7 +172,27 @@ public:
      *
      * @return true if initialization was successful.
      */
-    virtual bool init(float x, float y, float width, float height) override;
+    virtual bool init(float x, float y, float width, float height) override {
+        return init(x, y, width, height, true);
+    };
+
+    /**
+     * Initializes a Scene2Texture with the given viewport.
+     *
+     * Offseting the viewport origin has little affect on the scene in general.
+     * It only affects the coordinate conversion methods {@link Camera#project()}
+     * and {@link Camera#unproject()}. It is supposed to represent the offset
+     * of the viewport in a larger canvas.
+     *
+     * @param x         The viewport x offset
+     * @param y         The viewport y offset
+     * @param width     The viewport width
+     * @param height    The viewport height
+     * @param dpi       true if DPI should be accounted for
+     *
+     * @return true if initialization was successful.
+     */
+    bool init(float x, float y, float width, float height, bool dpi) ;
 
 #pragma mark Static Constructors
     /**
@@ -257,6 +275,26 @@ public:
         std::shared_ptr<Scene2Texture> result = std::make_shared<Scene2Texture>();
         return (result->init(x,y,width,height) ? result : nullptr);
     }
+
+    /**
+     * Returns a newly allocated Scene2Texture for the given viewport.
+     *
+     * Offseting the viewport origin has little affect on the Scene in general.
+     * It only affects the coordinate conversion methods {@link Camera#project()}
+     * and {@link Camera#unproject()}. It is supposed to represent the offset
+     *
+     * @param x         The viewport x offset
+     * @param y         The viewport y offset
+     * @param width     The viewport width
+     * @param height    The viewport height
+     * @param dpi       true if dpi should be accounted for
+     *
+     * @return a newly allocated Scene for the given viewport.
+     */
+        static std::shared_ptr<Scene2Texture> alloc(float x, float y, float width, float height, bool dpi) {
+            std::shared_ptr<Scene2Texture> result = std::make_shared<Scene2Texture>();
+            return (result->init(x,y,width,height,dpi) ? result : nullptr);
+        }
     
 #pragma mark Scene Logic
     /**

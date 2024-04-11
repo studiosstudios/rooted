@@ -408,8 +408,10 @@ void Map::loadBoundary(Vec2 pos, Size size){
 void Map::loadShaderNodes(Size size){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
-    
-    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+
+    _wheatscene = WheatScene::alloc(_assets, name, bladeColorScale);
+
+    _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
     _shaderrenderer->setScale(_scale.x);
     _shaderrenderer->buildShaders();
     _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
@@ -419,7 +421,7 @@ void Map::loadShaderNodes(Size size){
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
-    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _wheatscene->getTexture(), _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
     _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
     
     _worldnode->addChild(_shaderedEntitiesNode);
@@ -622,7 +624,9 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     _world->initObstacle(carrot);
 }
 
-
+void Map::renderWheatScene(const std::shared_ptr<cugl::SpriteBatch> &batch) {
+    _wheatscene->render(batch);
+}
 
 void Map::updateShaders(float step, Mat4 perspective) {
     int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size());

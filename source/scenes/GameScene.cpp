@@ -59,8 +59,6 @@ using namespace cugl;
 #define RESET_MESSAGE    "RESETTING"
 /** The color of the reset message */
 #define RESET_COLOR      Color4::YELLOW
-/** The key the basic game music */
-#define GAME_MUSIC      "game"
 /** The key the victory game music */
 #define WIN_MUSIC       "win"
 /** The key the failure game music */

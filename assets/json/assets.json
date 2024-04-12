@@ -114,7 +114,7 @@
     "sounds": {
         "game": {
             "type":     "sample",
-            "file":     "sounds/Rooted.wav",
+            "file":     "sounds/DD_Main.ogg",
             "stream":   true,
             "volume":   0.5
         },

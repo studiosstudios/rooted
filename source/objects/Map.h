@@ -69,6 +69,8 @@ private:
 
     std::shared_ptr<WheatScene> _wheatscene;
     
+    PolyFactory _pf;
+    
     /** Possible init positions of carrots */
     std::vector<float> _carrotPosList;
     
@@ -259,6 +261,8 @@ public:
     
     void renderWheatScene(const std::shared_ptr<cugl::SpriteBatch> &batch);
 
+    std::shared_ptr<WheatScene> getWheatScene() { return _wheatscene; }
+    
 private:
 #pragma mark -
 #pragma mark Internal Helper Methods

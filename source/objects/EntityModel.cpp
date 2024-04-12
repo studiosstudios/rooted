@@ -253,6 +253,7 @@ void EntityModel::releaseFixtures() {
  */
 void EntityModel::dispose() {
     _node = nullptr;
+    _wheatHeightNode = nullptr;
     _geometry = nullptr;
 }
 
@@ -349,6 +350,10 @@ void EntityModel::update(float dt) {
 //            _node->setColor(Color4(255, 255, 255, 255));
 //        }
     }
+    
+    if (_wheatHeightNode != nullptr) {
+        updateWheatHeightNode();
+    }
 }
 
 
@@ -365,6 +370,17 @@ void EntityModel::resetDebug() {
     BoxObstacle::resetDebug();
 }
 
+std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode(const cugl::PolyFactory pf) {
+    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), Size(1.6, 0.9)));
+    _wheatHeightNode->setColor(Color4(0, 3, 0, 255));
+    _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
+    _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _wheatHeightNode->setPosition(getX(), getY()-getHeight()/2);
+    return _wheatHeightNode;
+}
 
+void EntityModel::updateWheatHeightNode() {
+    _wheatHeightNode->setPosition(getX(), getY()-getHeight()/2);
+}
 
 

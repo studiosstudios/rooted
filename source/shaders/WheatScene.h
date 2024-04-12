@@ -13,6 +13,8 @@ class WheatScene : public Scene2Texture {
 private:
     shared_ptr<scene2::SceneNode> _rootnode;
     float _bladeColorScale;
+    shared_ptr<Shader> _fsqshader;
+    PolyFactory _pf;
     
 public:
     shared_ptr<Texture> _wheattex;
@@ -29,15 +31,12 @@ public:
     bool init(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale);
 
     void dispose();
-    
-    void bindTexture(int bindpoint);
-    
-    void unbindTexture();
 
-    void renderToTarget(const shared_ptr<SpriteBatch> &batch);
+    void renderToScreen(float alpha);
     
-    /** FOR DEBUGGING ONLY */
-    void drawRenderTarget(const shared_ptr<SpriteBatch> &batch);
+    void renderToScreen() { renderToScreen(1.0); };
+
+    shared_ptr<scene2::SceneNode> getRoot() { return _rootnode; }
 
 };
 

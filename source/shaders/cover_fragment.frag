@@ -72,8 +72,8 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
 }
 
 float sampleHeight(vec2 uv) {
-    float r = texture(grass_tex, uv).r;
-    return r > 0.0f ? r * 255.0f/blade_color_scale + 10.0f : 0.0f;
+    vec3 samp = texture(grass_tex, uv).rgb;
+    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f/blade_color_scale + 10.0f, 0.0, MAX_WHEAT_HEIGHT) : 0.0f;
 }
 
 /**
@@ -124,7 +124,7 @@ void main()
 
     vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCENE_SIZE.y;
 
-    for (float dist = 0.0f; dist < MAX_WHEAT_HEIGHT; ++dist) {
+    for (float dist = 0.0f; dist <= MAX_WHEAT_HEIGHT; ++dist) {
         //sample wheat height
         float wheat_height = sampleHeight(wheatUV);
 

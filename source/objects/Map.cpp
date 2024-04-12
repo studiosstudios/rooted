@@ -495,6 +495,10 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     _entitiesNode->addChild(farmerEastWalkNode);
     _entitiesNode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
+    farmerSouthWalkNode->setHeight(32);
+    farmerNorthWalkNode->setHeight(32);
+    farmerEastWalkNode->setHeight(32);
+    carrotfarmerNode->setHeight(32);
 
     auto wheatnode = farmer->allocWheatHeightNode();
     _wheatscene->getRoot()->addChild(wheatnode);
@@ -525,7 +529,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     baby->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
-    babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    babyNode->setHeight(32);
     _entitiesNode->addChild(babyNode);
     baby->setDebugScene(_debugnode);
     
@@ -626,6 +630,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
                            carrotNode);
     _entitiesNode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
+    carrotNode->setHeight(32);
 
     auto wheatnode = carrot->allocWheatHeightNode();
     _wheatscene->getRoot()->addChild(wheatnode);

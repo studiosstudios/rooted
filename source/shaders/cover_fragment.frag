@@ -44,6 +44,7 @@ uniform float WIND_TIME;
 
 uniform float wind_speed;
 uniform vec2 wind_direction;
+uniform float tex_height;
 
 // The output color
 out vec4 frag_color;
@@ -119,9 +120,9 @@ void main()
     //note that this assume that all textures are 32px tall (not accounting for camera zoom)
     //we cant pass this in as a uniform per texture since spritebatch draws in one call
     //to fix this we will have to modify spritebatch
-    float height = (1.0 - outTexCoord.y) * 32.0 / SCENE_SIZE.y / TEXTURE_PIXEL_SIZE.y;
+    float height = (1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y / TEXTURE_PIXEL_SIZE.y;
 
-    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCENE_SIZE.y;
+    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y;
 
     for (float dist = 0.0f; dist <= MAX_WHEAT_HEIGHT; ++dist) {
         //sample wheat height

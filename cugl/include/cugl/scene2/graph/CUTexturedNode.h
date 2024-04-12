@@ -127,6 +127,9 @@ protected:
     /** Whether or not to flip the texture vertically */
     bool _flipVertical;
     
+    /** The height of this texture. This is used exclusively by the wheat cover shader. */
+    float _height;
+    
 
 #pragma mark -
 #pragma mark Constructors
@@ -544,6 +547,20 @@ public:
      * @return true if the texture coordinates are flipped vertically.
      */
     bool isFlipVertical() const { return _flipVertical; }
+    
+    /**
+     * Flips the texture coordinates vertically if flag is true.
+     *
+     * @param  height texture height
+     */
+    void setHeight(float height) { _height = height; }
+    
+    /**
+     * Returns true if the texture coordinates are flipped vertically.
+     *
+     * @return true if the texture coordinates are flipped vertically.
+     */
+    float getHeight() const { return _height; }
 
     /**
      * Returns a string representation of this node for debugging purposes.

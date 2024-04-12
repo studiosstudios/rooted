@@ -615,11 +615,15 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     carrot->setDebugColor(DEBUG_COLOR);
     carrot->setName("carrot");
     _carrots.push_back(carrot);
+    
+    auto carrotSouthWalkSprite = _assets->get<Texture>(CARROT_SOUTH_WALK_SPRITE);
 
     auto carrotNode = scene2::SpriteNode::allocWithSheet(
-            _assets->get<Texture>(CARROT_TEXTURE), 1, 1);
+            carrotSouthWalkSprite, 3, 5);
     carrot->setSceneNode(carrotNode);
     carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    carrotNode->setScale(0.1f, 0.1f);
+    carrotNode->setFrame(0);
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)

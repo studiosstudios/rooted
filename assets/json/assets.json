@@ -26,6 +26,9 @@
         "farmer-east-walk": {
             "file":     "textures/farmer-east-walk.png"
         },
+        "carrot-south-walk": {
+            "file":     "textures/carrot-south-walk.png"
+        },
         "baby": {
             "file":     "textures/baby.png"
         },

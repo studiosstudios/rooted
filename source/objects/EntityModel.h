@@ -58,6 +58,9 @@
 #define FARMER_FRONT_WALK_SPRITE "farmer-front-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
+
+#define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
+
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -

@@ -302,6 +302,9 @@ void GameScene::reset() {
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
     activateWorldCollisions(world);
 
+    _map->resetPlantingSpots();
+    _map->resetPlayers();
+    
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
 

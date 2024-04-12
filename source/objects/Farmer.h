@@ -50,6 +50,7 @@ public:
     
     void setMovement(cugl::Vec2 movement) override;
     
+    void resetFarmer();
 };
 
 

@@ -498,8 +498,9 @@ void PathNode::draw(const std::shared_ptr<SpriteBatch>& batch, const Affine2& tr
         batch->setGradient(_gradient);
     }
     batch->setBlendEquation(_blendEquation);
-    batch->setSrcBlendFunc(_srcFactor);
-    batch->setDstBlendFunc(_dstFactor);
+    batch->setHeight(_height);
+    batch->setSrcBlendFunc(_srcFactor, _srcAlphaFactor);
+    batch->setDstBlendFunc(_dstFactor, _dstAlphaFactor);
 
     if (_stencil) {
         batch->setStencilEffect(StencilEffect::CLAMP_NONE);

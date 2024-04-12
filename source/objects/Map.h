@@ -16,6 +16,7 @@
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
 #include "../shaders/ShaderRenderer.h"
+#include "../shaders/WheatScene.h"
 
 class Map {
 private:
@@ -66,6 +67,8 @@ private:
 
     std::shared_ptr<ShaderRenderer> _shaderrenderer;
 
+    std::shared_ptr<WheatScene> _wheatscene;
+    
     /** Possible init positions of carrots */
     std::vector<float> _carrotPosList;
     
@@ -253,7 +256,11 @@ public:
 #pragma mark -
 #pragma mark Drawing
     void updateShaders(float step, Mat4 perspective);
+    
+    void renderWheatScene(const std::shared_ptr<cugl::SpriteBatch> &batch);
 
+    std::shared_ptr<WheatScene> getWheatScene() { return _wheatscene; }
+    
 private:
 #pragma mark -
 #pragma mark Internal Helper Methods

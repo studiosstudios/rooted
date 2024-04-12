@@ -244,8 +244,9 @@ void PolygonNode::draw(const std::shared_ptr<SpriteBatch>& batch, const Affine2&
         batch->setGradient(_gradient);
     }
     batch->setBlendEquation(_blendEquation);
-    batch->setSrcBlendFunc(_srcFactor);
-    batch->setDstBlendFunc(_dstFactor);
+    batch->setSrcBlendFunc(_srcFactor, _srcAlphaFactor);
+    batch->setDstBlendFunc(_dstFactor, _dstAlphaFactor);
+    batch->setHeight(_height);
     batch->drawMesh(_mesh, transform);
     if (_gradient) {
         batch->setGradient(nullptr);

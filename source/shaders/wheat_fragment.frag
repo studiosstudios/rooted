@@ -64,7 +64,6 @@ uniform vec4 tip_color;
 uniform vec4 wind_color;
 
 uniform vec2 SCREEN_PIXEL_SIZE;
-uniform float blade_color_scale;
 uniform float player_transparency;
 uniform float transparency_radius;
 
@@ -105,11 +104,8 @@ vec4 sampleColor(float dist, float bladeLen) {
  - uv: position to evaluate blade length at
  */
 float sampleBladeLength(vec2 uv) {
-    if (texture(grass_tex, uv).g > 0.0) {
-        return 0.0;
-    }
-    float r = texture(grass_tex, uv).r;
-    return r > 0.0f ? r * 255.0f/blade_color_scale + 10.0f : 0.0f;
+    vec3 samp = texture(grass_tex, uv).rgb;
+    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
 }
 
 /**
@@ -159,20 +155,13 @@ void main(void) {
 
     // Sample the wind
     float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, WIND_TIME);
-    for (float dist = 0.0f; dist < MAX_BLADE_LENGTH; ++dist) {
+    for (float dist = 0.0f; dist <= MAX_BLADE_LENGTH; ++dist) {
 
         // Get the height of the blade originating at the current pixel
         // (0 means no blade)
         float bladeLength = sampleBladeLength(fragUV);
 
         if (bladeLength > 0.0f) {
-            // push up entity positions
-            for (int i = 0; i < num_entities; i++ ){
-                if (distance(fragUV, positions[i]) < 0.02) {
-                    bladeLength += round(0.9*length(velocities[i]));
-                }
-            }
-
             // Blades are pressed down by the wind
             if (windValue > 0.5f) {
                 bladeLength -= 3.0f;

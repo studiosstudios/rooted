@@ -408,8 +408,10 @@ void Map::loadBoundary(Vec2 pos, Size size){
 void Map::loadShaderNodes(Size size){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
-    
-    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+
+    _wheatscene = WheatScene::alloc(_assets, name, bladeColorScale);
+
+    _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
     _shaderrenderer->setScale(_scale.x);
     _shaderrenderer->buildShaders();
     _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
@@ -419,7 +421,7 @@ void Map::loadShaderNodes(Size size){
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
-    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _wheatscene->getTexture(), _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
     _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
     
     _worldnode->addChild(_shaderedEntitiesNode);
@@ -493,7 +495,14 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     _entitiesNode->addChild(farmerEastWalkNode);
     _entitiesNode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
+    farmerSouthWalkNode->setHeight(32);
+    farmerNorthWalkNode->setHeight(32);
+    farmerEastWalkNode->setHeight(32);
+    carrotfarmerNode->setHeight(32);
 
+    auto wheatnode = farmer->allocWheatHeightNode();
+    _wheatscene->getRoot()->addChild(wheatnode);
+    
     _farmers.push_back(farmer);
 
     _world->initObstacle(farmer);
@@ -520,10 +529,13 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     baby->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
     // Create the polygon node (empty, as the model will initialize)
-    babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    babyNode->setHeight(32);
     _entitiesNode->addChild(babyNode);
     baby->setDebugScene(_debugnode);
-
+    
+    auto wheatnode = baby->allocWheatHeightNode();
+    _wheatscene->getRoot()->addChild(wheatnode);
+    
     _world->initObstacle(baby);
 }
 
@@ -618,11 +630,17 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
                            carrotNode);
     _entitiesNode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
+    carrotNode->setHeight(32);
 
+    auto wheatnode = carrot->allocWheatHeightNode();
+    _wheatscene->getRoot()->addChild(wheatnode);
+    
     _world->initObstacle(carrot);
 }
 
-
+void Map::renderWheatScene(const std::shared_ptr<cugl::SpriteBatch> &batch) {
+    _wheatscene->render(batch);
+}
 
 void Map::updateShaders(float step, Mat4 perspective) {
     int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size());

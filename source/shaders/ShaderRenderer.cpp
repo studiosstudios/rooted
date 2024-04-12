@@ -66,7 +66,7 @@ const std::string cloudsVert =
 
 using namespace std;
 
-bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size, bool fullHeight) {
+bool ShaderRenderer::init(const shared_ptr<Texture> &wheattex, const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size, bool fullHeight) {
     
     _assets = assets;
     _fullHeight = fullHeight;
@@ -77,10 +77,10 @@ bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, str
     _bladeColorScale = bladeColorScale;
 
     _cloudtex = _assets->get<Texture>("shader_clouds");
-    _wheattex = _assets->get<Texture>(name);
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
     _grassgradienttex = _assets->get<Texture>("shader_grass_gradient");
+    _wheattex = wheattex;
 
     _size = _wheattex->getSize();
 
@@ -97,7 +97,7 @@ bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, str
     _textures.push_back(_gradienttex);
     _textures.push_back(_grassgradienttex);
     _textures.push_back(_wheattex);
-    
+
     for (int i = 0; i < _textures.size(); i++) {
         _textures[i]->setBindPoint(i);
     }

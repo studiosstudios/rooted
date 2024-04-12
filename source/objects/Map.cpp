@@ -623,6 +623,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     carrot->setSceneNode(carrotNode);
     carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
     carrotNode->setScale(0.1f, 0.1f);
+//    carrotNode->setScale(0.1f, 0.1f);
     carrotNode->setFrame(0);
     carrot->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM

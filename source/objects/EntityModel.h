@@ -129,7 +129,12 @@ protected:
     
     int _wheatContacts;
     
-    float animTime;
+    /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
+    float curAnimDuration = 1.5f;
+    
+    /** The amount of time that has elapsed in the current animation cycle
+        For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
+    float curAnimTime;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -413,8 +418,26 @@ public:
      */
     void setDrawScale(float scale) { _drawScale = scale; };
     
+    /**
+     * Updates the current value in curAnimDuration with the current EntityModel's state value
+     *
+     * Virtual, should be implemented by all derived classes with respect to their specific animation durations.
+     */
+    virtual void updateCurAnimDurationForState() {};
+    
+    /**
+     * Returns whether the current EntityModel's state is one where the animation should be cycling
+     *
+     * Examples of states where this would return false is if the player is currently not moving or DASHING or ROOTED.
+     */
     bool animationShouldStep();
     
+    /**
+     * Sets all of the sprite nodes associated with this EntityModel
+     *
+     * This currently only includes the 5-directional movement sprites, but
+     * TODO: It should later include all action sprites.
+     */
     void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
@@ -427,6 +450,11 @@ public:
         _southWalkSprite = southNode;
     }
     
+    /**
+     * Steps the current sprite's animation by dt.
+     *
+     * This steps the current sprite node associated with this EntityModel by incrementing curAnimTime by dt and comparing it with curAnimDuration
+     */
     void stepAnimation(float dt);
     
     EntityFacing calculateFacing(cugl::Vec2 movement);

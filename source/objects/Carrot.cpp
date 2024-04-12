@@ -50,3 +50,17 @@ void Carrot::gotRooted(){
 void Carrot::gotUnrooted(){
     _isRooted = false;
 }
+
+
+void Carrot::updateCurAnimDurationForState() {
+    switch (_state) {
+        case MOVING: {
+            curAnimDuration = walkAnimDuration;
+            break;
+        }
+        default: {
+            // This state duration is not implemented yet
+            return;
+        }
+    }
+}

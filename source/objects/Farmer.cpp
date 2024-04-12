@@ -29,3 +29,16 @@ void Farmer::setMovement(Vec2 movement) {
     }
     EntityModel::setMovement(movement);
 }
+
+void Farmer::updateCurAnimDurationForState() {
+    switch (_state) {
+        case MOVING: {
+            curAnimDuration = walkAnimDuration;
+            break;
+        }
+        default: {
+            // This state duration is not implemented yet
+            return;
+        }
+    }
+}

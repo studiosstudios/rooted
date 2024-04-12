@@ -94,6 +94,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         // Gameplay attributes
         _facing = SOUTH;
         _state = MOVING;
+        updateCurAnimDurationForState();
         
         return true;
     }
@@ -117,9 +118,9 @@ void EntityModel::stepAnimation(float dt) {
     cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
     if (sprite != nullptr) {
         if (animationShouldStep()) {
-                animTime += dt;
-                if (animTime > 1.5f) { animTime = 0;}
-                sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
+                curAnimTime += dt;
+                if (curAnimTime > curAnimDuration) { curAnimTime = 0;}
+                sprite->setFrame(std::floor(sprite->getSpan() * curAnimTime / curAnimDuration));
         }
         else if (sprite->getFrame() != 0) {
             sprite->setFrame(0);
@@ -267,12 +268,15 @@ void EntityModel::updateState() {
         return;
     }
     
+    bool stateChanged = false;
+    
     switch (_state) {
         case MOVING: {
             // Moving -> Dashing
             if (dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
+                stateChanged = true;
             }
             break;
         }
@@ -281,12 +285,17 @@ void EntityModel::updateState() {
             dashTimer--;
             if (dashTimer == 0) {
                 _state = MOVING;
+                stateChanged = true;
             }
             break;
         }
         default: {
             CULog("updateState: Not implemented yet");
         }
+    }
+    
+    if (stateChanged) {
+        updateCurAnimDurationForState();
     }
 }
 

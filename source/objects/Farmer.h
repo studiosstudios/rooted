@@ -18,6 +18,9 @@ private:
     bool _dashWindow;
     std::shared_ptr<cugl::scene2::SpriteNode> _normalNode;
     std::shared_ptr<cugl::scene2::PolygonNode> _captureNode;
+    
+    // Animation timers
+    float walkAnimDuration = 1.5f;
 
 public:
     int captureTime;
@@ -50,6 +53,7 @@ public:
     
     void setMovement(cugl::Vec2 movement) override;
     
+    void updateCurAnimDurationForState() override;
 };
 
 

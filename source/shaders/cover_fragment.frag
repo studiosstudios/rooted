@@ -41,7 +41,6 @@ uniform sampler2D noise_tex;
 uniform vec2 TEXTURE_PIXEL_SIZE;
 uniform vec2 SCENE_SIZE;
 uniform float WIND_TIME;
-uniform float blade_color_scale;
 
 uniform float wind_speed;
 uniform vec2 wind_direction;
@@ -73,7 +72,7 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
 
 float sampleHeight(vec2 uv) {
     vec3 samp = texture(grass_tex, uv).rgb;
-    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f/blade_color_scale + 10.0f, 0.0, MAX_WHEAT_HEIGHT) : 0.0f;
+    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_WHEAT_HEIGHT) : 0.0f;
 }
 
 /**

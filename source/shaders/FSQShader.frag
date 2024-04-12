@@ -36,6 +36,7 @@ precision highp float;  // highp required for gradient precision
 in vec2 outUV;
 uniform sampler2D uTexture;
 uniform float alpha;
+uniform float scale;
 
 out vec4 frag_color;
 
@@ -43,5 +44,6 @@ void main()
 {
 	frag_color = texture(uTexture, vec2(outUV.x, 1-outUV.y));
 	frag_color.a = frag_color.a * alpha;
+	frag_color.rgb *= scale;
 }
 /////////// SHADER END //////////)"

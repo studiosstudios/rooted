@@ -31,7 +31,7 @@ using namespace cugl;
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
 /** Zoom of camera relative to scene */
-#define CAMERA_ZOOM 1.0
+#define CAMERA_ZOOM 2.0
 /** Camera gliding rate */
 #define CAMERA_GLIDE_RATE 0.06f
 
@@ -592,8 +592,8 @@ Size GameScene::computeActiveSize() const {
 
 void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
     _map->getWheatScene()->render(batch);
-    Scene2::render(batch);
-//    _map->getWheatScene()->renderToScreen(0.05); //for debugging the wheat texture
+//    Scene2::render(batch);
+    _map->getWheatScene()->renderToScreen(1.0); //for debugging the wheat texture
 }
 
 void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){

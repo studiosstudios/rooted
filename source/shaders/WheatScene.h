@@ -32,9 +32,11 @@ public:
 
     void dispose();
 
-    void renderToScreen(float alpha);
+    void renderToScreen(float alpha, float scale);
     
-    void renderToScreen() { renderToScreen(1.0); };
+    void renderToScreen() { renderToScreen(1.0, 8.0); };
+
+    void renderToScreen(float alpha) { renderToScreen(alpha, 8.0); };
 
     shared_ptr<scene2::SceneNode> getRoot() { return _rootnode; }
 

@@ -64,7 +64,6 @@ uniform vec4 tip_color;
 uniform vec4 wind_color;
 
 uniform vec2 SCREEN_PIXEL_SIZE;
-uniform float blade_color_scale;
 uniform float player_transparency;
 uniform float transparency_radius;
 
@@ -106,7 +105,7 @@ vec4 sampleColor(float dist, float bladeLen) {
  */
 float sampleBladeLength(vec2 uv) {
     vec3 samp = texture(grass_tex, uv).rgb;
-    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f/blade_color_scale + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
+    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
 }
 
 /**

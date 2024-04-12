@@ -113,6 +113,7 @@ void ActionController::postUpdate(float dt) {
         if ((*it)->isRemoved()) {
             (*it)->getSceneNode()->dispose();
             (*it)->getDebugNode()->dispose();
+            (*it)->getWheatHeightNode()->dispose();
             _map->getBabyCarrots().erase(it);
         }
         else ++it;

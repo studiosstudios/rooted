@@ -370,17 +370,34 @@ void EntityModel::resetDebug() {
     BoxObstacle::resetDebug();
 }
 
-std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode(const cugl::PolyFactory pf) {
-    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), Size(1.6, 0.9)));
-    _wheatHeightNode->setColor(Color4(0, 3, 0, 255));
+std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
+    pf = PolyFactory(0.01);
+    _wheatHeightTarget = 0.0;
+    _wheatSizeTarget = 0.75;
+    _currWheatHeight = _wheatHeightTarget;
+    _currWheatSize = _wheatSizeTarget;
+    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(1.6, 0.9)));
+    _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
     _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
     _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
-    _wheatHeightNode->setPosition(getX(), getY()-getHeight()/2);
+    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     return _wheatHeightNode;
 }
 
 void EntityModel::updateWheatHeightNode() {
-    _wheatHeightNode->setPosition(getX(), getY()-getHeight()/2);
+    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    if (_state == DASHING) {
+        _wheatSizeTarget = 1.5;
+        _wheatHeightTarget = -100;
+    } else {
+        _wheatSizeTarget = 0.75;
+        _wheatHeightTarget = round(getLinearVelocity().length());
+    }
+    _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.2;
+    _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.2;
+    _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+    _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
+                                      _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 }
 
 

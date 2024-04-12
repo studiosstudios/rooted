@@ -69,8 +69,6 @@ private:
 
     std::shared_ptr<WheatScene> _wheatscene;
     
-    PolyFactory _pf;
-    
     /** Possible init positions of carrots */
     std::vector<float> _carrotPosList;
     

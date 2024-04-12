@@ -198,8 +198,6 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
     
     setRootNode(root);
-    
-    _pf = PolyFactory(0.01);
 
     return true;
 }
@@ -498,7 +496,7 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     _entitiesNode->addChild(carrotfarmerNode);
     farmer->setDebugScene(_debugnode);
 
-    auto wheatnode = farmer->allocWheatHeightNode(_pf);
+    auto wheatnode = farmer->allocWheatHeightNode();
     _wheatscene->getRoot()->addChild(wheatnode);
     
     _farmers.push_back(farmer);
@@ -531,7 +529,7 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     _entitiesNode->addChild(babyNode);
     baby->setDebugScene(_debugnode);
     
-    auto wheatnode = baby->allocWheatHeightNode(_pf);
+    auto wheatnode = baby->allocWheatHeightNode();
     _wheatscene->getRoot()->addChild(wheatnode);
     
     _world->initObstacle(baby);
@@ -629,7 +627,7 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     _entitiesNode->addChild(carrotNode);
     carrot->setDebugScene(_debugnode);
 
-    auto wheatnode = carrot->allocWheatHeightNode(_pf);
+    auto wheatnode = carrot->allocWheatHeightNode();
     _wheatscene->getRoot()->addChild(wheatnode);
     
     _world->initObstacle(carrot);

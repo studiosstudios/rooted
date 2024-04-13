@@ -115,19 +115,18 @@ bool EntityModel::animationShouldStep() {
 }
 
 void EntityModel::stepAnimation(float dt) {
-    cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
-    if (sprite != nullptr) {
+    if (_node != nullptr) {
         if (animationShouldStep()) {
                 curAnimTime += dt;
                 if (curAnimTime > (2 * curAnimDuration)) { curAnimTime = 0;}
                 // PING-PING style animation
                 // https://www.desmos.com/calculator/kszulthvhz
-                sprite->setFrame(std::floor(sprite->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
+                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
                 // LOOPING style animation
                 // sprite->setFrame(std::floor(sprite->getSpan() * curAnimTime / curAnimDuration));
         }
-        else if (sprite->getFrame() != 0) {
-            sprite->setFrame(0);
+        else if (_node->getFrame() != 0) {
+            _node->setFrame(0);
             curAnimTime = 0;
         }
     }

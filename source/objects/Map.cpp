@@ -478,7 +478,7 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
     farmerEastWalkNode->setHeight(32);
     
-    auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(CARROTFARMER_TEXTURE));
+    auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
     carrotfarmerNode->setVisible(false);
     carrotfarmerNode->setScale(0.23f, 0.23f);
     carrotfarmerNode->setHeight(32);
@@ -523,8 +523,8 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
     _babies.push_back(baby);
 
     _assets->get<Texture>(BABY_TEXTURE)->setName("baby");
-    auto babyNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(BABY_TEXTURE));
+    auto babyNode = scene2::SpriteNode::allocWithSheet(
+            _assets->get<Texture>(BABY_TEXTURE), 1, 1);
 //        babyNode->setColor(Color4::BLUE);
     baby->setSceneNode(babyNode);
     babyNode->setName("baby");

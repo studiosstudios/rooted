@@ -116,7 +116,7 @@ protected:
     EntityFacing _facing;
 
 	/** The scene graph node for the Dude. */
-	std::shared_ptr<cugl::scene2::SceneNode> _node;
+	std::shared_ptr<cugl::scene2::SpriteNode> _node;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _eastWalkSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _southWalkSprite;
@@ -377,7 +377,7 @@ public:
      *
      * @return the scene graph node representing this DudeModel.
      */
-	const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+	const std::shared_ptr<cugl::scene2::SpriteNode>& getSceneNode() const { return _node; }
 
     /**
      * Sets the scene graph node representing this DudeModel.
@@ -397,7 +397,7 @@ public:
      *
      * @param node  The scene graph node representing this DudeModel, which has been added to the world node already.
      */
-	void setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+	void setSceneNode(const std::shared_ptr<cugl::scene2::SpriteNode>& node) {
         if (_node != nullptr) {
             _node->setVisible(false);
         }

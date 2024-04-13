@@ -17,7 +17,7 @@ private:
     bool _canPlant;
     bool _dashWindow;
     std::shared_ptr<cugl::scene2::SpriteNode> _normalNode;
-    std::shared_ptr<cugl::scene2::PolygonNode> _captureNode;
+    std::shared_ptr<cugl::scene2::SpriteNode> _captureNode;
     
     // Animation timers
     float walkAnimDuration = 1.5f;
@@ -51,7 +51,7 @@ public:
     void setCanPlant(bool plant) { _canPlant = plant; };
     
     void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
-    void setCaptureNode(std::shared_ptr<cugl::scene2::PolygonNode> n) { _captureNode = n; }
+    void setCaptureNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _captureNode = n; }
     
     void setMovement(cugl::Vec2 movement) override;
     

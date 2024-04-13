@@ -93,7 +93,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         
         // Gameplay attributes
         _facing = SOUTH;
-        _state = MOVING;
+        _state = STANDING;
         updateCurAnimDurationForState();
         
         return true;
@@ -111,7 +111,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return !getLinearVelocity().isZero() || _state == DASHING || _state == PLANTING;
+    return _state == MOVING || _state == DASHING || _state == PLANTING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -281,12 +281,22 @@ void EntityModel::updateState() {
     bool stateChanged = false;
     
     switch (_state) {
+        case STANDING: {
+            // Standing -> Moving
+            if (!_movement.isZero()) {
+                _state = MOVING;
+            }
+            break;
+        }
         case MOVING: {
             // Moving -> Dashing
             if (dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
                 stateChanged = true;
+            }
+            else if (_movement.isZero()) {
+                _state = STANDING;
             }
             break;
         }
@@ -322,13 +332,12 @@ void EntityModel::applyForce() {
     Vec2 speed;
     
     switch (_state) {
+        case STANDING: {
+            setLinearVelocity(Vec2::ZERO);
+            break;
+        }
         case MOVING: {
-            if (getMovement() == Vec2::ZERO) {
-                speed = Vec2::ZERO;
-            }
-            else{
-                Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
-            }
+            Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
             setLinearVelocity(speed);
             break;
         }

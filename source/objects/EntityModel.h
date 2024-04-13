@@ -151,9 +151,10 @@ protected:
     
     /** State that a rooted! player entity can be in. Some of these states are specific
         to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which states an entity can
+        we need to enforce the corresponding invariants for which staztes an entity can
         be in. */
     enum EntityState {
+        STANDING,
         MOVING,
         DASHING,
         CARRYING,   // bunny only
@@ -575,7 +576,11 @@ public:
      */
     void applyForce();
 
+    /** Whether this EntityModel is in the DASHING state*/
     bool isDashing();
+    
+    /** Whether this EntityModel is NOT in the STANDING state */
+    bool isNotStanding();
 
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
 

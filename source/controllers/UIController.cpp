@@ -39,8 +39,8 @@ bool UIController::init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
 
 
 void UIController::updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick) {
-    _joyback->setPosition(joyStick.first / 1.5f - _offset / _cameraZoom);
-    _joymain->setPosition(joyStick.second / 1.5f - _offset / _cameraZoom);
+    _joyback->setPosition(joyStick.first / _cameraZoom - _offset / _cameraZoom);
+    _joymain->setPosition(joyStick.second / _cameraZoom - _offset / _cameraZoom);
 }
 
 void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera,

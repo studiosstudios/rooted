@@ -38,7 +38,10 @@ void Farmer::setMovement(Vec2 movement) {
 
 void Farmer::updateCurAnimDurationForState() {
     switch (_state) {
-        case MOVING: {
+        // TODO: This needs to be split up into the correct animDurations for each type of movement states
+        case SNEAKING:
+        case WALKING:
+        case RUNNING: {
             curAnimDuration = walkAnimDuration;
             break;
         }

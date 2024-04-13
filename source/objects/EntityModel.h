@@ -155,7 +155,9 @@ protected:
         be in. */
     enum EntityState {
         STANDING,
-        MOVING,
+        SNEAKING,
+        WALKING,
+        RUNNING,
         DASHING,
         CARRYING,   // bunny only
         PLANTING,   // bunny only
@@ -581,6 +583,25 @@ public:
     
     /** Whether this EntityModel is NOT in the STANDING state */
     bool isNotStanding();
+    
+    /** Whether this EntityModel is in SNEAKING/WALKING/RUNNING state 
+     *  This does NOT include if the state is DASHING. Use `isDashing` for that.
+     */
+    bool isMoving() { return _state == SNEAKING || _state == WALKING || _state == RUNNING; };
+    
+    /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
+    EntityState getMovementState() {
+        if (_movement.isZero()) {
+            return STANDING;
+        }
+        else if (_movement.lengthSquared() <= 0.33 * 0.33) {
+            return SNEAKING;
+        }
+        else if (_movement.lengthSquared() <= 0.66 * 0.66) {
+            return WALKING;
+        }
+        return RUNNING;
+    }
 
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
 

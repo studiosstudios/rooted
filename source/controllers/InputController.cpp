@@ -190,6 +190,7 @@ void InputController::update(float dt) {
     } else {
         _movement.y = 0;
     }
+    _movement.normalize();
 #endif
 
     _resetPressed = _keyReset;

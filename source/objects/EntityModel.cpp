@@ -111,7 +111,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return _state == MOVING || _state == DASHING || _state == PLANTING;
+    return isMoving() || _state == DASHING || _state == PLANTING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -279,24 +279,30 @@ void EntityModel::updateState() {
     }
     
     bool stateChanged = false;
+    EntityState nextState = _state;
+    
     
     switch (_state) {
         case STANDING: {
             // Standing -> Moving
-            if (!_movement.isZero()) {
-                _state = MOVING;
-            }
+            nextState = getMovementState();
+            stateChanged = (nextState != _state);
+            _state = nextState;
             break;
         }
-        case MOVING: {
+        case SNEAKING:
+        case WALKING:
+        case RUNNING: {
             // Moving -> Dashing
             if (dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
                 stateChanged = true;
             }
-            else if (_movement.isZero()) {
-                _state = STANDING;
+            else {
+                nextState = getMovementState();
+                stateChanged = (nextState != _state);
+                _state = nextState;
             }
             break;
         }
@@ -304,7 +310,7 @@ void EntityModel::updateState() {
             // Dashing -> Moving
             dashTimer--;
             if (dashTimer == 0) {
-                _state = MOVING;
+                _state = getMovementState();
                 stateChanged = true;
             }
             break;
@@ -317,6 +323,7 @@ void EntityModel::updateState() {
     if (stateChanged) {
         updateCurAnimDurationForState();
     }
+    std::cout << _state << "\n";
 }
 
 /**
@@ -336,7 +343,9 @@ void EntityModel::applyForce() {
             setLinearVelocity(Vec2::ZERO);
             break;
         }
-        case MOVING: {
+        case SNEAKING:
+        case WALKING:
+        case RUNNING: {
             Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
             setLinearVelocity(speed);
             break;

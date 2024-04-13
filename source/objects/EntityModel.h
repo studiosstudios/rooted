@@ -55,11 +55,13 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
-#define FARMER_FRONT_WALK_SPRITE "farmer-front-walk"
+#define FARMER_SOUTH_WALK_SPRITE "farmer-south-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
 
 #define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
+#define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
+#define CARROT_EAST_WALK_SPRITE "carrot-east-walk"
 
 #define BABY_TEXTURE   "baby"
 

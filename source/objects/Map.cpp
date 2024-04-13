@@ -18,6 +18,7 @@
 #pragma mark -
 #pragma mark Asset Constants
 # define PLANTING_SPOT_TEXTURE "planting spot"
+# define GRASS_TEXTURE "grass"
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
 
@@ -257,6 +258,21 @@ void Map::populate(Size size) {
     loadBoundary(Vec2(_bounds.size.width/2, -0.5), Size(_bounds.size.width, 1));
     loadBoundary(Vec2(_bounds.size.width/2, _bounds.size.height+0.5), Size(_bounds.size.width, 1));
     
+    //add grass background node
+    float grassScale = 32.0;
+    std::shared_ptr<Texture> grassTex = _assets->get<Texture>(GRASS_TEXTURE);
+    Size nodesize; //ensure node properly fills scene
+    if (float(grassTex->getWidth())/grassTex->getHeight() > float(_root->getContentWidth())/_root->getContentHeight()) {
+        nodesize = grassScale * Size(float(_root->getContentHeight()) * grassTex->getWidth() / grassTex->getHeight(), _root->getContentHeight());
+    } else {
+        nodesize = grassScale * Size(_root->getContentWidth(), float(_root->getContentWidth()) * grassTex->getHeight() / grassTex->getWidth());
+    }
+    auto grassnode = scene2::PolygonNode::allocWithPoly(Rect(Vec2::ZERO, nodesize));
+    grassnode->setTexture(grassTex);
+    grassnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    grassnode->setPriority(float(DrawOrder::GRASS));
+    grassnode->setScale(1/grassScale);
+    _worldnode->addChild(grassnode);
 }
 
 void Map::populateWithCarrots(int numCarrots) {
@@ -417,7 +433,7 @@ void Map::loadShaderNodes(Size size){
     _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
     _wheatnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::WHEAT);
     _cloudsnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::CLOUDS);
-    _groundnode->setPriority(float(Map::DrawOrder::GROUND));
+    _groundnode->setPriority(float(Map::DrawOrder::SHADOWS));
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     

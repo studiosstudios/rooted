@@ -98,11 +98,26 @@
         "redbutton": {
             "file": "textures/redbutton.png"
         },
-        "rootedlogo": {
-            "file": "textures/logo.png"
-        },
         "wheatbkg": {
             "file": "textures/wheatbkg.png"
+        },
+        "woodbig" : {
+            "file" : "textures/woodbig.png"
+        },
+        "woodsmall" : {
+            "file" : "textures/woodsmall.png"
+        },
+        "mainmenubkg": {
+            "file": "textures/mainmenubkg.png"
+        },
+        "rootedlogo": {
+            "file": "textures/rootedlogo.png"
+        },
+        "sqbutton" : {
+            "file": "textures/squarebutton.png"
+        },
+        "lobbyidbkg" : {
+            "file": "textures/lobbyid.png"
         }
     },
     "jsons": {
@@ -162,13 +177,40 @@
         "gaeguBold65": {
             "file":     "fonts/Gaegu-Bold.ttf",
             "size":     65
+        },
+        "gaeguBold60": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 60
+        },
+        "gaeguBold67": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 67
+        },
+        "gaeguBold72": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 72
+        },
+        "gaeguBold75": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 75
+        },
+        "gaeguBold90": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 90
         }
     },
     "widgets": {
         "colorbutton" : "widgets/colorbutton.json",
         "textbutton" : "widgets/textbutton.json",
         "textfield" : "widgets/textfield.json",
-        "labelbox" : "widgets/labelbox.json"
+        "labelbox" : "widgets/labelbox.json",
+        "mainmenu" : "widgets/mainmenu.json",
+        "redbuttonbigwidget" : "widgets/redbuttonbigwidget.json",
+        "redbuttonsmallwidget" : "widgets/redbuttonsmallwidget.json",
+        "numbuttonwidget" : "widgets/numbuttonwidget.json",
+        "numpadwidget" : "widgets/numpadwidget.json",
+        "lobbyclient" : "widgets/lobbyclient.json",
+        "lobbyhost" : "widgets/lobbyhost.json"
     },
     "scene2s" : {
         "menu": {

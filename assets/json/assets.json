@@ -431,7 +431,7 @@
                 }
             }
         },
-        "client": {
+        "clientold": {
             "type"      : "Node",
             "format"    : {
                 "type"        : "Anchored"
@@ -834,6 +834,12 @@
             "type"   : "Widget",
             "data"   : {
                 "key"     : "lobbyhost"
+            }
+        },
+        "client": {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "lobbyclient"
             }
         },
         "mainmenu": {

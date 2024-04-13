@@ -167,6 +167,18 @@ protected:
     bool _unrootInput;
     
     cugl::Vec2 _dashCache;
+    /** Polygon factory for the wheat node. */
+    cugl::PolyFactory pf;
+    /** The wheat height adjustment node in the wheat scene from this entity's velocity */
+    std::shared_ptr<cugl::scene2::PolygonNode> _wheatHeightNode;
+    /** Target height for wheat node. This is very temporary */
+    float _wheatHeightTarget;
+    /** Current rendered height for wheat node. This is very temporary */
+    float _currWheatHeight;
+    /** Target size for wheat node. This is very temporary */
+    float _wheatSizeTarget;
+    /** Current rendered height for wheat node. This is very temporary */
+    float _currWheatSize;
     
 
 public:
@@ -531,6 +543,12 @@ public:
     void applyForce();
 
     bool isDashing();
+
+    virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
+
+    virtual void updateWheatHeightNode();
+
+    std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

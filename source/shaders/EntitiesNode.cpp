@@ -27,13 +27,14 @@ void EntitiesNode::dispose() {
     SceneNode::dispose();
 }
 
-bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, const std::shared_ptr<cugl::AssetManager> &assets,
+bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, const shared_ptr<Texture> &wheattex,
+                        const std::shared_ptr<cugl::AssetManager> &assets,
                         string name, float bladeColorScale, Size size, bool fullHeight) {
     if (SceneNode::init()) {
         _root = entitiesNode;
         _fullHeight = fullHeight;
 
-        _wheattex = assets->get<Texture>(name);
+        _wheattex = wheattex;
         _noisetex = assets->get<Texture>("shader_noise");
         _bladeColorScale = bladeColorScale;
         _coverShader = Shader::alloc(SHADER(coverShaderVert), SHADER(coverShaderFrag));

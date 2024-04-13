@@ -9,6 +9,9 @@ using namespace cugl;
 
 #pragma mark -
 #pragma mark Application State
+
+/** The key the basic game music */
+#define GAME_MUSIC      "game"
 /**
  * The method called after OpenGL is initialized, but before running the application.
  *
@@ -189,6 +192,10 @@ void RootedApp::preUpdate(float dt) {
     }
     else if (_status == GAME){
         _gameplay.preUpdate(dt);
+        if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
+            std::shared_ptr<Sound> source = _assets->get<Sound>(GAME_MUSIC);
+            AudioEngine::get()->play("game", source);
+        }
     }
     if(_network){
         _network->updateNet();

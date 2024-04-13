@@ -255,7 +255,7 @@
                 }
             }
         },
-        "host": {
+        "hostold": {
             "type"      : "Node",
             "format"    : {
                 "type"        : "Anchored"
@@ -828,6 +828,12 @@
                         "y_anchor" : "middle"
                     }
                 }
+            }
+        },
+        "host": {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "lobbyhost"
             }
         },
         "mainmenu": {

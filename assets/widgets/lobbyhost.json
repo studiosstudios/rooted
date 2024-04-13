@@ -49,6 +49,28 @@
                     "y_offset": 0
                 }
             },
+            "back" : {
+                "type"      : "Button",
+                "data"   : {
+                    "upnode"  : "up",
+                    "anchor":   [0.0,0.0]
+                },
+                "children": {
+                    "up" : {
+                        "type": "Image",
+                        "data": {
+                            "texture":  "left"
+                        }
+                    }
+                },
+                "layout" : {
+                    "x_anchor" : "left",
+                    "y_anchor" : "bottom",
+                    "y_offset" : 10,
+                    "x_offset" : 10,
+                    "absolute" : true
+                }
+            },
             "lobbybuttons": {
                 "type": "Node",
                 "format": {
@@ -138,6 +160,25 @@
                                     "absolute": false,
                                     "x_offset": 0,
                                     "y_offset": 0
+                                }
+                            },
+                            "text": {
+                                "type"   : "TextField",
+                                "data": {
+                                    "anchor"   : [0.5, 0.5],
+                                    "font"     : "gaeguBold90",
+                                    "text"     : "",
+                                    "padding"  : [20, 20, 20, 20],
+                                    "halign"   : "center",
+                                    "valign"   : "middle",
+                                    "cursor": true
+                                },
+                                "layout" : {
+                                    "x_anchor" : "fill",
+                                    "y_anchor" : "fill",
+                                    "x_offset" : 2,
+                                    "y_offset" : 2,
+                                    "absolute" : true
                                 }
                             }
                         },

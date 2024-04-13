@@ -261,6 +261,12 @@ void EntityModel::dispose() {
     _node = nullptr;
     _wheatHeightNode = nullptr;
     _geometry = nullptr;
+    
+    _northWalkSprite = nullptr;
+    _northEastWalkSprite = nullptr;
+    _eastWalkSprite = nullptr;
+    _southEastWalkSprite = nullptr;
+    _southWalkSprite = nullptr;
 }
 
 /**

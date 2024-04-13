@@ -466,18 +466,27 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
     farmerSouthWalkNode->setScale(0.23f, 0.23f);
     farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    farmerSouthWalkNode->setHeight(32);
     
     auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
     farmerNorthWalkNode->setScale(0.23f, 0.23f);
     farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    farmerNorthWalkNode->setHeight(32);
     
     auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
     farmerEastWalkNode->setScale(0.23f, 0.23f);
     farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    farmerEastWalkNode->setHeight(32);
     
     auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(CARROTFARMER_TEXTURE));
     carrotfarmerNode->setVisible(false);
     carrotfarmerNode->setScale(0.23f, 0.23f);
+    carrotfarmerNode->setHeight(32);
+    
+    _entitiesNode->addChild(farmerSouthWalkNode);
+    _entitiesNode->addChild(farmerNorthWalkNode);
+    _entitiesNode->addChild(farmerEastWalkNode);
+    _entitiesNode->addChild(carrotfarmerNode);
     
     farmer->setSpriteNodes(farmerNorthWalkNode,
                            farmerEastWalkNode,
@@ -486,21 +495,13 @@ void Map::loadFarmer(float x, float y, float width, float height) {
                            farmerSouthWalkNode);
     
     farmer->setNormalNode(farmerSouthWalkNode);
-
     farmer->setCaptureNode(carrotfarmerNode);
+    
     farmer->setSceneNode(farmerSouthWalkNode);
     farmer->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    
-    _entitiesNode->addChild(farmerSouthWalkNode);
-    _entitiesNode->addChild(farmerNorthWalkNode);
-    _entitiesNode->addChild(farmerEastWalkNode);
-    _entitiesNode->addChild(carrotfarmerNode);
+
     farmer->setDebugScene(_debugnode);
-    farmerSouthWalkNode->setHeight(32);
-    farmerNorthWalkNode->setHeight(32);
-    farmerEastWalkNode->setHeight(32);
-    carrotfarmerNode->setHeight(32);
 
     auto wheatnode = farmer->allocWheatHeightNode();
     _wheatscene->getRoot()->addChild(wheatnode);
@@ -626,17 +627,23 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
             carrotSouthWalkSprite, 3, 5);
     carrotSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
     carrotSouthWalkNode->setScale(0.1f, 0.1f);
+    carrotSouthWalkNode->setHeight(32);
     
     auto carrotNorthWalkNode = scene2::SpriteNode::allocWithSheet(
             carrotNorthWalkSprite, 3, 5);
     carrotNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
     carrotNorthWalkNode->setScale(0.1f, 0.1f);
+    carrotNorthWalkNode->setHeight(32);
     
     auto carrotEastWalkNode = scene2::SpriteNode::allocWithSheet(
             carrotEastWalkSprite, 3, 5);
     carrotEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
     carrotEastWalkNode->setScale(0.1f, 0.1f);
+    carrotEastWalkNode->setHeight(32);
     
+    _entitiesNode->addChild(carrotNorthWalkNode);
+    _entitiesNode->addChild(carrotEastWalkNode);
+    _entitiesNode->addChild(carrotSouthWalkNode);
     
     carrot->setSceneNode(carrotSouthWalkNode);
     carrot->setDrawScale(
@@ -647,13 +654,8 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
                            carrotEastWalkNode,
                            carrotEastWalkNode,
                            carrotSouthWalkNode);
-    _entitiesNode->addChild(carrotNorthWalkNode);
-    _entitiesNode->addChild(carrotEastWalkNode);
-    _entitiesNode->addChild(carrotSouthWalkNode);
+    
     carrot->setDebugScene(_debugnode);
-    carrotNorthWalkNode->setHeight(32);
-    carrotEastWalkNode->setHeight(32);
-    carrotSouthWalkNode->setHeight(32);
 
     auto wheatnode = carrot->allocWheatHeightNode();
     _wheatscene->getRoot()->addChild(wheatnode);

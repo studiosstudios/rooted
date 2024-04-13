@@ -29,7 +29,9 @@ public:
 
     Farmer() {};
 
-    ~Farmer() {};
+    ~Farmer() override { dispose(); };
+    
+    void dispose();
     
     bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
     

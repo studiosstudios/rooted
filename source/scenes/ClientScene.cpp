@@ -87,8 +87,8 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
         _numbers.push_back(std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_numpad_" + number)));
     }
     
-    // have none of these for now
-//    _backspace = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_buttons_back"));
+    _backspace = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_idfield_backspace"));
+    // no clear
 //    _clear = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_buttons_clear"));
     
     for (int ii = 0; ii < _numbers.size(); ii++) {
@@ -100,12 +100,12 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
         });
     }
 
-//    _backspace->addListener([this](const std::string& name, bool down) {
-//        if (down && !_gameid->getText().empty()) {
-//            _gameid->setText(_gameid->getText().substr(0, _gameid->getText().length() - 1));
-//        }
-//    });
-//    
+    _backspace->addListener([this](const std::string& name, bool down) {
+        if (down && !_gameid->getText().empty()) {
+            _gameid->setText(_gameid->getText().substr(0, _gameid->getText().length() - 1));
+        }
+    });
+
 //    _clear->addListener([this](const std::string& name, bool down) {
 //        if (down) {
 //            _gameid->setText("");
@@ -176,7 +176,7 @@ void ClientScene::setActive(bool value) {
             for (auto n : _numbers) {
                 n->activate();
             }
-//            _backspace->activate();
+            _backspace->activate();
 //            _clear->activate();
         } else {
             _gameid->deactivate();
@@ -191,8 +191,8 @@ void ClientScene::setActive(bool value) {
                 n->deactivate();
                 n->setDown(false);
             }
-//            _backspace->deactivate();
-//            _backspace->setDown(false);
+            _backspace->deactivate();
+            _backspace->setDown(false);
 //            _clear->deactivate();
 //            _clear->setDown(false);
         }
@@ -223,12 +223,12 @@ void ClientScene::updateText(const std::shared_ptr<scene2::Button>& button, cons
 void ClientScene::update(float timestep) {
     // Do this last for button safety
     configureStartButton();
-    if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
+//    if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
 //        _player->setText(std::to_string(_network->getNumPlayers()));
-    }
-    else {
+//    }
+//    else {
 //        _player->setText("...");
-    }
+//    }
 }
 
 /**
@@ -251,6 +251,6 @@ void ClientScene::configureStartButton() {
     else if (_network->getStatus() == NetEventController::Status::CONNECTED) {
         _startgame->setDown(false);
         _startgame->deactivate();
-        updateText(_startgame, "...");
+        updateText(_startgame, "wait");
     }
 }

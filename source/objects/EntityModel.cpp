@@ -119,11 +119,16 @@ void EntityModel::stepAnimation(float dt) {
     if (sprite != nullptr) {
         if (animationShouldStep()) {
                 curAnimTime += dt;
-                if (curAnimTime > curAnimDuration) { curAnimTime = 0;}
-                sprite->setFrame(std::floor(sprite->getSpan() * curAnimTime / curAnimDuration));
+                if (curAnimTime > (2 * curAnimDuration)) { curAnimTime = 0;}
+                // PING-PING style animation
+                // https://www.desmos.com/calculator/kszulthvhz
+                sprite->setFrame(std::floor(sprite->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
+                // LOOPING style animation
+                // sprite->setFrame(std::floor(sprite->getSpan() * curAnimTime / curAnimDuration));
         }
         else if (sprite->getFrame() != 0) {
             sprite->setFrame(0);
+            curAnimTime = 0;
         }
     }
    

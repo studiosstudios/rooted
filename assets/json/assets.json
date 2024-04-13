@@ -114,7 +114,7 @@
     "sounds": {
         "game": {
             "type":     "sample",
-            "file":     "sounds/DD_Main.ogg",
+            "file":     "sounds/game.ogg",
             "stream":   true,
             "volume":   0.5
         },
@@ -128,11 +128,6 @@
             "type":     "sample",
             "file":     "sounds/DD_Failure.ogg",
             "stream":   true,
-            "volume":   0.5
-        },
-        "rustle": {
-            "type":     "sample",
-            "file":     "sounds/rustling.wav",
             "volume":   0.5
         },
         "jump": {

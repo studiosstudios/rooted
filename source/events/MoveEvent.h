@@ -1,5 +1,5 @@
 //
-//  RustleEvent.h
+//  MoveEvent.h
 //  Rooted
 //
 //  Created by Kimmy Lin on 4/11/24.
@@ -13,14 +13,14 @@ using namespace cugl::physics2::net;
 using namespace cugl;
 using namespace cugl::net;
 
-class RustleEvent : public NetEvent {
+class MoveEvent : public NetEvent {
     
 protected:
     NetcodeSerializer _serializer;
     NetcodeDeserializer _deserializer;
     
     std::string _uuid;
-    bool _isMoving;
+    std::string _state;
     
 public:
     /**
@@ -32,7 +32,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocRustleEvent(std::string uuid, bool isMoving);
+    static std::shared_ptr<NetEvent> allocMoveEvent(std::string uuid, std::string state);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -52,7 +52,7 @@ public:
     /** Gets the uuid of carrot associated with the event. */
     std::string getUUID() { return _uuid; }
     
-    bool getIsMoving() { return _isMoving; }
+    std::string getState() { return _state; }
 };
 
 #endif /* RustleEvent_h */

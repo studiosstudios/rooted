@@ -36,9 +36,10 @@ void Farmer::setMovement(Vec2 movement) {
     EntityModel::setMovement(movement);
 }
 
+
 void Farmer::updateCurAnimDurationForState() {
     switch (_state) {
-        // TODO: This needs to be split up into the correct animDurations for each type of movement states
+            // TODO: This needs to be split up into the correct animDurations for each type of movement states
         case SNEAKING:
         case WALKING:
         case RUNNING: {
@@ -50,4 +51,10 @@ void Farmer::updateCurAnimDurationForState() {
             return;
         }
     }
+}
+
+void Farmer::resetFarmer(){
+    _isHoldingCarrot = false;
+    _canPlant = false;
+
 }

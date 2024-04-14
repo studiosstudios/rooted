@@ -10,16 +10,22 @@ using namespace cugl;
 /** Time after dashing when carrot can be captured */
 #define CAPTURE_TIME    10 //TEMPORARY DASH TO ROOT SOLUTION
 #define DASH_TIME       2
+/** The sound effect for a bunny rooting a carrot */
+#define ROOTING_BUNNY_EFFECT      "bunny-root"
+#define ROOTING_CARROT_EFFECT     "carrot-root"
+#define UNROOTING_EFFECT          "unroot"
+#define DASH_EFFECT               "dash"
 
 /**
  * Initializes an ActionController
  */
 bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-    std::shared_ptr<NetworkController> &network) {
+    std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets) {
     _map = map;
     _input = input;
     _world = _map->getWorld();
     _network = network;
+    _assets = assets;
     if (_network->isHost()) {
         _ai.init(map);
     }
@@ -39,7 +45,12 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
 void ActionController::preUpdate(float dt) {
     auto playerEntity = _map->getCharacter();
     playerEntity->setMovement(_input->getMovement());
-    playerEntity->setDashInput(_input->didDash());
+    bool didDash = _input->didDash();
+    playerEntity->setDashInput(didDash);
+    if(didDash){
+        std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
+        AudioEngine::get()->play("dash", source);
+    }
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     
@@ -67,7 +78,9 @@ void ActionController::preUpdate(float dt) {
         
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
             //        std::cout<<"farmer did the rooting\n";
-            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+            Haptics::get()->playContinuous(1.0, 0.3, 0.2);
+            std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_BUNNY_EFFECT);
+            AudioEngine::get()->play("root-bunny", source);
             
             // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
             for (auto carrot : _map->getCarrots()) {
@@ -161,6 +174,8 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
             carrot->gotRooted();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
                 Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+                std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_CARROT_EFFECT);
+                AudioEngine::get()->play("root-carrot", source);
             }
         }
     }
@@ -179,6 +194,8 @@ void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& ev
             carrot->gotUnrooted();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
                 Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+                std::shared_ptr<Sound> source = _assets->get<Sound>(UNROOTING_EFFECT);
+                AudioEngine::get()->play("unroot", source);
             }
         }
     }

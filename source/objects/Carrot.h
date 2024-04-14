@@ -83,6 +83,8 @@ public:
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
     
+    void resetCarrot();
+    
 #pragma mark -
 #pragma mark Interactions
     void captureBabyCarrot() { _numBabyCarrots++; };

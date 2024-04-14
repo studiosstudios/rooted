@@ -665,3 +665,17 @@ void Map::updateShaders(float step, Mat4 perspective) {
     _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / _scale.x * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);
 }
+
+void Map::resetPlantingSpots() {
+    for(auto sp : _plantingSpot){
+        sp->setCarrotPlanted(false);
+        sp->setBelowAvatar(false);
+    }
+}
+
+void Map::resetPlayers() {
+    for(auto carrot : _carrots){
+        carrot->resetCarrot();
+    }
+    _farmers.at(0)->resetFarmer();
+}

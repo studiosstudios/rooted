@@ -29,6 +29,7 @@ private:
     AIController _ai;
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
+    std::shared_ptr<cugl::AssetManager> _assets;
 
 
 public:
@@ -46,7 +47,7 @@ public:
      * Initializes an ActionController
      */
     bool init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-              std::shared_ptr<NetworkController> &network);
+              std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets);
 
     /**
      * The method called to indicate the start of a deterministic loop.

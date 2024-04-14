@@ -118,12 +118,12 @@ void EntityModel::stepAnimation(float dt) {
     if (_node != nullptr) {
         if (animationShouldStep()) {
                 curAnimTime += dt;
-                if (curAnimTime > (2 * curAnimDuration)) { curAnimTime = 0;}
+                if (curAnimTime > (curAnimDuration)) { curAnimTime = 0;}
                 // PING-PING style animation
                 // https://www.desmos.com/calculator/kszulthvhz
-                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
+//                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
                 // LOOPING style animation
-                // sprite->setFrame(std::floor(sprite->getSpan() * curAnimTime / curAnimDuration));
+                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
         }
         else if (_node->getFrame() != 0) {
             _node->setFrame(0);
@@ -198,9 +198,9 @@ void EntityModel::setMovement(Vec2 movement) {
         sprite = _southEastWalkSprite;
     }
     // Change facing for the sprite
-    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
-    if (image->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-        image->flipHorizontal(!image->isFlipHorizontal());
+//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
+    if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+        sprite->flipHorizontal(!sprite->isFlipHorizontal());
     }
     setSceneNode(sprite);
     _facing = face;
@@ -323,7 +323,7 @@ void EntityModel::updateState() {
     if (stateChanged) {
         updateCurAnimDurationForState();
     }
-    std::cout << _state << "\n";
+//    std::cout << _state << "\n";
 }
 
 /**

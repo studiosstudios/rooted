@@ -112,9 +112,9 @@
         "testMap2": "level-editor/testMap2.json"
     },
     "sounds": {
-        "game": {
+        "menu": {
             "type":     "sample",
-            "file":     "sounds/game.ogg",
+            "file":     "sounds/main-menu.ogg",
             "stream":   true,
             "volume":   0.5
         },

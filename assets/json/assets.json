@@ -17,14 +17,23 @@
         "carrotfarmer": {
             "file":     "textures/carrotfarmer.png"
         },
-        "farmer-front-walk": {
-            "file":     "textures/farmer-front-walk.png"
+        "farmer-south-walk": {
+            "file":     "textures/farmer-south-walk.png"
         },
         "farmer-north-walk": {
             "file":     "textures/farmer-north-walk.png"
         },
         "farmer-east-walk": {
             "file":     "textures/farmer-east-walk.png"
+        },
+        "carrot-south-walk": {
+            "file":     "textures/carrot-south-walk.png"
+        },
+        "carrot-north-walk": {
+            "file":     "textures/carrot-north-walk.png"
+        },
+        "carrot-east-walk": {
+            "file":     "textures/carrot-east-walk.png"
         },
         "baby": {
             "file":     "textures/baby.png"

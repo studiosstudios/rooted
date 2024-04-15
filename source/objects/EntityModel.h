@@ -55,9 +55,14 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
-#define FARMER_FRONT_WALK_SPRITE "farmer-front-walk"
+#define FARMER_SOUTH_WALK_SPRITE "farmer-south-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
+
+#define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
+#define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
+#define CARROT_EAST_WALK_SPRITE "carrot-east-walk"
+
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -
@@ -111,7 +116,7 @@ protected:
     EntityFacing _facing;
 
 	/** The scene graph node for the Dude. */
-	std::shared_ptr<cugl::scene2::SceneNode> _node;
+	std::shared_ptr<cugl::scene2::SpriteNode> _node;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _eastWalkSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _southWalkSprite;
@@ -126,7 +131,12 @@ protected:
     
     int _wheatContacts;
     
-    float animTime;
+    /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
+    float curAnimDuration = 1.5f;
+    
+    /** The amount of time that has elapsed in the current animation cycle
+        For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
+    float curAnimTime;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -141,10 +151,13 @@ protected:
     
     /** State that a rooted! player entity can be in. Some of these states are specific
         to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which states an entity can
+        we need to enforce the corresponding invariants for which staztes an entity can
         be in. */
     enum EntityState {
-        MOVING,
+        STANDING,
+        SNEAKING,
+        WALKING,
+        RUNNING,
         DASHING,
         CARRYING,   // bunny only
         PLANTING,   // bunny only
@@ -367,7 +380,7 @@ public:
      *
      * @return the scene graph node representing this DudeModel.
      */
-	const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+	const std::shared_ptr<cugl::scene2::SpriteNode>& getSceneNode() const { return _node; }
 
     /**
      * Sets the scene graph node representing this DudeModel.
@@ -387,7 +400,7 @@ public:
      *
      * @param node  The scene graph node representing this DudeModel, which has been added to the world node already.
      */
-	void setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+	void setSceneNode(const std::shared_ptr<cugl::scene2::SpriteNode>& node) {
         if (_node != nullptr) {
             _node->setVisible(false);
         }
@@ -410,8 +423,26 @@ public:
      */
     void setDrawScale(float scale) { _drawScale = scale; };
     
+    /**
+     * Updates the current value in curAnimDuration with the current EntityModel's state value
+     *
+     * Virtual, should be implemented by all derived classes with respect to their specific animation durations.
+     */
+    virtual void updateCurAnimDurationForState() {};
+    
+    /**
+     * Returns whether the current EntityModel's state is one where the animation should be cycling
+     *
+     * Examples of states where this would return false is if the player is currently not moving or DASHING or ROOTED.
+     */
     bool animationShouldStep();
     
+    /**
+     * Sets all of the sprite nodes associated with this EntityModel
+     *
+     * This currently only includes the 5-directional movement sprites, but
+     * TODO: It should later include all action sprites.
+     */
     void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
@@ -424,6 +455,11 @@ public:
         _southWalkSprite = southNode;
     }
     
+    /**
+     * Steps the current sprite's animation by dt.
+     *
+     * This steps the current sprite node associated with this EntityModel by incrementing curAnimTime by dt and comparing it with curAnimDuration
+     */
     void stepAnimation(float dt);
     
     EntityFacing calculateFacing(cugl::Vec2 movement);
@@ -542,7 +578,30 @@ public:
      */
     void applyForce();
 
+    /** Whether this EntityModel is in the DASHING state*/
     bool isDashing();
+    
+    /** Whether this EntityModel is NOT in the STANDING state */
+    bool isNotStanding();
+    
+    /** Whether this EntityModel is in SNEAKING/WALKING/RUNNING state 
+     *  This does NOT include if the state is DASHING. Use `isDashing` for that.
+     */
+    bool isMoving() { return _state == SNEAKING || _state == WALKING || _state == RUNNING; };
+    
+    /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
+    EntityState getMovementState() {
+        if (_movement.isZero()) {
+            return STANDING;
+        }
+        else if (_movement.lengthSquared() <= 0.33 * 0.33) {
+            return SNEAKING;
+        }
+        else if (_movement.lengthSquared() <= 0.66 * 0.66) {
+            return WALKING;
+        }
+        return RUNNING;
+    }
 
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
 

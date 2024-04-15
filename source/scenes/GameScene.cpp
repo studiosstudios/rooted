@@ -133,12 +133,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // Create the scene graph
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    
-    // To be changed -CJ
-//    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
-//    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-//    _debugjoynode->setColor(Color4(Vec4(0, 0, 0, 0.25)));
-//    _uinode->addChild(_debugjoynode);
 
     _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
     _winnode->setAnchor(Vec2::ANCHOR_CENTER);

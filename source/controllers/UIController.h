@@ -12,18 +12,38 @@
 
 #endif /* UIController_h */
 
+/* Copied values from GameScene/InputController. Is there a better global location we can put these constants? */
+#define SCENE_WIDTH 1024
+#define SCENE_HEIGHT 576
+#define JOY_ZONE_WIDTH       0.35f
+#define JOY_ZONE_HEIGHT      0.5f
+
 class UIController {
 private:
+    /** PolyFactory for drawing the joystick circle.
+     *  TODO: We can remove this once we get proper assets for the joystick
+     */
     cugl::PolyFactory _pf;
-    /** Reference to the UI root of the scene graph */
+    
+    /** Pointer to the UI root of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
     
+    /** Pointer to the SceneNode which is the root of the joystick UI */
     std::shared_ptr<cugl::scene2::SceneNode> _joynode;
     
+    /** Pointer to the PolygonNode of the joystick's backing circle*/
     std::shared_ptr<cugl::scene2::PolygonNode> _joyback;
+    /** Pointer to the PolygonNode of the joystick's moving circle*/
     std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
     
+    /** The offset of the scene graph
+     *
+     *  This offset is nonzero if the device's screen is not 1024 x 576.
+     *  In which case, either the X xor Y coordinate will be non-zero.
+     */
     cugl::Vec2 _offset;
+    
+    /** The camera's zoom */
     float _cameraZoom;
     
 public:

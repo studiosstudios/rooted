@@ -51,7 +51,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _menuscene->setContentSize(dimen);
     _menuscene->doLayout(); // Repositions the HUD
     
-    _lobbyscene = _assets->get<scene2::SceneNode>("network");
+    _lobbyscene = _assets->get<scene2::SceneNode>("prelobby");
     _lobbyscene->setContentSize(dimen);
     _menuscene->doLayout();
     
@@ -62,8 +62,8 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _playbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_play"));
     _optionsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_options"));
     _statsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_stats"));
-    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_host"));
-    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_join"));
+    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_host"));
+    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_join"));
     
     // Program the buttons
     _playbutton->addListener([this](const std::string& name, bool down) {

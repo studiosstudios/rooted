@@ -93,7 +93,8 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         
         // Gameplay attributes
         _facing = SOUTH;
-        _state = MOVING;
+        _state = STANDING;
+        updateCurAnimDurationForState();
         
         return true;
     }
@@ -110,19 +111,23 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return !getLinearVelocity().isZero() || _state == DASHING || _state == PLANTING;
+    return isMoving() || _state == DASHING || _state == PLANTING;
 }
 
 void EntityModel::stepAnimation(float dt) {
-    cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
-    if (sprite != nullptr) {
+    if (_node != nullptr) {
         if (animationShouldStep()) {
-                animTime += dt;
-                if (animTime > 1.5f) { animTime = 0;}
-                sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
+                curAnimTime += dt;
+                if (curAnimTime > (curAnimDuration)) { curAnimTime = 0;}
+                // PING-PING style animation
+                // https://www.desmos.com/calculator/kszulthvhz
+//                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
+                // LOOPING style animation
+                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
         }
-        else if (sprite->getFrame() != 0) {
-            sprite->setFrame(0);
+        else if (_node->getFrame() != 0) {
+            _node->setFrame(0);
+            curAnimTime = 0;
         }
     }
    
@@ -193,9 +198,9 @@ void EntityModel::setMovement(Vec2 movement) {
         sprite = _southEastWalkSprite;
     }
     // Change facing for the sprite
-    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
-    if (image->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-        image->flipHorizontal(!image->isFlipHorizontal());
+//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
+    if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+        sprite->flipHorizontal(!sprite->isFlipHorizontal());
     }
     setSceneNode(sprite);
     _facing = face;
@@ -255,6 +260,12 @@ void EntityModel::dispose() {
     _node = nullptr;
     _wheatHeightNode = nullptr;
     _geometry = nullptr;
+    
+    _northWalkSprite = nullptr;
+    _northEastWalkSprite = nullptr;
+    _eastWalkSprite = nullptr;
+    _southEastWalkSprite = nullptr;
+    _southWalkSprite = nullptr;
 }
 
 /**
@@ -267,12 +278,31 @@ void EntityModel::updateState() {
         return;
     }
     
+    bool stateChanged = false;
+    EntityState nextState = _state;
+    
+    
     switch (_state) {
-        case MOVING: {
+        case STANDING: {
+            // Standing -> Moving
+            nextState = getMovementState();
+            stateChanged = (nextState != _state);
+            _state = nextState;
+            break;
+        }
+        case SNEAKING:
+        case WALKING:
+        case RUNNING: {
             // Moving -> Dashing
             if (dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
+                stateChanged = true;
+            }
+            else {
+                nextState = getMovementState();
+                stateChanged = (nextState != _state);
+                _state = nextState;
             }
             break;
         }
@@ -280,7 +310,8 @@ void EntityModel::updateState() {
             // Dashing -> Moving
             dashTimer--;
             if (dashTimer == 0) {
-                _state = MOVING;
+                _state = getMovementState();
+                stateChanged = true;
             }
             break;
         }
@@ -288,6 +319,11 @@ void EntityModel::updateState() {
             CULog("updateState: Not implemented yet");
         }
     }
+    
+    if (stateChanged) {
+        updateCurAnimDurationForState();
+    }
+//    std::cout << _state << "\n";
 }
 
 /**
@@ -303,13 +339,14 @@ void EntityModel::applyForce() {
     Vec2 speed;
     
     switch (_state) {
-        case MOVING: {
-            if (getMovement() == Vec2::ZERO) {
-                speed = Vec2::ZERO;
-            }
-            else{
-                Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
-            }
+        case STANDING: {
+            setLinearVelocity(Vec2::ZERO);
+            break;
+        }
+        case SNEAKING:
+        case WALKING:
+        case RUNNING: {
+            Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
             setLinearVelocity(speed);
             break;
         }

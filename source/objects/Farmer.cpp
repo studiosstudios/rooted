@@ -29,3 +29,8 @@ void Farmer::setMovement(Vec2 movement) {
     }
     EntityModel::setMovement(movement);
 }
+
+void Farmer::resetFarmer(){
+    _isHoldingCarrot = false;
+    _canPlant = false;
+}

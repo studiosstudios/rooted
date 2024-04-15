@@ -59,8 +59,6 @@ using namespace cugl;
 #define RESET_MESSAGE    "RESETTING"
 /** The color of the reset message */
 #define RESET_COLOR      Color4::YELLOW
-/** The key the basic game music */
-#define GAME_MUSIC      "game"
 /** The key the victory game music */
 #define WIN_MUSIC       "win"
 /** The key the failure game music */
@@ -188,7 +186,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _input = InputController::alloc(getBounds());
     Haptics::start();
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network);
+    _action.init(_map, _input, _network, _assets);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -302,8 +300,11 @@ void GameScene::reset() {
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
     activateWorldCollisions(world);
 
+    _map->resetPlantingSpots();
+    _map->resetPlayers();
+    
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network);
+    _action.init(_map, _input, _network, _assets);
 
     if (_isHost) {
         _map->acquireMapOwnership();

@@ -28,7 +28,7 @@ public:
 
     ~Farmer() {};
     
-    bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
+    bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale) override;
     
     static std::shared_ptr<Farmer> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
         std::shared_ptr<Farmer> result = std::make_shared<Farmer>();
@@ -50,6 +50,7 @@ public:
     
     void setMovement(cugl::Vec2 movement) override;
     
+    void resetFarmer();
 };
 
 

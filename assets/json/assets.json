@@ -5,6 +5,34 @@
             "wrapS":    "repeat",
             "wrapT":    "repeat"
         },
+        "grass": {
+            "file":     "textures/grass3.png",
+            "wrapS":    "repeat",
+            "wrapT":    "repeat"
+        },
+        "planting": {
+            "file":     "textures/dirt-tileset.png",
+            "wrapS":     "clamp",
+            "wrapT":     "clamp",
+            "atlas":     {
+                "single"   : [0,     0, 127, 127],
+                "h_left" : [128,   0, 255, 127],
+                "h_mid" : [256,   0, 383, 127],
+                "h_right" : [384,   0, 511, 127],
+                "v_top" : [0,   128, 127, 255],
+                "v_mid" : [0,   256, 127, 383],
+                "v_bot" : [0,   384, 127, 511],
+                "top_left" : [128,   128, 255, 255],
+                "top_mid" : [256,   128, 383, 255],
+                "top_right" : [384,   128, 511, 255],
+                "mid_left" : [128,   256, 255, 383],
+                "mid_mid" : [256,   256, 383, 383],
+                "mid_right" : [384,   256, 511, 383],
+                "bot_left" : [128,   384, 255, 511],
+                "bot_mid" : [256,   384, 383, 511],
+                "bot_right" : [384,   384, 511, 511]
+            }
+        },
         "dude": {
             "file":     "textures/dude.png"
         },

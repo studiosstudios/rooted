@@ -58,11 +58,11 @@ void main(void) {
 
     vec2 fragUV = uv - vec2(0.0, SCREEN_PIXEL_SIZE.y * noise);
 
-    frag_color = vec4(0.70196, 0.83529, 0.0, 1.0);
+    frag_color = vec4(0.0);
 
     for (int i = 0; i < num_entities; i++ ){
         if (distance(fragUV, positions[i]) < 0.012) {
-            frag_color = vec4(0.6039216, 0.6039216, 0.196078, 1.0);
+            frag_color = vec4(0.0, 0.0, 0.0, 0.2);
             break;
         }
     }

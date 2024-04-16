@@ -117,7 +117,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     
     // Create, but transfer ownership to root
     // needs to be an ordered node in order to reorder some elements
-    _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::ASCEND);
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(Vec2::ZERO);
 
@@ -134,7 +134,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
     
-    bool showGrid = false; //change this to show the grid in debug
+    bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
         for (int x = 0; x < _bounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
@@ -459,11 +459,9 @@ void Map::loadPlantingSpot(float x, float y, float width, float height) {
     plantingSpot->setPlantingID((unsigned)_plantingSpot.size());
     _plantingSpot.push_back(plantingSpot);
 
-    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
-    plantingSpot->setSceneNode(spotNode);
-    spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
-    spotNode->setPriority(float(Map::DrawOrder::PLANTINGSPOT));
-    addObstacle(plantingSpot, spotNode);
+//    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
+    plantingSpot->setSceneNode(_assets, float(Map::DrawOrder::PLANTINGSPOT));
+    addObstacle(plantingSpot, plantingSpot->getSceneNode());
 }
 
 /**

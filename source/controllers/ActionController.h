@@ -76,14 +76,19 @@ public:
     
     void networkQueuePositions();
     
+    /** Updates character states after capture event */
     void processCaptureEvent(const std::shared_ptr<CaptureEvent>& event);
     
+    /** Updates character states after root event */
     void processRootEvent(const std::shared_ptr<RootEvent>& event);
     
+    /** Updates character states after unrooting even */
     void processUnrootEvent(const std::shared_ptr<UnrootEvent>& event);
     
+    /** Updates character and barrot states after barrot is caputured */
     void processBarrotEvent(const std::shared_ptr<CaptureBarrotEvent>& event);
     
+    /** Updates EntityStates of other characters */
     void processMoveEvent(const std::shared_ptr<MoveEvent>& event);
 };
 

@@ -182,6 +182,12 @@
             "stream":   true,
             "volume":   0.5
         },
+        "rustle": {
+            "type":     "sample",
+            "file":     "sounds/rustling.ogg",
+            "stream":   true,
+            "volume":   0.5
+        },
         "jump": {
             "type":     "sample",
             "file":     "sounds/jump.wav",

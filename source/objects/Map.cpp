@@ -425,7 +425,7 @@ void Map::loadShaderNodes(){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
 
-    _wheatscene = WheatScene::alloc(_assets, name, bladeColorScale, _scale);
+    _wheatscene = WheatScene::alloc(_assets, name, bladeColorScale, _scale, _bounds.size);
 
     _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, name, bladeColorScale, _bounds.size, FULL_WHEAT_HEIGHT);
     _shaderrenderer->setScale(_scale.x);

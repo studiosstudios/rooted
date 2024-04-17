@@ -84,7 +84,8 @@
 * experience, using a rectangular shape for a character will regularly snag
 * on a platform.  The round shapes on the end caps lead to smoother movement.
 */
-class EntityModel : public cugl::physics2::BoxObstacle {public:
+class EntityModel : public cugl::physics2::BoxObstacle {
+public:
     int dashTimer;
     
     /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/

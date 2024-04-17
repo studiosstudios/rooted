@@ -44,6 +44,7 @@ protected:
     float _aspectRatio;
     float _bladeColorScale;
     bool _fullHeight;
+    Size _worldSize;
     
     
 public:

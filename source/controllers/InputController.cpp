@@ -13,51 +13,9 @@
 //  Version: 2/9/21
 //
 #include "InputController.h"
+#include "../RootedConstants.h"
 
 using namespace cugl;
-
-#pragma mark Input Constants
-
-/** The key to use for reseting the game */
-#define RESET_KEY KeyCode::R
-/** The key for toggling the debug display */
-#define DEBUG_KEY KeyCode::D
-/** The key for exitting the game */
-#define EXIT_KEY  KeyCode::ESCAPE
-
-/** How close we need to be for a multi touch */
-#define NEAR_TOUCH      100
-/** The key for the event handlers */
-#define LISTENER_KEY      1
-
-/** This defines the joystick "deadzone" (how far we must move) */
-#define JSTICK_DEADZONE  15
-/** This defines the joystick radial size (for reseting the anchor) */
-#define JSTICK_RADIUS    100
-/** How far to display the virtual joystick above the finger */
-#define JSTICK_OFFSET    0
-/** How far we must swipe up for a jump gesture */
-#define SWIPE_LENGTH    50
-/** How fast a double click must be in milliseconds */
-#define DOUBLE_CLICK    400
-
-#define SWITCH_SWIPE_LENGTH 125
-
-// The screen is divided into three zones: Joy(stick), Main, and Right.
-//
-//   |---------------|
-//   |   |       |   |
-//   |---|   M   | R |
-//   | J |       |   |
-//   |---------------|
-//
-// The meaning of any touch depends on the zone it begins in.
-
-/** The portion of the screen used for the left zone */
-#define JOY_ZONE_WIDTH       0.35f
-#define JOY_ZONE_HEIGHT      0.5f
-/** The portion of the screen used for the right zone */
-#define RIGHT_ZONE      0.35f
 
 #pragma mark -
 #pragma mark Input Controller

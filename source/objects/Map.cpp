@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "../objects/EntityModel.h"
 #include "../controllers/NetworkController.h"
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -113,7 +114,6 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _root = node;
     _scale.set(_root->getContentSize().width / _bounds.size.width,
                _root->getContentSize().height / _bounds.size.height);
-
     
     // Create, but transfer ownership to root
     // needs to be an ordered node in order to reorder some elements
@@ -203,7 +203,7 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     return true;
 }
 
-void Map::populate(Size size) {
+void Map::populate() {
     
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
@@ -225,7 +225,7 @@ void Map::populate(Size size) {
             float height = std::any_cast<float>(_propertiesMap.at("height"));
             
             if (name == "wheat") {
-                loadShaderNodes(size);
+                loadShaderNodes();
                 break;
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
@@ -259,7 +259,7 @@ void Map::populate(Size size) {
     loadBoundary(Vec2(_bounds.size.width/2, _bounds.size.height+0.5), Size(_bounds.size.width, 1));
     
     //add grass background node
-    float grassScale = 32.0;
+    float grassScale = 16.0 * DEFAULT_DRAWSCALE / _scale.x;
     std::shared_ptr<Texture> grassTex = _assets->get<Texture>(GRASS_TEXTURE);
     Size nodesize; //ensure node properly fills scene
     if (float(grassTex->getWidth())/grassTex->getHeight() > float(_root->getContentWidth())/_root->getContentHeight()) {
@@ -421,13 +421,13 @@ void Map::loadBoundary(Vec2 pos, Size size){
  * node. This method should only be called once per initialization, any subsequent calls will
  * override previous calls.
  */
-void Map::loadShaderNodes(Size size){
+void Map::loadShaderNodes(){
     std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
     float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
 
-    _wheatscene = WheatScene::alloc(_assets, name, bladeColorScale);
+    _wheatscene = WheatScene::alloc(_assets, name, bladeColorScale, _scale);
 
-    _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+    _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, name, bladeColorScale, _bounds.size, FULL_WHEAT_HEIGHT);
     _shaderrenderer->setScale(_scale.x);
     _shaderrenderer->buildShaders();
     _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
@@ -437,7 +437,7 @@ void Map::loadShaderNodes(Size size){
     _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
     _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
     
-    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _wheatscene->getTexture(), _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
+    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _wheatscene->getTexture(), _assets, name, bladeColorScale, FULL_WHEAT_HEIGHT);
     _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
     
     _worldnode->addChild(_shaderedEntitiesNode);
@@ -478,24 +478,24 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
 
     auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
-    farmerSouthWalkNode->setScale(0.23f, 0.23f);
+    farmerSouthWalkNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
     farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    farmerSouthWalkNode->setHeight(32);
+    farmerSouthWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
     
     auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
-    farmerNorthWalkNode->setScale(0.23f, 0.23f);
+    farmerNorthWalkNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
     farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    farmerNorthWalkNode->setHeight(32);
+    farmerNorthWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
     
     auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
-    farmerEastWalkNode->setScale(0.23f, 0.23f);
+    farmerEastWalkNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
     farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    farmerEastWalkNode->setHeight(32);
+    farmerEastWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
     
     auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
     carrotfarmerNode->setVisible(false);
-    carrotfarmerNode->setScale(0.23f, 0.23f);
-    carrotfarmerNode->setHeight(32);
+    carrotfarmerNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
+    carrotfarmerNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
     
     _entitiesNode->addChild(farmerSouthWalkNode);
     _entitiesNode->addChild(farmerNorthWalkNode);
@@ -545,8 +545,9 @@ void Map::loadBabyCarrot(float x, float y, float width, float height) {
 //    babyNode->setColor(Color4::BLACK);
     baby->setDrawScale(
             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+    babyNode->setScale(_scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
-    babyNode->setHeight(32);
+    babyNode->setHeight(32*_scale.y/DEFAULT_DRAWSCALE);
     _entitiesNode->addChild(babyNode);
     baby->setDebugScene(_debugnode);
     
@@ -640,20 +641,20 @@ void Map::spawnCarrot(Vec2 position, float width, float height) {
     auto carrotSouthWalkNode = scene2::SpriteNode::allocWithSheet(
             carrotSouthWalkSprite, 3, 5);
     carrotSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    carrotSouthWalkNode->setScale(0.1f, 0.1f);
-    carrotSouthWalkNode->setHeight(32);
+    carrotSouthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+    carrotSouthWalkNode->setHeight(32 * _scale.y/DEFAULT_DRAWSCALE);
     
     auto carrotNorthWalkNode = scene2::SpriteNode::allocWithSheet(
             carrotNorthWalkSprite, 3, 5);
     carrotNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    carrotNorthWalkNode->setScale(0.1f, 0.1f);
-    carrotNorthWalkNode->setHeight(32);
+    carrotNorthWalkNode->setScale(0.1f *  _scale/DEFAULT_DRAWSCALE);
+    carrotNorthWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
     
     auto carrotEastWalkNode = scene2::SpriteNode::allocWithSheet(
             carrotEastWalkSprite, 3, 5);
     carrotEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    carrotEastWalkNode->setScale(0.1f, 0.1f);
-    carrotEastWalkNode->setHeight(32);
+    carrotEastWalkNode->setScale(0.1f *  _scale/DEFAULT_DRAWSCALE);
+    carrotEastWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
     
     _entitiesNode->addChild(carrotNorthWalkNode);
     _entitiesNode->addChild(carrotEastWalkNode);
@@ -686,22 +687,23 @@ void Map::updateShaders(float step, Mat4 perspective) {
     float positions[2*size]; // must be 1d array
     float velocities[size];
     float ratio = _shaderrenderer->getAspectRatio();
+    float scale = _root->getContentSize().width/_scale.x;
     for (int i = 0; i < _carrots.size(); i++) {
-        positions[2 * i] = _carrots.at(i)->getX() / _scale.x;
-        positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / _scale.x * ratio;
+        positions[2 * i] = _carrots.at(i)->getX() / scale;
+        positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / scale * ratio;
         velocities[i] = _carrots.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < _farmers.size(); i++) {
-        positions[2 * i + 2* _carrots.size()] = _farmers.at(i)->getX() / _scale.x;
-        positions[2 * i + 1 + 2 * _carrots.size()] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / _scale.x * ratio;
+        positions[2 * i + 2* _carrots.size()] = _farmers.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * _carrots.size()] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / scale * ratio;
         velocities[i + _carrots.size()] = _farmers.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < _babies.size(); i++) {
-        positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / _scale.x;
-        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / _scale.x * ratio;
+        positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / scale * ratio;
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
-    _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / _scale.x * Vec2(1.0, ratio));
+    _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / scale * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);
 }
 

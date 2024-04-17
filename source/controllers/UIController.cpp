@@ -6,6 +6,7 @@
 //
 
 #include "UIController.h"
+#include "../RootedConstants.h"
 
 using namespace cugl;
 

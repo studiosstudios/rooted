@@ -43,12 +43,12 @@ public:
 
     ~WheatScene() { dispose(); };
 
-    static shared_ptr<WheatScene> alloc(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale) {
+    static shared_ptr<WheatScene> alloc(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale, Vec2 drawScale) {
         std::shared_ptr<WheatScene> result = std::make_shared<WheatScene>();
-        return (result->init(assets, name, bladeColorScale) ? result : nullptr);
+        return (result->init(assets, name, bladeColorScale, drawScale) ? result : nullptr);
     }
 
-    bool init(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale);
+    bool init(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale, Vec2 drawScale);
 
     void dispose();
 

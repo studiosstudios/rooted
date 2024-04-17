@@ -6,9 +6,7 @@
 //
 
 #include "CameraController.h"
-
-#define SCENE_WIDTH 1024
-#define SCENE_HEIGHT 576
+#include "../RootedConstants.h"
 
 using namespace cugl;
 

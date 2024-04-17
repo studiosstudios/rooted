@@ -111,7 +111,7 @@
             "file":     "textures/grass_base.png"
         },
         "testMap": {
-            "file":     "textures/maps/grid.png"
+            "file":     "textures/maps/testmap.png"
         },
         "shader_clouds": {
             "file":     "textures/clouds.png",
@@ -161,7 +161,9 @@
         "server": "json/server.json",
         "map": "json/map.json",
         "testMap": "level-editor/testMap.json",
-        "testMap2": "level-editor/testMap2.json"
+        "testMap2": "level-editor/testMap2.json",
+        "largerMap": "level-editor/largerMapTest.json",
+        "evenLargerMap": "level-editor/evenLargerMap.json"
     },
     "sounds": {
         "game": {

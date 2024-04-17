@@ -32,9 +32,9 @@ public:
 
     static std::shared_ptr<EntitiesNode> alloc(const std::shared_ptr<scene2::SceneNode> &node, const shared_ptr<Texture> &wheattex,
                                                const std::shared_ptr<cugl::AssetManager> &assets,
-                                               string name, float bladeColorScale, Size size, bool fullHeight) {
+                                               string name, float bladeColorScale, bool fullHeight) {
         shared_ptr<EntitiesNode> result = make_shared<EntitiesNode>();
-        return (result->init(node, wheattex, assets, name, bladeColorScale, size, fullHeight) ? result : nullptr);
+        return (result->init(node, wheattex, assets, name, bladeColorScale, fullHeight) ? result : nullptr);
     }
 
     void update(float timestep);
@@ -43,7 +43,7 @@ public:
 
     bool init(const std::shared_ptr<scene2::SceneNode> &node, const shared_ptr<Texture> &wheattex,
               const std::shared_ptr<cugl::AssetManager> &assets,
-              string name, float bladeColorScale, Size size, bool fullHeight);
+              string name, float bladeColorScale, bool fullHeight);
 
     void dispose() override;
 

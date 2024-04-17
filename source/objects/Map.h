@@ -113,7 +113,7 @@ public:
               const std::shared_ptr<scene2::SceneNode> &root,
               const std::shared_ptr<cugl::JsonValue> &json);
 
-    void populate(Size size);
+    void populate();
     
     /**
      * populate the map with Carrots
@@ -300,7 +300,7 @@ private:
     /**
      * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world node. This method should only be called once per initialization, any subsequent calls will override previous calls.
      */
-    void loadShaderNodes(Size size);
+    void loadShaderNodes();
     
     /**
      * Loads a single farmer into the world.

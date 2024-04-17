@@ -12,12 +12,6 @@
 
 #endif /* UIController_h */
 
-/* Copied values from GameScene/InputController. Is there a better global location we can put these constants? */
-#define SCENE_WIDTH 1024
-#define SCENE_HEIGHT 576
-#define JOY_ZONE_WIDTH       0.35f
-#define JOY_ZONE_HEIGHT      0.5f
-
 class UIController {
 private:
     /** PolyFactory for drawing the joystick circle.

@@ -7,6 +7,7 @@
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
 #include "../objects/EntityModel.h"
+#include "../RootedConstants.h"
 
 #include <ctime>
 #include <string>
@@ -15,77 +16,6 @@
 #include <random>
 
 using namespace cugl;
-
-#pragma mark -
-#pragma mark Level Geography
-
-/** This is adjusted by screen aspect ratio to get the height */
-#define SCENE_WIDTH 1024
-#define SCENE_HEIGHT 576
-
-/** This is the aspect ratio for physics */
-#define SCENE_ASPECT 9.0/16.0
-
-/** Width of the game world in Box2d units */
-#define DEFAULT_WIDTH   32.0f
-/** Height of the game world in Box2d units */
-#define DEFAULT_HEIGHT  18.0f
-/** Zoom of camera relative to scene */
-#define CAMERA_ZOOM 2.0
-/** Camera gliding rate */
-#define CAMERA_GLIDE_RATE 0.06f
-
-#pragma mark -
-#pragma mark Physics Constants
-/** No gravity because we are top down */
-#define DEFAULT_GRAVITY 0.0f
-/** The number of frame to wait before reinitializing the game */
-#define EXIT_COUNT      240
-
-
-#pragma mark -
-#pragma mark Asset Constants
-/** The font for victory/failure messages */
-#define MESSAGE_FONT    "gyparody"
-/** The message for winning the game */
-#define WIN_MESSAGE     "YOU WIN!"
-/** The color of the win message */
-#define WIN_COLOR       Color4::BLUE
-/** The message for losing the game */
-#define LOSE_MESSAGE    "YOU LOSE!"
-/** The color of the lose message */
-#define LOSE_COLOR      Color4::RED
-/** The message for resetting the game */
-#define RESET_MESSAGE    "RESETTING"
-/** The color of the reset message */
-#define RESET_COLOR      Color4::YELLOW
-/** The key the victory game music */
-#define WIN_MUSIC       "win"
-/** The key the failure game music */
-#define LOSE_MUSIC      "lose"
-/** The sound effect for firing a bullet */
-#define PEW_EFFECT      "pew"
-/** The sound effect for a bullet collision */
-#define POP_EFFECT      "pop"
-/** The sound effect for jumping */
-#define JUMP_EFFECT     "jump"
-/** The volume for the music */
-#define MUSIC_VOLUME    0.7f
-/** The volume for sound effects */
-#define EFFECT_VOLUME   0.8f
-/** The image for the left dpad/joystick */
-#define LEFT_IMAGE      "dpad_left"
-/** The image for the right dpad/joystick */
-#define RIGHT_IMAGE     "dpad_right"
-
-#define JOY_MAIN        "joystick-main"
-#define JOY_BACK        "joystick-back"
-
-/** Color to outline the physics nodes */
-#define DEBUG_COLOR     Color4::GREEN
-/** Opacity of the physics outlines */
-#define DEBUG_OPACITY   192
-
 
 #pragma mark -
 #pragma mark Constructors
@@ -150,14 +80,14 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("testMap2")); // Obtains ownership of root.
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("evenLargerMap")); // Obtains ownership of root.
 
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
     
-    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
+    _map->populate();
     
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
@@ -208,7 +138,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // set the camera after all of the network is loaded
     _ui.init(_uinode, _offset, CAMERA_ZOOM);
     
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
     _cam.setZoom(CAMERA_ZOOM);
     _initCamera = _cam.getCamera()->getPosition();
 
@@ -285,7 +215,7 @@ void GameScene::reset() {
     _map->clearRootNode();
     _map->setRootNode(_rootnode);
     _map->dispose();
-    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
+    _map->populate();
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
     _collision.dispose();

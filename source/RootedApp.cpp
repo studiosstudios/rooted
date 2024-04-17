@@ -10,7 +10,7 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Application State
 
-/** The key the basic game music */
+/** The key the basic main menu music */
 #define MENU_MUSIC      "menu"
 
 /**

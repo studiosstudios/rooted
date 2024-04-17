@@ -12,9 +12,14 @@ using namespace cugl;
 #define DASH_TIME       2
 /** The sound effect for a bunny rooting a carrot */
 #define ROOTING_BUNNY_EFFECT      "bunny-root"
+/** The sound effect for a carrot being rooted*/
 #define ROOTING_CARROT_EFFECT     "carrot-root"
+/** The sound effect for a carrot being unrooted*/
 #define UNROOTING_EFFECT          "unroot"
+/** The sound effect for a character dashing */
 #define DASH_EFFECT               "dash"
+/** The key the basic main menu music */
+#define RUSTLE_MUSIC      "rustle"
 
 /**
  * Initializes an ActionController

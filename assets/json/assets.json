@@ -129,6 +129,16 @@
         "shader_grass_gradient": {
             "file":     "textures/grass_gradient.png"
         },
+        "shader_wheat_side": {
+            "file":     "textures/wheat_side.png",
+            "wrapS":    "repeat",
+            "wrapT":    "repeat"
+        },
+        "shader_wheat_top": {
+            "file":     "textures/wheat_top.png",
+            "wrapS":    "repeat",
+            "wrapT":    "repeat"
+        },
         "bkg": {
             "file": "textures/mainmenubkg.png"
         },

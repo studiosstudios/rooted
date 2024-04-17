@@ -40,6 +40,8 @@ protected:
     std::shared_ptr<cugl::Texture> _cloudtex;
     std::shared_ptr<cugl::Texture> _gradienttex;
     std::shared_ptr<cugl::Texture> _grassgradienttex;
+    std::shared_ptr<cugl::Texture> _wheatsidetex;
+    std::shared_ptr<cugl::Texture> _wheattoptex;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
     float _aspectRatio;
     float _bladeColorScale;

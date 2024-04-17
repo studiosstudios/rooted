@@ -11,13 +11,18 @@ using namespace cugl;
 
 #pragma mark -
 #pragma mark Asset Constants
+/** The base texture for the wheat shader */
 # define BASE_TEXTURE       "shader_base"
-/** The key for the earth texture in the asset manager */
+/** The cloud texture for the cloud shader */
 #define CLOUD_TEXTURE       "shader_clouds"
-/** The name of a wall (for object identification) */
+/** The noise texture for the shader */
 #define NOISE_TEXTURE       "shader_noise"
-/** The name of a platform (for object identification) */
+/** The gradient texture for the wheat shader */
 #define GRADIENT_TEXTURE    "shader_gradient"
+/** The texture for the side of the wheat for the wheat shader */
+#define WHEAT_SIDE_TEXTURE  "shader_wheat_side"
+/** The texture for the top of the wheat for the wheat shader */
+#define WHEAT_TOP_TEXTURE   "shader_wheat_top"
 
 #define WIND_SPEED 1.0
 #define CLOUD_SPEED 0.05
@@ -76,10 +81,12 @@ bool ShaderRenderer::init(const shared_ptr<Texture> &wheattex, const std::shared
 
     _bladeColorScale = bladeColorScale;
 
-    _cloudtex = _assets->get<Texture>("shader_clouds");
-    _noisetex = _assets->get<Texture>("shader_noise");
-    _gradienttex = _assets->get<Texture>("shader_gradient");
+    _cloudtex = _assets->get<Texture>(CLOUD_TEXTURE);
+    _noisetex = _assets->get<Texture>(NOISE_TEXTURE);
+    _gradienttex = _assets->get<Texture>(GRADIENT_TEXTURE);
     _grassgradienttex = _assets->get<Texture>("shader_grass_gradient");
+    _wheatsidetex = _assets->get<Texture>(WHEAT_SIDE_TEXTURE);
+    _wheattoptex = _assets->get<Texture>(WHEAT_TOP_TEXTURE);
     _wheattex = wheattex;
 
     _size = _wheattex->getSize();
@@ -96,6 +103,8 @@ bool ShaderRenderer::init(const shared_ptr<Texture> &wheattex, const std::shared
     _textures.push_back(_noisetex);
     _textures.push_back(_gradienttex);
     _textures.push_back(_grassgradienttex);
+    _textures.push_back(_wheatsidetex);
+    _textures.push_back(_wheattoptex);
     _textures.push_back(_wheattex);
 
     for (int i = 0; i < _textures.size(); i++) {
@@ -240,11 +249,10 @@ void ShaderRenderer::buildShaders() {
     _wheatShader->setSampler("grass_tex", _wheattex);
     _wheatShader->setSampler("noise_tex", _noisetex);
     _wheatShader->setSampler("gradient_tex", _gradienttex);
+    _wheatShader->setSampler("wheat_side_tex", _wheatsidetex);
+    _wheatShader->setSampler("wheat_top_tex", _wheattoptex);
     _wheatShader->setUniform1f("WIND_TIME", _windTime);
-//    _wheatShader->setUniform4f("tip_color", 0.96863, 0.8, 0.294118, 1.0);
-//    _wheatShader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
     _wheatShader->setUniform4f("tip_color", 1.0, 0.866667, 0.231373, 1.0);
-//    _wheatShader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
     _wheatShader->setUniform4f("wind_color", 1.0, 0.9058824, 0.309804, 1.0);
     _wheatShader->setUniform1f("wind_speed", WIND_SPEED);
     _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);

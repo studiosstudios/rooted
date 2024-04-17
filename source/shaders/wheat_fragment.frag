@@ -56,6 +56,8 @@ uniform float WIND_TIME;
 uniform sampler2D grass_tex;
 uniform sampler2D noise_tex;
 uniform sampler2D gradient_tex;
+uniform sampler2D wheat_side_tex;
+uniform sampler2D wheat_top_tex;
 
 uniform float wind_speed;
 uniform vec2 wind_direction;
@@ -69,6 +71,9 @@ uniform float transparency_radius;
 
 uniform float MAX_BLADE_LENGTH;
 const float PI = 3.14f;
+
+uniform vec2 WHEAT_SIDE_SIZE;
+uniform vec2 WHEAT_TOP_SIZE;
 
 /** Objects */
 uniform vec2 player_pos;
@@ -94,8 +99,27 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
  
  - dist: distance from base
  */
-vec4 sampleColor(float dist, float bladeLen) {
-    return texture(gradient_tex, vec2(dist + 0.5f, 0.0f) / 3.0f);
+//vec4 sampleColor(float dist, float bladeLen) {
+//    return texture(gradient_tex, vec2(dist + 0.5f, 0.0f) / 3.0f);
+//}
+
+/**
+ Retrieves the color from the wheat side texture for the side of the wheat
+ 
+ Converts the current coordinate to coordinate in wheat side texture
+ 
+ - x: coordinate
+ - dist: distance from base
+ */
+vec4 wheatSideColor(float x, float dist) {
+    return texture(wheat_side_tex, vec2(x*5.0f, 576 - (dist/41 * 1682)));
+}
+
+/**
+ 
+ */
+vec4 wheatTopColor(float x, float y) {
+    return texture(wheat_top_tex, vec2(x, y) * 4.0f);
 }
 
 /**
@@ -149,8 +173,10 @@ void main(void) {
 
     float dist = distance(fragUV / SCREEN_PIXEL_SIZE, player_pos / SCREEN_PIXEL_SIZE);
     float alpha = clamp(smoothstep(0.0, transparency_radius, dist), player_transparency, 1.0);
+    
     if (texture(grass_tex, fragUV).r > 0.0f && texture(grass_tex, fragUV).g == 0.0f) {
-        baseColor = sampleColor(0.0f, 0.0f);
+//        baseColor = sampleColor(0.0f, 0.0f);
+//        baseColor = wheatSideColor(
     }
 
     // Sample the wind
@@ -171,15 +197,18 @@ void main(void) {
             if (abs(dist - bladeLength) < 0.0001f) {
                 // Color grass tips
                 if (windValue <= 0.5f) {
-                    baseColor = tip_color;
+//                    baseColor = tip_color;
+                    baseColor = wheatTopColor(fragUV.x, fragUV.y);
 //                    baseColor = windValue > 0.49 ? sampleColor(dist, bladeLength) : tip_color;
                 } else {
-                    baseColor = wind_color;
+//                    baseColor = wind_color;
+                    baseColor = wheatTopColor(fragUV.x, fragUV.y) + vec4(0.1, 0.1, 0.1, 0.0);
                 }
                 break;
             } else if (dist < bladeLength) {
                 // Color grass stems
-                baseColor = sampleColor(dist, bladeLength);
+//                baseColor = sampleColor(dist, bladeLength);
+                baseColor = wheatSideColor(fragUV.x, dist);
             }
         }
 

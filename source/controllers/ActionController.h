@@ -14,6 +14,7 @@
 #include "../events/CaptureEvent.h"
 #include "../events/RootEvent.h"
 #include "../events/UnrootEvent.h"
+#include "../events/MoveEvent.h"
 #include "../events/CaptureBarrotEvent.h"
 
 class ActionController {

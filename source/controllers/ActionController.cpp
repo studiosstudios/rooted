@@ -32,6 +32,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _network->attachEventType<CaptureEvent>();
     _network->attachEventType<RootEvent>();
     _network->attachEventType<UnrootEvent>();
+    _network->attachEventType<MoveEvent>();
     return true;
 }
 
@@ -53,8 +54,11 @@ void ActionController::preUpdate(float dt) {
     }
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
-    
+    EntityModel::EntityState currState =playerEntity->getMovementState();
     playerEntity->updateState();
+    if(playerEntity->getMovementState() != currState){
+        _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getMovementState()));
+    }
     playerEntity->applyForce();
     playerEntity->stepAnimation(dt);
     

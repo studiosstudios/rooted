@@ -84,7 +84,27 @@
 * experience, using a rectangular shape for a character will regularly snag
 * on a platform.  The round shapes on the end caps lead to smoother movement.
 */
-class EntityModel : public cugl::physics2::BoxObstacle {
+class EntityModel : public cugl::physics2::BoxObstacle {public:
+    int dashTimer;
+    
+    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
+    
+    /** State that a rooted! player entity can be in. Some of these states are specific
+        to only a certain type of character (ex. only a bunny can be PLANTING), so
+        we need to enforce the corresponding invariants for which staztes an entity can
+        be in. */
+    enum EntityState {
+        STANDING,
+        SNEAKING,
+        WALKING,
+        RUNNING,
+        DASHING,
+        CARRYING,   // bunny only
+        PLANTING,   // bunny only
+        CAUGHT,     // carrot only
+        ROOTED      // carrot only
+    };
+    
 private:
 	/** This macro disables the copy constructor (not allowed on physics objects) */
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
@@ -147,24 +167,6 @@ protected:
 	*/
 	virtual void resetDebug() override;
     
-    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
-    
-    /** State that a rooted! player entity can be in. Some of these states are specific
-        to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which staztes an entity can
-        be in. */
-    enum EntityState {
-        STANDING,
-        SNEAKING,
-        WALKING,
-        RUNNING,
-        DASHING,
-        CARRYING,   // bunny only
-        PLANTING,   // bunny only
-        CAUGHT,     // carrot only
-        ROOTED      // carrot only
-    };
-    
     /** Current EntityState that this entity is in. */
     EntityState _state;
     
@@ -192,10 +194,6 @@ protected:
     float _wheatSizeTarget;
     /** Current rendered height for wheat node. This is very temporary */
     float _currWheatSize;
-    
-
-public:
-    int dashTimer;
 
 public:
     

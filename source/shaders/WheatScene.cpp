@@ -34,14 +34,14 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, string name, float
 
     _wheattex = assets->get<Texture>(name);
     _bladeColorScale = bladeColorScale;
-//    _fsqshader = Shader::alloc(SHADER(fsqShaderVert), SHADER(fsqShaderFrag));
-    if (!Scene2Texture::init(0,0,DEFAULT_WHEAT_WIDTH * worldSize.width / DEFAULT_WIDTH,
-                             DEFAULT_WHEAT_HEIGHT * worldSize.height / DEFAULT_HEIGHT, false)) {
+    _fsqshader = Shader::alloc(SHADER(fsqShaderVert), SHADER(fsqShaderFrag));
+    if (!Scene2Texture::init(0, 0, DEFAULT_WHEAT_TEX_WIDTH * worldSize.width / DEFAULT_WIDTH,
+                             DEFAULT_WHEAT_TEX_HEIGHT * worldSize.height / DEFAULT_HEIGHT, false)) {
         return false;
     }
 
     _rootnode = scene2::SceneNode::alloc();
-    _rootnode->setScale(DEFAULT_DRAWSCALE*_wheattex->getWidth()/SCENE_WIDTH, DEFAULT_DRAWSCALE*_wheattex->getHeight()/SCENE_HEIGHT);
+    _rootnode->setScale(DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_WIDTH / SCENE_WIDTH, DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_HEIGHT / SCENE_HEIGHT);
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(Vec2::ZERO);
     addChild(_rootnode);

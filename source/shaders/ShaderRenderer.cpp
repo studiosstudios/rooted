@@ -235,7 +235,8 @@ void ShaderRenderer::buildShaders() {
     _wheatShader->setUniform1f("transparency_radius",20.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
     _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
-    _wheatShader->setUniform1f("MAX_BLADE_LENGTH", 30 * _fullHeight);
+    _wheatShader->setUniform1f("MAX_BLADE_LENGTH", MAX_WHEAT_HEIGHT * _fullHeight);
+    _wheatShader->setUniform1f("STEP_SIZE", STEP_SIZE);
 
     _groundShader = Shader::alloc(SHADER(groundVert), SHADER(groundFrag));
     _groundShader->setSampler("noise_tex", _noisetex);

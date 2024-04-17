@@ -57,6 +57,7 @@ in vec2 outGradCoord;
 
 uniform float MAX_WHEAT_HEIGHT;
 const float PI = 3.14f;
+uniform float STEP_SIZE;
 
 /**
  Calculates a sine wave
@@ -73,7 +74,7 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
 
 float sampleHeight(vec2 uv) {
     vec3 samp = texture(grass_tex, uv).rgb;
-    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_WHEAT_HEIGHT) : 0.0f;
+    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f, 0.0, MAX_WHEAT_HEIGHT) : 0.0f;
 }
 
 /**
@@ -124,7 +125,7 @@ void main()
 
     vec2 wheatUV = wheatCoord + vec2(0.0, 1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y;
 
-    for (float dist = 0.0f; dist <= MAX_WHEAT_HEIGHT; ++dist) {
+    for (float dist = 0.0f; dist <= MAX_WHEAT_HEIGHT; dist += STEP_SIZE) {
         //sample wheat height
         float wheat_height = sampleHeight(wheatUV);
 
@@ -139,7 +140,7 @@ void main()
             break;
         }
 
-        wheatUV += vec2(0.0, TEXTURE_PIXEL_SIZE.y);
+        wheatUV += vec2(0.0, TEXTURE_PIXEL_SIZE.y) * STEP_SIZE;
     }
 
     frag_color *= outColor;

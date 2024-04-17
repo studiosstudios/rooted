@@ -113,6 +113,9 @@
         "testMap": {
             "file":     "textures/maps/testmap.png"
         },
+        "grid": {
+            "file":     "textures/maps/grid.png"
+        },
         "shader_clouds": {
             "file":     "textures/clouds.png",
             "wrapS":    "repeat",

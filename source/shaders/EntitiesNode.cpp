@@ -44,7 +44,8 @@ bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, 
         _coverShader->setUniform1f("blade_color_scale", _bladeColorScale);
         _coverShader->setUniform1f("wind_speed", WIND_SPEED);
         _coverShader->setUniform2f("wind_direction", WIND_DIRECTION[0], WIND_DIRECTION[1]);
-        _coverShader->setUniform1f("MAX_WHEAT_HEIGHT", 30 * _fullHeight);
+        _coverShader->setUniform1f("MAX_WHEAT_HEIGHT", MAX_WHEAT_HEIGHT * _fullHeight);
+        _coverShader->setUniform1f("STEP_SIZE", STEP_SIZE);
         _windTime = 0;
         return true;
     }

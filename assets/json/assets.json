@@ -188,6 +188,12 @@
         },
         "carrot-count-board" : {
             "file": "textures/carrot-count-board.png"
+        },
+        "backbutton": {
+            "file": "textures/back.png"
+        },
+        "playercountasset" : {
+            "file" : "textures/temp_player_count.png"
         }
     },
     "jsons": {
@@ -297,6 +303,38 @@
         "gaeguBold90": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 90
+        },
+        "gaeguBold40": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 40
+        },
+        "gaeguBold50": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 50
+        },
+        "gaeguBold60": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 60
+        },
+        "gaeguBold67": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 67
+        },
+        "gaeguBold72": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 72
+        },
+        "gaeguBold75": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 75
+        },
+        "gaeguBold90": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 90
+        },
+        "gaeguBold100": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 100
         }
     },
     "widgets": {
@@ -311,7 +349,10 @@
         "numpadwidget" : "widgets/numpadwidget.json",
         "lobbyclient" : "widgets/lobbyclient.json",
         "lobbyhost" : "widgets/lobbyhost.json",
-        "prelobby": "widgets/prelobby.json"
+        "prelobby": "widgets/prelobby.json",
+        "backbuttonwidget" : "widgets/backbuttonwidget.json",
+        "lobbyidwidget" : "widgets/lobbyidwidget.json",
+        "playercountwidget" : "widgets/playercountwidget.json"
     },
     "scene2s" : {
         "host": {

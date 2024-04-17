@@ -188,11 +188,16 @@ void ActionController::playRustling(std::shared_ptr<EntityModel> player, float d
     //TODO: check if player is in wheat, if not, setVolume to 0.
     std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
     float newVolume = calculateVolume(_map->getCharacter()->getEntityState(), distance);
-    if(AudioEngine::get()->getState(_map->getCharacter()->getUUID()) != AudioEngine::State::PLAYING){
+    if(AudioEngine::get()->getState(_map->getCharacter()->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){
         AudioEngine::get()->play(player->getUUID(), source);
     }
     else{
-        AudioEngine::get()->setVolume(player->getUUID(), newVolume);
+        if(newVolume == 0){
+            AudioEngine::get()->clear(player->getUUID());
+        }
+        else{
+            AudioEngine::get()->setVolume(player->getUUID(), newVolume);
+        }
     }
 }
 
@@ -210,7 +215,7 @@ void ActionController::updateRustlingNoise(){
         }
     }
     auto farmerEntity = _map->getFarmers().at(0);
-    if(farmerEntity->getUUID() == _map->getCharacter()->getUUID()){
+    if(farmerEntity->getUUID() == playerEntity->getUUID()){
         playRustling(playerEntity, 0);
     }
     else{

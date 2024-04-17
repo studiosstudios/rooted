@@ -1,5 +1,5 @@
 {
-    "variables": {},
+    "variables": {"anchor": ["data", "anchor"]},
     "contents": {
         "type": "Node",
         "format": {

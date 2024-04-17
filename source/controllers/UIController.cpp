@@ -11,6 +11,15 @@ using namespace cugl;
 
 void UIController::dispose() {
     _uinode->removeAllChildren();
+    _uinode = nullptr;
+}
+
+void UIController::setWinVisible(bool visible) {
+    _winNode->setVisible(visible);
+}
+
+void UIController::setLoseVisible(bool visible) {
+    _loseNode->setVisible(visible);
 }
 
 void UIController::initJoystickNodes() {
@@ -27,13 +36,30 @@ void UIController::initJoystickNodes() {
     _uinode->addChild(_joynode);
 }
 
-bool UIController::init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
+void UIController::initGameUINodes() {
+    _winNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("victory"));
+    _winNode->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) / _cameraZoom + _offset);
+    _winNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _winNode->setVisible(false);
+    _uinode->addChild(_winNode);
+    
+    _loseNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("defeat"));
+    _loseNode->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) / _cameraZoom + _offset);
+    _loseNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _loseNode->setVisible(false);
+    _uinode->addChild(_loseNode);
+}
+
+bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
+                        const std::shared_ptr<cugl::scene2::SceneNode> uinode,
                         Vec2 offset, float cameraZoom) {
+    _assets = assets;
     _uinode = uinode;
     _offset = offset;
     _cameraZoom = cameraZoom;
     
     initJoystickNodes();
+    initGameUINodes();
     return true;
 }
 

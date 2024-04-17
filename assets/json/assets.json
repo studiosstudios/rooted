@@ -155,6 +155,12 @@
         },
         "lobbyidbkg" : {
             "file": "textures/lobbyid.png"
+        },
+        "victory" : {
+            "file": "textures/victory.png"
+        },
+        "defeat" : {
+            "file": "textures/defeat.png"
         }
     },
     "jsons": {

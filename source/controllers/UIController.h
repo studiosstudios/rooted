@@ -20,6 +20,9 @@
 
 class UIController {
 private:
+    /** The asset manager for this game mode. */
+    std::shared_ptr<cugl::AssetManager> _assets;
+    
     /** PolyFactory for drawing the joystick circle.
      *  TODO: We can remove this once we get proper assets for the joystick
      */
@@ -36,6 +39,11 @@ private:
     /** Pointer to the PolygonNode of the joystick's moving circle*/
     std::shared_ptr<cugl::scene2::PolygonNode> _joymain;
     
+    /** Pointer to the TextureNode of the VICTORY! message */
+    std::shared_ptr<cugl::scene2::TexturedNode> _winNode;
+    /** Pointer to the TextureNode of the DEFEAT. message*/
+    std::shared_ptr<cugl::scene2::TexturedNode> _loseNode;
+    
     /** The offset of the scene graph
      *
      *  This offset is nonzero if the device's screen is not 1024 x 576.
@@ -47,15 +55,25 @@ private:
     float _cameraZoom;
     
 public:
+#pragma mark Constructor/Destructor/Dispose
+#pragma mark -
     UIController() {};
     
     ~UIController() { dispose(); }
     
     void dispose();
     
+#pragma mark Getters/Setters
+#pragma mark -
+    void setWinVisible(bool visible);
+    void setLoseVisible(bool visible);
+    
     void initJoystickNodes();
     
-    bool init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
+    void initGameUINodes();
+    
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
+              const std::shared_ptr<cugl::scene2::SceneNode> uinode,
               cugl::Vec2 offset, float cameraZoom);
     
     void updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick);

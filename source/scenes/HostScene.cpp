@@ -88,7 +88,7 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_lobbybuttons_idfield_textfield"));
     // currently no way to display the number of players
-//    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_center_players_field_text"));
+    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_lobbybuttons_playercount_players"));
         
     // Program the buttons
     _backout->addListener([this](const std::string& name, bool down) {
@@ -146,7 +146,7 @@ void HostScene::setActive(bool value) {
             _backout->activate();
             _network->disconnect();
             _network->connectAsHost();
-            updateText(_startgame, "host");
+            updateText(_startgame, "start");
             _backClicked = false;
             _startGameClicked = false;
         } else {
@@ -188,7 +188,7 @@ void HostScene::updateText(const std::shared_ptr<scene2::Button>& button, const 
 void HostScene::update(float timestep) {
     if(_network->getStatus() == NetEventController::Status::CONNECTED) {
         if (!_startGameClicked) {
-            updateText(_startgame, "host");
+            updateText(_startgame, "start");
             _startgame->activate();
         }
         else {
@@ -196,7 +196,7 @@ void HostScene::update(float timestep) {
             _startgame->deactivate();
         }
         _gameid->setText(hex2dec(_network->getRoomID()));
-//        _player->setText(std::to_string(_network->getNumPlayers()));
+        _player->setText(std::to_string(_network->getNumPlayers()));
     }
     else if (_network->getStatus() == NetEventController::Status::CONNECTING) {
         _gameid->setText("...");

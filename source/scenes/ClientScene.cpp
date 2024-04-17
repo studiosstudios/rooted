@@ -80,7 +80,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_join"));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_back"));
     _gameid = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("client_lobbybuttons_idfield_textfield"));
-//    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_center_players_field_text"));
+    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_lobbybuttons_playercount_players"));
     
     std::string numbers[10]= { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
     for (std::string number : numbers) {
@@ -223,12 +223,12 @@ void ClientScene::updateText(const std::shared_ptr<scene2::Button>& button, cons
 void ClientScene::update(float timestep) {
     // Do this last for button safety
     configureStartButton();
-//    if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
-//        _player->setText(std::to_string(_network->getNumPlayers()));
-//    }
-//    else {
-//        _player->setText("...");
-//    }
+    if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
+        _player->setText(std::to_string(_network->getNumPlayers()));
+    }
+    else {
+        _player->setText("...");
+    }
 }
 
 /**

@@ -31,6 +31,9 @@ private:
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
     std::shared_ptr<cugl::AssetManager> _assets;
+    
+    void playRustling(std::string key, float distance);
+    void updateRustlingNoise();
 
 
 public:

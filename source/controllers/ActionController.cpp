@@ -18,8 +18,10 @@ using namespace cugl;
 #define UNROOTING_EFFECT          "unroot"
 /** The sound effect for a character dashing */
 #define DASH_EFFECT               "dash"
-/** The key the basic main menu music */
-#define RUSTLE_MUSIC      "rustle"
+/** The key the rustle sounds */
+#define RUSTLE_MUSIC              "rustle"
+/** Limits volume to be in between 0-1 */
+#define VOLUME_FACTOR    0.2
 
 /**
  * Initializes an ActionController
@@ -66,6 +68,7 @@ void ActionController::preUpdate(float dt) {
     }
     playerEntity->applyForce();
     playerEntity->stepAnimation(dt);
+    updateRustlingNoise();
     
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
@@ -148,6 +151,68 @@ void ActionController::postUpdate(float dt) {
         }
         else if(!c->isRooted()){
             c->setSensor(false);
+        }
+    }
+}
+
+float calculateVolume(EntityModel::EntityState state, float distance){
+    float stateToNum;
+    switch(state){
+        case EntityModel::EntityState::STANDING:
+        case EntityModel::EntityState::PLANTING:
+        case EntityModel::EntityState::CAUGHT:
+        case EntityModel::EntityState::ROOTED:
+            stateToNum = 0;
+            break;
+        case EntityModel::EntityState::SNEAKING:
+            stateToNum = 1;
+            break;
+        case EntityModel::EntityState::WALKING:
+        case EntityModel::EntityState::CARRYING:
+            stateToNum = 2;
+            break;
+        case EntityModel::EntityState::RUNNING:
+            stateToNum = 3;
+            break;
+        case EntityModel::EntityState::DASHING:
+            stateToNum = 4;
+            break;
+    }
+    return distance == 0 ? stateToNum/4.0 : (stateToNum/distance)/VOLUME_FACTOR; //needs to be function between 0 and 1
+}
+
+void ActionController::playRustling(std::string key, float distance){
+    std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
+    float newVolume = calculateVolume(_map->getCharacter()->getEntityState(), distance);
+    if(AudioEngine::get()->getState(_map->getCharacter()->getUUID()) != AudioEngine::State::PLAYING){
+        AudioEngine::get()->play(key, source);
+    }
+    else{
+        AudioEngine::get()->setVolume(key, newVolume);
+    }
+}
+
+void ActionController::updateRustlingNoise(){
+    auto playerEntity = _map->getCharacter();
+    for(auto carrot : _map->getCarrots()){
+        if(carrot->getUUID() == playerEntity->getUUID()){
+            playRustling(playerEntity->getUUID(), 0);
+        }
+        else{
+            float distanceFromCharacter = playerEntity->getPosition().distance(carrot->getPosition());
+            if(distanceFromCharacter <= 20){
+                playRustling(carrot->getUUID(), distanceFromCharacter);
+            }
+        }
+    }
+    auto farmerEntity = _map->getFarmers().at(0);
+    if(farmerEntity->getUUID() == _map->getCharacter()->getUUID()){
+        playRustling(playerEntity->getUUID(), 0);
+    }
+    else{
+        float distanceFromCharacter = playerEntity->getPosition().distance(farmerEntity->getPosition());
+        if(distanceFromCharacter <= 20){
+            playRustling(farmerEntity->getUUID(), distanceFromCharacter);
         }
     }
 }

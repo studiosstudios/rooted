@@ -425,6 +425,9 @@ void GameScene::fixedUpdate(float step) {
         if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
             processResetEvent(resetEvent);
         }
+        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
+            _action.processMoveEvent(moveEvent);
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;

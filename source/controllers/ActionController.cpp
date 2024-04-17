@@ -54,10 +54,10 @@ void ActionController::preUpdate(float dt) {
     }
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
-    EntityModel::EntityState currState =playerEntity->getMovementState();
+    EntityModel::EntityState oldState = playerEntity->getEntityState();
     playerEntity->updateState();
-    if(playerEntity->getMovementState() != currState){
-        _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getMovementState()));
+    if(playerEntity->getEntityState() != oldState){
+        _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
     }
     playerEntity->applyForce();
     playerEntity->stepAnimation(dt);
@@ -218,6 +218,24 @@ void ActionController::processBarrotEvent(const std::shared_ptr<CaptureBarrotEve
                 if(barrot->getID() == event->getBarrotID()){
                     barrot->gotCaptured();
                 }
+            }
+        }
+    }
+}
+
+void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event){
+    //don't let network events update own state
+    if(event->getUUID() == _map->getCharacter()->getUUID()){
+        return;
+    }
+    else if(event->getUUID() == _map->getFarmers().at(0)->getUUID()){
+        _map->getFarmers().at(0)->setEntityState(event->getState());
+    }
+    else{
+        for(auto carrot : _map->getCarrots()){
+            if(event->getUUID() == carrot->getUUID()){
+                carrot->setEntityState(event->getState());
+                return;
             }
         }
     }

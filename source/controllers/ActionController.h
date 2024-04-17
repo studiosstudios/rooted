@@ -83,6 +83,8 @@ public:
     void processUnrootEvent(const std::shared_ptr<UnrootEvent>& event);
     
     void processBarrotEvent(const std::shared_ptr<CaptureBarrotEvent>& event);
+    
+    void processMoveEvent(const std::shared_ptr<MoveEvent>& event);
 };
 
 

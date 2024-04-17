@@ -601,7 +601,15 @@ public:
         }
         return RUNNING;
     }
-
+    
+    EntityState getEntityState(){
+        return _state;
+    }
+    
+    void setEntityState(EntityState state) {
+        _state = state;
+    }
+    
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
 
     virtual void updateWheatHeightNode();

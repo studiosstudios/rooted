@@ -1,5 +1,5 @@
 { "compressionlevel":-1,
- "height":72,
+ "height":36,
  "infinite":false,
  "layers":[
         {
@@ -32,7 +32,7 @@
                 }, 
                 {
                  "gid":5,
-                 "height":2322,
+                 "height":1152,
                  "id":117,
                  "name":"",
                  "properties":[
@@ -49,9 +49,9 @@
                  "rotation":0,
                  "type":"Map",
                  "visible":true,
-                 "width":4096,
+                 "width":2048,
                  "x":0,
-                 "y":2304
+                 "y":1152
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -362,5 +362,5 @@
  "tilewidth":32,
  "type":"map",
  "version":"1.10",
- "width":128
+ "width":64
 }

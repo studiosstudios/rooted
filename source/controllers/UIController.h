@@ -39,6 +39,8 @@ private:
     
     /** The camera's zoom */
     float _cameraZoom;
+    /** The draw scale */
+    float _drawScale;
     
 public:
     UIController() {};
@@ -50,7 +52,7 @@ public:
     void initJoystickNodes();
     
     bool init(const std::shared_ptr<cugl::scene2::SceneNode> uinode,
-              cugl::Vec2 offset, float cameraZoom);
+              cugl::Vec2 offset, float cameraZoom, float drawScale);
     
     void updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick);
     

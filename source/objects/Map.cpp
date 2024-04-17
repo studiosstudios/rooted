@@ -203,8 +203,8 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets,
     return true;
 }
 
-void Map::populate() {
-    
+void Map::populate(int randSeed) {
+
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
     

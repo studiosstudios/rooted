@@ -78,8 +78,8 @@ public:
      */
     enum class DrawOrder : int {
         GRASS,
-        SHADOWS,
         PLANTINGSPOT,
+        SHADOWS,
         ENTITIES,
         PLAYER,
         WHEAT,
@@ -113,7 +113,7 @@ public:
               const std::shared_ptr<scene2::SceneNode> &root,
               const std::shared_ptr<cugl::JsonValue> &json);
 
-    void populate();
+    void populate(int randSeed);
     
     /**
      * populate the map with Carrots

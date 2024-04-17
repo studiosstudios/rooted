@@ -162,7 +162,7 @@
         "map": "json/map.json",
         "testMap": "level-editor/testMap.json",
         "testMap2": "level-editor/testMap2.json",
-        "largerMap": "level-editor/largerMapTest.json",
+        "largerMap": "level-editor/largerMaptest.json",
         "evenLargerMap": "level-editor/evenLargerMap.json"
     },
     "sounds": {

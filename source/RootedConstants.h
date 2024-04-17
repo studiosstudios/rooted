@@ -22,7 +22,7 @@
 /** Default drawscale */
 #define DEFAULT_DRAWSCALE 32.0f
 /** Zoom of camera relative to scene */
-#define CAMERA_ZOOM 8.0
+#define DEFAULT_CAMERA_ZOOM 2.0f
 /** Camera gliding rate */
 #define CAMERA_GLIDE_RATE 0.06f
 

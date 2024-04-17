@@ -17,6 +17,25 @@
 
 using namespace cugl;
 
+/**
+ * Converts a hexadecimal string to a decimal string
+ *
+ * This function assumes that the string is 4 hexadecimal characters
+ * or less, and therefore it converts to a decimal string of five
+ * characters or less (as is the case with the lobby server). We
+ * pad the decimal string with leading 0s to bring it to 5 characters
+ * exactly.
+ *
+ * @param hex the hexadecimal string to convert
+ *
+ * @return the decimal equivalent to hex
+ */
+static int hex2dec(const std::string hex) {
+    Uint32 value = strtool::stou32(hex,0,16);
+    std::string result = strtool::to_string(value);
+    return stoi(result);
+}
+
 #pragma mark -
 #pragma mark Constructors
 
@@ -60,52 +79,54 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(_offset);
 
-    // Create the scene graph
-    _uinode = scene2::SceneNode::alloc();
-    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-
-    _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _winnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _winnode->setPosition(dimen / 1.8f/ CAMERA_ZOOM);
-    _winnode->setScale(1/CAMERA_ZOOM);
-    _winnode->setForeground(WIN_COLOR);
-    setComplete(false);
-
-    _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _losenode->setAnchor(Vec2::ANCHOR_CENTER);
-    _losenode->setPosition(dimen.width / 1.8f / CAMERA_ZOOM, dimen.height / 1.8f / CAMERA_ZOOM);
-    _losenode->setScale(1/CAMERA_ZOOM);
-    _losenode->setForeground(LOSE_COLOR);
-    setFailure(false);
-
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("evenLargerMap")); // Obtains ownership of root.
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("largerMap")); // Obtains ownership of root.
 
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
     
-    _map->populate();
+    _map->populate(hex2dec(_network->getRoomID()));
     
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
-
-    addChild(_rootnode);
-    addChild(_uinode);
-    _uinode->addChild(_winnode);
-    _uinode->addChild(_losenode);
+    
+    // Create the scene graph
+    _uinode = scene2::SceneNode::alloc();
+    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
     activateWorldCollisions(world);
-
+    
     // IMPORTANT: SCALING MUST BE UNIFORM
     // This means that we cannot change the aspect ratio of the physics world
     // Shift to center if a bad fit
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
+    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
+    
+    _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
+    _winnode->setAnchor(Vec2::ANCHOR_CENTER);
+    _winnode->setPosition(dimen / 1.8f/ zoom);
+    _winnode->setScale(1/zoom);
+    _winnode->setForeground(WIN_COLOR);
+    setComplete(false);
+
+    _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
+    _losenode->setAnchor(Vec2::ANCHOR_CENTER);
+    _losenode->setPosition(dimen.width / 1.8f / zoom, dimen.height / 1.8f / zoom);
+    _losenode->setScale(1/zoom);
+    _losenode->setForeground(LOSE_COLOR);
+    setFailure(false);
+    
+    _uinode->addChild(_winnode);
+    _uinode->addChild(_losenode);
+
+    addChild(_rootnode);
+    addChild(_uinode);
     
     _input = InputController::alloc(getBounds());
     Haptics::start();
@@ -136,10 +157,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
-    _ui.init(_uinode, _offset, CAMERA_ZOOM);
+    _ui.init(_uinode, _offset, 32.0, _scale);
     
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
-    _cam.setZoom(CAMERA_ZOOM);
+    _cam.setZoom(zoom);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
@@ -215,7 +236,7 @@ void GameScene::reset() {
     _map->clearRootNode();
     _map->setRootNode(_rootnode);
     _map->dispose();
-    _map->populate();
+    _map->populate(hex2dec(_network->getRoomID()));
     _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
     _collision.dispose();

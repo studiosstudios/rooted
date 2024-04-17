@@ -122,7 +122,7 @@ void main()
     //to fix this we will have to modify spritebatch
     float height = (1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y / TEXTURE_PIXEL_SIZE.y;
 
-    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y;
+    vec2 wheatUV = wheatCoord + vec2(0.0, 1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y;
 
     for (float dist = 0.0f; dist <= MAX_WHEAT_HEIGHT; ++dist) {
         //sample wheat height

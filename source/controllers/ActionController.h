@@ -32,7 +32,14 @@ private:
     std::shared_ptr<NetworkController> _network;
     std::shared_ptr<cugl::AssetManager> _assets;
     
-    void playRustling(std::string key, float distance);
+    /**
+     * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character
+     */
+    void playRustling(std::shared_ptr<EntityModel> player, float distance);
+    
+    /**
+     * Updates rustling sound effect based on the movement of the entities around one's own character
+     */
     void updateRustlingNoise();
 
 

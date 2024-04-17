@@ -155,6 +155,9 @@ void ActionController::postUpdate(float dt) {
     }
 }
 
+/**
+ * Local method to calculate the volume of wheat rustling based on character movement and distance from one's own character
+ */
 float calculateVolume(EntityModel::EntityState state, float distance){
     float stateToNum;
     switch(state){
@@ -181,14 +184,15 @@ float calculateVolume(EntityModel::EntityState state, float distance){
     return distance == 0 ? stateToNum/4.0 : (stateToNum/distance)/VOLUME_FACTOR; //needs to be function between 0 and 1
 }
 
-void ActionController::playRustling(std::string key, float distance){
+void ActionController::playRustling(std::shared_ptr<EntityModel> player, float distance){
+    //TODO: check if player is in wheat, if not, setVolume to 0.
     std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
     float newVolume = calculateVolume(_map->getCharacter()->getEntityState(), distance);
     if(AudioEngine::get()->getState(_map->getCharacter()->getUUID()) != AudioEngine::State::PLAYING){
-        AudioEngine::get()->play(key, source);
+        AudioEngine::get()->play(player->getUUID(), source);
     }
     else{
-        AudioEngine::get()->setVolume(key, newVolume);
+        AudioEngine::get()->setVolume(player->getUUID(), newVolume);
     }
 }
 
@@ -196,23 +200,23 @@ void ActionController::updateRustlingNoise(){
     auto playerEntity = _map->getCharacter();
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == playerEntity->getUUID()){
-            playRustling(playerEntity->getUUID(), 0);
+            playRustling(playerEntity, 0);
         }
         else{
             float distanceFromCharacter = playerEntity->getPosition().distance(carrot->getPosition());
             if(distanceFromCharacter <= 20){
-                playRustling(carrot->getUUID(), distanceFromCharacter);
+                playRustling(carrot, distanceFromCharacter);
             }
         }
     }
     auto farmerEntity = _map->getFarmers().at(0);
     if(farmerEntity->getUUID() == _map->getCharacter()->getUUID()){
-        playRustling(playerEntity->getUUID(), 0);
+        playRustling(playerEntity, 0);
     }
     else{
         float distanceFromCharacter = playerEntity->getPosition().distance(farmerEntity->getPosition());
         if(distanceFromCharacter <= 20){
-            playRustling(farmerEntity->getUUID(), distanceFromCharacter);
+            playRustling(farmerEntity, distanceFromCharacter);
         }
     }
 }

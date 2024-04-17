@@ -112,7 +112,7 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
  - dist: distance from base
  */
 vec4 wheatSideColor(float x, float dist) {
-    return texture(wheat_side_tex, vec2(x*5.0f, 576 - (dist/41 * 1682)));
+    return texture(wheat_side_tex, vec2(x*5.0f, 576.0f - (dist * 0.04f)));
 }
 
 /**
@@ -129,7 +129,8 @@ vec4 wheatTopColor(float x, float y) {
  */
 float sampleBladeLength(vec2 uv) {
     vec3 samp = texture(grass_tex, uv).rgb;
-    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
+//    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
+    return samp.r > 0.0f ? clamp((samp.r) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
 }
 
 /**
@@ -164,15 +165,15 @@ void main(void) {
     // Convert fragCoord to UV
     vec2 uv = outTexCoord;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*50.0f, 0.1f * WIND_TIME) * (1.0f+texture(grass_tex, uv + vec2(0,0.03f)).g*400.0f);
 
     vec2 fragUV = uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     
     // Color the base of the grass with the first gradient color
-    vec4 baseColor = vec4(0.0);
+    vec4 baseColor = vec4(0.0f);
 
     float dist = distance(fragUV / SCREEN_PIXEL_SIZE, player_pos / SCREEN_PIXEL_SIZE);
-    float alpha = clamp(smoothstep(0.0, transparency_radius, dist), player_transparency, 1.0);
+    float alpha = clamp(smoothstep(0.0f, transparency_radius, dist), player_transparency, 1.0f);
     
     if (texture(grass_tex, fragUV).r > 0.0f && texture(grass_tex, fragUV).g == 0.0f) {
 //        baseColor = sampleColor(0.0f, 0.0f);
@@ -202,7 +203,7 @@ void main(void) {
 //                    baseColor = windValue > 0.49 ? sampleColor(dist, bladeLength) : tip_color;
                 } else {
 //                    baseColor = wind_color;
-                    baseColor = wheatTopColor(fragUV.x, fragUV.y) + vec4(0.1, 0.1, 0.1, 0.0);
+                    baseColor = wheatTopColor(fragUV.x, fragUV.y) + vec4(0.08, 0.08, 0.08, 0.0);
                 }
                 break;
             } else if (dist < bladeLength) {

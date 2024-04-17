@@ -94,14 +94,14 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     for (int ii = 0; ii < _numbers.size(); ii++) {
         auto n = _numbers.at(ii);
         n->addListener([this, ii](const std::string& name, bool down) {
-            if (down && _gameid->getText().length() < 5) {
+            if (!down && _gameid->getText().length() < 5) {
                 _gameid->setText(_gameid->getText() + std::to_string(ii));
             }
         });
     }
 
     _backspace->addListener([this](const std::string& name, bool down) {
-        if (down && !_gameid->getText().empty()) {
+        if (!down && !_gameid->getText().empty()) {
             _gameid->setText(_gameid->getText().substr(0, _gameid->getText().length() - 1));
         }
     });
@@ -113,14 +113,14 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
 //    });
     
     _backout->addListener([this](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             _network->disconnect();
             _backClicked = true;
         }
     });
 
     _startgame->addListener([=](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             if (!_gameid->getText().empty()) {
                 _network->connectAsClient(dec2hex(_gameid->getText()));
             }

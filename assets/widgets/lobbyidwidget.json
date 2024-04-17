@@ -67,7 +67,7 @@
                     "visible": true,
                     "font": "gaeguBold100",
                     "text": " ",
-                    "cursor": true,
+                    "cursor": false,
                     "cursorwidth": 10,
                     "cursorcolor": "#000000ff",
                     "foreground": "#000000ff",

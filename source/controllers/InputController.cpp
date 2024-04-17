@@ -33,6 +33,7 @@ _dashPressed(false),
 _showPlayerPressed(false),
 _switchPressed(false),
 _rootPressed(false),
+_throwRockPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
@@ -43,6 +44,7 @@ _joystick(false),
 _hasJumped(false),
 _keyDash(false),
 _keyDashPressed(false),
+_keyThrowRock(false),
 _currentSwipeColor(Color4::WHITE) {
 }
 
@@ -134,6 +136,7 @@ void InputController::update(float dt) {
     _keySwitch = keys->keyPressed(KeyCode::S);
     _keyRoot   = keys->keyPressed(KeyCode::Z);
     _keyUnroot = keys->keyPressed(KeyCode::Z);
+    _keyThrowRock = keys->keyPressed(KeyCode::SPACE);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -173,6 +176,9 @@ void InputController::update(float dt) {
     _rootPressed = _keyRoot;
     
     _unrootPressed = _keyUnroot;
+    
+    _keyThrowRock = _keyThrowRock && !_throwRockPressed;
+    _throwRockPressed = _keyThrowRock;
 
     // _movement is now updated directly in processJoystick
 
@@ -352,6 +358,9 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _swipePoints->clear();
                 _currentSwipeColor = Color4::WHITE;
                 addSwipePoint(screenPos);
+            }
+            if (_jtouch.touchids.empty() && _rtouch.touchids.empty() && _mtouch.touchids.empty() && !_keyThrowRock) {
+                _keyThrowRock = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
             }
             break;
         case Zone::MAIN:

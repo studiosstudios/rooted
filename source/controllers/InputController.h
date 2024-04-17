@@ -55,9 +55,10 @@ private:
     bool _keyRoot;
     /** Whether the unroot key is down*/
     bool _keyUnroot;
-    
     /** Whether the dash key was pressed in previous frame */
     bool _keyDashPressed;
+    /** Whether the key for throwing a rock is down */
+    bool _keyThrowRock;
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
@@ -79,6 +80,8 @@ protected:
     bool _rootPressed;
     /** Whether the unroot action was chosen */
     bool _unrootPressed;
+    /** Whether the rock throwing action was chosen */
+    bool _throwRockPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
     
@@ -349,6 +352,8 @@ public:
     
     bool didShakeDevice() const { return _deviceShaking; }
 
+    bool didThrowRock() const { return _throwRockPressed; }
+    
 #pragma mark -
 #pragma mark Swipe Drawing Logic
     void addSwipePoint(cugl::Vec2 point) {
@@ -369,7 +374,6 @@ public:
     cugl::Color4 getCurrentSwipeColor() {
         return _currentSwipeColor;
     }
-
 
 #pragma mark -
 #pragma mark Touch and Mouse Callbacks

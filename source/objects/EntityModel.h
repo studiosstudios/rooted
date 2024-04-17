@@ -544,6 +544,8 @@ public:
     bool isInWheat() const { return _wheatContacts > 0; }
 
     void changeWheatContacts(int dx) { _wheatContacts += dx; }
+    
+    void throwRock();
 
     
 #pragma mark -

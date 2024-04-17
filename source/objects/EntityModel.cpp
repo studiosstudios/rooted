@@ -374,6 +374,11 @@ bool EntityModel::isDashing() {
     return _state == DASHING;
 }
 
+
+void EntityModel::throwRock() {
+    CULog("throwing rock");
+}
+
 /**
  * Updates the object's physics state (NOT GAME LOGIC).
  *

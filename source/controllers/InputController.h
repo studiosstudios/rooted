@@ -153,7 +153,7 @@ protected:
 	cugl::Timestamp _mtime;
     
     /** List holding points for swipe drawing */
-    std::list<cugl::Vec2> _swipePoints;
+    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> _swipePoints;
     /** Capacity for swipe drawing list */
     int _swipePointsCapacity = 25;
     std::optional<cugl::Vec2> _swipeFirstPoint;
@@ -345,14 +345,13 @@ public:
 #pragma mark -
 #pragma mark Swipe Drawing Logic
     void addSwipePoint(cugl::Vec2 point) {
-        if (_swipePoints.size() == _swipePointsCapacity) {
-            _swipeFirstPoint = _swipePoints.back();
-            _swipePoints.pop_back();
+        if (_swipePoints->size() == _swipePointsCapacity) {
+            _swipePoints->pop_back();
         }
-        _swipePoints.push_front(point);
+        _swipePoints->push_front(std::pair(point, cugl::Timestamp()));
     }
     
-    std::list<cugl::Vec2> getSwipePoints() {
+    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> getSwipePoints() {
         return _swipePoints;
     }
     

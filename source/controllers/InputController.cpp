@@ -105,6 +105,7 @@ void InputController::dispose() {
         touch->removeEndListener(LISTENER_KEY);
 #endif
         _active = false;
+        _swipePoints = nullptr;
     }
 }
 
@@ -123,6 +124,8 @@ bool InputController::init(const Rect bounds) {
     bool success = true;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
+    
+    _swipePoints = std::make_shared<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>>();
     
     createZones();
     clearTouchInstance(_jtouch);
@@ -444,7 +447,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _keyUnroot = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
-        _swipePoints.clear();
+        _swipePoints->clear();
         _swipeFirstPoint.reset();
     }
     else if (zone == Zone::MAIN) {

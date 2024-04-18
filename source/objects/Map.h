@@ -77,7 +77,8 @@ public:
      * Enum representing the draw order of scene nodes. Nodes will be drawn in the order they are listed in the enum.
      */
     enum class DrawOrder : int {
-        GROUND,
+        GRASS,
+        SHADOWS,
         PLANTINGSPOT,
         ENTITIES,
         PLAYER,

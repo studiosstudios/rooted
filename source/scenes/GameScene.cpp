@@ -425,6 +425,9 @@ void GameScene::fixedUpdate(float step) {
         if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
             processResetEvent(resetEvent);
         }
+        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
+            _action.processMoveEvent(moveEvent);
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
@@ -526,6 +529,15 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::Obstacle
     };
 }
 
+void GameScene::pauseNonEssentialAudio(){
+    AudioEngine::get()->clear("root-carrot");
+    AudioEngine::get()->clear("root-bunny");
+    AudioEngine::get()->clear(_map->getFarmers().at(0)->getUUID());
+    for(auto carrot:_map->getCarrots()){
+        AudioEngine::get()->clear(carrot->getUUID());
+    }
+}
+
 /**
 * Sets whether the level is completed.
 *
@@ -537,6 +549,7 @@ void GameScene::setComplete(bool value) {
     bool change = _complete != value;
     _complete = value;
     if (value && change) {
+        pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
         _winnode->setVisible(true);
@@ -557,6 +570,7 @@ void GameScene::setComplete(bool value) {
 void GameScene::setFailure(bool value) {
     _failed = value;
     if (value) {
+        pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(LOSE_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
         _losenode->setVisible(true);

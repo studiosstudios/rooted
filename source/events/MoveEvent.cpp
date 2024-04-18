@@ -18,7 +18,7 @@ std::shared_ptr<NetEvent> MoveEvent::newEvent(){
     return std::make_shared<MoveEvent>();
 }
 
-std::shared_ptr<NetEvent> MoveEvent::allocMoveEvent(std::string uuid, std::string state){
+std::shared_ptr<NetEvent> MoveEvent::allocMoveEvent(std::string uuid, EntityModel::EntityState state){
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<MoveEvent>();
     event->_uuid = uuid;
@@ -34,7 +34,7 @@ std::vector<std::byte> MoveEvent::serialize(){
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
     _serializer.writeString(_uuid);
-    _serializer.writeString(_state);
+    _serializer.writeSint32(_state);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -52,8 +52,8 @@ void MoveEvent::deserialize(const std::vector<std::byte>& data){
     _deserializer.reset();
     _deserializer.receive(data);
     std::string uuid = _deserializer.readString();
-    std::string state = _deserializer.readString();
+    int state = _deserializer.readSint32();
     _uuid = uuid;
-    _state = state;
+    _state = static_cast<EntityModel::EntityState>(state);
 #pragma mark END SOLUTION
 }

@@ -39,6 +39,8 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
         return false;
     }
 
+    _worldSize = Size(worldSize);
+
     _rootnode = scene2::SceneNode::alloc();
     _rootnode->setScale(DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_WIDTH / SCENE_WIDTH, 
                         DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_HEIGHT / SCENE_HEIGHT);
@@ -46,6 +48,7 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
     _rootnode->setPosition(Vec2::ZERO);
     addChild(_rootnode);
 
+    //add wheat texture nodes based on data in mapInfo
     for (int i = 0; i < mapInfo.size(); i++) {
         for (int j = 0; j < mapInfo[i].size(); j++) {
             auto wheattex = assets->get<Texture>(mapInfo[i][j].first);
@@ -62,8 +65,9 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
         }
     }
 
-
     _target->setClearColor(Color4::CLEAR);
+
+    _queryId = 0;
 
     return true;
 }
@@ -94,6 +98,51 @@ void WheatScene::dispose() {
     _rootnode = nullptr;
     _fsqshader = nullptr;
     Scene2::dispose();
+}
+
+int WheatScene::addWheatQuery(Vec2 position) {
+    _queries.emplace(_queryId, WheatQuery(position, _queryId));
+    _queryId++;
+    return _queryId-1;
+}
+
+bool WheatScene::getWheatQueryResult(unsigned int id) {
+    auto res = _queries.find(id);
+    if (res == _queries.end()) {
+        CUWarn("could not find query %u", id);
+    }
+    if (!(res->second).resolved) {
+        CUWarn("query %u has not been resolved", id);
+    }
+    return (res->second).result;
+}
+
+void WheatScene::doQueries() {
+    //bind render target framebuffer
+    int viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    glBindFramebuffer(GL_FRAMEBUFFER, _target->getFramebuffer());
+    glViewport(0, 0, _target->getWidth(), _target->getHeight());
+
+    //read pixel data for each query
+    GLfloat pixel[4];
+    Vec2 texPos;
+    for (auto &kv : _queries) {
+        texPos = kv.second.pos/_worldSize * Vec2(_target->getWidth(), _target->getHeight());
+        glReadPixels(int(texPos.x), int(texPos.y), 1, 1, GL_RGBA, GL_FLOAT, &pixel);
+        kv.second.resolved = true;
+        kv.second.result = pixel[0] > 0;
+    }
+
+    //restore default buffer
+    Display::get()->restoreRenderTarget();
+    glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+
+    _queryId = 0;
+}
+
+void WheatScene::clearQueries() {
+    _queries.clear();
 }
 
 

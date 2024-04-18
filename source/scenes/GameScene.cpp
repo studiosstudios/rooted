@@ -399,6 +399,37 @@ void GameScene::fixedUpdate(float step) {
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
+
+    
+    //check if entities are in wheat
+    //TODO: make entities vector in map for convenience?
+    //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
+    
+    //create queries
+    for (auto baby : _map->getBabyCarrots()) {
+        baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
+    }
+    for (auto farmer : _map->getFarmers()) {
+        farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
+    }
+    for (auto carrot : _map->getCarrots()) {
+        carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
+    }
+    
+    //resolve queries
+    _map->getWheatScene()->doQueries();
+    
+    //fetch results
+    for (auto farmer : _map->getFarmers()) {
+        farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
+    }
+    for (auto carrot : _map->getCarrots()) {
+        carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
+    }
+    for (auto baby : _map->getBabyCarrots()) {
+        baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
+    }
+    _map->getWheatScene()->clearQueries();
 }
 
 /**

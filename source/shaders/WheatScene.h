@@ -33,6 +33,29 @@ private:
     /** a full screen quad shader for debug rendering the full wheat texture */
     shared_ptr<Shader> _fsqshader;
 
+    Size _worldSize;
+
+    unsigned int _queryId;
+
+    class WheatQuery {
+        public:
+            Vec2 pos;
+            unsigned int id;
+            bool result;
+            bool resolved;
+
+            WheatQuery(Vec2 pos, unsigned int id) {
+                this->pos = pos;
+                this->id = id;
+                result = false;
+                resolved = false;
+            };
+            
+        
+    };
+
+    unordered_map<unsigned int, WheatQuery> _queries;
+
 public:
 
     WheatScene() {};
@@ -59,6 +82,14 @@ public:
     void renderToScreen(float alpha = 1.0, float scale = 8.5);
 
     shared_ptr<scene2::SceneNode> getRoot() { return _rootnode; }
+
+    int addWheatQuery(Vec2 position);
+
+    bool getWheatQueryResult(unsigned int queryId);
+
+    void doQueries();
+    
+    void clearQueries();
 
 };
 

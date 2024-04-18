@@ -595,7 +595,8 @@ public:
     
     /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
     EntityState getMovementState() {
-        if (_movement.isZero()) {
+        if (_movement.lengthSquared() <= 0.1 * 0.1) {
+            // If joystick movement is too minor, we don't actually let it cause a movement
             return STANDING;
         }
         else if (_movement.lengthSquared() <= 0.33 * 0.33) {

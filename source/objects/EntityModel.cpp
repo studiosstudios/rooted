@@ -346,7 +346,7 @@ void EntityModel::applyForce() {
         case SNEAKING:
         case WALKING:
         case RUNNING: {
-            Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
+            speed.set(getMovement()).scale(getMaxSpeed());
             setLinearVelocity(speed);
             break;
         }

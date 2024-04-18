@@ -167,6 +167,12 @@
         },
         "joystick-back" : {
             "file": "textures/joystick-back.png"
+        },
+        "barrot-count-board" : {
+            "file": "textures/barrot-count-board.png"
+        },
+        "carrot-count-board" : {
+            "file": "textures/carrot-count-board.png"
         }
     },
     "jsons": {
@@ -238,6 +244,10 @@
         "gyparody": {
             "file":     "fonts/gyparody-hv.ttf",
             "size":     48
+        },
+        "gaeguBold16": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 16
         },
         "gaeguBold60": {
             "file": "fonts/Gaegu-Bold.ttf",

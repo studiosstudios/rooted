@@ -27,15 +27,15 @@ private:
     /** reference to the input controller */
     std::shared_ptr<InputController> _input;
     
-    /** PolyFactory for drawing the joystick circle.
-     *  TODO: We can remove this once we get proper assets for the joystick
-     */
-    cugl::PolyFactory _pf;
-    
-    /** */
-    cugl::Spline2 _spline;
-    cugl::SplinePather _sp;
-    cugl::SimpleExtruder _se;
+//    /** PolyFactory for drawing the joystick circle.
+//     *  TODO: We can remove this once we get proper assets for the joystick
+//     */
+//    cugl::PolyFactory _pf;
+//    
+//    /** */
+//    cugl::Spline2 _spline;
+//    cugl::SplinePather _sp;
+//    cugl::SimpleExtruder _se;
     std::shared_ptr<cugl::scene2::PolygonNode> _swipeNode;
     
     /** Pointer to the UI root of the scene graph */
@@ -53,6 +53,14 @@ private:
     std::shared_ptr<cugl::scene2::TexturedNode> _winNode;
     /** Pointer to the TextureNode of the DEFEAT. message*/
     std::shared_ptr<cugl::scene2::TexturedNode> _loseNode;
+    
+    /** Pointer to the TextureNode of the top-left CARROT count */
+    std::shared_ptr<cugl::scene2::TexturedNode> _carrotsRemainingBoard;
+    std::shared_ptr<cugl::scene2::Label> _carrotsRemainingText;
+    
+    /** Pointer to the TextureNode of the top-right BABY CARROT count */
+    std::shared_ptr<cugl::scene2::TexturedNode> _barrotsRemainingBoard;
+    std::shared_ptr<cugl::scene2::Label> _BarrotsRemainingText;
     
     float swipeThickness = 8;
     Uint32 swipeDurationMillis = 500;

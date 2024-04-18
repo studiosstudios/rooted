@@ -51,6 +51,17 @@ void UIController::initGameUINodes() {
     _loseNode->setAnchor(Vec2::ANCHOR_CENTER);
     _loseNode->setVisible(false);
     _uinode->addChild(_loseNode);
+    
+    _carrotsRemainingBoard = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("carrot-count-board"));
+    _carrotsRemainingBoard->setPosition((Vec2(_carrotsRemainingBoard->getContentWidth() / 2, SCENE_HEIGHT - _carrotsRemainingBoard->getContentHeight())) / _cameraZoom);
+    _uinode->addChild(_carrotsRemainingBoard);
+    
+    _carrotsRemainingText = scene2::Label::allocWithText("remaining player carrots: 2", _assets->get<Font>("gaeguBold16"));
+    _carrotsRemainingText->setHorizontalAlignment(HorizontalAlign::CENTER);
+    _carrotsRemainingText->setVerticalAlignment(VerticalAlign::MIDDLE);
+    _carrotsRemainingText->setContentSize(_carrotsRemainingBoard->getContentSize());
+    _carrotsRemainingText->doLayout();
+    _carrotsRemainingBoard->addChild(_carrotsRemainingText);
 }
 
 bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,

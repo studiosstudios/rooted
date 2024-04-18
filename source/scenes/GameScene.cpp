@@ -412,7 +412,6 @@ void GameScene::fixedUpdate(float step) {
     }
     
     _map->getWorld()->update(step);
-    _ui.update(step, _cam.getCamera());
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
@@ -442,6 +441,8 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
+    
+    _ui.update(remain, _cam.getCamera());
     
     if (_countdown > 0) {
         _countdown--;

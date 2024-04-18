@@ -58,6 +58,8 @@
 #define FARMER_SOUTH_WALK_SPRITE "farmer-south-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
+#define FARMER_NORTHEAST_WALK_SPRITE "farmer-northeast-walk"
+#define FARMER_SOUTHEAST_WALK_SPRITE "farmer-southeast-walk"
 
 #define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
 #define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"

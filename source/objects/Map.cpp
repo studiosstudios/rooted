@@ -476,36 +476,48 @@ void Map::loadFarmer(float x, float y, float width, float height) {
     auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_SOUTH_WALK_SPRITE);
     auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
     auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
+    auto farmerNorthEastWalkSprite  = _assets->get<Texture>(FARMER_NORTHEAST_WALK_SPRITE);
+    auto farmerSouthEastWalkSprite  = _assets->get<Texture>(FARMER_SOUTHEAST_WALK_SPRITE);
 
     auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
-    farmerSouthWalkNode->setScale(0.23f, 0.23f);
+    farmerSouthWalkNode->setScale(0.18f, 0.18f);
     farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
     farmerSouthWalkNode->setHeight(32);
     
     auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
-    farmerNorthWalkNode->setScale(0.23f, 0.23f);
+    farmerNorthWalkNode->setScale(0.18f, 0.18f);
     farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
     farmerNorthWalkNode->setHeight(32);
     
     auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
-    farmerEastWalkNode->setScale(0.23f, 0.23f);
+    farmerEastWalkNode->setScale(0.11f, 0.11f);
     farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
     farmerEastWalkNode->setHeight(32);
     
+    auto farmerNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthEastWalkSprite, 3, 4);
+    farmerNorthEastWalkNode->setScale(0.12f, 0.12f);
+    farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    
+    auto farmerSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthEastWalkSprite, 3, 4, 9);
+    farmerSouthEastWalkNode->setScale(0.14f, 0.14f);
+    farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+    
     auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
     carrotfarmerNode->setVisible(false);
-    carrotfarmerNode->setScale(0.23f, 0.23f);
+    carrotfarmerNode->setScale(0.25f, 0.25f);
     carrotfarmerNode->setHeight(32);
     
     _entitiesNode->addChild(farmerSouthWalkNode);
     _entitiesNode->addChild(farmerNorthWalkNode);
     _entitiesNode->addChild(farmerEastWalkNode);
+    _entitiesNode->addChild(farmerNorthEastWalkNode);
+    _entitiesNode->addChild(farmerSouthEastWalkNode);
     _entitiesNode->addChild(carrotfarmerNode);
     
     farmer->setSpriteNodes(farmerNorthWalkNode,
+                           farmerNorthEastWalkNode,
                            farmerEastWalkNode,
-                           farmerEastWalkNode,
-                           farmerEastWalkNode,
+                           farmerSouthEastWalkNode,
                            farmerSouthWalkNode);
     
     farmer->setNormalNode(farmerSouthWalkNode);

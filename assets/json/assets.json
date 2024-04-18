@@ -54,6 +54,12 @@
         "farmer-east-walk": {
             "file":     "textures/farmer-east-walk.png"
         },
+        "farmer-northeast-walk": {
+            "file":     "textures/farmer-northeast-walk.png"
+        },
+        "farmer-southeast-walk": {
+            "file":     "textures/farmer-southeast-walk.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },

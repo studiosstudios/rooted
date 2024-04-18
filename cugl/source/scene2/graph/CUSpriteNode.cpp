@@ -253,7 +253,7 @@ void SpriteNode::generateRenderData() {
     
     const Vec2 offset = _polygon.getBounds().origin;
     if (!_absolute && !offset.isZero()) {
-        adjust = true;
+        adjust = true; 
         shift.translate(-offset.x,-offset.y,0);
     }
     

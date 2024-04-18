@@ -160,7 +160,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    
+    std::cout << "_offset: " << _offset.toString() << "\n";
     _input = InputController::alloc(getBounds());
     Haptics::start();
     _collision.init(_map, _network);
@@ -190,7 +190,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
-    _ui.init(_assets, _uinode, _offset, CAMERA_ZOOM);
+    _ui.init(_assets, _input, _uinode, _offset, CAMERA_ZOOM);
     setComplete(false);
     setFailure(false);
     
@@ -356,11 +356,6 @@ void GameScene::preUpdate(float dt) {
         Application::get()->quit();
     }
 
-    // Process the movement
-    if (_input->withJoystick()) {
-        // do something here
-    }
-
     _action.preUpdate(dt);
 }
 
@@ -417,7 +412,7 @@ void GameScene::fixedUpdate(float step) {
     }
     
     _map->getWorld()->update(step);
-    _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
+    _ui.update(step, _cam.getCamera());
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());

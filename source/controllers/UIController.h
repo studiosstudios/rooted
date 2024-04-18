@@ -9,6 +9,7 @@
 #define ROOTED_UICONTROLLER_H
 
 #include <cugl/cugl.h>
+#include "../controllers/InputController.h"
 
 #endif /* UIController_h */
 
@@ -23,10 +24,19 @@ private:
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
     
+    /** reference to the input controller */
+    std::shared_ptr<InputController> _input;
+    
     /** PolyFactory for drawing the joystick circle.
      *  TODO: We can remove this once we get proper assets for the joystick
      */
     cugl::PolyFactory _pf;
+    
+    /** */
+    cugl::Spline2 _spline;
+    cugl::SplinePather _sp;
+    cugl::SimpleExtruder _se;
+    std::shared_ptr<cugl::scene2::PolygonNode> _swipeNode;
     
     /** Pointer to the UI root of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
@@ -43,6 +53,9 @@ private:
     std::shared_ptr<cugl::scene2::TexturedNode> _winNode;
     /** Pointer to the TextureNode of the DEFEAT. message*/
     std::shared_ptr<cugl::scene2::TexturedNode> _loseNode;
+    
+    int swipeThickness = 10;
+    cugl::Vec2 tmp;
     
     /** The offset of the scene graph
      *
@@ -73,10 +86,19 @@ public:
     void initGameUINodes();
     
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
+              const std::shared_ptr<InputController>& input,
               const std::shared_ptr<cugl::scene2::SceneNode> uinode,
               cugl::Vec2 offset, float cameraZoom);
     
     void updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick);
     
-    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, bool joyOn, std::pair<cugl::Vec2, cugl::Vec2> joyStick);
+    std::list<cugl::Vec2> getAdjustedSwipePoints();
+    
+    std::vector<cugl::Vec2> computeTriangulatedPoints();
+    
+    std::vector<Uint32> computeTriangulatedIndices(int numTriangles);
+    
+    void updateSwipeSpline();
+    
+    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera);
 };

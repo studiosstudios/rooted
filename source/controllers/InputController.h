@@ -151,6 +151,12 @@ protected:
     cugl::Timestamp _rtime;
 	/** The timestamp for a double tap in the middle */
 	cugl::Timestamp _mtime;
+    
+    /** List holding points for swipe drawing */
+    std::list<cugl::Vec2> _swipePoints;
+    /** Capacity for swipe drawing list */
+    int _swipePointsCapacity = 100;
+    std::optional<cugl::Vec2> _swipeFirstPoint;
 
     /**
      * Defines the zone boundaries, so we can quickly categorize touches.
@@ -335,6 +341,34 @@ public:
     bool didUnroot() const { return _unrootPressed; }
 
     bool didSwitch() const { return _switchPressed; }
+    
+#pragma mark -
+#pragma mark Swipe Drawing Logic
+    void addSwipePoint(cugl::Vec2 point) {
+        if (_swipePoints.size() == _swipePointsCapacity) {
+            _swipeFirstPoint = _swipePoints.back();
+            _swipePoints.pop_back();
+        }
+        _swipePoints.push_front(point);
+    }
+    
+    std::list<cugl::Vec2> getSwipePoints() {
+        return _swipePoints;
+    }
+    
+    std::optional<cugl::Vec2> getSwipeFirstPoint() {
+        return _swipeFirstPoint;
+    }
+    
+    cugl::Vec2 getBottomLeftPoint() {
+        cugl::Vec2 point = cugl::Vec2(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity());
+        for (auto it = _swipePoints.begin(); it != _swipePoints.end(); it++) {
+            point.x = std::min(point.x, it->x);
+            point.y = std::min(point.y, it->y);
+        }
+//        std::cout << "Bottom left point is " << point.toString() << "\n";
+        return point;
+    }
 
 
 #pragma mark -

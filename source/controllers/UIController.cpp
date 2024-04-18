@@ -11,6 +11,8 @@ using namespace cugl;
 
 void UIController::dispose() {
     _uinode->removeAllChildren();
+    _assets = nullptr;
+    _input = nullptr;
     _uinode = nullptr;
 }
 
@@ -51,15 +53,23 @@ void UIController::initGameUINodes() {
 }
 
 bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
+                        const std::shared_ptr<InputController>& input,
                         const std::shared_ptr<cugl::scene2::SceneNode> uinode,
                         Vec2 offset, float cameraZoom) {
     _assets = assets;
+    _input = input;
     _uinode = uinode;
     _offset = offset;
     _cameraZoom = cameraZoom;
     
+    _uinode->setContentSize(SCENE_WIDTH / _cameraZoom, SCENE_HEIGHT / _cameraZoom);
+    
     initJoystickNodes();
     initGameUINodes();
+    
+    _swipeNode = scene2::PolygonNode::alloc();
+//    _swipeNode->setAbsolute(true);
+    _uinode->addChild(_swipeNode);
     return true;
 }
 
@@ -69,17 +79,82 @@ void UIController::updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick) {
     _joymain->setPosition(joyStick.second / _cameraZoom - _offset / _cameraZoom);
 }
 
-void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera,
-                          bool joyOn,
-                          std::pair<cugl::Vec2, cugl::Vec2> joyStick) {
+std::list<cugl::Vec2> UIController::getAdjustedSwipePoints() {
+    auto sp = _input->getSwipePoints();
+    for (auto it = sp.begin(); it != sp.end(); it++) {
+        it->set(*it / _cameraZoom);
+    }
+    return sp;
+}
+
+std::vector<cugl::Vec2> UIController::computeTriangulatedPoints() {
+//    std::list<cugl::Vec2> swipePoints = _input->getSwipePoints();
+    std::list<cugl::Vec2> swipePoints = getAdjustedSwipePoints();
+    std::vector<cugl::Vec2> points;
+    auto it = swipePoints.begin();
+    points.push_back(*it);
+    while (it != (--swipePoints.end())) {
+        auto a = *it;
+        it++;
+        auto b = *it;
+        Vec2::subtract(a, b, &tmp);
+        tmp.normalize();
+        tmp.set(-tmp.y, tmp.x);
+        points.push_back(Vec2(b - tmp * swipeThickness/2));
+        points.push_back(Vec2(b + tmp * swipeThickness/2));
+    }
+    points.push_back(*it);
+    return points;
+}
+
+std::vector<Uint32> UIController::computeTriangulatedIndices(int numTriangles) {
+    std::vector<Uint32> indices;
+    for (int i = 0; i < numTriangles; i++) {
+        indices.push_back(i);
+        indices.push_back(i + 1);
+        indices.push_back(i + 2);
+    }
+    return indices;
+}
+
+void UIController::updateSwipeSpline() { // div by cameraZoom and offset
+    int numSwipePoints = _input->getSwipePoints().size();
+    if (numSwipePoints > 2) {
+//        std::list<cugl::Vec2> swipePoints = _input->getSwipePoints();
+        std::vector<cugl::Vec2> swipePointsTri = computeTriangulatedPoints();
+        auto poly = Poly2(swipePointsTri, computeTriangulatedIndices(swipePointsTri.size()-2));
+        _swipeNode->setPolygon(poly);
+        
+//        _swipeNode->setPosition(poly.getBounds().origin);
+        _swipeNode->setPosition(poly.getBounds().origin);
+//        _swipeNode->setPosition(10, 10);
+        std::cout << "SwipeNode pos " << _swipeNode->getPosition().toString() << "\n";
+//        std::cout << "Poly bounds " << poly.getBounds().toString() << "\n";
+//        std::cout << "First point " << _input->getSwipeFirstPoint()->toString() << "\n";
+//        std::cout << "Bottom left point " << ((_input->getBottomLeftPoint()-_offset)/_cameraZoom).toString() << "\n";
+//        _spline.clear();
+//        for (auto it = swipePoints.begin(); it != swipePoints.end(); it++) {
+//            _spline.addAnchor(*it);
+//        }
+//        _sp.set(&_spline);
+//        _sp.calculate();
+//        _se.set(_sp.getPath());
+//        _se.calculate(10);
+//        _swipeNode->setPolygon(_se.getPolygon());
+//        _swipeNode->setPosition((_input->getSwipeFirstPoint().value() - _offset) / _cameraZoom);
+    }
+}
+
+void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera) {
     _cameraZoom = camera->getZoom();
     _uinode->setPosition(camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/_cameraZoom);
-    if (joyOn) {
+    if (_input->withJoystick()) {
         _joymain->setVisible(true);
         _joyback->setVisible(true);
-        updateJoystick(joyStick);
+        updateJoystick(_input->getJoystick());
     } else {
         _joymain->setVisible(false);
         _joyback->setVisible(false);
     }
+    updateSwipeSpline();
 }

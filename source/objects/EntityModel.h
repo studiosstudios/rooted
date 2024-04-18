@@ -64,6 +64,8 @@
 #define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
 #define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
 #define CARROT_EAST_WALK_SPRITE "carrot-east-walk"
+#define CARROT_NORTHEAST_WALK_SPRITE "carrot-northeast-walk"
+#define CARROT_SOUTHEAST_WALK_SPRITE "carrot-southeast-walk"
 
 #define BABY_TEXTURE   "baby"
 

@@ -69,6 +69,12 @@
         "carrot-east-walk": {
             "file":     "textures/carrot-east-walk.png"
         },
+        "carrot-northeast-walk": {
+            "file":     "textures/carrot-northeast-walk.png"
+        },
+        "carrot-southeast-walk": {
+            "file":     "textures/carrot-southeast-walk.png"
+        },
         "baby": {
             "file":     "textures/baby.png"
         },

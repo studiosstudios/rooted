@@ -55,6 +55,7 @@ private:
     std::shared_ptr<cugl::scene2::TexturedNode> _loseNode;
     
     float swipeThickness = 8;
+    Uint32 swipeDurationMillis = 500;
     cugl::Vec2 tmp;
     
     /** The offset of the scene graph
@@ -91,6 +92,8 @@ public:
               cugl::Vec2 offset, float cameraZoom);
     
     void updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick);
+    
+    void cullSwipePointsByDuration();
     
     std::list<cugl::Vec2> getAdjustedSwipePoints();
     

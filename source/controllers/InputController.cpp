@@ -397,6 +397,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _keyRoot = false;
                 _keyShowPlayer = false;
                 _swipeFirstPoint = screenPos;
+                _swipePoints->clear();
                 addSwipePoint(screenPos);
             }
             break;
@@ -447,7 +448,6 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _keyUnroot = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
-        _swipePoints->clear();
         _swipeFirstPoint.reset();
     }
     else if (zone == Zone::MAIN) {

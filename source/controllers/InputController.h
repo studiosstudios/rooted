@@ -155,7 +155,7 @@ protected:
     /** List holding points for swipe drawing */
     std::list<cugl::Vec2> _swipePoints;
     /** Capacity for swipe drawing list */
-    int _swipePointsCapacity = 100;
+    int _swipePointsCapacity = 3;
     std::optional<cugl::Vec2> _swipeFirstPoint;
 
     /**
@@ -358,16 +358,6 @@ public:
     
     std::optional<cugl::Vec2> getSwipeFirstPoint() {
         return _swipeFirstPoint;
-    }
-    
-    cugl::Vec2 getBottomLeftPoint() {
-        cugl::Vec2 point = cugl::Vec2(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity());
-        for (auto it = _swipePoints.begin(); it != _swipePoints.end(); it++) {
-            point.x = std::min(point.x, it->x);
-            point.y = std::min(point.y, it->y);
-        }
-//        std::cout << "Bottom left point is " << point.toString() << "\n";
-        return point;
     }
 
 

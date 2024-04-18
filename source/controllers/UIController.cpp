@@ -69,7 +69,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     _swipeNode = scene2::PolygonNode::alloc();
     _swipeNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-//    _swipeNode->setAbsolute(true);
     _uinode->addChild(_swipeNode);
     return true;
 }
@@ -94,7 +93,7 @@ std::vector<cugl::Vec2> UIController::computeTriangulatedPoints() {
     std::vector<cugl::Vec2> points;
     auto it = swipePoints.begin();
     points.push_back(*it);
-    while (it != (--swipePoints.end())) {
+    while (it != (std::prev(std::prev(swipePoints.end())))) {
         auto a = *it;
         it++;
         auto b = *it;
@@ -104,6 +103,7 @@ std::vector<cugl::Vec2> UIController::computeTriangulatedPoints() {
         points.push_back(Vec2(b - tmp * swipeThickness/2));
         points.push_back(Vec2(b + tmp * swipeThickness/2));
     }
+    it++;
     points.push_back(*it);
     return points;
 }
@@ -125,24 +125,7 @@ void UIController::updateSwipeSpline() { // div by cameraZoom and offset
         std::vector<cugl::Vec2> swipePointsTri = computeTriangulatedPoints();
         auto poly = Poly2(swipePointsTri, computeTriangulatedIndices(swipePointsTri.size()-2));
         _swipeNode->setPolygon(poly);
-        
-//        _swipeNode->setPosition(poly.getBounds().origin);
         _swipeNode->setPosition(poly.getBounds().origin);
-//        _swipeNode->setPosition(10, 10);
-        std::cout << "SwipeNode pos " << _swipeNode->getPosition().toString() << "\n";
-//        std::cout << "Poly bounds " << poly.getBounds().toString() << "\n";
-//        std::cout << "First point " << _input->getSwipeFirstPoint()->toString() << "\n";
-//        std::cout << "Bottom left point " << ((_input->getBottomLeftPoint()-_offset)/_cameraZoom).toString() << "\n";
-//        _spline.clear();
-//        for (auto it = swipePoints.begin(); it != swipePoints.end(); it++) {
-//            _spline.addAnchor(*it);
-//        }
-//        _sp.set(&_spline);
-//        _sp.calculate();
-//        _se.set(_sp.getPath());
-//        _se.calculate(10);
-//        _swipeNode->setPolygon(_se.getPolygon());
-//        _swipeNode->setPosition((_input->getSwipeFirstPoint().value() - _offset) / _cameraZoom);
     }
 }
 

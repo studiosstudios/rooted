@@ -287,8 +287,6 @@ InputController::Zone InputController::getZone(const Vec2 pos) const {
  * @return the scene location of a touch
  */
 Vec2 InputController::touch2Screen(const Vec2 pos) const {
-//    std::cout << "Tbounds: " <<  _tbounds.toString() << "\n";
-//    std::cout << "Sbounds: " <<  _sbounds.toString() << "\n";
     float px = pos.x/_tbounds.size.width -_tbounds.origin.x;
     float py = pos.y/_tbounds.size.height-_tbounds.origin.y;
     Vec2 result;
@@ -370,8 +368,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     //CULog("Touch began %lld", event.touch);
     Vec2 pos = event.position;
     Vec2 screenPos = touch2Screen(pos);
-    std::cout << "Touch began POS: " << pos.toString() << "\n";
-    std::cout << "Touch began WORLD POS: " << screenPos.toString() << "\n";
     Zone zone = getZone(pos);
     switch (zone) {
         case Zone::JOY:

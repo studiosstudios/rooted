@@ -54,7 +54,7 @@ private:
     /** Pointer to the TextureNode of the DEFEAT. message*/
     std::shared_ptr<cugl::scene2::TexturedNode> _loseNode;
     
-    int swipeThickness = 6;
+    float swipeThickness = 8;
     cugl::Vec2 tmp;
     
     /** The offset of the scene graph

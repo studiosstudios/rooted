@@ -91,6 +91,9 @@ std::vector<cugl::Vec2> UIController::computeTriangulatedPoints() {
 //    std::list<cugl::Vec2> swipePoints = _input->getSwipePoints();
     std::list<cugl::Vec2> swipePoints = getAdjustedSwipePoints();
     std::vector<cugl::Vec2> points;
+    float thickness = swipeThickness;
+    float pSize = swipePoints.size();
+    float i = 0;
     auto it = swipePoints.begin();
     points.push_back(*it);
     while (it != (std::prev(std::prev(swipePoints.end())))) {
@@ -100,8 +103,10 @@ std::vector<cugl::Vec2> UIController::computeTriangulatedPoints() {
         Vec2::subtract(a, b, &tmp);
         tmp.normalize();
         tmp.set(-tmp.y, tmp.x);
-        points.push_back(Vec2(b - tmp * swipeThickness/2));
-        points.push_back(Vec2(b + tmp * swipeThickness/2));
+        thickness = swipeThickness * ((pSize - i) / pSize);
+        points.push_back(Vec2(b - tmp * thickness/2));
+        points.push_back(Vec2(b + tmp * thickness/2));
+        i++;
     }
     it++;
     points.push_back(*it);

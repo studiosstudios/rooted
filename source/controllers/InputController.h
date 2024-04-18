@@ -155,7 +155,7 @@ protected:
     /** List holding points for swipe drawing */
     std::list<cugl::Vec2> _swipePoints;
     /** Capacity for swipe drawing list */
-    int _swipePointsCapacity = 3;
+    int _swipePointsCapacity = 25;
     std::optional<cugl::Vec2> _swipeFirstPoint;
 
     /**

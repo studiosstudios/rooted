@@ -60,7 +60,7 @@ private:
     
     /** Pointer to the TextureNode of the top-right BABY CARROT count */
     std::shared_ptr<cugl::scene2::TexturedNode> _barrotsRemainingBoard;
-    std::shared_ptr<cugl::scene2::Label> _BarrotsRemainingText;
+    std::shared_ptr<cugl::scene2::Label> _barrotsRemainingText;
     
     float swipeThickness = 8;
     Uint32 swipeDurationMillis = 500;
@@ -112,5 +112,7 @@ public:
     
     void updateSwipeSpline();
     
-    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera);
+    void updateInfoNodes(int numCarrots, int numBarrots);
+    
+    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots);
 };

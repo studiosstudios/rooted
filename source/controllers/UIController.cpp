@@ -41,19 +41,19 @@ void UIController::initJoystickNodes() {
 
 void UIController::initGameUINodes() {
     _winNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("victory"));
-    _winNode->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) / _cameraZoom + _offset);
+    _winNode->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) - _offset) / _cameraZoom);
     _winNode->setAnchor(Vec2::ANCHOR_CENTER);
     _winNode->setVisible(false);
     _uinode->addChild(_winNode);
     
     _loseNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("defeat"));
-    _loseNode->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) / _cameraZoom + _offset);
+    _loseNode->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) - _offset)/ _cameraZoom);
     _loseNode->setAnchor(Vec2::ANCHOR_CENTER);
     _loseNode->setVisible(false);
     _uinode->addChild(_loseNode);
     
     _carrotsRemainingBoard = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("carrot-count-board"));
-    _carrotsRemainingBoard->setPosition((Vec2(_carrotsRemainingBoard->getContentWidth() / 2, SCENE_HEIGHT - _carrotsRemainingBoard->getContentHeight())) / _cameraZoom);
+    _carrotsRemainingBoard->setPosition((Vec2(_carrotsRemainingBoard->getContentWidth(), SCENE_HEIGHT - _carrotsRemainingBoard->getContentHeight()) - _offset) / _cameraZoom);
     _uinode->addChild(_carrotsRemainingBoard);
     
     _carrotsRemainingText = scene2::Label::allocWithText("remaining player carrots: 2", _assets->get<Font>("gaeguBold16"));
@@ -62,6 +62,17 @@ void UIController::initGameUINodes() {
     _carrotsRemainingText->setContentSize(_carrotsRemainingBoard->getContentSize());
     _carrotsRemainingText->doLayout();
     _carrotsRemainingBoard->addChild(_carrotsRemainingText);
+    
+    _barrotsRemainingBoard = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("barrot-count-board"));
+    _barrotsRemainingBoard->setPosition((Vec2(SCENE_WIDTH - _barrotsRemainingBoard->getContentWidth(), SCENE_HEIGHT - _barrotsRemainingBoard->getContentHeight()) + _offset) / _cameraZoom);
+    _uinode->addChild(_barrotsRemainingBoard);
+    
+    _barrotsRemainingText = scene2::Label::allocWithText("remaining baby carrots: 2", _assets->get<Font>("gaeguBold16"));
+    _barrotsRemainingText->setHorizontalAlignment(HorizontalAlign::CENTER);
+    _barrotsRemainingText->setVerticalAlignment(VerticalAlign::MIDDLE);
+    _barrotsRemainingText->setContentSize(_barrotsRemainingBoard->getContentSize());
+    _barrotsRemainingText->doLayout();
+    _barrotsRemainingBoard->addChild(_barrotsRemainingText);
 }
 
 bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
@@ -169,7 +180,12 @@ void UIController::updateSwipeSpline() { // div by cameraZoom and offset
     }
 }
 
-void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera) {
+void UIController::updateInfoNodes(int numCarrots, int numBarrots) {
+    _carrotsRemainingText->setText("remaining player carrots: " + std::to_string(numCarrots));
+    _barrotsRemainingText->setText("remaining baby carrots: " + std::to_string(numBarrots));
+}
+
+void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera, int numCarrots, int numBarrots) {
     _cameraZoom = camera->getZoom();
     _uinode->setPosition(camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/_cameraZoom);
     if (_input->withJoystick()) {
@@ -181,4 +197,5 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
         _joyback->setVisible(false);
     }
     updateSwipeSpline();
+    updateInfoNodes(numCarrots, numBarrots);
 }

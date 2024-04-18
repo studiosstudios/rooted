@@ -442,7 +442,16 @@ void GameScene::fixedUpdate(float step) {
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
     
-    _ui.update(remain, _cam.getCamera());
+    // TEMP CODE FOR OPEN BETA - CJ
+    int i = _network->getNumPlayers() - 1;
+    for (auto it = _map->getPlantingSpots().begin(); it != _map->getPlantingSpots().end(); it++) {
+        if ((*it)->getCarrotPlanted()) {
+            i--;
+        }
+    }
+    // TEMP CODE FOR OPEN BETA
+    
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size());
     
     if (_countdown > 0) {
         _countdown--;

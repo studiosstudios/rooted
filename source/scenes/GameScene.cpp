@@ -160,7 +160,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    std::cout << "_offset: " << _offset.toString() << "\n";
+    
     _input = InputController::alloc(getBounds());
     Haptics::start();
     _collision.init(_map, _network);

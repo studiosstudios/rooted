@@ -21,7 +21,7 @@ using namespace cugl;
 /** The key the rustle sounds */
 #define RUSTLE_MUSIC              "rustle"
 /** Limits volume to be in between 0-1 */
-#define VOLUME_FACTOR    0.2
+#define VOLUME_FACTOR    1
 
 /**
  * Initializes an ActionController
@@ -181,22 +181,22 @@ float calculateVolume(EntityModel::EntityState state, float distance){
             stateToNum = 4;
             break;
     }
-    return distance == 0 ? stateToNum/4.0 : (stateToNum/distance)/VOLUME_FACTOR; //needs to be function between 0 and 1
+    return distance == 0 ? stateToNum/4.0 : (stateToNum/(distance*distance))/VOLUME_FACTOR; //needs to be approx a function between 0 and 1
 }
 
 void ActionController::playRustling(std::shared_ptr<EntityModel> player, float distance){
     //TODO: check if player is in wheat, if not, setVolume to 0.
     std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
-    float newVolume = calculateVolume(_map->getCharacter()->getEntityState(), distance);
-    if(AudioEngine::get()->getState(_map->getCharacter()->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){
-        AudioEngine::get()->play(player->getUUID(), source);
+    float newVolume = distance > 20 ? 0 : calculateVolume(player->getEntityState(), distance);
+    if(AudioEngine::get()->getState(player->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){
+        AudioEngine::get()->play(player->getUUID(), source, true, newVolume, false);
     }
     else{
         if(newVolume == 0){
             AudioEngine::get()->clear(player->getUUID());
         }
         else{
-            AudioEngine::get()->setVolume(player->getUUID(), newVolume);
+            AudioEngine::get()->setVolume(player->getUUID(), newVolume > 1 ? 1 : newVolume);
         }
     }
 }
@@ -209,9 +209,7 @@ void ActionController::updateRustlingNoise(){
         }
         else{
             float distanceFromCharacter = playerEntity->getPosition().distance(carrot->getPosition());
-            if(distanceFromCharacter <= 20){
-                playRustling(carrot, distanceFromCharacter);
-            }
+            playRustling(carrot, distanceFromCharacter);
         }
     }
     auto farmerEntity = _map->getFarmers().at(0);
@@ -220,9 +218,8 @@ void ActionController::updateRustlingNoise(){
     }
     else{
         float distanceFromCharacter = playerEntity->getPosition().distance(farmerEntity->getPosition());
-        if(distanceFromCharacter <= 20){
-            playRustling(farmerEntity, distanceFromCharacter);
-        }
+        playRustling(farmerEntity, distanceFromCharacter);
+//        std::cout << "bunny state: " << farmerEntity->getEntityState() << "\n";
     }
 }
 

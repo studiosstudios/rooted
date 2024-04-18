@@ -157,6 +157,7 @@ protected:
     /** Capacity for swipe drawing list */
     int _swipePointsCapacity = 25;
     std::optional<cugl::Vec2> _swipeFirstPoint;
+    cugl::Color4 _currentSwipeColor;
 
     /**
      * Defines the zone boundaries, so we can quickly categorize touches.
@@ -357,6 +358,10 @@ public:
     
     std::optional<cugl::Vec2> getSwipeFirstPoint() {
         return _swipeFirstPoint;
+    }
+    
+    cugl::Color4 getCurrentSwipeColor() {
+        return _currentSwipeColor;
     }
 
 

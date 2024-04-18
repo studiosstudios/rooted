@@ -37,11 +37,9 @@ using namespace cugl;
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    0
 /** How far we must swipe up for a jump gesture */
-#define SWIPE_LENGTH    50
+#define SWIPE_LENGTH    200
 /** How fast a double click must be in milliseconds */
 #define DOUBLE_CLICK    400
-
-#define SWITCH_SWIPE_LENGTH 125
 
 // The screen is divided into three zones: Joy(stick), Main, and Right.
 //
@@ -86,7 +84,8 @@ _movement(Vec2(0,0)),
 _joystick(false),
 _hasJumped(false),
 _keyDash(false),
-_keyDashPressed(false) {
+_keyDashPressed(false),
+_currentSwipeColor(Color4::WHITE) {
 }
 
 /**
@@ -398,6 +397,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _keyShowPlayer = false;
                 _swipeFirstPoint = screenPos;
                 _swipePoints->clear();
+                _currentSwipeColor = Color4::WHITE;
                 addSwipePoint(screenPos);
             }
             break;
@@ -476,17 +476,22 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         addSwipePoint(screenPos);
         if (!_keyDash) {
-            if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
+            // TODO: These conditionals now use the trailing 25th swipe point for swipe detection. Will make it cleaner later -CJ
+            if (_swipePoints->begin() != _swipePoints->end() && (screenPos.y - _swipePoints->back().first.y) > SWIPE_LENGTH) {
+//            if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
 //                std::cout << "Swiped!\n";
                 _keyDash = true;
+                _currentSwipeColor = Color4::ORANGE;
             }
-            else if ((pos.y-_rtouch.position.y) > SWITCH_SWIPE_LENGTH) {
+            else if (_swipePoints->begin() != _swipePoints->end() && (_swipePoints->back().first.y - screenPos.y) > SWIPE_LENGTH) {
+//            else if ((pos.y-_rtouch.position.y) > SWIPE_LENGTH) {
 //                _keySwitch = true;
                 _keyRoot = true;
                 _keyUnroot = true;
                 _rtouch.position = pos;
+                _currentSwipeColor = Color4::BLUE;
             }
-            else if ((pos.x-_rtouch.position.x) > SWITCH_SWIPE_LENGTH) {
+            else if ((pos.x-_rtouch.position.x) > SWIPE_LENGTH) {
                 _keyShowPlayer = true;
             }
         }

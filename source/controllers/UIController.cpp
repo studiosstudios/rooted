@@ -143,6 +143,7 @@ void UIController::updateSwipeSpline() { // div by cameraZoom and offset
         _swipeNode->setPolygon(poly);
         _swipeNode->setPosition(poly.getBounds().origin);
         _swipeNode->setVisible(true);
+        _swipeNode->setColor(_input->getCurrentSwipeColor());
     }
     else {
         _swipeNode->setVisible(false);

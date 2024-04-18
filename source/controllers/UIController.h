@@ -57,6 +57,7 @@ private:
     float swipeThickness = 8;
     Uint32 swipeDurationMillis = 500;
     cugl::Vec2 tmp;
+    std::optional<cugl::Color4> swipeColor;
     
     /** The offset of the scene graph
      *

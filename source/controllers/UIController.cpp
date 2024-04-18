@@ -68,6 +68,7 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     initGameUINodes();
     
     _swipeNode = scene2::PolygonNode::alloc();
+    _swipeNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 //    _swipeNode->setAbsolute(true);
     _uinode->addChild(_swipeNode);
     return true;
@@ -82,7 +83,7 @@ void UIController::updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick) {
 std::list<cugl::Vec2> UIController::getAdjustedSwipePoints() {
     auto sp = _input->getSwipePoints();
     for (auto it = sp.begin(); it != sp.end(); it++) {
-        it->set(*it / _cameraZoom);
+        it->set((*it - _offset) / _cameraZoom);
     }
     return sp;
 }

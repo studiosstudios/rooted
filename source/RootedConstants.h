@@ -19,6 +19,10 @@
 #define DEFAULT_WIDTH   32.0f
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
+/** Width of the game world in Box2d units */
+#define MAP_UNIT_WIDTH   16.0f
+/** Height of the game world in Box2d units */
+#define MAP_UNIT_HEIGHT   9.0f
 /** Default drawscale */
 #define DEFAULT_DRAWSCALE 32.0f
 /** Zoom of camera relative to scene */

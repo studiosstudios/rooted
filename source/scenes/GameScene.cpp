@@ -81,16 +81,16 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("largerMap")); // Obtains ownership of root.
-
+    _seed = hex2dec(_network->getRoomID());
+    _map = Map::alloc(_assets); // Obtains ownership of root.
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
     
-    _map->populate(hex2dec(_network->getRoomID()));
-    
-    _map->populateWithCarrots(_network->getNumPlayers() - 1);
+    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->setRootNode(_rootnode);
+    _map->populate();
     
     // Create the scene graph
     _uinode = scene2::SceneNode::alloc();
@@ -157,10 +157,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
-    _ui.init(_uinode, _offset, 32.0, _scale);
+    _ui.init(_uinode, _offset, zoom, _scale);
     
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
     _cam.setZoom(zoom);
+    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
@@ -233,11 +234,12 @@ void GameScene::unload() {
  */
 void GameScene::reset() {
     // Load a new level
+    _seed++;
     _map->clearRootNode();
-    _map->setRootNode(_rootnode);
     _map->dispose();
-    _map->populate(hex2dec(_network->getRoomID()));
-    _map->populateWithCarrots(_network->getNumPlayers() - 1);
+    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->setRootNode(_rootnode);
+    _map->populate();
 
     _collision.dispose();
     _action.dispose();
@@ -271,8 +273,19 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
     
+    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
+    _cam.setZoom(zoom);
+    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
+    
+    _losenode->setPosition(dimen.width / 1.8f / zoom, dimen.height / 1.8f / zoom);
+    _losenode->setScale(1/zoom);
+    
+    _winnode->setPosition(dimen / 1.8f/ zoom);
+    _winnode->setScale(1/zoom);
+    
+    _ui.init(_uinode, _offset, zoom, _scale);
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
     setDebug(false);

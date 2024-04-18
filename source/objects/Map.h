@@ -70,7 +70,25 @@ private:
     std::shared_ptr<WheatScene> _wheatscene;
     
     /** Possible init positions of carrots */
-    std::vector<float> _carrotPosList;
+    std::vector<Rect> _carrotSpawns;
+    
+    /** Possible init positions of baby carrots */
+    std::vector<Rect> _babyCarrotSpawns;
+    
+    /** Possible init positions of farmers */
+    std::vector<Rect> _farmerSpawns;
+    
+    std::vector<Rect> _plantingSpawns;
+    
+    /** Vector of key names for all map units in assets json */
+    std::vector<std::string> _mapNames;
+    
+    /** Mersenne Twister random number generator to ensure randomness is consistent without broadcasting across network (hopefully) */
+    std::mt19937 _rand32;
+    
+    /** 2D vector representing tiling of randomly generated map */
+    std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
+
     
 public:
     /**
@@ -102,18 +120,16 @@ public:
      *
      * @return  an autoreleased level file
      */
-    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets,
-                                      const std::shared_ptr<scene2::SceneNode> &root,
-                                      const std::shared_ptr<cugl::JsonValue> &json) {
+    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets) {
         std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init(assets, root, json) ? result : nullptr);
+        return (result->init(assets) ? result : nullptr);
     }
 
-    bool init(const std::shared_ptr<AssetManager> &assets,
-              const std::shared_ptr<scene2::SceneNode> &root,
-              const std::shared_ptr<cugl::JsonValue> &json);
-
-    void populate(int randSeed);
+    bool init(const std::shared_ptr<AssetManager> &assets);
+    
+    void generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots);
+    
+    void populate();
     
     /**
      * populate the map with Carrots
@@ -261,8 +277,6 @@ public:
 #pragma mark -
 #pragma mark Drawing
     void updateShaders(float step, Mat4 perspective);
-    
-    void renderWheatScene(const std::shared_ptr<cugl::SpriteBatch> &batch);
 
     std::shared_ptr<WheatScene> getWheatScene() { return _wheatscene; }
     
@@ -270,6 +284,7 @@ private:
 #pragma mark -
 #pragma mark Internal Helper Methods
     
+    void loadTiledJson(std::shared_ptr<JsonValue> &json, int i, int j);
     /**
      * Adds the physics object to the physics world and loosely couples it to the scene graph
      *
@@ -291,36 +306,19 @@ private:
      * @param levelHeight   Height of the map in physics coordinates
      */
     bool readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight);
-
-    /**
-     * Loads a single planting spot of variable size into the world.
-     */
-    void loadPlantingSpot(float x, float y, float width, float height);
-
-    /**
-     * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world node. This method should only be called once per initialization, any subsequent calls will override previous calls.
-     */
-    void loadShaderNodes();
-    
-    /**
-     * Loads a single farmer into the world.
-     */
-    void loadFarmer(float x, float y, float width, float height);
-    
-    /**
-     * Loads a single baby carrot into the world.
-     */
-    void loadBabyCarrot(float x, float y, float width, float height);
-
-    /**
-     * Loads a single carrot into the world.
-     */
-    void loadCarrot(float x, float y, float width, float height);
     
     /**
      * Adds a boundary box obstacle to the world.
      */
     void loadBoundary(Vec2 pos, Size size);
+    
+    void spawnPlantingSpots();
+    
+    void spawnFarmers();
+    
+    void spawnCarrots();
+    
+    void spawnBabyCarrots();
 
 };
 

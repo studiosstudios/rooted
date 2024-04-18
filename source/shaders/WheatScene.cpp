@@ -30,10 +30,9 @@ const std::string fsqShaderVert =
 #include "FSQShader.vert"
 ;
 
-bool WheatScene::init(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale, Vec2 drawScale, Size worldSize) {
+bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair<string, float>>> mapInfo,
+                      Vec2 drawScale, Size worldSize) {
 
-    _wheattex = assets->get<Texture>(name);
-    _bladeColorScale = bladeColorScale;
     _fsqshader = Shader::alloc(SHADER(fsqShaderVert), SHADER(fsqShaderFrag));
     if (!Scene2Texture::init(0, 0, DEFAULT_WHEAT_TEX_WIDTH * worldSize.width / DEFAULT_WIDTH,
                              DEFAULT_WHEAT_TEX_HEIGHT * worldSize.height / DEFAULT_HEIGHT, false)) {
@@ -41,17 +40,27 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, string name, float
     }
 
     _rootnode = scene2::SceneNode::alloc();
-    _rootnode->setScale(DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_WIDTH / SCENE_WIDTH, DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_HEIGHT / SCENE_HEIGHT);
+    _rootnode->setScale(DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_WIDTH / SCENE_WIDTH, 
+                        DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_HEIGHT / SCENE_HEIGHT);
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(Vec2::ZERO);
     addChild(_rootnode);
 
-    auto wheatnode = scene2::PolygonNode::allocWithTexture(_wheattex);
-    wheatnode->setScale(SCENE_WIDTH/_wheattex->getWidth()/drawScale.x, SCENE_HEIGHT/_wheattex->getHeight()/drawScale.y);
-    wheatnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    wheatnode->setColor(Color4(255/_bladeColorScale,255/_bladeColorScale,255/_bladeColorScale,255)); //not sure if this will work for all scales
-    wheatnode->setPosition(0,0);
-    _rootnode->addChild(wheatnode);
+    for (int i = 0; i < mapInfo.size(); i++) {
+        for (int j = 0; j < mapInfo[i].size(); j++) {
+            auto wheattex = assets->get<Texture>(mapInfo[i][j].first);
+            float bladeColorScale = mapInfo[i][j].second;
+            auto wheatnode = scene2::PolygonNode::allocWithTexture(wheattex);
+            wheatnode->setScale(SCENE_WIDTH / wheattex->getWidth() / drawScale.x * MAP_UNIT_WIDTH / worldSize.width,
+                                SCENE_HEIGHT / wheattex->getHeight() / drawScale.y * MAP_UNIT_HEIGHT / worldSize.height);
+            wheatnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            wheatnode->setColor(
+                    Color4(255 / bladeColorScale, 255 / bladeColorScale, 255 / bladeColorScale,
+                           255)); //not sure if this will work for all scales
+            wheatnode->setPosition(MAP_UNIT_WIDTH * i, MAP_UNIT_HEIGHT * j);
+            _rootnode->addChild(wheatnode);
+        }
+    }
 
 
     _target->setClearColor(Color4::CLEAR);
@@ -82,7 +91,6 @@ void WheatScene::renderToScreen(float alpha, float scale) {
 }
 
 void WheatScene::dispose() {
-    _wheattex = nullptr;
     _rootnode = nullptr;
     _fsqshader = nullptr;
     Scene2::dispose();

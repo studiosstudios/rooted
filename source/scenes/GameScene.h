@@ -90,6 +90,8 @@ protected:
     /** Initial camera position */
     Vec3 _initCamera;
     
+    int _seed;
+    
     
 
 

@@ -30,12 +30,8 @@ class WheatScene : public Scene2Texture {
 private:
     /** the root node of the wheat scene */
     shared_ptr<scene2::SceneNode> _rootnode;
-    /** color scale of wheat texture */
-    float _bladeColorScale;
     /** a full screen quad shader for debug rendering the full wheat texture */
     shared_ptr<Shader> _fsqshader;
-    /** the base wheat texture */
-    shared_ptr<Texture> _wheattex;
 
 public:
 
@@ -43,12 +39,12 @@ public:
 
     ~WheatScene() { dispose(); };
 
-    static shared_ptr<WheatScene> alloc(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale, Vec2 drawScale, Size worldSize) {
+    static shared_ptr<WheatScene> alloc(const shared_ptr<AssetManager> &assets, vector<vector<pair<string, float>>> mapInfo, Vec2 drawScale, Size worldSize) {
         std::shared_ptr<WheatScene> result = std::make_shared<WheatScene>();
-        return (result->init(assets, name, bladeColorScale, drawScale, worldSize) ? result : nullptr);
+        return (result->init(assets, mapInfo, drawScale, worldSize) ? result : nullptr);
     }
 
-    bool init(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale, Vec2 drawScale, Size worldSize);
+    bool init(const shared_ptr<AssetManager> &assets, vector<vector<pair<string, float>>> mapInfo, Vec2 drawScale, Size worldSize);
 
     void dispose();
 

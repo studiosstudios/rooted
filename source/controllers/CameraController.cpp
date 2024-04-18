@@ -41,12 +41,6 @@ void CameraController::update(float dt) {
 //    _ui->setPosition(uiPos);
 }
 
-const Vec2 CameraController::getScreenPosition(){
-    int viewWidth = _camera->getViewport().getMaxX();
-    int viewHeight = _camera->getViewport().getMaxY();
-    return _camera->getPosition()-Vec2(viewWidth, viewHeight)/2/_camera->getZoom();
-}
-
 void CameraController::setZoom(float zoom) {
     float originalZoom = _camera->getZoom();
     // Don't let it be greater than max zoom
@@ -75,7 +69,11 @@ void CameraController::addZoom(float zoom) {
 }
 
 void CameraController::setPosition(Vec3 pos){
-    _camera->setPosition(pos);
+    int viewWidth = _camera->getViewport().getMaxX();
+    int viewHeight = _camera->getViewport().getMaxY();
+    float new_x = std::min(std::max(pos.x, (float) ((viewWidth/2)/_camera->getZoom())), (float) (SCENE_WIDTH-(viewWidth/2)/_camera->getZoom()));
+    float new_y = std::min(std::max(pos.y, (float) ((viewHeight/2)/_camera->getZoom())), (float) (SCENE_HEIGHT-(viewHeight/2)/_camera->getZoom()));
+    _camera->setPosition(Vec3(new_x, new_y, pos.z));
 }
 
 void CameraController::setTarget(std::shared_ptr<EntityModel> target) {

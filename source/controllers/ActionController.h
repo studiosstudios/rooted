@@ -35,7 +35,7 @@ private:
     /**
      * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character
      */
-    void playRustling(std::shared_ptr<EntityModel> player, float distance);
+    void playRustling(std::shared_ptr<EntityModel> player, float distance, bool isBarrot);
     
     /**
      * Updates rustling sound effect based on the movement of the entities around one's own character

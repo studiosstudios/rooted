@@ -184,19 +184,40 @@ float calculateVolume(EntityModel::EntityState state, float distance){
     return distance == 0 ? stateToNum/4.0 : (stateToNum/(distance*distance))/VOLUME_FACTOR; //needs to be approx a function between 0 and 1
 }
 
-void ActionController::playRustling(std::shared_ptr<EntityModel> player, float distance){
+void ActionController::playRustling(std::shared_ptr<EntityModel> player, float distance, bool isBarrot){
     //TODO: check if player is in wheat, if not, setVolume to 0.
     std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
-    float newVolume = distance > 20 ? 0 : calculateVolume(player->getEntityState(), distance);
-    if(AudioEngine::get()->getState(player->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){
-        AudioEngine::get()->play(player->getUUID(), source, true, newVolume, false);
+    float newVolume;
+    if(distance > 20){
+        newVolume = 0;
     }
-    else{
-        if(newVolume == 0){
-            AudioEngine::get()->clear(player->getUUID());
+    else {
+        newVolume = isBarrot? calculateVolume(EntityModel::EntityState::WALKING, distance) : calculateVolume(player->getEntityState(), distance);
+    }
+    if(isBarrot){
+        if(AudioEngine::get()->getState("barrot") != AudioEngine::State::PLAYING && newVolume != 0){
+            AudioEngine::get()->play("barrot", source, true, newVolume, false);
         }
         else{
-            AudioEngine::get()->setVolume(player->getUUID(), newVolume > 1 ? 1 : newVolume);
+            if(newVolume == 0){
+                AudioEngine::get()->clear("barrot");
+            }
+            else if (AudioEngine::get()->getState("barrot") == AudioEngine::State::PLAYING){
+                AudioEngine::get()->setVolume("barrot", newVolume > 1 ? 1 : newVolume);
+            }
+        }
+    }
+    else{
+        if(AudioEngine::get()->getState(player->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){
+            AudioEngine::get()->play(player->getUUID(), source, true, newVolume, false);
+        }
+        else{
+            if(newVolume == 0){
+                AudioEngine::get()->clear(player->getUUID());
+            }
+            else if (AudioEngine::get()->getState(player->getUUID()) == AudioEngine::State::PLAYING){
+                AudioEngine::get()->setVolume(player->getUUID(), newVolume > 1 ? 1 : newVolume);
+            }
         }
     }
 }
@@ -205,22 +226,35 @@ void ActionController::updateRustlingNoise(){
     auto playerEntity = _map->getCharacter();
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == playerEntity->getUUID()){
-            playRustling(playerEntity, 0);
+            playRustling(playerEntity, 0, false);
         }
         else{
             float distanceFromCharacter = playerEntity->getPosition().distance(carrot->getPosition());
-            playRustling(carrot, distanceFromCharacter);
+            playRustling(carrot, distanceFromCharacter, false);
         }
     }
     auto farmerEntity = _map->getFarmers().at(0);
     if(farmerEntity->getUUID() == playerEntity->getUUID()){
-        playRustling(playerEntity, 0);
+        playRustling(playerEntity, 0, false);
     }
     else{
         float distanceFromCharacter = playerEntity->getPosition().distance(farmerEntity->getPosition());
-        playRustling(farmerEntity, distanceFromCharacter);
+        playRustling(farmerEntity, distanceFromCharacter, false);
 //        std::cout << "bunny state: " << farmerEntity->getEntityState() << "\n";
     }
+    float closestBarrot = 21;
+    int numBarrotsClose = 0;
+    for(auto barrot : _map->getBabyCarrots()){
+        float tempBarrotDist = barrot->getPosition().distance(playerEntity->getPosition());
+        closestBarrot = closestBarrot > tempBarrotDist ? tempBarrotDist : closestBarrot;
+        if(tempBarrotDist < 12){
+            numBarrotsClose++;
+        }
+    }
+    if(numBarrotsClose > 1){
+        numBarrotsClose *= 0.75;
+    }
+    playRustling(nullptr, closestBarrot/(numBarrotsClose), true);
 }
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){

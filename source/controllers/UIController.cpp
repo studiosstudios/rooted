@@ -27,11 +27,12 @@ void UIController::setLoseVisible(bool visible) {
 void UIController::initJoystickNodes() {
     _joynode = scene2::SceneNode::allocWithBounds(Vec2(JOY_ZONE_WIDTH * SCENE_WIDTH / _cameraZoom, JOY_ZONE_HEIGHT * SCENE_HEIGHT / _cameraZoom) + _offset);
     
-    _joyback = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2(0,0), 64));
-    _joyback->setColor(Color4(0, 0, 0, 100));
+    _joyback = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("joystick-back"));
+    _joyback->setScale(0.5f / _cameraZoom);
     _joynode->addChild(_joyback);
     
-    _joymain = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2(0,0), 32));
+    _joymain = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("joystick"));
+    _joymain->setScale(0.25f / _cameraZoom);
     _joymain->setVisible(false);
     _joynode->addChild(_joymain);
     
@@ -76,6 +77,13 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
 
 void UIController::updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick) {
     _joyback->setPosition(joyStick.first / _cameraZoom - _offset / _cameraZoom);
+    Vec2 resultant = joyStick.second - joyStick.first;
+    float rLength = resultant.length();
+    if (rLength / _cameraZoom > _joyback->getWidth() / 2) {
+        joyStick.second.set(joyStick.first + resultant.normalize() * _joyback->getWidth() * _cameraZoom / 2);
+        // Multiply _joyback->getWidth() by _cameraZoom because the joyback width was already divided by _cameraZoom earlier, and this
+        // is still pre-zoom coordinates
+    }
     _joymain->setPosition(joyStick.second / _cameraZoom - _offset / _cameraZoom);
 }
 

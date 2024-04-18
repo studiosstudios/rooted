@@ -161,6 +161,12 @@
         },
         "defeat" : {
             "file": "textures/defeat.png"
+        },
+        "joystick" : {
+            "file": "textures/joystick.png"
+        },
+        "joystick-back" : {
+            "file": "textures/joystick-back.png"
         }
     },
     "jsons": {

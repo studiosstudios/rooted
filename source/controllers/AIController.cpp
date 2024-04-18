@@ -59,7 +59,9 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
             if (babyCarrot->hasTarget()) {
                 Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
 //                movement *= 2.5;
+                babyCarrot->setShared(false);
                 babyCarrot->setLinearVelocity((babyCarrot->getLinearVelocity() + movement * 0.25) * 0.93);
+                babyCarrot->setShared(true);
             }
             break;
         case State::SIT:
@@ -70,7 +72,9 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
             if (babyCarrot->hasTarget()) {
                 Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
                 movement *= 0.5;
+                babyCarrot->setShared(false);
                 babyCarrot->setLinearVelocity(movement);
+                babyCarrot->setShared(true);
             }
             break;
     }

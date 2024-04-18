@@ -140,9 +140,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // Won't compile unless I make this variable with type NetWorld :/
     if (_isHost) {
         _map->acquireMapOwnership();
+        _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-    _babies = _map->loadBabyEntities();
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -255,9 +255,9 @@ void GameScene::reset() {
 
     if (_isHost) {
         _map->acquireMapOwnership();
+        _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-    _babies = _map->loadBabyEntities();
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);

@@ -76,7 +76,11 @@
 /** The amount to slow the character down */
 #define DUDE_DAMPING    10.0f
 /** The maximum character speed */
-#define DUDE_MAXSPEED   5.0f
+#define DUDE_MAXSPEED   5.4f
+
+#define RUN_SPEED       3.6f
+#define WALK_SPEED      2.6f
+#define SNEAK_SPEED     1.8f
 
 
 #pragma mark -
@@ -595,14 +599,14 @@ public:
     
     /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
     EntityState getMovementState() {
-        if (_movement.lengthSquared() <= 0.1 * 0.1) {
+        if (_movement.lengthSquared() <= 0.15 * 0.15) {
             // If joystick movement is too minor, we don't actually let it cause a movement
             return STANDING;
         }
-        else if (_movement.lengthSquared() <= 0.33 * 0.33) {
+        else if (_movement.lengthSquared() <= 0.8 * 0.8) {
             return SNEAKING;
         }
-        else if (_movement.lengthSquared() <= 0.66 * 0.66) {
+        else if (_movement.lengthSquared() <= 0.9 * 0.9) {
             return WALKING;
         }
         return RUNNING;

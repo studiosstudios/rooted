@@ -28,6 +28,11 @@ void Farmer::rootCarrot(){
     setSceneNode(_normalNode);
 }
 
+void Farmer::carrotEscaped(){
+    _isHoldingCarrot = false;
+    setSceneNode(_normalNode);
+}
+
 void Farmer::setMovement(Vec2 movement) {
     _movement = movement;
     if (_isHoldingCarrot) {

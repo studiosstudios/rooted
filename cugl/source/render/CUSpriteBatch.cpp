@@ -119,8 +119,12 @@ using namespace cugl;
 #define DIRTY_UNIBLOCK          0x800
 /** Texture height for wheat cover shader */
 #define DIRTY_HEIGHT            0x1000
+/** Texture height origin for wheat cover shader */
+#define DIRTY_ORIGIN            0x2000
+/** If the texture is the player */
+#define DIRTY_PLAYER            0x4000
 /** All values have changed */
-#define DIRTY_ALL_VALS          0x1FFF
+#define DIRTY_ALL_VALS          0x7FFF
 
 /**
  * Fills poly with a mesh defining the given rectangle.
@@ -193,6 +197,8 @@ public:
         blockptr = -1;
         zDepth = 0;
         height = 0;
+        origin = 0;
+        player = false;
         blur = 0;
         type = 0;
         dirty = 0;
@@ -220,6 +226,8 @@ public:
         blockptr = copy->blockptr;
         zDepth = copy->zDepth;
         height = copy->height;
+        origin = copy->origin;
+        player = copy->player;
         blur  = copy->blur;
         dirty = 0;
     }
@@ -243,6 +251,8 @@ public:
         blockptr = -1;
         zDepth = 0;
         height = 0;
+        origin = 0;
+        player = false;
         blur = 0;
         type = 0;
     }
@@ -271,6 +281,8 @@ public:
         blockptr = -1;
         zDepth = 0;
         height = 0;
+        origin = 0;
+        player = false;
         blur = 0;
         type = 0;
         dirty = 0;
@@ -310,6 +322,10 @@ public:
     GLsizei blockptr;
     /** The texture height for the wheat cover shader */
     float height;
+    /** The texture height origin for the wheat cover shader */
+    float origin;
+    /** If the texture is the player */
+    bool player;
     /** The dirty bits relative to the previous set of uniforms */
     GLuint dirty;
 };
@@ -940,7 +956,7 @@ float SpriteBatch::getDepth() const {
 }
 
 /**
- * Sets the height of the active texure for this sprite batch.
+ * Sets the height of the active texture for this sprite batch.
  * This is used exclusively by the wheat cover shader and does not do anything
  * for the default sprite batch shader
  *
@@ -955,7 +971,7 @@ void SpriteBatch::setHeight(float height) {
 }
 
 /**
- * Returns the height of the active texure for this sprite batch.
+ * Returns the height of the active texture for this sprite batch.
  * This is used exclusively by the wheat cover shader and does not do anything
  * for the default sprite batch shader
  *
@@ -963,6 +979,58 @@ void SpriteBatch::setHeight(float height) {
  */
 float SpriteBatch::getHeight() const {
    return _context->height;
+}
+
+/**
+ * Sets the y origin of the active texture for this sprite batch.
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @param height The y origin of the active texture
+ */
+void SpriteBatch::setOrigin(float origin) {
+    if (_context->origin != origin) {
+        if (_inflight) { record(); }
+        _context->origin = origin;
+        _context->dirty  = _context->dirty | DIRTY_ORIGIN;
+    }
+}
+
+/**
+ * Returns the y origin of the active texture for this sprite batch.
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @return The y origin of the active texture
+ */
+float SpriteBatch::getOrigin() const {
+    return _context->origin;
+}
+
+/**
+ * Sets if current texture is the player.
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @param bool If active texture is player
+ */
+void SpriteBatch::setIsPlayer(bool player) {
+    if (_context->player != player) {
+        if (_inflight) { record(); }
+        _context->player = player;
+        _context->dirty  = _context->dirty | DIRTY_PLAYER;
+    }
+}
+
+/**
+ * Gets if current texture is the player
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @return If active texture is player
+ */
+bool SpriteBatch::getIsPlayer() const {
+    return _context->player;
 }
 
 /**
@@ -1217,6 +1285,12 @@ void SpriteBatch::flush() {
         }
         if (next->dirty & DIRTY_HEIGHT) {
             _shader->setUniform1f("tex_height", next->height);
+        }
+        if (next->dirty & DIRTY_ORIGIN) {
+            _shader->setUniform1f("tex_y_origin", next->origin);
+        }
+        if (next->dirty & DIRTY_PLAYER) {
+            _shader->setUniform1f("player", next->player ? 1.0 : 0.0);
         }
         
         GLuint amt = next->last-next->first;

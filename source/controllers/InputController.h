@@ -87,6 +87,8 @@ protected:
     bool _showPlayerPressed;
     
     bool _switchPressed;
+    
+    bool _deviceShaking;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -345,6 +347,8 @@ public:
 
     bool didSwitch() const { return _switchPressed; }
     
+    bool didShakeDevice() const { return _deviceShaking; }
+
 #pragma mark -
 #pragma mark Swipe Drawing Logic
     void addSwipePoint(cugl::Vec2 point) {

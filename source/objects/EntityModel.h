@@ -203,6 +203,11 @@ protected:
     float _wheatSizeTarget;
     /** Current rendered height for wheat node. This is very temporary */
     float _currWheatSize;
+    /** Query id for in wheat query from wheat scene */
+    unsigned int _wheatQueryId;
+    /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
+    bool _inWheat;
+
 
 public:
     
@@ -624,6 +629,14 @@ public:
     virtual void updateWheatHeightNode();
 
     std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
+
+    unsigned int getWheatQueryId() { return _wheatQueryId; };
+
+    void setWheatQueryId(unsigned int id) { _wheatQueryId = id; };
+
+    bool isInWheat() { return _inWheat; }
+
+    void setInWheat(bool inWheat) { _inWheat = inWheat; }
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

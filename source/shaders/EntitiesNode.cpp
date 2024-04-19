@@ -3,6 +3,7 @@
 //
 
 #include "EntitiesNode.h"
+#include "../RootedConstants.h"
 
 const std::string coverShaderFrag =
 #include "cover_fragment.frag"
@@ -28,22 +29,20 @@ void EntitiesNode::dispose() {
 }
 
 bool EntitiesNode::init(const std::shared_ptr<scene2::SceneNode> &entitiesNode, const shared_ptr<Texture> &wheattex,
-                        const std::shared_ptr<cugl::AssetManager> &assets,
-                        string name, float bladeColorScale, Size size, bool fullHeight) {
+                        const std::shared_ptr<cugl::AssetManager> &assets, bool fullHeight) {
     if (SceneNode::init()) {
         _root = entitiesNode;
         _fullHeight = fullHeight;
 
         _wheattex = wheattex;
         _noisetex = assets->get<Texture>("shader_noise");
-        _bladeColorScale = bladeColorScale;
         _coverShader = Shader::alloc(SHADER(coverShaderVert), SHADER(coverShaderFrag));
         _coverShader->setUniform2f("TEXTURE_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
-        _coverShader->setUniform2f("SCENE_SIZE", size.width, size.height);
-        _coverShader->setUniform1f("blade_color_scale", _bladeColorScale);
-        _coverShader->setUniform1f("wind_speed", 1.0);
-        _coverShader->setUniform2f("wind_direction", 1.0, 1.0);
-        _coverShader->setUniform1f("MAX_WHEAT_HEIGHT", 30 * _fullHeight);
+        _coverShader->setUniform2f("SCENE_SIZE", SCENE_WIDTH, SCENE_HEIGHT);
+        _coverShader->setUniform1f("wind_speed", WIND_SPEED);
+        _coverShader->setUniform2f("wind_direction", WIND_DIRECTION[0], WIND_DIRECTION[1]);
+        _coverShader->setUniform1f("MAX_WHEAT_HEIGHT", MAX_WHEAT_HEIGHT * _fullHeight);
+        _coverShader->setUniform1f("STEP_SIZE", STEP_SIZE);
         _windTime = 0;
         return true;
     }

@@ -30,12 +30,31 @@ class WheatScene : public Scene2Texture {
 private:
     /** the root node of the wheat scene */
     shared_ptr<scene2::SceneNode> _rootnode;
-    /** color scale of wheat texture */
-    float _bladeColorScale;
     /** a full screen quad shader for debug rendering the full wheat texture */
     shared_ptr<Shader> _fsqshader;
-    /** the base wheat texture */
-    shared_ptr<Texture> _wheattex;
+
+    Size _worldSize;
+
+    unsigned int _queryId;
+
+    class WheatQuery {
+        public:
+            Vec2 pos;
+            unsigned int id;
+            bool result;
+            bool resolved;
+
+            WheatQuery(Vec2 pos, unsigned int id) {
+                this->pos = pos;
+                this->id = id;
+                result = false;
+                resolved = false;
+            };
+            
+        
+    };
+
+    unordered_map<unsigned int, WheatQuery> _queries;
 
 public:
 
@@ -43,12 +62,12 @@ public:
 
     ~WheatScene() { dispose(); };
 
-    static shared_ptr<WheatScene> alloc(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale) {
+    static shared_ptr<WheatScene> alloc(const shared_ptr<AssetManager> &assets, vector<vector<pair<string, float>>> mapInfo, Vec2 drawScale, Size worldSize) {
         std::shared_ptr<WheatScene> result = std::make_shared<WheatScene>();
-        return (result->init(assets, name, bladeColorScale) ? result : nullptr);
+        return (result->init(assets, mapInfo, drawScale, worldSize) ? result : nullptr);
     }
 
-    bool init(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale);
+    bool init(const shared_ptr<AssetManager> &assets, vector<vector<pair<string, float>>> mapInfo, Vec2 drawScale, Size worldSize);
 
     void dispose();
 
@@ -63,6 +82,14 @@ public:
     void renderToScreen(float alpha = 1.0, float scale = 8.5);
 
     shared_ptr<scene2::SceneNode> getRoot() { return _rootnode; }
+
+    int addWheatQuery(Vec2 position);
+
+    bool getWheatQueryResult(unsigned int queryId);
+
+    void doQueries();
+    
+    void clearQueries();
 
 };
 

@@ -7,6 +7,7 @@
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
 #include "../objects/EntityModel.h"
+#include "../RootedConstants.h"
 
 #include <ctime>
 #include <string>
@@ -16,76 +17,24 @@
 
 using namespace cugl;
 
-#pragma mark -
-#pragma mark Level Geography
-
-/** This is adjusted by screen aspect ratio to get the height */
-#define SCENE_WIDTH 1024
-#define SCENE_HEIGHT 576
-
-/** This is the aspect ratio for physics */
-#define SCENE_ASPECT 9.0/16.0
-
-/** Width of the game world in Box2d units */
-#define DEFAULT_WIDTH   32.0f
-/** Height of the game world in Box2d units */
-#define DEFAULT_HEIGHT  18.0f
-/** Zoom of camera relative to scene */
-#define CAMERA_ZOOM 2.0
-/** Camera gliding rate */
-#define CAMERA_GLIDE_RATE 0.06f
-
-#pragma mark -
-#pragma mark Physics Constants
-/** No gravity because we are top down */
-#define DEFAULT_GRAVITY 0.0f
-/** The number of frame to wait before reinitializing the game */
-#define EXIT_COUNT      240
-
-
-#pragma mark -
-#pragma mark Asset Constants
-/** The font for victory/failure messages */
-#define MESSAGE_FONT    "gyparody"
-/** The message for winning the game */
-#define WIN_MESSAGE     "YOU WIN!"
-/** The color of the win message */
-#define WIN_COLOR       Color4::BLUE
-/** The message for losing the game */
-#define LOSE_MESSAGE    "YOU LOSE!"
-/** The color of the lose message */
-#define LOSE_COLOR      Color4::RED
-/** The message for resetting the game */
-#define RESET_MESSAGE    "RESETTING"
-/** The color of the reset message */
-#define RESET_COLOR      Color4::YELLOW
-/** The key the victory game music */
-#define WIN_MUSIC       "win"
-/** The key the failure game music */
-#define LOSE_MUSIC      "lose"
-/** The sound effect for firing a bullet */
-#define PEW_EFFECT      "pew"
-/** The sound effect for a bullet collision */
-#define POP_EFFECT      "pop"
-/** The sound effect for jumping */
-#define JUMP_EFFECT     "jump"
-/** The volume for the music */
-#define MUSIC_VOLUME    0.7f
-/** The volume for sound effects */
-#define EFFECT_VOLUME   0.8f
-/** The image for the left dpad/joystick */
-#define LEFT_IMAGE      "dpad_left"
-/** The image for the right dpad/joystick */
-#define RIGHT_IMAGE     "dpad_right"
-
-#define JOY_MAIN        "joystick-main"
-#define JOY_BACK        "joystick-back"
-
-/** Color to outline the physics nodes */
-#define DEBUG_COLOR     Color4::GREEN
-/** Opacity of the physics outlines */
-#define DEBUG_OPACITY   192
-
+/**
+ * Converts a hexadecimal string to a decimal string
+ *
+ * This function assumes that the string is 4 hexadecimal characters
+ * or less, and therefore it converts to a decimal string of five
+ * characters or less (as is the case with the lobby server). We
+ * pad the decimal string with leading 0s to bring it to 5 characters
+ * exactly.
+ *
+ * @param hex the hexadecimal string to convert
+ *
+ * @return the decimal equivalent to hex
+ */
+static int hex2dec(const std::string hex) {
+    Uint32 value = strtool::stou32(hex,0,16);
+    std::string result = strtool::to_string(value);
+    return stoi(result);
+}
 
 #pragma mark -
 #pragma mark Constructors
@@ -130,36 +79,36 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(_offset);
 
-    // Create the scene graph
-    _uinode = scene2::SceneNode::alloc();
-    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
-    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("testMap2")); // Obtains ownership of root.
-
+    _seed = hex2dec(_network->getRoomID());
+    _map = Map::alloc(_assets); // Obtains ownership of root.
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
     
-    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
-    
-    _map->populateWithCarrots(_network->getNumPlayers() - 1);
+    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->setRootNode(_rootnode);
+    _map->populate();
 
-    addChild(_rootnode);
-    addChild(_uinode);
+    // Create the scene graph
+    _uinode = scene2::SceneNode::alloc();
+    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
     activateWorldCollisions(world);
-
+    
     // IMPORTANT: SCALING MUST BE UNIFORM
     // This means that we cannot change the aspect ratio of the physics world
     // Shift to center if a bad fit
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
+    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
+    addChild(_rootnode);
+    addChild(_uinode);
     
     _input = InputController::alloc(getBounds());
     Haptics::start();
@@ -173,9 +122,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // Won't compile unless I make this variable with type NetWorld :/
     if (_isHost) {
         _map->acquireMapOwnership();
+        _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-    _babies = _map->loadBabyEntities();
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -190,12 +139,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
-    _ui.init(_assets, _input, _uinode, _offset, CAMERA_ZOOM);
+    _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
     setComplete(false);
     setFailure(false);
     
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
-    _cam.setZoom(CAMERA_ZOOM);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.setZoom(zoom);
+    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
@@ -234,10 +184,7 @@ void GameScene::dispose() {
         _input = nullptr;
         Haptics::stop();
         _rootnode = nullptr;
-        _winnode = nullptr;
         _uinode = nullptr;
-        _winnode = nullptr;
-        _losenode = nullptr;
         _collision.dispose();
         _action.dispose();
         _ui.dispose();
@@ -268,12 +215,14 @@ void GameScene::unload() {
  */
 void GameScene::reset() {
     // Load a new level
+    _seed++;
     _map->clearRootNode();
-    _map->setRootNode(_rootnode);
     _map->dispose();
-    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
-    _map->populateWithCarrots(_network->getNumPlayers() - 1);
+    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->setRootNode(_rootnode);
+    _map->populate();
 
+    _ui.dispose();
     _collision.dispose();
     _action.dispose();
 
@@ -288,9 +237,9 @@ void GameScene::reset() {
 
     if (_isHost) {
         _map->acquireMapOwnership();
+        _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-    _babies = _map->loadBabyEntities();
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -306,8 +255,13 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
     
+    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
+    _cam.setZoom(zoom);
+    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
+
+    _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
     setDebug(false);
@@ -418,6 +372,39 @@ void GameScene::fixedUpdate(float step) {
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
+
+    
+    //check if entities are in wheat
+    //TODO: make entities vector in map for convenience?
+    //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
+    
+    //create queries
+    for (auto baby : _map->getBabyCarrots()) {
+        baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
+    }
+    for (auto farmer : _map->getFarmers()) {
+        farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
+        //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
+    }
+    for (auto carrot : _map->getCarrots()) {
+        carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
+    }
+
+    //resolve queries
+    _map->getWheatScene()->doQueries();
+    
+    //fetch results
+    for (auto farmer : _map->getFarmers()) {
+        farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
+    }
+    for (auto carrot : _map->getCarrots()) {
+        carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
+    }
+    for (auto baby : _map->getBabyCarrots()) {
+        baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
+//        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
+    }
+    _map->getWheatScene()->clearQueries();
 }
 
 /**

@@ -69,6 +69,7 @@ uniform float transparency_radius;
 
 uniform float MAX_BLADE_LENGTH;
 const float PI = 3.14f;
+uniform float STEP_SIZE;
 
 /** Objects */
 uniform vec2 player_pos;
@@ -105,7 +106,7 @@ vec4 sampleColor(float dist, float bladeLen) {
  */
 float sampleBladeLength(vec2 uv) {
     vec3 samp = texture(grass_tex, uv).rgb;
-    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
+    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
 }
 
 /**
@@ -140,7 +141,7 @@ void main(void) {
     // Convert fragCoord to UV
     vec2 uv = outTexCoord;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*50.0, 0.1f * WIND_TIME);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*30.0, 0.1f * WIND_TIME);
 
     vec2 fragUV = uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     
@@ -155,7 +156,7 @@ void main(void) {
 
     // Sample the wind
     float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, WIND_TIME);
-    for (float dist = 0.0f; dist <= MAX_BLADE_LENGTH; ++dist) {
+    for (float dist = 0.0f; dist <= MAX_BLADE_LENGTH; dist += STEP_SIZE) {
 
         // Get the height of the blade originating at the current pixel
         // (0 means no blade)
@@ -184,7 +185,7 @@ void main(void) {
         }
 
         // Move on to the next pixel, down the blades
-        fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);
+        fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y) * STEP_SIZE;
 
     }
 

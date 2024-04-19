@@ -1,5 +1,5 @@
 { "compressionlevel":-1,
- "height":18,
+ "height":9,
  "infinite":false,
  "layers":[
         {
@@ -9,8 +9,8 @@
          "objects":[
                 {
                  "gid":5,
-                 "height":576,
-                 "id":61,
+                 "height":288,
+                 "id":112,
                  "name":"",
                  "properties":[
                         {
@@ -26,9 +26,9 @@
                  "rotation":0,
                  "type":"Map",
                  "visible":true,
-                 "width":1024,
+                 "width":512,
                  "x":0,
-                 "y":576
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -42,64 +42,16 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":6,
-                 "height":96,
-                 "id":108,
-                 "name":"",
-                 "rotation":0,
-                 "type":"PlantingSpot",
-                 "visible":true,
-                 "width":96,
-                 "x":96,
-                 "y":160
-                }, 
-                {
-                 "gid":6,
-                 "height":160,
-                 "id":109,
-                 "name":"",
-                 "rotation":0,
-                 "type":"PlantingSpot",
-                 "visible":true,
-                 "width":160,
-                 "x":448,
-                 "y":288
-                }, 
-                {
-                 "gid":6,
-                 "height":96,
-                 "id":110,
-                 "name":"",
-                 "rotation":0,
-                 "type":"PlantingSpot",
-                 "visible":true,
-                 "width":96,
-                 "x":896,
-                 "y":352
-                }, 
-                {
-                 "gid":6,
-                 "height":64,
-                 "id":111,
+                 "gid":7,
+                 "height":128,
+                 "id":124,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
                  "width":128,
-                 "x":768,
-                 "y":128
-                }, 
-                {
-                 "gid":6,
-                 "height":96,
-                 "id":112,
-                 "name":"",
-                 "rotation":0,
-                 "type":"PlantingSpot",
-                 "visible":true,
-                 "width":64,
-                 "x":192,
-                 "y":576
+                 "x":288,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -113,129 +65,117 @@
          "name":"entities",
          "objects":[
                 {
+                 "gid":2,
+                 "height":32,
+                 "id":125,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Carrot",
+                 "visible":true,
+                 "width":32,
+                 "x":448,
+                 "y":64
+                }, 
+                {
+                 "gid":2,
+                 "height":32,
+                 "id":126,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Carrot",
+                 "visible":true,
+                 "width":32,
+                 "x":448,
+                 "y":256
+                }, 
+                {
                  "gid":1,
                  "height":32,
-                 "id":67,
+                 "id":127,
                  "name":"",
                  "rotation":0,
                  "type":"Farmer",
                  "visible":true,
                  "width":32,
-                 "x":192,
-                 "y":192
+                 "x":224,
+                 "y":64
                 }, 
                 {
                  "gid":3,
                  "height":32,
-                 "id":94,
+                 "id":128,
                  "name":"",
                  "rotation":0,
                  "type":"Baby",
                  "visible":true,
                  "width":32,
-                 "x":256,
-                 "y":448
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":95,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":128,
-                 "y":352
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":96,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":608,
-                 "y":352
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":97,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":608,
-                 "y":480
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":98,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":896,
-                 "y":480
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":99,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":864,
-                 "y":288
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":100,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":800,
-                 "y":160
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":101,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":544,
-                 "y":96
-                }, 
-                {
-                 "gid":3,
-                 "height":32,
-                 "id":102,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Baby",
-                 "visible":true,
-                 "width":32,
-                 "x":480,
+                 "x":64,
                  "y":224
                 }, 
                 {
                  "gid":3,
                  "height":32,
-                 "id":103,
+                 "id":129,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":224
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":130,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":96
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":131,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":448,
+                 "y":160
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":132,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":320,
+                 "y":128
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":133,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":160,
+                 "y":160
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":134,
                  "name":"",
                  "rotation":0,
                  "type":"Baby",
@@ -243,54 +183,6 @@
                  "width":32,
                  "x":320,
                  "y":256
-                }, 
-                {
-                 "gid":2,
-                 "height":32,
-                 "id":104,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Carrot",
-                 "visible":true,
-                 "width":32,
-                 "x":384,
-                 "y":416
-                }, 
-                {
-                 "gid":2,
-                 "height":32,
-                 "id":105,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Carrot",
-                 "visible":true,
-                 "width":32,
-                 "x":608,
-                 "y":256
-                }, 
-                {
-                 "gid":2,
-                 "height":32,
-                 "id":106,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Carrot",
-                 "visible":true,
-                 "width":32,
-                 "x":768,
-                 "y":352
-                }, 
-                {
-                 "gid":2,
-                 "height":32,
-                 "id":107,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Carrot",
-                 "visible":true,
-                 "width":32,
-                 "x":320,
-                 "y":128
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -299,7 +191,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":114,
+ "nextobjectid":135,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -321,11 +213,11 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":6,
+         "firstgid":7,
          "source":"environment.tsx"
         }],
  "tilewidth":32,
  "type":"map",
  "version":"1.10",
- "width":32
+ "width":16
 }

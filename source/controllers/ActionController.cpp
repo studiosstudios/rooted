@@ -125,7 +125,6 @@ void ActionController::preUpdate(float dt) {
         if(_input->didShakeDevice() && rand() % 20 < 1 && carrotEntity->isCaptured()){
             _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
 //            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
-            std::cout<<"carrot free \n";
         }
     }
 }
@@ -363,6 +362,12 @@ void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event)
 
 void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event){
     _map->getFarmers().at(0)->carrotEscaped();
+    if(_network->isHost()){
+        Haptics::get()->playContinuous(1.0, 0.8, 0.3);
+    }
+    else if(_map->getCharacter()->getUUID() == event->getUUID()){
+        Haptics::get()->playContinuous(1.0, 0.5, 0.2);
+    }
     for(auto carrot : _map->getCarrots()){
         if(event->getUUID() == carrot->getUUID()){
             carrot->escaped();

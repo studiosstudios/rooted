@@ -88,7 +88,7 @@ void ActionController::preUpdate(float dt) {
             _ai.updateBabyCarrot(babyCarrot);
         }
         
-        if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted()){
+        if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
             //        std::cout<<"farmer did the rooting\n";
             Haptics::get()->playContinuous(1.0, 0.3, 0.2);
             std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_BUNNY_EFFECT);
@@ -121,7 +121,7 @@ void ActionController::preUpdate(float dt) {
     
     if(!_network->isHost()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
-        if(_input->didShakeDevice() && rand()%20 < 1 && carrotEntity->isCaptured()){
+        if(_input->didShakeDevice() && rand() % 20 < 1 && carrotEntity->isCaptured()){
             //TODO: implement phone shaking logic
         }
     }

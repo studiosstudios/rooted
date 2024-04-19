@@ -37,7 +37,7 @@ void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby
             babyCarrot->setTarget(newTarget);
         }
     } else {
-        if (((float) std::rand()/ RAND_MAX) < 0.2) {
+        if (((float) std::rand()/ RAND_MAX) < 0.3 && babyCarrot->isInWheat()) {
             babyCarrot->setState(State::HOLD);
             Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));
             babyCarrot->setTarget(newTarget);

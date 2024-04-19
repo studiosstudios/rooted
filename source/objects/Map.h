@@ -89,7 +89,7 @@ private:
     /** 2D vector representing tiling of randomly generated map */
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
     
-    std::map<std::shared_ptr<cugl::physics2::WheelObstacle>, std::shared_ptr<scene2::PolygonNode>> _rocks;
+    std::vector<std::shared_ptr<EntityModel>> _rocks;
 
     
 public:

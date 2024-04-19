@@ -762,36 +762,29 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
 
     float radius = (0.5f*rockTexture->getSize()/_scale).x;
     
-    auto rock = cugl::physics2::WheelObstacle::alloc(player->getPosition(), radius);
+    auto rock = EntityModel::alloc(player->getPosition());
     rock->setDebugColor(DEBUG_COLOR);
+    rock->setName("rock");
     rock->setSensor(true);
     rock->setBullet(true);
     rock->setLinearVelocity(player->getFacing() * WALK_SPEED);
     
-    auto rockNode = scene2::PolygonNode::allocWithTexture(rockTexture);
-    rockNode->setColor(Color4::ORANGE);
+    auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
+    rock->setSceneNode(rockNode);
+
     rockNode->setPriority(float(DrawOrder::ENTITIES));
 
     rockNode->setScale(_scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
     rockNode->setHeight(32*_scale.y/DEFAULT_DRAWSCALE);
+    rockNode->setName("rock");
     _entitiesNode->addChild(rockNode);
     rock->setDebugScene(_debugnode);
     
-    _rocks.insert({rock, rockNode});
+    _rocks.push_back(rock);
     
-    // manually alloc wheat height node
-    cugl::PolyFactory pf = PolyFactory(0.01);
-    auto wheatHeightTarget = 0.0;
-    auto wheatSizeTarget = 0.75;
-    auto currWheatHeight = wheatHeightTarget;
-    auto currWheatSize = wheatSizeTarget;
-    auto wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), wheatSizeTarget * Size(1.6, 0.9)));
-    wheatHeightNode->setColor(Color4(2, 0, 0, 255));
-    wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
-    wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
-    wheatHeightNode->setPosition(player->getX(), player->getY() - player->getHeight());
-    _wheatscene->getRoot()->addChild(wheatHeightNode);
+    auto wheatnode = rock->allocWheatHeightNode();
+    _wheatscene->getRoot()->addChild(wheatnode);
     
     _world->initObstacle(rock);
 }

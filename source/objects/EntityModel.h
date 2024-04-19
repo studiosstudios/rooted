@@ -625,6 +625,8 @@ public:
     }
     
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
+    
+    virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode(std::shared_ptr<cugl::Texture> &rustle);
 
     virtual void updateWheatHeightNode();
 

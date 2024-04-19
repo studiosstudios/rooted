@@ -765,7 +765,7 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     rock->setName("rock");
     rock->setSensor(true);
     rock->setBullet(true);
-    rock->setLinearVelocity(player->getFacing() * WALK_SPEED);
+    rock->setLinearVelocity(player->getFacing() * RUN_SPEED);
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
     rock->setSceneNode(rockNode);

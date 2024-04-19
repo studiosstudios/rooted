@@ -177,7 +177,6 @@ void InputController::update(float dt) {
     
     _unrootPressed = _keyUnroot;
     
-    _keyThrowRock = _keyThrowRock && !_throwRockPressed;
     _throwRockPressed = _keyThrowRock;
 
     // _movement is now updated directly in processJoystick
@@ -345,6 +344,10 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
             }
             break;
         case Zone::RIGHT:
+            if (_rtouch.touchids.empty() && _mtouch.touchids.empty()) {
+                _keyThrowRock = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
+            }
+            
             // Only process if no touch in zone
             if (_rtouch.touchids.empty()) {
                 _rtouch.position = event.position;
@@ -358,9 +361,11 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _swipePoints->clear();
                 _currentSwipeColor = Color4::WHITE;
                 addSwipePoint(screenPos);
-            }
-            if (_jtouch.touchids.empty() && _rtouch.touchids.empty() && _mtouch.touchids.empty() && !_keyThrowRock) {
-                _keyThrowRock = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
+            } else {
+                Vec2 offset = event.position-_rtouch.position;
+                if (offset.lengthSquared() < NEAR_TOUCH*NEAR_TOUCH) {
+                    _rtouch.touchids.insert(event.touch);
+                }
             }
             break;
         case Zone::MAIN:

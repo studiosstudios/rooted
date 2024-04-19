@@ -499,6 +499,7 @@ void PathNode::draw(const std::shared_ptr<SpriteBatch>& batch, const Affine2& tr
     }
     batch->setBlendEquation(_blendEquation);
     batch->setHeight(_height);
+    batch->setOrigin(_origin);
     batch->setSrcBlendFunc(_srcFactor, _srcAlphaFactor);
     batch->setDstBlendFunc(_dstFactor, _dstAlphaFactor);
 

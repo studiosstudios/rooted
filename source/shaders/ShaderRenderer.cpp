@@ -230,7 +230,7 @@ void ShaderRenderer::buildShaders() {
     _wheatShader->setUniform1f("wind_speed", WIND_SPEED);
     _wheatShader->setUniform2f("wind_direction", WIND_DIRECTION[0], WIND_DIRECTION[1]);
     _wheatShader->setUniform1f("player_transparency", 0.6);
-    _wheatShader->setUniform1f("transparency_radius",20.0);
+    _wheatShader->setUniform1f("transparency_radius",0.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
     _wheatShader->setUniform1f("MAX_BLADE_LENGTH", MAX_WHEAT_HEIGHT * _fullHeight);
     _wheatShader->setUniform1f("STEP_SIZE", STEP_SIZE);

@@ -130,6 +130,9 @@ protected:
     /** The height of this texture. This is used exclusively by the wheat cover shader. */
     float _height;
     
+    /** The y origin of this texture. This is used exclusively by the wheat cover shader. */
+    float _origin = 0.0;
+    
 
 #pragma mark -
 #pragma mark Constructors

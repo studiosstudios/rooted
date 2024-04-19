@@ -822,6 +822,24 @@ public:
     float getOrigin() const;
 
     /**
+    * Sets if current texture is the player.
+    * This is used exclusively by the wheat cover shader and does not do anything
+    * for the default sprite batch shader
+    *
+    * @param bool If active texture is player
+    */
+    void setIsPlayer(bool player);
+
+    /**
+     * Gets if current texture is the player
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @return If active texture is player
+     */
+    bool getIsPlayer() const;
+
+    /**
      * Sets the blur radius in pixels (0 if there is no blurring).
      *
      * This sprite batch supports a simple Gaussian blur. The blur

@@ -46,7 +46,7 @@ uniform float wind_speed;
 uniform vec2 wind_direction;
 uniform float tex_height;
 uniform float tex_y_origin;
-uniform bool player;
+uniform float player;
 
 // The output color
 out vec4 frag_color;
@@ -139,7 +139,7 @@ void main()
         }
 
         if (height + dist <= wheat_height) {
-            frag_color = vec4(0.0, 0.0, 0.0, frag_color.a * 0.0);
+            frag_color = vec4(0.0, 0.0, 0.0, player * frag_color.a * 0.2);
             break;
         }
 

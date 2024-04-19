@@ -205,7 +205,6 @@ void SpriteNode::setFrame(int frame) {
     float dy = y-_bounds.origin.y;
     _bounds.origin.set(x,y);
     _origin = float(y)/_texture->getSize().height;
-    CULog("height: %f \t origin: %f", _height, _origin);
     shiftTexture(dx, dy);
 }
 

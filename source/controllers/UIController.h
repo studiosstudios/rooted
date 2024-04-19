@@ -13,12 +13,6 @@
 
 #endif /* UIController_h */
 
-/* Copied values from GameScene/InputController. Is there a better global location we can put these constants? */
-#define SCENE_WIDTH 1024
-#define SCENE_HEIGHT 576
-#define JOY_ZONE_WIDTH       0.35f
-#define JOY_ZONE_HEIGHT      0.5f
-
 class UIController {
 private:
     /** The asset manager for this game mode. */
@@ -76,6 +70,8 @@ private:
     
     /** The camera's zoom */
     float _cameraZoom;
+    /** The draw scale */
+    float _drawScale;
     
 public:
 #pragma mark Constructor/Destructor/Dispose
@@ -92,13 +88,13 @@ public:
     void setLoseVisible(bool visible);
     
     void initJoystickNodes();
-    
+
     void initGameUINodes();
     
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               const std::shared_ptr<InputController>& input,
               const std::shared_ptr<cugl::scene2::SceneNode> uinode,
-              cugl::Vec2 offset, float cameraZoom);
+              cugl::Vec2 offset, float cameraZoom, float drawScale);
     
     void updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick);
     

@@ -20,6 +20,7 @@
 //
 
 #include "WheatScene.h"
+#include "../RootedConstants.h"
 
 const std::string fsqShaderFrag =
 #include "FSQShader.frag"
@@ -29,29 +30,44 @@ const std::string fsqShaderVert =
 #include "FSQShader.vert"
 ;
 
-bool WheatScene::init(const shared_ptr<AssetManager> &assets, string name, float bladeColorScale) {
+bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair<string, float>>> mapInfo,
+                      Vec2 drawScale, Size worldSize) {
 
-    _wheattex = assets->get<Texture>(name);
-    _bladeColorScale = bladeColorScale;
     _fsqshader = Shader::alloc(SHADER(fsqShaderVert), SHADER(fsqShaderFrag));
-    if (!Scene2Texture::init(0,0,_wheattex->getWidth(), _wheattex->getHeight(), false)) {
+    if (!Scene2Texture::init(0, 0, DEFAULT_WHEAT_TEX_WIDTH * worldSize.width / DEFAULT_WIDTH,
+                             DEFAULT_WHEAT_TEX_HEIGHT * worldSize.height / DEFAULT_HEIGHT, false)) {
         return false;
     }
 
+    _worldSize = Size(worldSize);
+
     _rootnode = scene2::SceneNode::alloc();
-    _rootnode->setScale(32*_wheattex->getWidth()/1024.0, 32*_wheattex->getHeight()/576.0);
+    _rootnode->setScale(DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_WIDTH / SCENE_WIDTH, 
+                        DEFAULT_DRAWSCALE * DEFAULT_WHEAT_TEX_HEIGHT / SCENE_HEIGHT);
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(Vec2::ZERO);
     addChild(_rootnode);
 
-    auto wheatnode = scene2::PolygonNode::allocWithTexture(_wheattex);
-    wheatnode->setScale(1024.0/_wheattex->getWidth()/32, 576.0/_wheattex->getHeight()/32);
-    wheatnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    wheatnode->setColor(Color4(255/_bladeColorScale,255/_bladeColorScale,255/_bladeColorScale,255)); //not sure if this will work for all scales
-    wheatnode->setPosition(0,0);
-    _rootnode->addChild(wheatnode);
+    //add wheat texture nodes based on data in mapInfo
+    for (int i = 0; i < mapInfo.size(); i++) {
+        for (int j = 0; j < mapInfo[i].size(); j++) {
+            auto wheattex = assets->get<Texture>(mapInfo[i][j].first);
+            float bladeColorScale = mapInfo[i][j].second;
+            auto wheatnode = scene2::PolygonNode::allocWithTexture(wheattex);
+            wheatnode->setScale(SCENE_WIDTH / wheattex->getWidth() / drawScale.x * MAP_UNIT_WIDTH / worldSize.width,
+                                SCENE_HEIGHT / wheattex->getHeight() / drawScale.y * MAP_UNIT_HEIGHT / worldSize.height);
+            wheatnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            wheatnode->setColor(
+                    Color4(255 / bladeColorScale, 255 / bladeColorScale, 255 / bladeColorScale,
+                           255)); //not sure if this will work for all scales
+            wheatnode->setPosition(MAP_UNIT_WIDTH * i, MAP_UNIT_HEIGHT * j);
+            _rootnode->addChild(wheatnode);
+        }
+    }
 
     _target->setClearColor(Color4::CLEAR);
+
+    _queryId = 0;
 
     return true;
 }
@@ -79,10 +95,54 @@ void WheatScene::renderToScreen(float alpha, float scale) {
 }
 
 void WheatScene::dispose() {
-    _wheattex = nullptr;
     _rootnode = nullptr;
     _fsqshader = nullptr;
     Scene2::dispose();
+}
+
+int WheatScene::addWheatQuery(Vec2 position) {
+    _queries.emplace(_queryId, WheatQuery(position, _queryId));
+    _queryId++;
+    return _queryId-1;
+}
+
+bool WheatScene::getWheatQueryResult(unsigned int id) {
+    auto res = _queries.find(id);
+    if (res == _queries.end()) {
+        CUWarn("could not find query %u", id);
+    }
+    if (!(res->second).resolved) {
+        CUWarn("query %u has not been resolved", id);
+    }
+    return (res->second).result;
+}
+
+void WheatScene::doQueries() {
+    //bind render target framebuffer
+    int viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    glBindFramebuffer(GL_FRAMEBUFFER, _target->getFramebuffer());
+    glViewport(0, 0, _target->getWidth(), _target->getHeight());
+
+    //read pixel data for each query
+    GLubyte pixel[4];
+    Vec2 texPos;
+    for (auto &kv : _queries) {
+        texPos = kv.second.pos/_worldSize * Vec2(_target->getWidth(), _target->getHeight());
+        glReadPixels(int(texPos.x), int(texPos.y), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
+        kv.second.resolved = true;
+        kv.second.result = pixel[0] > 0;
+    }
+
+    //restore default buffer
+    Display::get()->restoreRenderTarget();
+    glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+
+    _queryId = 0;
+}
+
+void WheatScene::clearQueries() {
+    _queries.clear();
 }
 
 

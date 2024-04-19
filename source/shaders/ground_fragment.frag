@@ -28,7 +28,7 @@ uniform sampler2D grass_tex;
 uniform sampler2D noise_tex;
 
 uniform vec2 wind_direction;
-
+uniform float radius;
 uniform vec2 SCREEN_PIXEL_SIZE;
 
 /** Objects */
@@ -61,7 +61,7 @@ void main(void) {
     frag_color = vec4(0.0);
 
     for (int i = 0; i < num_entities; i++ ){
-        if (distance(fragUV, positions[i]) < 0.012) {
+        if (distance(fragUV, positions[i]) < radius) {
             frag_color = vec4(0.0, 0.0, 0.0, 0.2);
             break;
         }

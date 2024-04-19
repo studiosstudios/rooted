@@ -42,7 +42,7 @@ out vec4 frag_color;
 
 void main() 
 {
-	frag_color = texture(uTexture, vec2(outUV.x, 1-outUV.y));
+	frag_color = texture(uTexture, vec2(outUV.x, 1.0-outUV.y));
 	frag_color.a = frag_color.a * alpha;
 	frag_color.rgb *= scale;
 }

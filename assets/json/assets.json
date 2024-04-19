@@ -123,6 +123,9 @@
             "file":     "textures/grass_base.png"
         },
         "testMap": {
+            "file":     "textures/maps/testmap.png"
+        },
+        "grid": {
             "file":     "textures/maps/grid.png"
         },
         "shader_clouds": {
@@ -189,9 +192,17 @@
     },
     "jsons": {
         "server": "json/server.json",
-        "map": "json/map.json",
+        "mapNames": "json/mapNames.json",
         "testMap": "level-editor/testMap.json",
-        "testMap2": "level-editor/testMap2.json"
+        "testMap2": "level-editor/testMap2.json",
+        "largerMap": "level-editor/largerMaptest.json",
+        "evenLargerMap": "level-editor/evenLargerMap.json",
+        "gridUnit1": "level-editor/gridUnit.json",
+        "gridUnit2": "level-editor/gridUnit2.json",
+        "gridUnit3": "level-editor/gridUnit3.json",
+        "gridUnit4": "level-editor/gridUnit4.json",
+        "gridUnit5": "level-editor/gridUnit5.json",
+        "gridUnit6": "level-editor/gridUnit6.json"
     },
     "sounds": {
         "menu": {

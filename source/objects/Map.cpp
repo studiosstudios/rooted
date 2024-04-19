@@ -759,10 +759,8 @@ void Map::resetPlayers() {
 
 void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     auto rockTexture = _assets->get<Texture>("rock");
-
-    float radius = (0.5f*rockTexture->getSize()/_scale).x;
     
-    auto rock = EntityModel::alloc(player->getPosition());
+    auto rock = EntityModel::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName("rock");
     rock->setSensor(true);
@@ -771,12 +769,12 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
     rock->setSceneNode(rockNode);
-
+    rock->setDrawScale(_scale.x);
     rockNode->setPriority(float(DrawOrder::ENTITIES));
 
-    rockNode->setScale(_scale/DEFAULT_DRAWSCALE);
+    rockNode->setScale(0.5f * _scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
-    rockNode->setHeight(32*_scale.y/DEFAULT_DRAWSCALE);
+    rockNode->setHeight(0.5f * _scale.y/DEFAULT_DRAWSCALE);
     rockNode->setName("rock");
     _entitiesNode->addChild(rockNode);
     rock->setDebugScene(_debugnode);

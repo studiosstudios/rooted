@@ -188,7 +188,7 @@ void RootedApp::preUpdate(float dt) {
         AudioEngine::get()->pause("game");
         std::shared_ptr<Sound> source = _assets->get<Sound>(MENU_MUSIC);
         if(AudioEngine::get()->getState("menu") != AudioEngine::State::PLAYING){
-            AudioEngine::get()->play("menu", source);
+            AudioEngine::get()->play("menu", source, true);
         }
     }
     else if (_status == HOST){

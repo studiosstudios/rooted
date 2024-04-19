@@ -16,6 +16,7 @@
 #include "../events/UnrootEvent.h"
 #include "../events/MoveEvent.h"
 #include "../events/CaptureBarrotEvent.h"
+#include "../events/FreeEvent.h"
 
 class ActionController {
 private:
@@ -100,6 +101,9 @@ public:
     
     /** Updates EntityStates of other characters */
     void processMoveEvent(const std::shared_ptr<MoveEvent>& event);
+    
+    /** Updates character states after a carrot frees itself */
+    void processFreeEvent(const std::shared_ptr<FreeEvent>& event);
 };
 
 

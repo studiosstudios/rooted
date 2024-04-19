@@ -82,7 +82,7 @@ public:
 #pragma mark Getters and Setters
     bool isRooted() { return _isRooted; };
     
-    bool isCaptured() {return _isCaptured; };
+    bool isCaptured() { return _isCaptured; };
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
     

@@ -51,6 +51,11 @@ void Carrot::gotUnrooted(){
     _isRooted = false;
 }
 
+void Carrot::escaped(){
+    _isCaptured = false;
+    getSceneNode()->setVisible(true);
+}
+
 void Carrot::updateCurAnimDurationForState() {
     switch (_state) {
             // TODO: This needs to be split up into the correct animDurations for each type of movement states

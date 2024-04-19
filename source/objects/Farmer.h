@@ -43,8 +43,8 @@ public:
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
     void grabCarrot();
-
     void rootCarrot();
+    void carrotEscaped();
 
     bool canPlant() { return _canPlant; };
     

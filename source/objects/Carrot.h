@@ -98,6 +98,7 @@ public:
     
     void gotUnrooted();
     
+    void escaped();
     
 #pragma mark -
 #pragma mark Animation

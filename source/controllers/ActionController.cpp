@@ -71,11 +71,6 @@ void ActionController::preUpdate(float dt) {
     playerEntity->stepAnimation(dt);
     updateRustlingNoise();
     
-    if (_input->didThrowRock()) {
-        
-        playerEntity->throwRock();
-    }
-    
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
     std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
@@ -84,6 +79,11 @@ void ActionController::preUpdate(float dt) {
             plantingSpot = ps;
             break;
         }
+    }
+    
+    // for now, leave this as a carrot only option
+    if (_input->didThrowRock()) {
+        _map->spawnRock(playerEntity);
     }
     
     if (_network->isHost()) { // Farmer (host) specific actions

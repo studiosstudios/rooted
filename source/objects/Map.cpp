@@ -756,3 +756,37 @@ void Map::resetPlayers() {
     }
     _farmers.at(0)->resetFarmer();
 }
+
+void Map::spawnRock(std::shared_ptr<EntityModel> player) {
+    auto rock = cugl::physics2::WheelObstacle::alloc(player->getPosition(), 0.5);
+    rock->setDebugColor(DEBUG_COLOR);
+    rock->setSensor(true);
+    
+    auto rockTexture = _assets->get<Texture>("rock");
+    auto rockNode = scene2::PolygonNode::allocWithTexture(rockTexture);
+    rockNode->setColor(Color4::ORANGE);
+    rockNode->setPriority(float(DrawOrder::ENTITIES));
+
+    rockNode->setScale(_scale/DEFAULT_DRAWSCALE);
+    // Create the polygon node (empty, as the model will initialize)
+    rockNode->setHeight(32*_scale.y/DEFAULT_DRAWSCALE);
+    _entitiesNode->addChild(rockNode);
+    rock->setDebugScene(_debugnode);
+    
+    _rocks.insert({rock, rockNode});
+    
+    // manually alloc wheat height node
+    cugl::PolyFactory pf = PolyFactory(0.01);
+    auto wheatHeightTarget = 0.0;
+    auto wheatSizeTarget = 0.75;
+    auto currWheatHeight = wheatHeightTarget;
+    auto currWheatSize = wheatSizeTarget;
+    auto wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), wheatSizeTarget * Size(1.6, 0.9)));
+    wheatHeightNode->setColor(Color4(2, 0, 0, 255));
+    wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
+    wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
+    wheatHeightNode->setPosition(player->getX(), player->getY() - player->getHeight());
+    _wheatscene->getRoot()->addChild(wheatHeightNode);
+    
+    _world->initObstacle(rock);
+}

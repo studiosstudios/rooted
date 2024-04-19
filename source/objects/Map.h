@@ -88,6 +88,8 @@ private:
     
     /** 2D vector representing tiling of randomly generated map */
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
+    
+    std::map<std::shared_ptr<cugl::physics2::WheelObstacle>, std::shared_ptr<scene2::PolygonNode>> _rocks;
 
     
 public:
@@ -273,6 +275,8 @@ public:
     void resetPlantingSpots();
     
     void resetPlayers();
+    
+    void spawnRock(std::shared_ptr<EntityModel> player);
 
 #pragma mark -
 #pragma mark Drawing
@@ -319,7 +323,7 @@ private:
     void spawnCarrots();
     
     void spawnBabyCarrots();
-
+    
 };
 
 #endif //ROOTED_MAP_H

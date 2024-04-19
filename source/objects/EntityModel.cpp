@@ -377,6 +377,8 @@ bool EntityModel::isDashing() {
 
 void EntityModel::throwRock() {
     CULog("throwing rock");
+    
+    // spawn a physics object
 }
 
 /**

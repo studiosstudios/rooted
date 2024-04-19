@@ -280,6 +280,10 @@
             "file":     "fonts/gyparody-hv.ttf",
             "size":     48
         },
+        "gaeguBold16": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 16
+        },
         "gaeguBold40": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 40

@@ -169,7 +169,7 @@ void main(void) {
     // Convert fragCoord to UV
     vec2 uv = outTexCoord;
     
-    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*50.0f, 0.1f * WIND_TIME) * (1.0f+texture(grass_tex, uv + vec2(0,0.03f)).g*400.0f);
+    float noise = sampleNoise(uv, SCREEN_PIXEL_SIZE*50.0f, 0.1f * WIND_TIME) * (1.0f+texture(grass_tex, uv + vec2(0,0.03f)).g*700.0f);
 
     vec2 fragUV = uv - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     

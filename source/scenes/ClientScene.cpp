@@ -131,6 +131,8 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _backoutloading->addListener([this](const std::string& name, bool down) {
         if (!down) {
             switchScene();
+            // clear text
+            _gameid->setText("");
             _network->disconnect();
         }
     });
@@ -231,9 +233,14 @@ void ClientScene::update(float timestep) {
     // Do this last for button safety
     configureStartButton();
     if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
+        _loadingtext->setText("WAITING");
         _player->setText(std::to_string(_network->getNumPlayers()));
     }
+    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
+        _loadingtext->setText("ERROR :(");
+    }
     else {
+        _loadingtext->setText("LOADING...");
         _player->setText("...");
     }
 }

@@ -118,6 +118,13 @@ void ActionController::preUpdate(float dt) {
             }
         }
     }
+    
+    if(!_network->isHost()){
+        auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
+        if(_input->didShakeDevice() && rand()%20 < 1 && carrotEntity->isCaptured()){
+            //TODO: implement phone shaking logic
+        }
+    }
 }
 
 /**

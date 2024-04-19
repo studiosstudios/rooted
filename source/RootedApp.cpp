@@ -30,6 +30,7 @@ void RootedApp::onStartup() {
     // Start-up basic input
 #ifdef CU_TOUCH_SCREEN
     Input::activate<Touchscreen>();
+    Input::activate<Accelerometer>();
 #else
     Input::activate<Mouse>();
 #endif

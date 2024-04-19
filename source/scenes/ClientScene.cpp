@@ -73,14 +73,14 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _network = network;
     
     // Acquire the scene built by the asset loader and resize it the scene
-    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("client");
-    scene->setContentSize(dimen);
-    scene->doLayout(); // Repositions the HUD
+    _clientscene = _assets->get<scene2::SceneNode>("client");
+    _clientscene->setContentSize(dimen);
+    _clientscene->doLayout(); // Repositions the HUD
     
+    // FOR JOINING THE GAME
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_join"));
-    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_back"));
+    _backoutclient = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_back"));
     _gameid = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("client_lobbybuttons_idfield_textfield"));
-    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_lobbybuttons_playercount_players"));
     
     std::string numbers[10]= { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
     for (std::string number : numbers) {
@@ -88,8 +88,6 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     }
     
     _backspace = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_idfield_backspace"));
-    // no clear
-//    _clear = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_buttons_clear"));
     
     for (int ii = 0; ii < _numbers.size(); ii++) {
         auto n = _numbers.at(ii);
@@ -105,16 +103,9 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
             _gameid->setText(_gameid->getText().substr(0, _gameid->getText().length() - 1));
         }
     });
-
-//    _clear->addListener([this](const std::string& name, bool down) {
-//        if (down) {
-//            _gameid->setText("");
-//        }
-//    });
     
-    _backout->addListener([this](const std::string& name, bool down) {
+    _backoutclient->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            _network->disconnect();
             _backClicked = true;
         }
     });
@@ -122,17 +113,33 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _startgame->addListener([=](const std::string& name, bool down) {
         if (!down) {
             if (!_gameid->getText().empty()) {
+                switchScene();
                 _network->connectAsClient(dec2hex(_gameid->getText()));
             }
         }
     });
 
+    // FOR THE LOADING/WAITING SCREEN
+    _loadingscene = _assets->get<scene2::SceneNode>("loadingscreen");
+    _loadingscene->setContentSize(dimen);
+    _loadingscene->doLayout();
+    
+    _backoutloading = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("loadingscreen_back"));
+    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("loadingscreen_playercount_players"));
+    _loadingtext = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("loadingscreen_loadingtxt"));
+    
+    _backoutloading->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            switchScene();
+            _network->disconnect();
+        }
+    });
     
     // Create the server configuration
     auto json = _assets->get<JsonValue>("server");
     _config.set(json);
     
-    addChild(scene);
+    addChild(_clientscene);
     setActive(false);
     return true;
 }
@@ -161,13 +168,14 @@ void ClientScene::setActive(bool value) {
         Scene2::setActive(value);
         
         if (value) {
+            removeAllChildren();
+            addChild(_clientscene);
             // only want to activate if you are not a touchscreen
             #ifndef CU_TOUCH_SCREEN
             _gameid->activate();
             _gameid->setText("");
             #endif
-            _backout->activate();
-//            _player->setText("1");
+            _backoutclient->activate();
             configureStartButton();
             _backClicked = false;
             // Don't reset the room id
@@ -177,24 +185,23 @@ void ClientScene::setActive(bool value) {
                 n->activate();
             }
             _backspace->activate();
-//            _clear->activate();
         } else {
             _gameid->deactivate();
             _startgame->deactivate();
-            _backout->deactivate();
+            _backoutclient->deactivate();
+            _backoutloading->deactivate();
             //_network = nullptr;
             // If any were pressed, reset them
             _startgame->setDown(false);
-            _backout->setDown(false);
-            
+            _backoutclient->setDown(false);
+            _backoutloading->setDown(false);
+
             for (auto n : _numbers) {
                 n->deactivate();
                 n->setDown(false);
             }
             _backspace->deactivate();
             _backspace->setDown(false);
-//            _clear->deactivate();
-//            _clear->setDown(false);
         }
     }
 }
@@ -252,5 +259,28 @@ void ClientScene::configureStartButton() {
         _startgame->setDown(false);
         _startgame->deactivate();
         updateText(_startgame, "wait");
+    }
+}
+
+void ClientScene::switchScene() {
+    if (isActive()) {
+        if (getChildByName("client")) {
+            removeAllChildren();
+            addChild(_loadingscene);
+            _backoutloading->activate();
+            _backoutclient->deactivate();
+            _backoutclient->setDown(false);
+            _startgame->setDown(false);
+            _startgame->deactivate();
+        }
+        else if (getChildByName("loadingscreen")) {
+            removeAllChildren();
+            addChild(_clientscene);
+            _backoutclient->activate();
+            _startgame->activate();
+            // for some reason deactivating this breaks the game
+//            _backoutloading->deactivate();
+//            _backoutloading->setDown(false);
+        }
     }
 }

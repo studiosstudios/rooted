@@ -53,7 +53,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     
     _lobbyscene = _assets->get<scene2::SceneNode>("prelobby");
     _lobbyscene->setContentSize(dimen);
-    _menuscene->doLayout();
+    _lobbyscene->doLayout();
     
     _choice = Choice::NONE;
     _currmenuchoice = Choice::MAIN;

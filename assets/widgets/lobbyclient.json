@@ -116,19 +116,6 @@
                             "x_offset": 0,
                             "y_offset": -0.02
                         }
-                    },
-                    "playercount": {
-                        "type": "Widget",
-                        "data": {
-                            "key" : "playercountwidget"
-                        },
-                        "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
-                            "absolute": false,
-                            "x_offset": 1.13,
-                            "y_offset": -0.08
-                        }
                     }
                 },
                 "layout": {

@@ -91,7 +91,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
     _map->setRootNode(_rootnode);
     _map->populate();
-    
+
     // Create the scene graph
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -107,24 +107,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    
-    _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _winnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _winnode->setPosition(dimen / 1.8f/ zoom);
-    _winnode->setScale(1/zoom);
-    _winnode->setForeground(WIN_COLOR);
-    setComplete(false);
-
-    _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _losenode->setAnchor(Vec2::ANCHOR_CENTER);
-    _losenode->setPosition(dimen.width / 1.8f / zoom, dimen.height / 1.8f / zoom);
-    _losenode->setScale(1/zoom);
-    _losenode->setForeground(LOSE_COLOR);
-    setFailure(false);
-    
-    _uinode->addChild(_winnode);
-    _uinode->addChild(_losenode);
-
     addChild(_rootnode);
     addChild(_uinode);
     
@@ -157,7 +139,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
-    _ui.init(_uinode, _offset, zoom, _scale);
+    _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
+    setComplete(false);
+    setFailure(false);
     
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
     _cam.setZoom(zoom);
@@ -200,10 +184,7 @@ void GameScene::dispose() {
         _input = nullptr;
         Haptics::stop();
         _rootnode = nullptr;
-        _winnode = nullptr;
         _uinode = nullptr;
-        _winnode = nullptr;
-        _losenode = nullptr;
         _collision.dispose();
         _action.dispose();
         _ui.dispose();
@@ -241,6 +222,7 @@ void GameScene::reset() {
     _map->setRootNode(_rootnode);
     _map->populate();
 
+    _ui.dispose();
     _collision.dispose();
     _action.dispose();
 
@@ -278,14 +260,8 @@ void GameScene::reset() {
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     _cam.setZoom(zoom);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
-    
-    _losenode->setPosition(dimen.width / 1.8f / zoom, dimen.height / 1.8f / zoom);
-    _losenode->setScale(1/zoom);
-    
-    _winnode->setPosition(dimen / 1.8f/ zoom);
-    _winnode->setScale(1/zoom);
-    
-    _ui.init(_uinode, _offset, zoom, _scale);
+
+    _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
     setDebug(false);
@@ -332,11 +308,6 @@ void GameScene::preUpdate(float dt) {
     if (_input->didExit()) {
         CULog("Shutting down");
         Application::get()->quit();
-    }
-
-    // Process the movement
-    if (_input->withJoystick()) {
-        // do something here
     }
 
     _action.preUpdate(dt);
@@ -389,13 +360,15 @@ void GameScene::fixedUpdate(float step) {
         if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
             processResetEvent(resetEvent);
         }
+        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
+            _action.processMoveEvent(moveEvent);
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
     }
     
     _map->getWorld()->update(step);
-    _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
@@ -415,7 +388,7 @@ void GameScene::fixedUpdate(float step) {
     for (auto carrot : _map->getCarrots()) {
         carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
     }
-    
+
     //resolve queries
     _map->getWheatScene()->doQueries();
     
@@ -456,6 +429,17 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
+    
+    // TEMP CODE FOR OPEN BETA - CJ
+    int i = _network->getNumPlayers() - 1;
+    for (auto it = _map->getPlantingSpots().begin(); it != _map->getPlantingSpots().end(); it++) {
+        if ((*it)->getCarrotPlanted()) {
+            i--;
+        }
+    }
+    // TEMP CODE FOR OPEN BETA
+    
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
     
     if (_countdown > 0) {
         _countdown--;
@@ -521,6 +505,15 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::Obstacle
     };
 }
 
+void GameScene::pauseNonEssentialAudio(){
+    AudioEngine::get()->clear("root-carrot");
+    AudioEngine::get()->clear("root-bunny");
+    AudioEngine::get()->clear(_map->getFarmers().at(0)->getUUID());
+    for(auto carrot:_map->getCarrots()){
+        AudioEngine::get()->clear(carrot->getUUID());
+    }
+}
+
 /**
 * Sets whether the level is completed.
 *
@@ -532,12 +525,13 @@ void GameScene::setComplete(bool value) {
     bool change = _complete != value;
     _complete = value;
     if (value && change) {
+        pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
-        _winnode->setVisible(true);
+        _ui.setWinVisible(true);
         _countdown = EXIT_COUNT;
     } else if (!value) {
-        _winnode->setVisible(false);
+        _ui.setWinVisible(false);
         _countdown = -1;
     }
 }
@@ -552,12 +546,13 @@ void GameScene::setComplete(bool value) {
 void GameScene::setFailure(bool value) {
     _failed = value;
     if (value) {
+        pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(LOSE_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
-        _losenode->setVisible(true);
+        _ui.setLoseVisible(true);
         _countdown = EXIT_COUNT;
     } else {
-        _losenode->setVisible(false);
+        _ui.setLoseVisible(false);
         _countdown = -1;
     }
 }

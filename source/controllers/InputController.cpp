@@ -17,8 +17,6 @@
 
 using namespace cugl;
 
-#pragma mark -
-#pragma mark Input Controller
 /**
  * Creates a new input controller.
  *
@@ -44,7 +42,8 @@ _movement(Vec2(0,0)),
 _joystick(false),
 _hasJumped(false),
 _keyDash(false),
-_keyDashPressed(false) {
+_keyDashPressed(false),
+_currentSwipeColor(Color4::WHITE) {
 }
 
 /**
@@ -63,6 +62,7 @@ void InputController::dispose() {
         touch->removeEndListener(LISTENER_KEY);
 #endif
         _active = false;
+        _swipePoints = nullptr;
     }
 }
 
@@ -81,6 +81,8 @@ bool InputController::init(const Rect bounds) {
     bool success = true;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
+    
+    _swipePoints = std::make_shared<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>>();
     
     createZones();
     clearTouchInstance(_jtouch);
@@ -268,25 +270,15 @@ void InputController::processJoystick(const cugl::Vec2 pos) {
     Vec2 diff =  pos - _jtouch.position;
     _joyCenter = touch2Screen(pos);
 
-    // Max out the diff
     if (diff.lengthSquared() > JSTICK_RADIUS*JSTICK_RADIUS) {
         diff.normalize();
-        diff *= JSTICK_RADIUS;
     }
+    else {
+        diff.divide(JSTICK_RADIUS);
+    }
+    diff.y *= -1;
     
-    if (std::fabsf(diff.x) > JSTICK_DEADZONE) {
-        _movement.x = ((std::fabsf(diff.x) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE));
-        _movement.x *= _movement.x * signum(diff.x);
-    } else {
-        _movement.x = 0;
-    }
-    
-    if (std::fabsf(diff.y) > JSTICK_DEADZONE) {
-        _movement.y = ((std::fabsf(diff.y) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE));
-        _movement.y *= _movement.y * -signum(diff.y); // Negative here because of inverted y;
-    } else {
-        _movement.y = 0;
-    }
+    _movement.set(diff);
 }
 
 /**
@@ -325,6 +317,7 @@ int InputController::processSwipe(const Vec2 start, const Vec2 stop, Timestamp c
 void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     //CULog("Touch began %lld", event.touch);
     Vec2 pos = event.position;
+    Vec2 screenPos = touch2Screen(pos);
     Zone zone = getZone(pos);
     switch (zone) {
         case Zone::JOY:
@@ -335,7 +328,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _jtouch.timestamp.mark();
                 _jtouch.touchids.insert(event.touch);
 
-                _joyCenter = touch2Screen(pos);
+                _joyCenter = screenPos;
                 _joyAnchor = _joyCenter;
                 _joystick = true;
             }
@@ -350,6 +343,10 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 //                _keySwitch = false;
                 _keyRoot = false;
                 _keyShowPlayer = false;
+                _swipeFirstPoint = screenPos;
+                _swipePoints->clear();
+                _currentSwipeColor = Color4::WHITE;
+                addSwipePoint(screenPos);
             }
             break;
         case Zone::MAIN:
@@ -385,19 +382,23 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     // Reset all keys that might have been set
     Vec2 pos = event.position;
+//    Vec2 screenPos = touch2Screen(pos);
     Zone zone = getZone(pos);
     if (_jtouch.touchids.find(event.touch) != _jtouch.touchids.end()) {
         _jtouch.touchids.clear();
         _movement.setZero();
         _joystick = false;
-    } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+    }
+    else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         _keyDash = false;
 //        _keySwitch = false;
         _keyRoot = false;
         _keyUnroot = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
-    } else if (zone == Zone::MAIN) {
+        _swipeFirstPoint.reset();
+    }
+    else if (zone == Zone::MAIN) {
         if (_mtouch.touchids.find(event.touch) != _mtouch.touchids.end()) {
             _mtouch.touchids.erase(event.touch);
         }
@@ -415,26 +416,35 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
  */
 void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previous, bool focus) {
     Vec2 pos = event.position;
+    Vec2 screenPos = touch2Screen(pos);
     // Only check for swipes in the main zone if there is more than one finger.
     if (_jtouch.touchids.find(event.touch) != _jtouch.touchids.end()) {
         processJoystick(pos);
-    } else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+    }
+    else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
+        addSwipePoint(screenPos);
         if (!_keyDash) {
-            if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
+            // TODO: These conditionals now use the trailing 25th swipe point for swipe detection. Will make it cleaner later -CJ
+            if (_swipePoints->begin() != _swipePoints->end() && (screenPos.y - _swipePoints->back().first.y) > SWIPE_LENGTH) {
+//            if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
 //                std::cout << "Swiped!\n";
                 _keyDash = true;
+                _currentSwipeColor = Color4::ORANGE;
             }
-            else if ((pos.y-_rtouch.position.y) > SWITCH_SWIPE_LENGTH) {
+            else if (_swipePoints->begin() != _swipePoints->end() && (_swipePoints->back().first.y - screenPos.y) > SWIPE_LENGTH) {
+//            else if ((pos.y-_rtouch.position.y) > SWIPE_LENGTH) {
 //                _keySwitch = true;
                 _keyRoot = true;
                 _keyUnroot = true;
                 _rtouch.position = pos;
+                _currentSwipeColor = Color4::BLUE;
             }
-            else if ((pos.x-_rtouch.position.x) > SWITCH_SWIPE_LENGTH) {
+            else if ((pos.x-_rtouch.position.x) > SWIPE_LENGTH) {
                 _keyShowPlayer = true;
             }
         }
-    } else if (_mtouch.touchids.size() > 1) {
+    }
+    else if (_mtouch.touchids.size() > 1) {
         // We only process multifinger swipes in main
         int swipe = processSwipe(_mtouch.position, event.position, event.timestamp);
         if (swipe == 1) {

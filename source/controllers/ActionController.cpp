@@ -12,9 +12,16 @@ using namespace cugl;
 #define DASH_TIME       2
 /** The sound effect for a bunny rooting a carrot */
 #define ROOTING_BUNNY_EFFECT      "bunny-root"
+/** The sound effect for a carrot being rooted*/
 #define ROOTING_CARROT_EFFECT     "carrot-root"
+/** The sound effect for a carrot being unrooted*/
 #define UNROOTING_EFFECT          "unroot"
+/** The sound effect for a character dashing */
 #define DASH_EFFECT               "dash"
+/** The key the rustle sounds */
+#define RUSTLE_MUSIC              "rustle"
+/** Limits volume to be in between 0-1 */
+#define VOLUME_FACTOR    1
 
 /**
  * Initializes an ActionController
@@ -32,6 +39,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _network->attachEventType<CaptureEvent>();
     _network->attachEventType<RootEvent>();
     _network->attachEventType<UnrootEvent>();
+    _network->attachEventType<MoveEvent>();
     return true;
 }
 
@@ -53,10 +61,14 @@ void ActionController::preUpdate(float dt) {
     }
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
-    
+    EntityModel::EntityState oldState = playerEntity->getEntityState();
     playerEntity->updateState();
+    if(playerEntity->getEntityState() != oldState){
+        _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
+    }
     playerEntity->applyForce();
     playerEntity->stepAnimation(dt);
+    updateRustlingNoise();
     
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
@@ -143,6 +155,108 @@ void ActionController::postUpdate(float dt) {
     }
 }
 
+/**
+ * Local method to calculate the volume of wheat rustling based on character movement and distance from one's own character
+ */
+float calculateVolume(EntityModel::EntityState state, float distance){
+    float stateToNum;
+    switch(state){
+        case EntityModel::EntityState::STANDING:
+        case EntityModel::EntityState::PLANTING:
+        case EntityModel::EntityState::CAUGHT:
+        case EntityModel::EntityState::ROOTED:
+            stateToNum = 0;
+            break;
+        case EntityModel::EntityState::SNEAKING:
+            stateToNum = 1;
+            break;
+        case EntityModel::EntityState::WALKING:
+        case EntityModel::EntityState::CARRYING:
+            stateToNum = 2;
+            break;
+        case EntityModel::EntityState::RUNNING:
+            stateToNum = 3;
+            break;
+        case EntityModel::EntityState::DASHING:
+            stateToNum = 4;
+            break;
+    }
+    return distance == 0 ? stateToNum/4.0 : (stateToNum/(distance*distance))/VOLUME_FACTOR; //needs to be approx a function between 0 and 1
+}
+
+void ActionController::playRustling(std::shared_ptr<EntityModel> player, float distance, bool isBarrot){
+    //TODO: check if player is in wheat, if not, setVolume to 0.
+    std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
+    float newVolume;
+    if(distance > 20){
+        newVolume = 0;
+    }
+    else {
+        newVolume = isBarrot? calculateVolume(EntityModel::EntityState::WALKING, distance) : calculateVolume(player->getEntityState(), distance);
+    }
+    if(isBarrot){
+        if(AudioEngine::get()->getState("barrot") != AudioEngine::State::PLAYING && newVolume != 0){
+            AudioEngine::get()->play("barrot", source, true, newVolume, false);
+        }
+        else{
+            if(newVolume == 0){
+                AudioEngine::get()->clear("barrot");
+            }
+            else if (AudioEngine::get()->getState("barrot") == AudioEngine::State::PLAYING){
+                AudioEngine::get()->setVolume("barrot", newVolume > 1 ? 1 : newVolume);
+            }
+        }
+    }
+    else{
+        if(AudioEngine::get()->getState(player->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){
+            AudioEngine::get()->play(player->getUUID(), source, true, newVolume, false);
+        }
+        else{
+            if(newVolume == 0){
+                AudioEngine::get()->clear(player->getUUID());
+            }
+            else if (AudioEngine::get()->getState(player->getUUID()) == AudioEngine::State::PLAYING){
+                AudioEngine::get()->setVolume(player->getUUID(), newVolume > 1 ? 1 : newVolume);
+            }
+        }
+    }
+}
+
+void ActionController::updateRustlingNoise(){
+    auto playerEntity = _map->getCharacter();
+    for(auto carrot : _map->getCarrots()){
+        if(carrot->getUUID() == playerEntity->getUUID()){
+            playRustling(playerEntity, 0, false);
+        }
+        else{
+            float distanceFromCharacter = playerEntity->getPosition().distance(carrot->getPosition());
+            playRustling(carrot, distanceFromCharacter, false);
+        }
+    }
+    auto farmerEntity = _map->getFarmers().at(0);
+    if(farmerEntity->getUUID() == playerEntity->getUUID()){
+        playRustling(playerEntity, 0, false);
+    }
+    else{
+        float distanceFromCharacter = playerEntity->getPosition().distance(farmerEntity->getPosition());
+        playRustling(farmerEntity, distanceFromCharacter, false);
+//        std::cout << "bunny state: " << farmerEntity->getEntityState() << "\n";
+    }
+    float closestBarrot = 21;
+    int numBarrotsClose = 0;
+    for(auto barrot : _map->getBabyCarrots()){
+        float tempBarrotDist = barrot->getPosition().distance(playerEntity->getPosition());
+        closestBarrot = closestBarrot > tempBarrotDist ? tempBarrotDist : closestBarrot;
+        if(tempBarrotDist < 12){
+            numBarrotsClose++;
+        }
+    }
+    if(numBarrotsClose > 1){
+        numBarrotsClose *= 0.75;
+    }
+    playRustling(nullptr, closestBarrot/(numBarrotsClose), true);
+}
+
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
     _map->getFarmers().at(0)->grabCarrot();
     for(auto carrot : _map->getCarrots()){
@@ -214,6 +328,24 @@ void ActionController::processBarrotEvent(const std::shared_ptr<CaptureBarrotEve
                 if(barrot->getID() == event->getBarrotID()){
                     barrot->gotCaptured();
                 }
+            }
+        }
+    }
+}
+
+void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event){
+    //don't let network events update own state
+    if(event->getUUID() == _map->getCharacter()->getUUID()){
+        return;
+    }
+    else if(event->getUUID() == _map->getFarmers().at(0)->getUUID()){
+        _map->getFarmers().at(0)->setEntityState(event->getState());
+    }
+    else{
+        for(auto carrot : _map->getCarrots()){
+            if(event->getUUID() == carrot->getUUID()){
+                carrot->setEntityState(event->getState());
+                return;
             }
         }
     }

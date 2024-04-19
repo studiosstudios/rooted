@@ -490,21 +490,28 @@ void Map::spawnFarmers() {
         auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_SOUTH_WALK_SPRITE);
         auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
         auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
+        auto farmerNorthEastWalkSprite  = _assets->get<Texture>(FARMER_NORTHEAST_WALK_SPRITE);
+        auto farmerSouthEastWalkSprite  = _assets->get<Texture>(FARMER_SOUTHEAST_WALK_SPRITE);
 
         auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
-        farmerSouthWalkNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
+        farmerSouthWalkNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
         farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerSouthWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
         
         auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
-        farmerNorthWalkNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
+        farmerNorthWalkNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
         farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerNorthWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
         
         auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
-        farmerEastWalkNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
+        farmerEastWalkNode->setScale(0.11f * _scale/DEFAULT_DRAWSCALE);
         farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerEastWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
+        
+        auto farmerNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthEastWalkSprite, 3, 4);
+        farmerNorthEastWalkNode->setScale(0.12f * _scale/DEFAULT_DRAWSCALE);
+        farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        
+        auto farmerSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthEastWalkSprite, 3, 4, 9);
+        farmerSouthEastWalkNode->setScale(0.14f * _scale/DEFAULT_DRAWSCALE);
+        farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         
         auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
         carrotfarmerNode->setVisible(false);
@@ -514,12 +521,14 @@ void Map::spawnFarmers() {
         _entitiesNode->addChild(farmerSouthWalkNode);
         _entitiesNode->addChild(farmerNorthWalkNode);
         _entitiesNode->addChild(farmerEastWalkNode);
+        _entitiesNode->addChild(farmerNorthEastWalkNode);
+        _entitiesNode->addChild(farmerSouthEastWalkNode);
         _entitiesNode->addChild(carrotfarmerNode);
         
         farmer->setSpriteNodes(farmerNorthWalkNode,
+                               farmerNorthEastWalkNode,
                                farmerEastWalkNode,
-                               farmerEastWalkNode,
-                               farmerEastWalkNode,
+                               farmerSouthEastWalkNode,
                                farmerSouthWalkNode);
         
         farmer->setNormalNode(farmerSouthWalkNode);
@@ -550,8 +559,8 @@ void Map::spawnBabyCarrots() {
         
         _assets->get<Texture>(BABY_TEXTURE)->setName("baby");
         auto babyNode = scene2::SpriteNode::allocWithSheet(
-                                                           _assets->get<Texture>(BABY_TEXTURE), 1, 1);
-        //        babyNode->setColor(Color4::BLUE);
+                _assets->get<Texture>(BABY_TEXTURE), 1, 1);
+    //        babyNode->setColor(Color4::BLUE);
         baby->setSceneNode(babyNode);
         babyNode->setName("baby");
         //    babyNode->setColor(Color4::BLACK);
@@ -643,37 +652,51 @@ void Map::spawnCarrots() {
         auto carrotSouthWalkSprite = _assets->get<Texture>(CARROT_SOUTH_WALK_SPRITE);
         auto carrotNorthWalkSprite = _assets->get<Texture>(CARROT_NORTH_WALK_SPRITE);
         auto carrotEastWalkSprite = _assets->get<Texture>(CARROT_EAST_WALK_SPRITE);
+        auto carrotNorthEastWalkSprite = _assets->get<Texture>(CARROT_NORTHEAST_WALK_SPRITE);
+        auto carrotSouthEastWalkSprite = _assets->get<Texture>(CARROT_SOUTHEAST_WALK_SPRITE);
         
         auto carrotSouthWalkNode = scene2::SpriteNode::allocWithSheet(
                                                                       carrotSouthWalkSprite, 3, 5);
         carrotSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotSouthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
-        carrotSouthWalkNode->setHeight(32 * _scale.y/DEFAULT_DRAWSCALE);
+        carrotSouthWalkNode->setAnchor(Vec2(0.5, 0.25));
         
         auto carrotNorthWalkNode = scene2::SpriteNode::allocWithSheet(
                                                                       carrotNorthWalkSprite, 3, 5);
         carrotNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotNorthWalkNode->setScale(0.1f *  _scale/DEFAULT_DRAWSCALE);
-        carrotNorthWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
+        carrotNorthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotNorthWalkNode->setAnchor(Vec2(0.5, 0.25));
         
         auto carrotEastWalkNode = scene2::SpriteNode::allocWithSheet(
                                                                      carrotEastWalkSprite, 3, 5);
         carrotEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotEastWalkNode->setScale(0.1f *  _scale/DEFAULT_DRAWSCALE);
-        carrotEastWalkNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
+        carrotEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotEastWalkNode->setAnchor(Vec2(0.5, 0.25));
+        
+        auto carrotNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotNorthEastWalkSprite, 3, 5);
+        carrotNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        carrotNorthEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotNorthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
+        
+        auto carrotSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotSouthEastWalkSprite, 3, 5);
+        carrotSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        carrotSouthEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotSouthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
         
         _entitiesNode->addChild(carrotNorthWalkNode);
         _entitiesNode->addChild(carrotEastWalkNode);
         _entitiesNode->addChild(carrotSouthWalkNode);
+        _entitiesNode->addChild(carrotNorthEastWalkNode);
+        _entitiesNode->addChild(carrotSouthEastWalkNode);
         
         carrot->setSceneNode(carrotSouthWalkNode);
         carrot->setDrawScale(
                              _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)
         carrot->setSpriteNodes(carrotNorthWalkNode,
+                               carrotNorthEastWalkNode,
                                carrotEastWalkNode,
-                               carrotEastWalkNode,
-                               carrotEastWalkNode,
+                               carrotSouthEastWalkNode,
                                carrotSouthWalkNode);
         
         carrot->setDebugScene(_debugnode);

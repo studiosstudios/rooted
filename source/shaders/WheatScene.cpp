@@ -125,11 +125,11 @@ void WheatScene::doQueries() {
     glViewport(0, 0, _target->getWidth(), _target->getHeight());
 
     //read pixel data for each query
-    GLfloat pixel[4];
+    GLubyte pixel[4];
     Vec2 texPos;
     for (auto &kv : _queries) {
         texPos = kv.second.pos/_worldSize * Vec2(_target->getWidth(), _target->getHeight());
-        glReadPixels(int(texPos.x), int(texPos.y), 1, 1, GL_RGBA, GL_FLOAT, &pixel);
+        glReadPixels(int(texPos.x), int(texPos.y), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
         kv.second.resolved = true;
         kv.second.result = pixel[0] > 0;
     }

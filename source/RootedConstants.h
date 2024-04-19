@@ -103,11 +103,9 @@
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    0
 /** How far we must swipe up for a jump gesture */
-#define SWIPE_LENGTH    50
+#define SWIPE_LENGTH    200
 /** How fast a double click must be in milliseconds */
 #define DOUBLE_CLICK    400
-
-#define SWITCH_SWIPE_LENGTH 125
 
 // The screen is divided into three zones: Joy(stick), Main, and Right.
 //

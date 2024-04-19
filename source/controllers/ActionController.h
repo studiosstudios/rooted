@@ -14,6 +14,7 @@
 #include "../events/CaptureEvent.h"
 #include "../events/RootEvent.h"
 #include "../events/UnrootEvent.h"
+#include "../events/MoveEvent.h"
 #include "../events/CaptureBarrotEvent.h"
 
 class ActionController {
@@ -30,6 +31,16 @@ private:
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
     std::shared_ptr<cugl::AssetManager> _assets;
+    
+    /**
+     * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character
+     */
+    void playRustling(std::shared_ptr<EntityModel> player, float distance, bool isBarrot);
+    
+    /**
+     * Updates rustling sound effect based on the movement of the entities around one's own character
+     */
+    void updateRustlingNoise();
 
 
 public:
@@ -75,13 +86,20 @@ public:
     
     void networkQueuePositions();
     
+    /** Updates character states after capture event */
     void processCaptureEvent(const std::shared_ptr<CaptureEvent>& event);
     
+    /** Updates character states after root event */
     void processRootEvent(const std::shared_ptr<RootEvent>& event);
     
+    /** Updates character states after unrooting even */
     void processUnrootEvent(const std::shared_ptr<UnrootEvent>& event);
     
+    /** Updates character and barrot states after barrot is caputured */
     void processBarrotEvent(const std::shared_ptr<CaptureBarrotEvent>& event);
+    
+    /** Updates EntityStates of other characters */
+    void processMoveEvent(const std::shared_ptr<MoveEvent>& event);
 };
 
 

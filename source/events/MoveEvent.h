@@ -9,6 +9,8 @@
 #define RustleEvent_h
 
 #include <cugl/cugl.h>
+#include "../objects/EntityModel.h"
+
 using namespace cugl::physics2::net;
 using namespace cugl;
 using namespace cugl::net;
@@ -20,7 +22,7 @@ protected:
     NetcodeDeserializer _deserializer;
     
     std::string _uuid;
-    std::string _state;
+    EntityModel::EntityState _state;
     
 public:
     /**
@@ -32,7 +34,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocMoveEvent(std::string uuid, std::string state);
+    static std::shared_ptr<NetEvent> allocMoveEvent(std::string uuid, EntityModel::EntityState state);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -52,7 +54,7 @@ public:
     /** Gets the uuid of carrot associated with the event. */
     std::string getUUID() { return _uuid; }
     
-    std::string getState() { return _state; }
+    EntityModel::EntityState getState() { return _state; }
 };
 
 #endif /* RustleEvent_h */

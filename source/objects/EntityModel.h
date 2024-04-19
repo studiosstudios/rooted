@@ -58,10 +58,14 @@
 #define FARMER_SOUTH_WALK_SPRITE "farmer-south-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
+#define FARMER_NORTHEAST_WALK_SPRITE "farmer-northeast-walk"
+#define FARMER_SOUTHEAST_WALK_SPRITE "farmer-southeast-walk"
 
 #define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
 #define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
 #define CARROT_EAST_WALK_SPRITE "carrot-east-walk"
+#define CARROT_NORTHEAST_WALK_SPRITE "carrot-northeast-walk"
+#define CARROT_SOUTHEAST_WALK_SPRITE "carrot-southeast-walk"
 
 #define BABY_TEXTURE   "baby"
 
@@ -72,7 +76,11 @@
 /** The amount to slow the character down */
 #define DUDE_DAMPING    10.0f
 /** The maximum character speed */
-#define DUDE_MAXSPEED   5.0f
+#define DUDE_MAXSPEED   5.4f
+
+#define RUN_SPEED       3.6f
+#define WALK_SPEED      2.6f
+#define SNEAK_SPEED     1.8f
 
 
 #pragma mark -
@@ -85,6 +93,27 @@
 * on a platform.  The round shapes on the end caps lead to smoother movement.
 */
 class EntityModel : public cugl::physics2::BoxObstacle {
+public:
+    int dashTimer;
+    
+    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
+    
+    /** State that a rooted! player entity can be in. Some of these states are specific
+        to only a certain type of character (ex. only a bunny can be PLANTING), so
+        we need to enforce the corresponding invariants for which staztes an entity can
+        be in. */
+    enum EntityState {
+        STANDING,
+        SNEAKING,
+        WALKING,
+        RUNNING,
+        DASHING,
+        CARRYING,   // bunny only
+        PLANTING,   // bunny only
+        CAUGHT,     // carrot only
+        ROOTED      // carrot only
+    };
+    
 private:
 	/** This macro disables the copy constructor (not allowed on physics objects) */
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
@@ -147,24 +176,6 @@ protected:
 	*/
 	virtual void resetDebug() override;
     
-    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
-    
-    /** State that a rooted! player entity can be in. Some of these states are specific
-        to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which staztes an entity can
-        be in. */
-    enum EntityState {
-        STANDING,
-        SNEAKING,
-        WALKING,
-        RUNNING,
-        DASHING,
-        CARRYING,   // bunny only
-        PLANTING,   // bunny only
-        CAUGHT,     // carrot only
-        ROOTED      // carrot only
-    };
-    
     /** Current EntityState that this entity is in. */
     EntityState _state;
     
@@ -196,10 +207,7 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
-    
 
-public:
-    int dashTimer;
 
 public:
     
@@ -595,18 +603,27 @@ public:
     
     /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
     EntityState getMovementState() {
-        if (_movement.isZero()) {
+        if (_movement.lengthSquared() <= 0.15 * 0.15) {
+            // If joystick movement is too minor, we don't actually let it cause a movement
             return STANDING;
         }
-        else if (_movement.lengthSquared() <= 0.33 * 0.33) {
+        else if (_movement.lengthSquared() <= 0.8 * 0.8) {
             return SNEAKING;
         }
-        else if (_movement.lengthSquared() <= 0.66 * 0.66) {
+        else if (_movement.lengthSquared() <= 0.9 * 0.9) {
             return WALKING;
         }
         return RUNNING;
     }
-
+    
+    EntityState getEntityState(){
+        return _state;
+    }
+    
+    void setEntityState(EntityState state) {
+        _state = state;
+    }
+    
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
 
     virtual void updateWheatHeightNode();

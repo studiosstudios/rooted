@@ -110,6 +110,9 @@ protected:
     
     /** Function made for switching players */
     void switchPlayer();
+    
+    /** Pauses certain audio upon resetting */
+    void pauseNonEssentialAudio();
 
 public:
 #pragma mark -

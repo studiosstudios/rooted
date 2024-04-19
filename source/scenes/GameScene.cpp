@@ -384,6 +384,7 @@ void GameScene::fixedUpdate(float step) {
     }
     for (auto farmer : _map->getFarmers()) {
         farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
+        //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
     }
     for (auto carrot : _map->getCarrots()) {
         carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
@@ -401,6 +402,7 @@ void GameScene::fixedUpdate(float step) {
     }
     for (auto baby : _map->getBabyCarrots()) {
         baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
+//        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
     }
     _map->getWheatScene()->clearQueries();
 }

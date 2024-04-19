@@ -8,20 +8,20 @@
          "name":"wheat",
          "objects":[
                 {
-                 "gid":5,
+                 "gid":12,
                  "height":288,
-                 "id":112,
+                 "id":135,
                  "name":"",
                  "properties":[
                         {
                          "name":"blade_color_scale",
                          "type":"float",
-                         "value":1
+                         "value":10
                         }, 
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"shader_base"
+                         "value":"unit_6"
                         }],
                  "rotation":0,
                  "type":"Map",
@@ -42,16 +42,16 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":7,
-                 "height":128,
+                 "gid":14,
+                 "height":96,
                  "id":124,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
-                 "width":128,
+                 "width":96,
                  "x":288,
-                 "y":192
+                 "y":177
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -191,7 +191,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":135,
+ "nextobjectid":136,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -201,7 +201,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.10.1",
  "tileheight":32,
  "tilesets":[
         {
@@ -213,7 +213,7 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":7,
+         "firstgid":14,
          "source":"environment.tsx"
         }],
  "tilewidth":32,

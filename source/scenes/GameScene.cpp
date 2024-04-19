@@ -489,6 +489,9 @@ void GameScene::postUpdate(float remain) {
 //            _network->disconnect();
 //        }
     }
+    
+    _map->getCharacter()->getSceneNode()->TexturedNode::setIsPlayer(true);
+    
 }
 
 /**

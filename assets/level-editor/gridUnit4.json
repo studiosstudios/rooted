@@ -8,20 +8,20 @@
          "name":"wheat",
          "objects":[
                 {
-                 "gid":5,
+                 "gid":7,
                  "height":288,
-                 "id":112,
+                 "id":128,
                  "name":"",
                  "properties":[
                         {
                          "name":"blade_color_scale",
                          "type":"float",
-                         "value":1
+                         "value":10
                         }, 
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"shader_base"
+                         "value":"unit_1"
                         }],
                  "rotation":0,
                  "type":"Map",
@@ -42,7 +42,7 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":7,
+                 "gid":14,
                  "height":64,
                  "id":113,
                  "name":"",
@@ -51,10 +51,10 @@
                  "visible":true,
                  "width":96,
                  "x":96,
-                 "y":96
+                 "y":112
                 }, 
                 {
-                 "gid":7,
+                 "gid":14,
                  "height":64,
                  "id":114,
                  "name":"",
@@ -63,10 +63,10 @@
                  "visible":true,
                  "width":64,
                  "x":352,
-                 "y":96
+                 "y":112
                 }, 
                 {
-                 "gid":7,
+                 "gid":14,
                  "height":64,
                  "id":115,
                  "name":"",
@@ -75,7 +75,7 @@
                  "visible":true,
                  "width":128,
                  "x":160,
-                 "y":224
+                 "y":240
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -179,7 +179,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":128,
+ "nextobjectid":129,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -189,7 +189,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.10.1",
  "tileheight":32,
  "tilesets":[
         {
@@ -201,7 +201,7 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":7,
+         "firstgid":14,
          "source":"environment.tsx"
         }],
  "tilewidth":32,

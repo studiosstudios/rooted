@@ -420,7 +420,7 @@ std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
     _wheatSizeTarget = 0.75;
     _currWheatHeight = _wheatHeightTarget;
     _currWheatSize = _wheatSizeTarget;
-    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(1.6, 0.9)));
+    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(0.8, 0.8)));
     _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
     _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
     _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -428,17 +428,37 @@ std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
     return _wheatHeightNode;
 }
 
+std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode(std::shared_ptr<cugl::Texture> &rustle) {
+    pf = PolyFactory(0.01);
+    _wheatHeightTarget = 0.0;
+    _wheatSizeTarget = 0.75;
+    _currWheatHeight = _wheatHeightTarget;
+    _currWheatSize = _wheatSizeTarget;
+    _wheatHeightNode = scene2::PolygonNode::allocWithTexture(rustle);
+//    _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
+    _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
+    _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    return _wheatHeightNode;
+}
+
+
 void EntityModel::updateWheatHeightNode() {
     _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    
+    Vec2 velocity = getLinearVelocity();
+    float angle = atan2(velocity.y, velocity.x);
+    
     if (_state == DASHING) {
         _wheatSizeTarget = 1.5;
         _wheatHeightTarget = -100;
     } else {
         _wheatSizeTarget = 0.75;
-        _wheatHeightTarget = round(getLinearVelocity().length());
+        _wheatHeightTarget = round(velocity.length());
     }
-    _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.2;
-    _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.2;
+    _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+    _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+    
     _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
     _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
                                       _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));

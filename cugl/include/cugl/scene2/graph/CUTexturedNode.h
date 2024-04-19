@@ -126,9 +126,12 @@ protected:
     bool _flipHorizontal;
     /** Whether or not to flip the texture vertically */
     bool _flipVertical;
-    
     /** The height of this texture. This is used exclusively by the wheat cover shader. */
     float _height;
+    /** The y origin of this texture. This is used exclusively by the wheat cover shader. */
+    float _origin = 0.0;
+    /** If this texture is the texture of the player character. */
+    bool _isPlayer = false;
     
 
 #pragma mark -
@@ -561,6 +564,10 @@ public:
      * @return true if the texture coordinates are flipped vertically.
      */
     float getHeight() const { return _height; }
+    
+    void setIsPlayer(bool player) { _isPlayer = player; }
+    
+    bool getIsPlayer() const { return _isPlayer; }
 
     /**
      * Returns a string representation of this node for debugging purposes.

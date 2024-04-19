@@ -108,8 +108,6 @@ _rendered(false),
 _blendEquation(GL_FUNC_ADD),
 _srcFactor(GL_SRC_ALPHA),
 _dstFactor(GL_ONE_MINUS_SRC_ALPHA),
-_srcAlphaFactor(GL_SRC_ALPHA),
-_dstAlphaFactor(GL_ONE_MINUS_SRC_ALPHA),
 _flipHorizontal(false),
 _flipVertical(false) {
     _classname = "TexturedNode";
@@ -132,8 +130,6 @@ void TexturedNode::dispose() {
     _blendEquation = GL_FUNC_ADD;
     _srcFactor = GL_SRC_ALPHA;
     _dstFactor = GL_ONE_MINUS_SRC_ALPHA;
-    _srcAlphaFactor = GL_SRC_ALPHA;
-    _dstAlphaFactor = GL_ONE_MINUS_SRC_ALPHA;
     _flipHorizontal = false;
     _flipVertical = false;
     _mesh.clear();
@@ -253,8 +249,6 @@ bool TexturedNode::initWithData(const Scene2Loader* loader, const std::shared_pt
     _blendEquation = blendEq(data->getString("blendeq","GL_FUNC_ADD"));
     _srcFactor = blendFunc(data->getString("blendsrc","GL_SRC_ALPHA"));
     _dstFactor = blendFunc(data->getString("blenddst","GL_ONE_MINUS_SRC_ALPHA"));
-    _srcAlphaFactor = blendFunc(data->getString("blendsrcalpha","GL_SRC_ALPHA"));
-    _dstAlphaFactor = blendFunc(data->getString("blenddstalpha","GL_ONE_MINUS_SRC_ALPHA"));
     
     std::string flip = data->getString("flip","none");
     _flipHorizontal = flip == "horizontal" || flip == "both";
@@ -288,8 +282,6 @@ std::shared_ptr<SceneNode> TexturedNode::copy(const std::shared_ptr<SceneNode>& 
         node->_blendEquation = _blendEquation;
         node->_srcFactor = _srcFactor;
         node->_dstFactor = _dstFactor;
-        node->_srcAlphaFactor = _srcAlphaFactor;
-        node->_dstAlphaFactor = _dstAlphaFactor;
 
         node->_flipHorizontal = _flipHorizontal;
         node->_flipVertical   = _flipVertical;

@@ -35,7 +35,6 @@ void ShaderNode::draw(const std::shared_ptr<SpriteBatch> &batch, const cugl::Aff
     batch->flush();
     batch->end();
 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     switch (_type) {
         case ShaderType::WHEAT:
             _renderer->renderWheat();

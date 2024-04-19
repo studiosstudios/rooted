@@ -90,8 +90,6 @@ protected:
     /** Initial camera position */
     Vec3 _initCamera;
     
-    int _seed;
-    
     
 
 
@@ -110,9 +108,6 @@ protected:
     
     /** Function made for switching players */
     void switchPlayer();
-    
-    /** Pauses certain audio upon resetting */
-    void pauseNonEssentialAudio();
 
 public:
 #pragma mark -

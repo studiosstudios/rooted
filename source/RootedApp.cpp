@@ -9,10 +9,6 @@ using namespace cugl;
 
 #pragma mark -
 #pragma mark Application State
-
-/** The key the basic main menu music */
-#define MENU_MUSIC      "menu"
-
 /**
  * The method called after OpenGL is initialized, but before running the application.
  *
@@ -30,7 +26,6 @@ void RootedApp::onStartup() {
     // Start-up basic input
 #ifdef CU_TOUCH_SCREEN
     Input::activate<Touchscreen>();
-    Input::activate<Accelerometer>();
 #else
     Input::activate<Mouse>();
 #endif
@@ -185,11 +180,6 @@ void RootedApp::preUpdate(float dt) {
         _status = MENU;
     } else if (_status == MENU) {
         updateMenuScene(dt);
-        AudioEngine::get()->pause("game");
-        std::shared_ptr<Sound> source = _assets->get<Sound>(MENU_MUSIC);
-        if(AudioEngine::get()->getState("menu") != AudioEngine::State::PLAYING){
-            AudioEngine::get()->play("menu", source, true);
-        }
     }
     else if (_status == HOST){
         updateHostScene(dt);
@@ -199,14 +189,6 @@ void RootedApp::preUpdate(float dt) {
     }
     else if (_status == GAME){
         _gameplay.preUpdate(dt);
-        AudioEngine::get()->pause("menu");
-//        std::shared_ptr<Sound> source = _assets->get<Sound>(GAME_MUSIC);
-//        if(AudioEngine::get()->getState("game") == AudioEngine::State::PAUSED){
-//            AudioEngine::get()->resume("game");
-//        }
-//        else if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
-//            AudioEngine::get()->play("game", source);
-//        }
     }
     if(_network){
         _network->updateNet();

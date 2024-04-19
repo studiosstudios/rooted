@@ -117,8 +117,10 @@ using namespace cugl;
 #define DIRTY_BLURSTEP          0x400
 /** The block offset has changed */
 #define DIRTY_UNIBLOCK          0x800
+/** Texture height for wheat cover shader */
+#define DIRTY_HEIGHT            0x1000
 /** All values have changed */
-#define DIRTY_ALL_VALS          0xFFF
+#define DIRTY_ALL_VALS          0x1FFF
 
 /**
  * Fills poly with a mesh defining the given rectangle.
@@ -190,6 +192,7 @@ public:
         texture  = nullptr;
         blockptr = -1;
         zDepth = 0;
+        height = 0;
         blur = 0;
         type = 0;
         dirty = 0;
@@ -216,6 +219,7 @@ public:
         texture  = copy->texture;
         blockptr = copy->blockptr;
         zDepth = copy->zDepth;
+        height = copy->height;
         blur  = copy->blur;
         dirty = 0;
     }
@@ -238,6 +242,7 @@ public:
         texture  = nullptr;
         blockptr = -1;
         zDepth = 0;
+        height = 0;
         blur = 0;
         type = 0;
     }
@@ -265,6 +270,7 @@ public:
         texture  = nullptr;
         blockptr = -1;
         zDepth = 0;
+        height = 0;
         blur = 0;
         type = 0;
         dirty = 0;
@@ -302,6 +308,8 @@ public:
     GLfloat blur;
     /** The stored block offset for gradient and scissor */
     GLsizei blockptr;
+    /** The texture height for the wheat cover shader */
+    float height;
     /** The dirty bits relative to the previous set of uniforms */
     GLuint dirty;
 };
@@ -932,6 +940,32 @@ float SpriteBatch::getDepth() const {
 }
 
 /**
+ * Sets the height of the active texure for this sprite batch.
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @param height The height of the active texture
+ */
+void SpriteBatch::setHeight(float height) {
+   if (_context->height != height) {
+       if (_inflight) { record(); }
+       _context->height = height;
+       _context->dirty  = _context->dirty | DIRTY_HEIGHT;
+   }
+}
+
+/**
+ * Returns the height of the active texure for this sprite batch.
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @return The height of the active texture
+ */
+float SpriteBatch::getHeight() const {
+   return _context->height;
+}
+
+/**
  * Sets the blur radius in pixels (0 if there is no blurring).
  *
  * This sprite batch supports a simple Gaussian blur. The blur
@@ -1180,6 +1214,9 @@ void SpriteBatch::flush() {
         }
         if (next->dirty & DIRTY_STENCIL_EFFECT) {
             cugl::stencil::applyEffect(next->stencil, _shader);
+        }
+        if (next->dirty & DIRTY_HEIGHT) {
+            _shader->setUniform1f("tex_height", next->height);
         }
         
         GLuint amt = next->last-next->first;

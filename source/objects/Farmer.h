@@ -17,7 +17,11 @@ private:
     bool _canPlant;
     bool _dashWindow;
     std::shared_ptr<cugl::scene2::SpriteNode> _normalNode;
-    std::shared_ptr<cugl::scene2::PolygonNode> _captureNode;
+    std::shared_ptr<cugl::scene2::SpriteNode> _captureNode;
+    
+    // Animation timers
+    float sneakAnimDuration = 5.0f;
+    float walkAnimDuration = 2.0f;
 
 public:
     int captureTime;
@@ -26,9 +30,11 @@ public:
 
     Farmer() {};
 
-    ~Farmer() {};
+    ~Farmer() override { dispose(); };
     
-    bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
+    void dispose();
+    
+    bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale) override;
     
     static std::shared_ptr<Farmer> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
         std::shared_ptr<Farmer> result = std::make_shared<Farmer>();
@@ -46,10 +52,13 @@ public:
     void setCanPlant(bool plant) { _canPlant = plant; };
     
     void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
-    void setCaptureNode(std::shared_ptr<cugl::scene2::PolygonNode> n) { _captureNode = n; }
+    void setCaptureNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _captureNode = n; }
     
     void setMovement(cugl::Vec2 movement) override;
     
+    void updateCurAnimDurationForState() override;
+
+    void resetFarmer();
 };
 
 

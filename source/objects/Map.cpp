@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "../objects/EntityModel.h"
 #include "../controllers/NetworkController.h"
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -18,6 +19,7 @@
 #pragma mark -
 #pragma mark Asset Constants
 # define PLANTING_SPOT_TEXTURE "planting spot"
+# define GRASS_TEXTURE "grass"
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
 
@@ -112,11 +114,10 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _root = node;
     _scale.set(_root->getContentSize().width / _bounds.size.width,
                _root->getContentSize().height / _bounds.size.height);
-
     
     // Create, but transfer ownership to root
     // needs to be an ordered node in order to reorder some elements
-    _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::PRE_ASCEND);
+    _worldnode = scene2::OrderedNode::allocWithOrder(scene2::OrderedNode::Order::ASCEND);
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(Vec2::ZERO);
 
@@ -133,7 +134,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
     
-    bool showGrid = false; //change this to show the grid in debug
+    bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
         for (int x = 0; x < _bounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
@@ -183,34 +184,55 @@ void Map::showDebug(bool flag) {
  *
  * @return true if successfully loaded the asset from a file
  */
-bool Map::init(const std::shared_ptr<AssetManager> &assets,
-               const std::shared_ptr<scene2::SceneNode> &root,
-               const std::shared_ptr<cugl::JsonValue> &json) {
+bool Map::init(const std::shared_ptr<AssetManager> &assets) {
     setAssets(assets);
-
+    auto json = _assets->get<JsonValue>("mapNames");
     if (json == nullptr) {
-        CUAssertLog(false, "Failed to load level file");
+        CUAssertLog(false, "Failed to load map names");
     }
-
-    _json = json;
-
-    // Initial geometry
-    _bounds.size.set(_json->getFloat("width"), _json->getFloat("height"));
-    
-    setRootNode(root);
+    _mapNames = json->get("names")->asStringArray();
 
     return true;
 }
 
-void Map::populate(Size size) {
+void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots){
     
-    /** Create the physics world */
-    _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
+    _rand32.seed(randSeed);
+    //random size (must be 16x9 for now)
+    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * (3 + floor(float(_rand32()) / _rand32.max() * 3.0)));
+    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
     
-    int height = _json->getFloat("height");
-    int tileSize = _json->getInt("tilewidth");
+    _mapInfo.resize(_bounds.size.height / MAP_UNIT_HEIGHT, std::vector<std::pair<std::string, float>>(_bounds.size.width / MAP_UNIT_WIDTH));
     
-    std::shared_ptr<JsonValue> layers = _json->get("layers");
+    //randomly select a map for each location and object info lists
+    for (int i = 0; i < _bounds.size.width / MAP_UNIT_WIDTH; i++ ) {
+        for (int j = 0; j < _bounds.size.height / MAP_UNIT_HEIGHT; j++) {
+            std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
+            std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
+            loadTiledJson(json, i, j);
+        }
+    }
+    
+    //randomly shuffle object positions
+    std::shuffle(_carrotSpawns.begin(), _carrotSpawns.end(), _rand32);
+    std::shuffle(_farmerSpawns.begin(), _farmerSpawns.end(), _rand32);
+    std::shuffle(_babyCarrotSpawns.begin(), _babyCarrotSpawns.end(), _rand32);
+    std::shuffle(_plantingSpawns.begin(), _plantingSpawns.end(), _rand32);
+    
+    //take just first num{object} elements of each vector
+    _carrotSpawns = std::vector(_carrotSpawns.begin(), _carrotSpawns.begin() + std::min(numCarrots, int(_carrotSpawns.size())));
+    _farmerSpawns = std::vector(_farmerSpawns.begin(), _farmerSpawns.begin() + std::min(numFarmers, int(_farmerSpawns.size())));
+    _babyCarrotSpawns = std::vector(_babyCarrotSpawns.begin(), _babyCarrotSpawns.begin() + std::min(numBabyCarrots, int(_babyCarrotSpawns.size())));
+    _plantingSpawns = std::vector(_plantingSpawns.begin(), _plantingSpawns.begin() + std::min(numPlantingSpots, int(_plantingSpawns.size())));
+}
+
+void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
+    
+    CUAssertLog(json != nullptr, "Failed to load tiled json");
+    
+    std::shared_ptr<JsonValue> layers = json->get("layers");
+    int height = json->getFloat("height");
+    int tileSize = json->getInt("tilewidth");
     for (auto layer : layers->children()) {
         std::string name = layer->getString("name");
         auto objects = layer->get("objects");
@@ -224,21 +246,23 @@ void Map::populate(Size size) {
             float height = std::any_cast<float>(_propertiesMap.at("height"));
             
             if (name == "wheat") {
-                loadShaderNodes(size);
+                std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
+                float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
+                _mapInfo[i][j] = std::pair(name, bladeColorScale);
                 break;
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
-                    loadPlantingSpot(x, y, width, height);
+                    _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else {
                     CUWarn("TILED JSON: Unrecognized environmental object: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
                 }
             } else if (name == "entities"){
                 if (type == "Farmer") {
-                    loadFarmer(x, y, width, height);
+                    _farmerSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else if (type == "Baby") {
-                    loadBabyCarrot(x, y, width, height);
+                    _babyCarrotSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else if (type == "Carrot") {
-                    loadCarrot(x, y, width, height);
+                    _carrotSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else {
                     CUWarn("TILED JSON: Unrecognized entity: %s. Are you sure you have placed the objected in the correct layer?", type.c_str());
                 }
@@ -247,9 +271,39 @@ void Map::populate(Size size) {
                 break;
             }
         }
-        
     }
+        
+}
 
+void Map::populate() {
+
+    /** Create the physics world */
+    _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
+    
+    _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _bounds.size);
+
+    _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, _bounds.size, FULL_WHEAT_HEIGHT);
+    _shaderrenderer->setScale(_scale.x);
+    _shaderrenderer->buildShaders();
+    _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
+    _wheatnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::WHEAT);
+    _cloudsnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::CLOUDS);
+    _groundnode->setPriority(float(Map::DrawOrder::SHADOWS));
+    _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
+    _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
+    
+    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _wheatscene->getTexture(), _assets, FULL_WHEAT_HEIGHT);
+    _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
+    
+    _worldnode->addChild(_shaderedEntitiesNode);
+    _worldnode->addChild(_wheatnode);
+    _worldnode->addChild(_groundnode);
+    _worldnode->addChild(_cloudsnode);
+    
+    spawnPlantingSpots();
+    spawnFarmers();
+    spawnCarrots();
+    spawnBabyCarrots();
     
     //place boundary walls
     loadBoundary(Vec2(-0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
@@ -257,13 +311,21 @@ void Map::populate(Size size) {
     loadBoundary(Vec2(_bounds.size.width/2, -0.5), Size(_bounds.size.width, 1));
     loadBoundary(Vec2(_bounds.size.width/2, _bounds.size.height+0.5), Size(_bounds.size.width, 1));
     
-}
-
-void Map::populateWithCarrots(int numCarrots) {
-    for (int ii = 0; ii < numCarrots; ii++) {
-        Vec2 position = Vec2(_carrotPosList.at(ii * 2), _carrotPosList.at(ii * 2 + 1));
-        spawnCarrot(position, 1, 1);
+    //add grass background node
+    float grassScale = 16.0 * DEFAULT_DRAWSCALE / _scale.x;
+    std::shared_ptr<Texture> grassTex = _assets->get<Texture>(GRASS_TEXTURE);
+    Size nodesize; //ensure node properly fills scene
+    if (float(grassTex->getWidth())/grassTex->getHeight() > float(_root->getContentWidth())/_root->getContentHeight()) {
+        nodesize = grassScale * Size(float(_root->getContentHeight()) * grassTex->getWidth() / grassTex->getHeight(), _root->getContentHeight());
+    } else {
+        nodesize = grassScale * Size(_root->getContentWidth(), float(_root->getContentWidth()) * grassTex->getHeight() / grassTex->getWidth());
     }
+    auto grassnode = scene2::PolygonNode::allocWithPoly(Rect(Vec2::ZERO, nodesize));
+    grassnode->setTexture(grassTex);
+    grassnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    grassnode->setPriority(float(DrawOrder::GRASS));
+    grassnode->setScale(1/grassScale);
+    _worldnode->addChild(grassnode);
 }
 
 /**
@@ -315,6 +377,13 @@ void Map::dispose() {
     }
     _shaderedEntitiesNode->dispose();
     _shaderrenderer->dispose();
+    _wheatscene->dispose();
+    
+    _mapInfo.clear();
+    _carrotSpawns.clear();
+    _farmerSpawns.clear();
+    _babyCarrotSpawns.clear();
+    _plantingSpawns.clear();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
@@ -400,139 +469,119 @@ void Map::loadBoundary(Vec2 pos, Size size){
     boundaryobj->setPosition(pos); //set position after adding to world since it is out of boundss
 }
 
-/**
- * Loads and builds the shaders for a specific map texture, and adds the shader nodes to the world
- * node. This method should only be called once per initialization, any subsequent calls will
- * override previous calls.
- */
-void Map::loadShaderNodes(Size size){
-    std::string name = std::any_cast<std::string>(_propertiesMap.at("name"));
-    float bladeColorScale = std::any_cast<float>(_propertiesMap.at("blade_color_scale"));
-    
-    _shaderrenderer = ShaderRenderer::alloc(_assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
-    _shaderrenderer->setScale(_scale.x);
-    _shaderrenderer->buildShaders();
-    _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
-    _wheatnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::WHEAT);
-    _cloudsnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::CLOUDS);
-    _groundnode->setPriority(float(Map::DrawOrder::GROUND));
-    _wheatnode->setPriority(float(Map::DrawOrder::WHEAT));
-    _cloudsnode->setPriority(float(Map::DrawOrder::CLOUDS));
-    
-    _shaderedEntitiesNode = EntitiesNode::alloc(_entitiesNode, _assets, name, bladeColorScale, size, FULL_WHEAT_HEIGHT);
-    _shaderedEntitiesNode->setPriority(float(Map::DrawOrder::ENTITIESSHADER));
-    
-    _worldnode->addChild(_shaderedEntitiesNode);
-    _worldnode->addChild(_wheatnode);
-    _worldnode->addChild(_groundnode);
-    _worldnode->addChild(_cloudsnode);
-    
+void Map::spawnPlantingSpots() {
+    for (Rect rect : _plantingSpawns) {
+        std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(rect.origin, rect.size, _scale.x);
+        plantingSpot->setDebugColor(DEBUG_COLOR);
+        plantingSpot->setName("planting spot");
+        plantingSpot->setPlantingID((unsigned)_plantingSpot.size());
+        _plantingSpot.push_back(plantingSpot);
+
+        plantingSpot->setSceneNode(_assets, float(Map::DrawOrder::PLANTINGSPOT));
+        addObstacle(plantingSpot, plantingSpot->getSceneNode());
+    }
 }
 
-/**
- * Loads a single planting spot of variable size into the world.
- */
-void Map::loadPlantingSpot(float x, float y, float width, float height) {
-    Vec2 spotPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
-    
-    std::shared_ptr<PlantingSpot> plantingSpot = PlantingSpot::alloc(spotPos, {width, height}, _scale.x);
-    plantingSpot->setDebugColor(DEBUG_COLOR);
-    plantingSpot->setName("planting spot");
-    plantingSpot->setPlantingID((unsigned)_plantingSpot.size());
-    _plantingSpot.push_back(plantingSpot);
+void Map::spawnFarmers() {
+    for (Rect rect : _farmerSpawns) {
+        std::shared_ptr<Farmer> farmer = Farmer::alloc(rect.origin, rect.size, _scale.x);
+        farmer->setDebugColor(DEBUG_COLOR);
+        farmer->setName("farmer");
+        
+        auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_SOUTH_WALK_SPRITE);
+        auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
+        auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
+        auto farmerNorthEastWalkSprite  = _assets->get<Texture>(FARMER_NORTHEAST_WALK_SPRITE);
+        auto farmerSouthEastWalkSprite  = _assets->get<Texture>(FARMER_SOUTHEAST_WALK_SPRITE);
 
-    auto spotNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(PLANTING_SPOT_TEXTURE));
-    plantingSpot->setSceneNode(spotNode);
-    spotNode->setColor(Color4(255, 255, 255, 255 * 0.4));
-    spotNode->setPriority(float(Map::DrawOrder::PLANTINGSPOT));
-    addObstacle(plantingSpot, spotNode);
+        auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
+        farmerSouthWalkNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
+        farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        
+        auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
+        farmerNorthWalkNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
+        farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerNorthWalkNode->setVisible(false);
+        
+        auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
+        farmerEastWalkNode->setScale(0.11f * _scale/DEFAULT_DRAWSCALE);
+        farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerEastWalkNode->setVisible(false);
+        
+        auto farmerNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthEastWalkSprite, 3, 4);
+        farmerNorthEastWalkNode->setScale(0.12f * _scale/DEFAULT_DRAWSCALE);
+        farmerNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerNorthEastWalkNode->setVisible(false);
+        
+        auto farmerSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthEastWalkSprite, 3, 4, 9);
+        farmerSouthEastWalkNode->setScale(0.14f * _scale/DEFAULT_DRAWSCALE);
+        farmerSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerSouthEastWalkNode->setVisible(false);
+        
+        auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
+        carrotfarmerNode->setVisible(false);
+        carrotfarmerNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
+        carrotfarmerNode->setHeight(32 *_scale.y/DEFAULT_DRAWSCALE);
+        
+        _entitiesNode->addChild(farmerSouthWalkNode);
+        _entitiesNode->addChild(farmerNorthWalkNode);
+        _entitiesNode->addChild(farmerEastWalkNode);
+        _entitiesNode->addChild(farmerNorthEastWalkNode);
+        _entitiesNode->addChild(farmerSouthEastWalkNode);
+        _entitiesNode->addChild(carrotfarmerNode);
+        
+        farmer->setSpriteNodes(farmerNorthWalkNode,
+                               farmerNorthEastWalkNode,
+                               farmerEastWalkNode,
+                               farmerSouthEastWalkNode,
+                               farmerSouthWalkNode);
+        
+        farmer->setNormalNode(farmerSouthWalkNode);
+        farmer->setCaptureNode(carrotfarmerNode);
+        
+        farmer->setSceneNode(farmerSouthWalkNode);
+        farmer->setDrawScale(
+                _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+
+        farmer->setDebugScene(_debugnode);
+
+        auto wheatnode = farmer->allocWheatHeightNode();
+        _wheatscene->getRoot()->addChild(wheatnode);
+        
+        _farmers.push_back(farmer);
+
+        _world->initObstacle(farmer);
+    }
 }
 
-/**
- * Loads a single farmer into the world.
- */
-void Map::loadFarmer(float x, float y, float width, float height) {
-    Vec2 farmerPos = Vec2(x, y) + Vec2::ANCHOR_CENTER * Vec2(width, height);
-    std::shared_ptr<Farmer> farmer = Farmer::alloc(farmerPos, {width, height}, _scale.x);
-    farmer->setDebugColor(DEBUG_COLOR);
-    farmer->setName("farmer");
-    
-    auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_FRONT_WALK_SPRITE);
-    auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
-    auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
-
-    auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
-    farmerSouthWalkNode->setScale(0.23f, 0.23f);
-    
-    auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
-    farmerNorthWalkNode->setScale(0.23f, 0.23f);
-    
-    auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
-    farmerEastWalkNode->setScale(0.23f, 0.23f);
-    
-    auto carrotfarmerNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(CARROTFARMER_TEXTURE));
-    carrotfarmerNode->setVisible(false);
-    carrotfarmerNode->setScale(0.23f, 0.23f);
-    
-    farmer->setSpriteNodes(farmerNorthWalkNode,
-                           farmerEastWalkNode,
-                           farmerEastWalkNode,
-                           farmerEastWalkNode,
-                           farmerSouthWalkNode);
-    
-    farmer->setNormalNode(farmerSouthWalkNode);
-
-    farmer->setCaptureNode(carrotfarmerNode);
-    farmer->setSceneNode(farmerSouthWalkNode);
-    farmer->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _entitiesNode->addChild(farmerSouthWalkNode);
-    _entitiesNode->addChild(farmerNorthWalkNode);
-    _entitiesNode->addChild(farmerEastWalkNode);
-    _entitiesNode->addChild(carrotfarmerNode);
-    farmer->setDebugScene(_debugnode);
-
-    _farmers.push_back(farmer);
-
-    _world->initObstacle(farmer);
-}
-
-/**
- * Loads a single baby carrot into the world.
- */
-void Map::loadBabyCarrot(float x, float y, float width, float height) {
-    Vec2 carrotPos = Vec2(x, y)  + Vec2::ANCHOR_CENTER * Vec2(width, height);;
-    std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(carrotPos, {width, height}, _scale.x);
-    baby->setDebugColor(DEBUG_COLOR);
-    baby->setName("baby");
-    baby->setID((unsigned)_babies.size());
-    _babies.push_back(baby);
-
-    _assets->get<Texture>(BABY_TEXTURE)->setName("baby");
-    auto babyNode = scene2::PolygonNode::allocWithTexture(
-            _assets->get<Texture>(BABY_TEXTURE));
-//        babyNode->setColor(Color4::BLUE);
-    baby->setSceneNode(babyNode);
-    babyNode->setName("baby");
-//    babyNode->setColor(Color4::BLACK);
-    baby->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    babyNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    _entitiesNode->addChild(babyNode);
-    baby->setDebugScene(_debugnode);
-
-    _world->initObstacle(baby);
-}
-
-/**
- * Adds a possible carrot spawn location to the world.
- */
-void Map::loadCarrot(float x, float y, float width, float height) {
-    _carrotPosList.push_back(x + 0.5 * width);
-    _carrotPosList.push_back(y + 0.5 * height);
+void Map::spawnBabyCarrots() {
+    for (Rect rect : _babyCarrotSpawns) {
+        std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, rect.size, _scale.x);
+        baby->setDebugColor(DEBUG_COLOR);
+        baby->setName("baby");
+        baby->setID((unsigned)_babies.size());
+        _babies.push_back(baby);
+        
+        _assets->get<Texture>(BABY_TEXTURE)->setName("baby");
+        auto babyNode = scene2::SpriteNode::allocWithSheet(
+                _assets->get<Texture>(BABY_TEXTURE), 1, 1);
+    //        babyNode->setColor(Color4::BLUE);
+        baby->setSceneNode(babyNode);
+        babyNode->setName("baby");
+        //    babyNode->setColor(Color4::BLACK);
+        baby->setDrawScale(
+                           _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        babyNode->setScale(_scale/DEFAULT_DRAWSCALE);
+        // Create the polygon node (empty, as the model will initialize)
+        babyNode->setHeight(32*_scale.y/DEFAULT_DRAWSCALE);
+        _entitiesNode->addChild(babyNode);
+        baby->setDebugScene(_debugnode);
+        
+        auto wheatnode = baby->allocWheatHeightNode();
+        _wheatscene->getRoot()->addChild(wheatnode);
+        
+        _world->initObstacle(baby);
+    }
 }
 
 /**
@@ -598,52 +647,111 @@ bool Map::readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileS
     return true;
 }
 
-void Map::spawnCarrot(Vec2 position, float width, float height) {
-    std::shared_ptr<Carrot> carrot = Carrot::alloc(position, {width, height}, _scale.x);
-    carrot->setDebugColor(DEBUG_COLOR);
-    carrot->setName("carrot");
-    _carrots.push_back(carrot);
-
-    auto carrotNode = scene2::SpriteNode::allocWithSheet(
-            _assets->get<Texture>(CARROT_TEXTURE), 1, 1);
-    carrot->setSceneNode(carrotNode);
-    carrotNode->setPriority(float(Map::DrawOrder::ENTITIES));
-    carrot->setDrawScale(
-            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-    // Create the polygon node (empty, as the model will initialize)
-    carrot->setSpriteNodes(carrotNode,
-                           carrotNode,
-                           carrotNode,
-                           carrotNode,
-                           carrotNode);
-    _entitiesNode->addChild(carrotNode);
-    carrot->setDebugScene(_debugnode);
-
-    _world->initObstacle(carrot);
+void Map::spawnCarrots() {
+    for (Rect rect : _carrotSpawns) {
+        std::shared_ptr<Carrot> carrot = Carrot::alloc(rect.origin, rect.size, _scale.x);
+        carrot->setDebugColor(DEBUG_COLOR);
+        carrot->setName("carrot");
+        _carrots.push_back(carrot);
+        
+        auto carrotSouthWalkSprite = _assets->get<Texture>(CARROT_SOUTH_WALK_SPRITE);
+        auto carrotNorthWalkSprite = _assets->get<Texture>(CARROT_NORTH_WALK_SPRITE);
+        auto carrotEastWalkSprite = _assets->get<Texture>(CARROT_EAST_WALK_SPRITE);
+        auto carrotNorthEastWalkSprite = _assets->get<Texture>(CARROT_NORTHEAST_WALK_SPRITE);
+        auto carrotSouthEastWalkSprite = _assets->get<Texture>(CARROT_SOUTHEAST_WALK_SPRITE);
+        
+        auto carrotSouthWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                      carrotSouthWalkSprite, 3, 5);
+        carrotSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        carrotSouthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotSouthWalkNode->setAnchor(Vec2(0.5, 0.25));
+        
+        auto carrotNorthWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                      carrotNorthWalkSprite, 3, 5);
+        carrotNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        carrotNorthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotNorthWalkNode->setAnchor(Vec2(0.5, 0.25));
+        carrotNorthWalkNode->setVisible(false);
+        
+        auto carrotEastWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                     carrotEastWalkSprite, 3, 5);
+        carrotEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        carrotEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotEastWalkNode->setAnchor(Vec2(0.5, 0.25));
+        carrotEastWalkNode->setVisible(false);
+        
+        auto carrotNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotNorthEastWalkSprite, 3, 5);
+        carrotNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        carrotNorthEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotNorthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
+        carrotNorthEastWalkNode->setVisible(false);
+        
+        auto carrotSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotSouthEastWalkSprite, 3, 5);
+        carrotSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        carrotSouthEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
+        carrotSouthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
+        carrotSouthEastWalkNode->setVisible(false);
+        
+        _entitiesNode->addChild(carrotNorthWalkNode);
+        _entitiesNode->addChild(carrotEastWalkNode);
+        _entitiesNode->addChild(carrotSouthWalkNode);
+        _entitiesNode->addChild(carrotNorthEastWalkNode);
+        _entitiesNode->addChild(carrotSouthEastWalkNode);
+        
+        carrot->setSceneNode(carrotSouthWalkNode);
+        carrot->setDrawScale(
+                             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        // Create the polygon node (empty, as the model will initialize)
+        carrot->setSpriteNodes(carrotNorthWalkNode,
+                               carrotNorthEastWalkNode,
+                               carrotEastWalkNode,
+                               carrotSouthEastWalkNode,
+                               carrotSouthWalkNode);
+        
+        carrot->setDebugScene(_debugnode);
+        
+        auto wheatnode = carrot->allocWheatHeightNode();
+        _wheatscene->getRoot()->addChild(wheatnode);
+        
+        _world->initObstacle(carrot);
+    }
 }
-
-
 
 void Map::updateShaders(float step, Mat4 perspective) {
     int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size());
     float positions[2*size]; // must be 1d array
     float velocities[size];
     float ratio = _shaderrenderer->getAspectRatio();
+    float scale = _root->getContentSize().width/_scale.x;
     for (int i = 0; i < _carrots.size(); i++) {
-        positions[2 * i] = _carrots.at(i)->getX() / _scale.x;
-        positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / _scale.x * ratio;
+        positions[2 * i] = _carrots.at(i)->getX() / scale;
+        positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / scale * ratio;
         velocities[i] = _carrots.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < _farmers.size(); i++) {
-        positions[2 * i + 2* _carrots.size()] = _farmers.at(i)->getX() / _scale.x;
-        positions[2 * i + 1 + 2 * _carrots.size()] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / _scale.x * ratio;
+        positions[2 * i + 2* _carrots.size()] = _farmers.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * _carrots.size()] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / scale * ratio;
         velocities[i + _carrots.size()] = _farmers.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < _babies.size(); i++) {
-        positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / _scale.x;
-        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / _scale.x * ratio;
+        positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / scale * ratio;
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
-    _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / _scale.x * Vec2(1.0, ratio));
+    _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / scale * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);
+}
+
+void Map::resetPlantingSpots() {
+    for(auto sp : _plantingSpot){
+        sp->setCarrotPlanted(false);
+        sp->setBelowAvatar(false);
+    }
+}
+
+void Map::resetPlayers() {
+    for(auto carrot : _carrots){
+        carrot->resetCarrot();
+    }
+    _farmers.at(0)->resetFarmer();
 }

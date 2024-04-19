@@ -54,4 +54,4 @@ public:
 
 };
 
-#endif /* CaptureEvent_hpp */
+#endif /* CaptureEvent_h */

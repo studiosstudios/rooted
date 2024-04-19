@@ -117,11 +117,18 @@ protected:
     GLenum _srcFactor;
     /** The destination factor for the blend function */
     GLenum _dstFactor;
+    /** The source alpha factor for the blend function */
+    GLenum _srcAlphaFactor;
+    /** The destination alpha factor for the blend function */
+    GLenum _dstAlphaFactor;
     
     /** Whether or not to flip the texture horizontally */
     bool _flipHorizontal;
     /** Whether or not to flip the texture vertically */
     bool _flipVertical;
+    
+    /** The height of this texture. This is used exclusively by the wheat cover shader. */
+    float _height;
     
 
 #pragma mark -
@@ -338,7 +345,85 @@ public:
      * @param srcFactor Specifies how the source blending factors are computed
      * @param dstFactor Specifies how the destination blending factors are computed.
      */
-    void setBlendFunc(GLenum srcFactor, GLenum dstFactor) { _srcFactor = srcFactor; _dstFactor = dstFactor; }
+    void setBlendFunc(GLenum srcFactor, GLenum dstFactor) {
+        _srcFactor = srcFactor;
+        _srcAlphaFactor = srcFactor;
+        _dstAlphaFactor = dstFactor;
+        _dstFactor = dstFactor;
+    }
+
+    /**
+     * Sets the blending function for this texture node.
+     *
+     * The enums are the standard ones supported by OpenGL.  See
+     *
+     *      https://www.opengl.org/sdk/docs/man/html/glBlendFunc.xhtml
+     *
+     * However, this setter does not do any error checking to verify that
+     * the enums are valid.  By default, srcFactor is GL_SRC_ALPHA while
+     * dstFactor is GL_ONE_MINUS_SRC_ALPHA. This corresponds to non-premultiplied
+     * alpha blending.
+     *
+     * This blending factor only affects the texture of the current node.  It
+     * does not affect any children of the node.
+     *
+     * @param srcFactor         Specifies how the source blending factors are computed
+     * @param srcAlphaFactor    Specifies how the source alpha blending factors are computed
+     * @param dstFactor         Specifies how the destination blending factors are computed.
+     * @param dstAlphaFactor    Specifies how the destination alpha blending factors are computed.
+     */
+    void setBlendFunc(GLenum srcFactor, GLenum srcAlphaFactor, GLenum dstFactor, GLenum dstAlphaFactor) {
+        _srcFactor = srcFactor;
+        _srcAlphaFactor = srcAlphaFactor;
+        _dstFactor = dstFactor;
+        _dstAlphaFactor = dstAlphaFactor;
+    }
+
+    /**
+     * Sets the source blending function for this texture node.
+     *
+     * The enums are the standard ones supported by OpenGL.  See
+     *
+     *      https://www.opengl.org/sdk/docs/man/html/glBlendFunc.xhtml
+     *
+     * However, this setter does not do any error checking to verify that
+     * the enums are valid.  By default, srcFactor is GL_SRC_ALPHA while
+     * dstFactor is GL_ONE_MINUS_SRC_ALPHA. This corresponds to non-premultiplied
+     * alpha blending.
+     *
+     * This blending factor only affects the texture of the current node.  It
+     * does not affect any children of the node.
+     *
+     * @param rgb Specifies how the source rgb blending factors are computed
+     * @param alpha Specifies how the source alpha blending factors are computed.
+     */
+    void setSrcBlendFunc(GLenum rgb, GLenum alpha) {
+        _srcFactor = rgb;
+        _srcAlphaFactor = alpha;
+    }
+
+    /**
+     * Sets the source blending function for this texture node.
+     *
+     * The enums are the standard ones supported by OpenGL.  See
+     *
+     *      https://www.opengl.org/sdk/docs/man/html/glBlendFunc.xhtml
+     *
+     * However, this setter does not do any error checking to verify that
+     * the enums are valid.  By default, srcFactor is GL_SRC_ALPHA while
+     * dstFactor is GL_ONE_MINUS_SRC_ALPHA. This corresponds to non-premultiplied
+     * alpha blending.
+     *
+     * This blending factor only affects the texture of the current node.  It
+     * does not affect any children of the node.
+     *
+     * @param rgb Specifies how the destination rgb blending factors are computed
+     * @param alpha Specifies how the destination alpha blending factors are computed.
+     */
+    void setDstBlendFunc(GLenum rgb, GLenum alpha) {
+        _dstFactor = rgb;
+        _dstAlphaFactor = alpha;
+    }
     
     /**
      * Returns the source blending factor
@@ -366,7 +451,35 @@ public:
      *
      * @return the destination blending factor
      */
-    GLenum getDestinationBlendFactor() const { return _srcFactor; }
+    GLenum getDestinationBlendFactor() const { return _dstFactor; }
+
+    /**
+     * Returns the source blending factor
+     *
+     * By default this value is GL_SRC_ALPHA. For other options, see
+     *
+     *      https://www.opengl.org/sdk/docs/man/html/glBlendFunc.xhtml
+     *
+     * This blending factor only affects the texture of the current node.  It
+     * does not affect any children of the node.
+     *
+     * @return the source blending factor
+     */
+    GLenum getSourceAlphaBlendFactor() const { return _srcAlphaFactor; }
+
+    /**
+     * Returns the destination blending factor
+     *
+     * By default this value is GL_ONE_MINUS_SRC_ALPHA. For other options, see
+     *
+     *      https://www.opengl.org/sdk/docs/man/html/glBlendFunc.xhtml
+     *
+     * This blending factor only affects the texture of the current node.  It
+     * does not affect any children of the node.
+     *
+     * @return the destination blending factor
+     */
+    GLenum getDestinationAlphaBlendFactor() const { return _dstAlphaFactor; }
     
     /**
      * Sets the blending equation for this textured node
@@ -434,6 +547,20 @@ public:
      * @return true if the texture coordinates are flipped vertically.
      */
     bool isFlipVertical() const { return _flipVertical; }
+    
+    /**
+     * Flips the texture coordinates vertically if flag is true.
+     *
+     * @param  height texture height
+     */
+    void setHeight(float height) { _height = height; }
+    
+    /**
+     * Returns true if the texture coordinates are flipped vertically.
+     *
+     * @return true if the texture coordinates are flipped vertically.
+     */
+    float getHeight() const { return _height; }
 
     /**
      * Returns a string representation of this node for debugging purposes.

@@ -55,15 +55,15 @@
                 }, 
                 {
                  "gid":6,
-                 "height":96,
+                 "height":160,
                  "id":109,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
-                 "width":96,
+                 "width":160,
                  "x":448,
-                 "y":224
+                 "y":288
                 }, 
                 {
                  "gid":6,
@@ -79,15 +79,15 @@
                 }, 
                 {
                  "gid":6,
-                 "height":96,
+                 "height":64,
                  "id":111,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
-                 "width":96,
+                 "width":128,
                  "x":768,
-                 "y":160
+                 "y":128
                 }, 
                 {
                  "gid":6,
@@ -97,7 +97,7 @@
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
-                 "width":96,
+                 "width":64,
                  "x":192,
                  "y":576
                 }],
@@ -113,6 +113,18 @@
          "name":"entities",
          "objects":[
                 {
+                 "gid":1,
+                 "height":32,
+                 "id":67,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Farmer",
+                 "visible":true,
+                 "width":32,
+                 "x":192,
+                 "y":192
+                }, 
+                {
                  "gid":3,
                  "height":32,
                  "id":94,
@@ -123,7 +135,7 @@
                  "width":32,
                  "x":256,
                  "y":448
-                },
+                }, 
                 {
                  "gid":3,
                  "height":32,
@@ -135,7 +147,7 @@
                  "width":32,
                  "x":128,
                  "y":352
-                },
+                }, 
                 {
                  "gid":3,
                  "height":32,
@@ -219,7 +231,7 @@
                  "width":32,
                  "x":480,
                  "y":224
-                },
+                }, 
                 {
                  "gid":3,
                  "height":32,
@@ -231,7 +243,7 @@
                  "width":32,
                  "x":320,
                  "y":256
-                },
+                }, 
                 {
                  "gid":2,
                  "height":32,
@@ -279,20 +291,7 @@
                  "width":32,
                  "x":320,
                  "y":128
-                },
-           {
-             "gid":1,
-             "height":32,
-             "id":67,
-             "name":"",
-             "rotation":0,
-             "type":"Farmer",
-             "visible":true,
-             "width":32,
-             "x":192,
-             "y":192
-           }
-         ],
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,

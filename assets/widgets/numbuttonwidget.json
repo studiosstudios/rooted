@@ -1,0 +1,96 @@
+{
+    "variables": {
+        "text" : ["children", "num", "data", "text"]
+    },
+    "contents": {
+        "type": "Button",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                1
+            ],
+            "size": [
+                81.92,
+                81.92
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                96.08
+            ],
+            "visible": true,
+            "upnode": "sqbutton"
+        },
+        "children": {
+            "sqbutton": {
+                "type": "Image",
+                "data": {
+                    "texture": "sqbutton",
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        81.92,
+                        81.92
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "num": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        51.20000076293945,
+                        51.20000076293945
+                    ],
+                    "position": [
+                        15.199996948242188,
+                        15.520003318786621
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold72",
+                    "text": "0",
+                    "foreground": "#ffffffff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "middle",
+                    "halign": "center"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.19,
+                    "y_offset": -0.19
+                }
+            }
+        }
+    }
+}

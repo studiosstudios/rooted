@@ -784,6 +784,24 @@ public:
      * @return the current depth of this sprite batch.
      */
     float getDepth() const;
+    
+    /**
+     * Sets the height of the active texure for this sprite batch.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @param height The height of the active texture
+     */
+    void setHeight(float height);
+    
+    /**
+     * Returns the height of the active texure for this sprite batch.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @return The height of the active texture
+     */
+    float getHeight() const;
 
     /**
      * Sets the blur radius in pixels (0 if there is no blurring).

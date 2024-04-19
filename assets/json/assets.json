@@ -128,6 +128,24 @@
         "grid": {
             "file":     "textures/maps/grid.png"
         },
+        "unit_1": {
+            "file":     "textures/maps/unit_1.png"
+        },
+        "unit_2": {
+            "file":     "textures/maps/unit_2.png"
+        },
+        "unit_3": {
+            "file":     "textures/maps/unit_3.png"
+        },
+        "unit_4": {
+            "file":     "textures/maps/unit_4.png"
+        },
+        "unit_5": {
+            "file":     "textures/maps/unit_5.png"
+        },
+        "unit_6": {
+            "file":     "textures/maps/unit_6.png"
+        },
         "shader_clouds": {
             "file":     "textures/clouds.png",
             "wrapS":    "repeat",

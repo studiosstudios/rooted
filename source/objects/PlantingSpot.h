@@ -25,7 +25,7 @@ private:
     
 protected:
     /** The scene graph node for the planting spot. */
-    std::shared_ptr<cugl::scene2::PolygonNode> _node;
+    std::shared_ptr<cugl::scene2::SceneNode> _node;
     
 public:
     /**
@@ -79,9 +79,7 @@ public:
      * @param node  The scene graph node representing this planting spot, which has
      *              been added to the world node already.
      */
-    void setSceneNode(const std::shared_ptr<cugl::scene2::PolygonNode>& node) {
-        _node = node;
-    }
+    void setSceneNode(const std::shared_ptr<cugl::AssetManager>& assets, float priority);
     
     /**
      * Returns the scene graph node representing this PlantingSpot.
@@ -92,7 +90,7 @@ public:
      *
      * @return the scene graph node representing this PlantingSpot.
      */
-    const std::shared_ptr<cugl::scene2::PolygonNode>& getSceneNode() const { return _node; }
+    const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
     
     bool getCarrotPlanted() { return _isCarrotPlanted; }
     
@@ -105,6 +103,9 @@ public:
     int getPlantingID() { return _plantingID; }
     
     void setPlantingID(int plantingID) { _plantingID = plantingID; }
+    
+private:
+    void addTileNode(Vec2 position, float texscale, const std::shared_ptr<cugl::AssetManager> &assets, std::string texkey);
 
 };
 #endif /* PlantingSpot_h */

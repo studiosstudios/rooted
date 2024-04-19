@@ -87,6 +87,8 @@ protected:
     bool _showPlayerPressed;
     
     bool _switchPressed;
+    
+    bool _deviceShaking;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -151,6 +153,15 @@ protected:
     cugl::Timestamp _rtime;
 	/** The timestamp for a double tap in the middle */
 	cugl::Timestamp _mtime;
+    /** Maximum vector for joystick for scaling purposes */
+//    cugl::Vec2 maxJoystickVec = Vec2()
+    
+    /** List holding points for swipe drawing */
+    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> _swipePoints;
+    /** Capacity for swipe drawing list */
+    int _swipePointsCapacity = 25;
+    std::optional<cugl::Vec2> _swipeFirstPoint;
+    cugl::Color4 _currentSwipeColor;
 
     /**
      * Defines the zone boundaries, so we can quickly categorize touches.
@@ -335,6 +346,29 @@ public:
     bool didUnroot() const { return _unrootPressed; }
 
     bool didSwitch() const { return _switchPressed; }
+    
+    bool didShakeDevice() const { return _deviceShaking; }
+
+#pragma mark -
+#pragma mark Swipe Drawing Logic
+    void addSwipePoint(cugl::Vec2 point) {
+        if (_swipePoints->size() == _swipePointsCapacity) {
+            _swipePoints->pop_back();
+        }
+        _swipePoints->push_front(std::pair(point, cugl::Timestamp()));
+    }
+    
+    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> getSwipePoints() {
+        return _swipePoints;
+    }
+    
+    std::optional<cugl::Vec2> getSwipeFirstPoint() {
+        return _swipeFirstPoint;
+    }
+    
+    cugl::Color4 getCurrentSwipeColor() {
+        return _currentSwipeColor;
+    }
 
 
 #pragma mark -

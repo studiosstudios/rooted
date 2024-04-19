@@ -8,6 +8,7 @@
 
 #define RADIUS 0.2f
 #define MOVEMENT_SPEED 0.75f
+#define EDGE_DIST 5.0f
 
 using namespace cugl;
 
@@ -18,13 +19,16 @@ bool AIController::init(std::shared_ptr<Map> &map) {
 }
 
 void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &babyCarrot) {
+    float mapWidth = _map->getBounds().size.width;
+    float mapHeight = _map->getBounds().size.height;
     if (babyCarrot->getState() == State::HOLD) {
         if (((float) std::rand()/ RAND_MAX) < 0.5) {
             Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));
             babyCarrot->setTarget(newTarget);
         } else {
             babyCarrot->setState(State::ROAM);
-            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
+            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*(mapWidth - EDGE_DIST * 2)+EDGE_DIST,
+                                  ((float) std::rand()/ RAND_MAX)*(mapHeight - EDGE_DIST * 2)+EDGE_DIST);
             babyCarrot->setTarget(newTarget);
         }
     } else {
@@ -34,7 +38,8 @@ void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby
             babyCarrot->setTarget(newTarget);
         } else {
             babyCarrot->setState(State::ROAM);
-            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
+            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*(mapWidth - EDGE_DIST * 2)+EDGE_DIST,
+                                  ((float) std::rand()/ RAND_MAX)*(mapHeight - EDGE_DIST * 2)+EDGE_DIST);
             babyCarrot->setTarget(newTarget);
         }
     }
@@ -54,7 +59,9 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
             if (babyCarrot->hasTarget()) {
                 Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
 //                movement *= 2.5;
+                babyCarrot->setShared(false);
                 babyCarrot->setLinearVelocity((babyCarrot->getLinearVelocity() + movement * 0.25) * 0.93);
+                babyCarrot->setShared(true);
             }
             break;
         case State::SIT:
@@ -65,7 +72,9 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
             if (babyCarrot->hasTarget()) {
                 Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
                 movement *= 0.5;
+                babyCarrot->setShared(false);
                 babyCarrot->setLinearVelocity(movement);
+                babyCarrot->setShared(true);
             }
             break;
     }

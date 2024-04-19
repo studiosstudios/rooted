@@ -18,7 +18,10 @@ private:
     bool _isRooted;
     /** number of baby carrots this carrot has caught so far */
     int _numBabyCarrots;
-        
+    
+    // Animation
+    float walkAnimDuration = 1.0f;
+    
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -29,13 +32,13 @@ public:
      * the defaults.  To use a Carrot, you must call init().
      */
     Carrot() {};
-
+    
     /**
      * Destroys this Carrot, releasing all resources. Currently overrides
      * destructor in EntityModel, but does the same thing.
      */
     ~Carrot() override { dispose(); };
-
+    
     /**
      * Initializes a new Carrot at the given position.
      *
@@ -53,7 +56,7 @@ public:
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
     bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale) override;
-
+    
     /**
      * Creates a new Carrot at the given position.
      *
@@ -74,14 +77,16 @@ public:
         std::shared_ptr<Carrot> result = std::make_shared<Carrot>();
         return (result->init(pos, size, scale) ? result : nullptr);
     }
-
+    
 #pragma mark -
 #pragma mark Getters and Setters
     bool isRooted() { return _isRooted; };
     
-    bool isCaptured() {return _isCaptured; };
+    bool isCaptured() { return _isCaptured; };
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
+    
+    void resetCarrot();
     
 #pragma mark -
 #pragma mark Interactions
@@ -92,6 +97,13 @@ public:
     void gotRooted();
     
     void gotUnrooted();
+    
+    void escaped();
+    
+#pragma mark -
+#pragma mark Animation
+    void updateCurAnimDurationForState() override;
+    
 };
 
 

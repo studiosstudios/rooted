@@ -54,6 +54,12 @@
         "farmer-east-walk": {
             "file":     "textures/farmer-east-walk.png"
         },
+        "farmer-northeast-walk": {
+            "file":     "textures/farmer-northeast-walk.png"
+        },
+        "farmer-southeast-walk": {
+            "file":     "textures/farmer-southeast-walk.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },
@@ -62,6 +68,12 @@
         },
         "carrot-east-walk": {
             "file":     "textures/carrot-east-walk.png"
+        },
+        "carrot-northeast-walk": {
+            "file":     "textures/carrot-northeast-walk.png"
+        },
+        "carrot-southeast-walk": {
+            "file":     "textures/carrot-southeast-walk.png"
         },
         "baby": {
             "file":     "textures/baby.png"
@@ -155,6 +167,24 @@
         },
         "lobbyidbkg" : {
             "file": "textures/lobbyid.png"
+        },
+        "victory" : {
+            "file": "textures/victory.png"
+        },
+        "defeat" : {
+            "file": "textures/defeat.png"
+        },
+        "joystick" : {
+            "file": "textures/joystick.png"
+        },
+        "joystick-back" : {
+            "file": "textures/joystick-back.png"
+        },
+        "barrot-count-board" : {
+            "file": "textures/barrot-count-board.png"
+        },
+        "carrot-count-board" : {
+            "file": "textures/carrot-count-board.png"
         }
     },
     "jsons": {
@@ -232,6 +262,10 @@
         "gyparody": {
             "file":     "fonts/gyparody-hv.ttf",
             "size":     48
+        },
+        "gaeguBold16": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 16
         },
         "gaeguBold60": {
             "file": "fonts/Gaegu-Bold.ttf",

@@ -134,20 +134,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 
-    _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _winnode->setAnchor(Vec2::ANCHOR_CENTER);
-    _winnode->setPosition(dimen / 1.8f/ CAMERA_ZOOM);
-    _winnode->setScale(1/CAMERA_ZOOM);
-    _winnode->setForeground(WIN_COLOR);
-    setComplete(false);
-
-    _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
-    _losenode->setAnchor(Vec2::ANCHOR_CENTER);
-    _losenode->setPosition(dimen.width / 1.8f / CAMERA_ZOOM, dimen.height / 1.8f / CAMERA_ZOOM);
-    _losenode->setScale(1/CAMERA_ZOOM);
-    _losenode->setForeground(LOSE_COLOR);
-    setFailure(false);
-
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
     _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("testMap2")); // Obtains ownership of root.
@@ -163,8 +149,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     addChild(_rootnode);
     addChild(_uinode);
-    _uinode->addChild(_winnode);
-    _uinode->addChild(_losenode);
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
@@ -206,7 +190,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
-    _ui.init(_uinode, _offset, CAMERA_ZOOM);
+    _ui.init(_assets, _input, _uinode, _offset, CAMERA_ZOOM);
+    setComplete(false);
+    setFailure(false);
     
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
     _cam.setZoom(CAMERA_ZOOM);
@@ -370,11 +356,6 @@ void GameScene::preUpdate(float dt) {
         Application::get()->quit();
     }
 
-    // Process the movement
-    if (_input->withJoystick()) {
-        // do something here
-    }
-
     _action.preUpdate(dt);
 }
 
@@ -434,7 +415,6 @@ void GameScene::fixedUpdate(float step) {
     }
     
     _map->getWorld()->update(step);
-    _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
@@ -464,6 +444,17 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
+    
+    // TEMP CODE FOR OPEN BETA - CJ
+    int i = _network->getNumPlayers() - 1;
+    for (auto it = _map->getPlantingSpots().begin(); it != _map->getPlantingSpots().end(); it++) {
+        if ((*it)->getCarrotPlanted()) {
+            i--;
+        }
+    }
+    // TEMP CODE FOR OPEN BETA
+    
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
     
     if (_countdown > 0) {
         _countdown--;
@@ -552,10 +543,10 @@ void GameScene::setComplete(bool value) {
         pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
-        _winnode->setVisible(true);
+        _ui.setWinVisible(true);
         _countdown = EXIT_COUNT;
     } else if (!value) {
-        _winnode->setVisible(false);
+        _ui.setWinVisible(false);
         _countdown = -1;
     }
 }
@@ -573,10 +564,10 @@ void GameScene::setFailure(bool value) {
         pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(LOSE_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
-        _losenode->setVisible(true);
+        _ui.setLoseVisible(true);
         _countdown = EXIT_COUNT;
     } else {
-        _losenode->setVisible(false);
+        _ui.setLoseVisible(false);
         _countdown = -1;
     }
 }

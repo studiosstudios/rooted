@@ -7,7 +7,6 @@
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
 #include "../objects/EntityModel.h"
-#include "../RootedConstants.h"
 
 #include <ctime>
 #include <string>
@@ -17,24 +16,78 @@
 
 using namespace cugl;
 
-/**
- * Converts a hexadecimal string to a decimal string
- *
- * This function assumes that the string is 4 hexadecimal characters
- * or less, and therefore it converts to a decimal string of five
- * characters or less (as is the case with the lobby server). We
- * pad the decimal string with leading 0s to bring it to 5 characters
- * exactly.
- *
- * @param hex the hexadecimal string to convert
- *
- * @return the decimal equivalent to hex
- */
-static int hex2dec(const std::string hex) {
-    Uint32 value = strtool::stou32(hex,0,16);
-    std::string result = strtool::to_string(value);
-    return stoi(result);
-}
+#pragma mark -
+#pragma mark Level Geography
+
+/** This is adjusted by screen aspect ratio to get the height */
+#define SCENE_WIDTH 1024
+#define SCENE_HEIGHT 576
+
+/** This is the aspect ratio for physics */
+#define SCENE_ASPECT 9.0/16.0
+
+/** Width of the game world in Box2d units */
+#define DEFAULT_WIDTH   32.0f
+/** Height of the game world in Box2d units */
+#define DEFAULT_HEIGHT  18.0f
+/** Zoom of camera relative to scene */
+#define CAMERA_ZOOM 1.5
+/** Camera gliding rate */
+#define CAMERA_GLIDE_RATE 0.06f
+
+#pragma mark -
+#pragma mark Physics Constants
+/** No gravity because we are top down */
+#define DEFAULT_GRAVITY 0.0f
+/** The number of frame to wait before reinitializing the game */
+#define EXIT_COUNT      240
+
+
+#pragma mark -
+#pragma mark Asset Constants
+/** The font for victory/failure messages */
+#define MESSAGE_FONT    "gyparody"
+/** The message for winning the game */
+#define WIN_MESSAGE     "YOU WIN!"
+/** The color of the win message */
+#define WIN_COLOR       Color4::BLUE
+/** The message for losing the game */
+#define LOSE_MESSAGE    "YOU LOSE!"
+/** The color of the lose message */
+#define LOSE_COLOR      Color4::RED
+/** The message for resetting the game */
+#define RESET_MESSAGE    "RESETTING"
+/** The color of the reset message */
+#define RESET_COLOR      Color4::YELLOW
+/** The key the basic game music */
+#define GAME_MUSIC      "game"
+/** The key the victory game music */
+#define WIN_MUSIC       "win"
+/** The key the failure game music */
+#define LOSE_MUSIC      "lose"
+/** The sound effect for firing a bullet */
+#define PEW_EFFECT      "pew"
+/** The sound effect for a bullet collision */
+#define POP_EFFECT      "pop"
+/** The sound effect for jumping */
+#define JUMP_EFFECT     "jump"
+/** The volume for the music */
+#define MUSIC_VOLUME    0.7f
+/** The volume for sound effects */
+#define EFFECT_VOLUME   0.8f
+/** The image for the left dpad/joystick */
+#define LEFT_IMAGE      "dpad_left"
+/** The image for the right dpad/joystick */
+#define RIGHT_IMAGE     "dpad_right"
+
+#define JOY_MAIN        "joystick-main"
+#define JOY_BACK        "joystick-back"
+
+/** Color to outline the physics nodes */
+#define DEBUG_COLOR     Color4::GREEN
+/** Opacity of the physics outlines */
+#define DEBUG_OPACITY   192
+
 
 #pragma mark -
 #pragma mark Constructors
@@ -79,41 +132,63 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(_offset);
 
+    // Create the scene graph
+    _uinode = scene2::SceneNode::alloc();
+    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    
+    // To be changed -CJ
+//    _debugjoynode = scene2::PolygonNode::allocWithPoly(PolyFactory().makeRect(Vec2(0,0), Vec2(0.35f * 1024 / 1.5, 0.5f * 576 / 1.5)));
+//    _debugjoynode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+//    _debugjoynode->setColor(Color4(Vec4(0, 0, 0, 0.25)));
+//    _uinode->addChild(_debugjoynode);
+
+    _winnode = scene2::Label::allocWithText(WIN_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
+    _winnode->setAnchor(Vec2::ANCHOR_CENTER);
+    _winnode->setPosition(dimen / 1.8f/ CAMERA_ZOOM);
+    _winnode->setScale(1/CAMERA_ZOOM);
+    _winnode->setForeground(WIN_COLOR);
+    setComplete(false);
+
+    _losenode = scene2::Label::allocWithText(LOSE_MESSAGE, _assets->get<Font>(MESSAGE_FONT));
+    _losenode->setAnchor(Vec2::ANCHOR_CENTER);
+    _losenode->setPosition(dimen.width / 1.8f / CAMERA_ZOOM, dimen.height / 1.8f / CAMERA_ZOOM);
+    _losenode->setScale(1/CAMERA_ZOOM);
+    _losenode->setForeground(LOSE_COLOR);
+    setFailure(false);
+
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
-    _seed = hex2dec(_network->getRoomID());
-    _map = Map::alloc(_assets); // Obtains ownership of root.
+    _map = Map::alloc(_assets, _rootnode, assets->get<JsonValue>("testMap2")); // Obtains ownership of root.
+
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
     
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
-    _map->setRootNode(_rootnode);
-    _map->populate();
+    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
+    
+    _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
-    // Create the scene graph
-    _uinode = scene2::SceneNode::alloc();
-    _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    addChild(_rootnode);
+    addChild(_uinode);
+    _uinode->addChild(_winnode);
+    _uinode->addChild(_losenode);
 
     // Create the world and attach the listeners.
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
     activateWorldCollisions(world);
-    
+
     // IMPORTANT: SCALING MUST BE UNIFORM
     // This means that we cannot change the aspect ratio of the physics world
     // Shift to center if a bad fit
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    addChild(_rootnode);
-    addChild(_uinode);
     
     _input = InputController::alloc(getBounds());
     Haptics::start();
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -122,9 +197,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // Won't compile unless I make this variable with type NetWorld :/
     if (_isHost) {
         _map->acquireMapOwnership();
-        _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -139,13 +214,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _network->attachEventType<ResetEvent>();
     
     // set the camera after all of the network is loaded
-    _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
-    setComplete(false);
-    setFailure(false);
+    _ui.init(_uinode, _offset, CAMERA_ZOOM);
     
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
-    _cam.setZoom(zoom);
-    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
+    _cam.setZoom(CAMERA_ZOOM);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
@@ -184,7 +256,10 @@ void GameScene::dispose() {
         _input = nullptr;
         Haptics::stop();
         _rootnode = nullptr;
+        _winnode = nullptr;
         _uinode = nullptr;
+        _winnode = nullptr;
+        _losenode = nullptr;
         _collision.dispose();
         _action.dispose();
         _ui.dispose();
@@ -215,31 +290,26 @@ void GameScene::unload() {
  */
 void GameScene::reset() {
     // Load a new level
-    _seed++;
     _map->clearRootNode();
-    _map->dispose();
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
     _map->setRootNode(_rootnode);
-    _map->populate();
+    _map->dispose();
+    _map->populate(Size(SCENE_WIDTH, SCENE_HEIGHT));
+    _map->populateWithCarrots(_network->getNumPlayers() - 1);
 
-    _ui.dispose();
     _collision.dispose();
     _action.dispose();
 
     std::shared_ptr<physics2::ObstacleWorld> world = _map->getWorld();
     activateWorldCollisions(world);
 
-    _map->resetPlantingSpots();
-    _map->resetPlayers();
-    
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network);
 
     if (_isHost) {
         _map->acquireMapOwnership();
-        _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _babies = _map->loadBabyEntities();
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -255,13 +325,8 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 2.0f, _scale);
     
-    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    _cam.setZoom(zoom);
-    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
-
-    _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
     setDebug(false);
@@ -310,6 +375,11 @@ void GameScene::preUpdate(float dt) {
         Application::get()->quit();
     }
 
+    // Process the movement
+    if (_input->withJoystick()) {
+        // do something here
+    }
+
     _action.preUpdate(dt);
 }
 
@@ -341,6 +411,14 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    if (_countdown >= 0 && _network->getNumPlayers() > 1){
+        return;
+    }
+    
+    _map->getWorld()->update(step);
+    _ui.update(step, _cam.getCamera(), _input->withJoystick(), _input->getJoystick());
+    _cam.update(step);
+    
     while(_network->isInAvailable()){
         auto e = _network->popInEvent();
         if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
@@ -360,54 +438,9 @@ void GameScene::fixedUpdate(float step) {
         if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
             processResetEvent(resetEvent);
         }
-        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
-            _action.processMoveEvent(moveEvent);
-        }
-        if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
-            _action.processFreeEvent(freeEvent);
-        }
     }
-    if (_countdown >= 0 && _network->getNumPlayers() > 1){
-        return;
-    }
-    
-    _map->getWorld()->update(step);
-    _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
-
-    
-    //check if entities are in wheat
-    //TODO: make entities vector in map for convenience?
-    //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
-    
-    //create queries
-    for (auto baby : _map->getBabyCarrots()) {
-        baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
-    }
-    for (auto farmer : _map->getFarmers()) {
-        farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
-        //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
-    }
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
-    }
-
-    //resolve queries
-    _map->getWheatScene()->doQueries();
-    
-    //fetch results
-    for (auto farmer : _map->getFarmers()) {
-        farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
-    }
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
-    }
-    for (auto baby : _map->getBabyCarrots()) {
-        baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
-//        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
-    }
-    _map->getWheatScene()->clearQueries();
 }
 
 /**
@@ -435,21 +468,10 @@ void GameScene::fixedUpdate(float step) {
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
     
-    // TEMP CODE FOR OPEN BETA - CJ
-    int i = _network->getNumPlayers() - 1;
-    for (auto it = _map->getPlantingSpots().begin(); it != _map->getPlantingSpots().end(); it++) {
-        if ((*it)->getCarrotPlanted()) {
-            i--;
-        }
-    }
-    // TEMP CODE FOR OPEN BETA
-    
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
-    
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        _network->pushOutEvent(ResetEvent::allocResetEvent());
+        reset();
     }
     else{
         _action.postUpdate(remain);
@@ -510,15 +532,6 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::Obstacle
     };
 }
 
-void GameScene::pauseNonEssentialAudio(){
-    AudioEngine::get()->clear("root-carrot");
-    AudioEngine::get()->clear("root-bunny");
-    AudioEngine::get()->clear(_map->getFarmers().at(0)->getUUID());
-    for(auto carrot:_map->getCarrots()){
-        AudioEngine::get()->clear(carrot->getUUID());
-    }
-}
-
 /**
 * Sets whether the level is completed.
 *
@@ -530,13 +543,12 @@ void GameScene::setComplete(bool value) {
     bool change = _complete != value;
     _complete = value;
     if (value && change) {
-        pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
-        _ui.setWinVisible(true);
+        _winnode->setVisible(true);
         _countdown = EXIT_COUNT;
     } else if (!value) {
-        _ui.setWinVisible(false);
+        _winnode->setVisible(false);
         _countdown = -1;
     }
 }
@@ -551,13 +563,12 @@ void GameScene::setComplete(bool value) {
 void GameScene::setFailure(bool value) {
     _failed = value;
     if (value) {
-        pauseNonEssentialAudio();
         std::shared_ptr<Sound> source = _assets->get<Sound>(LOSE_MUSIC);
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
-        _ui.setLoseVisible(true);
+        _losenode->setVisible(true);
         _countdown = EXIT_COUNT;
     } else {
-        _ui.setLoseVisible(false);
+        _losenode->setVisible(false);
         _countdown = -1;
     }
 }
@@ -577,20 +588,22 @@ Size GameScene::computeActiveSize() const {
     } else {
         dimen *= SCENE_HEIGHT / dimen.height;
     }
+    CULog("ACTIVE SIZE: %s", dimen.toString().c_str());
     return dimen;
 }
 
 void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
-    _map->getWheatScene()->render(batch);
+//    const std::shared_ptr<Shader> spriteShader = Shader::alloc(SHADER(spriteVertex), SHADER(spriteFrag));
+//    spriteShader->setSampler("grass_tex", _assets->get<Texture>("shader_base"));
+//    spriteShader->setSampler("sprite_tex", batch->getTexture());
+    
+//    spriteShader->bind();
+//    batch->setShader(spriteShader);
     Scene2::render(batch);
-//    _map->getWheatScene()->renderToScreen(1.0); //for debugging the wheat texture
+//    spriteShader->unbind();
 }
 
 void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){
-    _network->disablePhysics();
-    while(_network->isInAvailable()){
-        _network->popInEvent();
-    }
     reset();
 }
 

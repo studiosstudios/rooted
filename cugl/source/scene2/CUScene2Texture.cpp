@@ -69,7 +69,7 @@ void Scene2Texture::dispose() {
     _target = nullptr;
     _texture = nullptr;
 }
-
+    
 /**
  * Initializes a Scene2Texture with the given viewport.
  *
@@ -82,18 +82,15 @@ void Scene2Texture::dispose() {
  * @param y         The viewport y offset
  * @param width     The viewport width
  * @param height    The viewport height
- * @param dpi       true if DPI should be accounted for
  *
  * @return true if initialization was successful.
  */
-bool Scene2Texture::init(float x, float y, float width, float height, bool dpi) {
+bool Scene2Texture::init(float x, float y, float width, float height) {
     if (Scene2::init(x,y,width,height)) {
-        // We need to account for high DPI screens
-        if (dpi) {
-            float scale = Display::get()->getPixelDensity();
-            width *= scale;
-            height *= scale;
-        }
+		// We need to account for high DPI screens
+        float scale = Display::get()->getPixelDensity();
+		width *= scale;
+		height *= scale;
 
         _target = RenderTarget::alloc(width, height);
         _texture = (_target == nullptr ? nullptr : _target->getTexture());

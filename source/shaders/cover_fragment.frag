@@ -41,10 +41,10 @@ uniform sampler2D noise_tex;
 uniform vec2 TEXTURE_PIXEL_SIZE;
 uniform vec2 SCENE_SIZE;
 uniform float WIND_TIME;
+uniform float blade_color_scale;
 
 uniform float wind_speed;
 uniform vec2 wind_direction;
-uniform float tex_height;
 
 // The output color
 out vec4 frag_color;
@@ -57,7 +57,6 @@ in vec2 outGradCoord;
 
 uniform float MAX_WHEAT_HEIGHT;
 const float PI = 3.14f;
-uniform float STEP_SIZE;
 
 /**
  Calculates a sine wave
@@ -73,8 +72,8 @@ float sineWave(float T, float a, float phase, vec2 dir, vec2 pos) {
 }
 
 float sampleHeight(vec2 uv) {
-    vec3 samp = texture(grass_tex, uv).rgb;
-    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f, 0.0, MAX_WHEAT_HEIGHT) : 0.0f;
+    float r = texture(grass_tex, uv).r;
+    return r > 0.0f ? r * 255.0f/blade_color_scale + 10.0f : 0.0f;
 }
 
 /**
@@ -121,11 +120,11 @@ void main()
     //note that this assume that all textures are 32px tall (not accounting for camera zoom)
     //we cant pass this in as a uniform per texture since spritebatch draws in one call
     //to fix this we will have to modify spritebatch
-    float height = (1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y / TEXTURE_PIXEL_SIZE.y;
+    float height = (1.0 - outTexCoord.y) * 32.0 / SCENE_SIZE.y / TEXTURE_PIXEL_SIZE.y;
 
-    vec2 wheatUV = wheatCoord + vec2(0.0, 1.0 - outTexCoord.y) * tex_height / SCENE_SIZE.y;
+    vec2 wheatUV = wheatCoord + vec2(0, 1.0 - outTexCoord.y) * 32.0 / SCENE_SIZE.y;
 
-    for (float dist = 0.0f; dist <= MAX_WHEAT_HEIGHT; dist += STEP_SIZE) {
+    for (float dist = 0.0f; dist < MAX_WHEAT_HEIGHT; ++dist) {
         //sample wheat height
         float wheat_height = sampleHeight(wheatUV);
 
@@ -140,7 +139,7 @@ void main()
             break;
         }
 
-        wheatUV += vec2(0.0, TEXTURE_PIXEL_SIZE.y) * STEP_SIZE;
+        wheatUV += vec2(0.0, TEXTURE_PIXEL_SIZE.y);
     }
 
     frag_color *= outColor;

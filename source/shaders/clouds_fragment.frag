@@ -31,7 +31,6 @@ uniform float CLOUD_TIME;
 uniform float cloud_speed;
 uniform vec2 wind_direction;
 uniform vec2 SCREEN_PIXEL_SIZE;
-uniform float scale;
 
 /**
  Calculates noise from using noise texture
@@ -49,7 +48,7 @@ float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
  */
 void main(void) {
     float noise = sampleNoise(outTexCoord, SCREEN_PIXEL_SIZE*50.0, 0.2f * WIND_TIME);
-    vec2 cloud_uv = outTexCoord/scale + cloud_speed * normalize(wind_direction) * CLOUD_TIME  - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise)/scale;
+    vec2 cloud_uv = outTexCoord + cloud_speed * normalize(wind_direction) * CLOUD_TIME  - vec2(0.0f, SCREEN_PIXEL_SIZE.y * noise);
     frag_color.a = texture(clouds_tex, cloud_uv).r*cloud_alpha_scale;
     frag_color *= outColor;
 }

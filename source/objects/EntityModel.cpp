@@ -93,8 +93,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         
         // Gameplay attributes
         _facing = SOUTH;
-        _state = STANDING;
-        updateCurAnimDurationForState();
+        _state = MOVING;
         
         return true;
     }
@@ -111,23 +110,19 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == PLANTING;
+    return !getLinearVelocity().isZero() || _state == DASHING || _state == PLANTING;
 }
 
 void EntityModel::stepAnimation(float dt) {
-    if (_node != nullptr) {
+    cugl::scene2::SpriteNode* sprite = dynamic_cast<cugl::scene2::SpriteNode*>(_node.get());
+    if (sprite != nullptr) {
         if (animationShouldStep()) {
-                curAnimTime += dt;
-                if (curAnimTime > (curAnimDuration)) { curAnimTime = 0;}
-                // PING-PING style animation
-                // https://www.desmos.com/calculator/kszulthvhz
-//                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
-                // LOOPING style animation
-                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
+                animTime += dt;
+                if (animTime > 1.5f) { animTime = 0;}
+                sprite->setFrame(std::floor(sprite->getSpan() * animTime / 1.5f));
         }
-        else if (_node->getFrame() != 0) {
-            _node->setFrame(0);
-            curAnimTime = 0;
+        else if (sprite->getFrame() != 0) {
+            sprite->setFrame(0);
         }
     }
    
@@ -198,9 +193,9 @@ void EntityModel::setMovement(Vec2 movement) {
         sprite = _southEastWalkSprite;
     }
     // Change facing for the sprite
-//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
-    if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-        sprite->flipHorizontal(!sprite->isFlipHorizontal());
+    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
+    if (image->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+        image->flipHorizontal(!image->isFlipHorizontal());
     }
     setSceneNode(sprite);
     _facing = face;
@@ -258,14 +253,7 @@ void EntityModel::releaseFixtures() {
  */
 void EntityModel::dispose() {
     _node = nullptr;
-    _wheatHeightNode = nullptr;
     _geometry = nullptr;
-    
-    _northWalkSprite = nullptr;
-    _northEastWalkSprite = nullptr;
-    _eastWalkSprite = nullptr;
-    _southEastWalkSprite = nullptr;
-    _southWalkSprite = nullptr;
 }
 
 /**
@@ -278,31 +266,12 @@ void EntityModel::updateState() {
         return;
     }
     
-    bool stateChanged = false;
-    EntityState nextState = _state;
-    
-    
     switch (_state) {
-        case STANDING: {
-            // Standing -> Moving
-            nextState = getMovementState();
-            stateChanged = (nextState != _state);
-            _state = nextState;
-            break;
-        }
-        case SNEAKING:
-        case WALKING:
-        case RUNNING: {
+        case MOVING: {
             // Moving -> Dashing
             if (dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
-                stateChanged = true;
-            }
-            else {
-                nextState = getMovementState();
-                stateChanged = (nextState != _state);
-                _state = nextState;
             }
             break;
         }
@@ -310,8 +279,7 @@ void EntityModel::updateState() {
             // Dashing -> Moving
             dashTimer--;
             if (dashTimer == 0) {
-                _state = getMovementState();
-                stateChanged = true;
+                _state = MOVING;
             }
             break;
         }
@@ -319,11 +287,6 @@ void EntityModel::updateState() {
             CULog("updateState: Not implemented yet");
         }
     }
-    
-    if (stateChanged) {
-        updateCurAnimDurationForState();
-    }
-//    std::cout << _state << "\n";
 }
 
 /**
@@ -337,23 +300,15 @@ void EntityModel::applyForce() {
     }
     
     Vec2 speed;
-    Vec2 normMovement = getMovement().getNormalization();
     
     switch (_state) {
-        case STANDING: {
-            setLinearVelocity(Vec2::ZERO);
-            break;
-        }
-        case SNEAKING:
-            speed.set(normMovement).scale(SNEAK_SPEED);
-            setLinearVelocity(speed);
-            break;
-        case WALKING:
-            speed.set(normMovement).scale(WALK_SPEED);
-            setLinearVelocity(speed);
-            break;
-        case RUNNING: {
-            speed.set(normMovement).scale(RUN_SPEED);
+        case MOVING: {
+            if (getMovement() == Vec2::ZERO) {
+                speed = Vec2::ZERO;
+            }
+            else{
+                Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
+            }
             setLinearVelocity(speed);
             break;
         }
@@ -394,10 +349,6 @@ void EntityModel::update(float dt) {
 //            _node->setColor(Color4(255, 255, 255, 255));
 //        }
     }
-    
-    if (_wheatHeightNode != nullptr) {
-        updateWheatHeightNode();
-    }
 }
 
 
@@ -414,34 +365,6 @@ void EntityModel::resetDebug() {
     BoxObstacle::resetDebug();
 }
 
-std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
-    pf = PolyFactory(0.01);
-    _wheatHeightTarget = 0.0;
-    _wheatSizeTarget = 0.75;
-    _currWheatHeight = _wheatHeightTarget;
-    _currWheatSize = _wheatSizeTarget;
-    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(1.6, 0.9)));
-    _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
-    _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
-    _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
-    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
-    return _wheatHeightNode;
-}
 
-void EntityModel::updateWheatHeightNode() {
-    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
-    if (_state == DASHING) {
-        _wheatSizeTarget = 1.5;
-        _wheatHeightTarget = -100;
-    } else {
-        _wheatSizeTarget = 0.75;
-        _wheatHeightTarget = round(getLinearVelocity().length());
-    }
-    _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.2;
-    _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.2;
-    _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
-    _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
-                                      _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
-}
 
 

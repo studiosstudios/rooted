@@ -50,30 +50,3 @@ void Carrot::gotRooted(){
 void Carrot::gotUnrooted(){
     _isRooted = false;
 }
-
-void Carrot::escaped(){
-    _isCaptured = false;
-    getSceneNode()->setVisible(true);
-}
-
-void Carrot::updateCurAnimDurationForState() {
-    switch (_state) {
-            // TODO: This needs to be split up into the correct animDurations for each type of movement states
-        case SNEAKING:
-        case WALKING:
-        case RUNNING: {
-            curAnimDuration = walkAnimDuration;
-            break;
-        }
-        default: {
-            // This state duration is not implemented yet
-            return;
-        }
-    }
-}
-
-void Carrot::resetCarrot(){
-    _isCaptured = false;
-    _isRooted = false;
-    _numBabyCarrots = 0;
-}

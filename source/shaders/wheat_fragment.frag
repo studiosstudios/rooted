@@ -116,8 +116,10 @@ vec4 wheatSideColor(float x, float dist) {
 }
 
 /**
+ Retrieves the color from the wheat top texture for the top of the wheat
  
- */
+ Converts the current coordinate to coordinate in wheat top texture
+*/
 vec4 wheatTopColor(float x, float y) {
     return texture(wheat_top_tex, vec2(x, y) * 4.0f);
 }
@@ -154,7 +156,8 @@ float wind(vec2 pos, float t) {
  - offset: offset sampling along x axis for jagged look
  */
 float sampleNoise(vec2 uv, vec2 texture_pixel_size, float offset) {
-    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x + offset, 0.0f)).r;
+//    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x + offset, 0.0f)).r;
+    return texture(noise_tex, vec2(uv.x / texture_pixel_size.x + offset, uv.y / texture_pixel_size.y)).r;
 }
 
 /**
@@ -200,10 +203,14 @@ void main(void) {
                 if (windValue <= 0.5f) {
 //                    baseColor = tip_color;
                     baseColor = wheatTopColor(fragUV.x, fragUV.y);
+                    // a little shading on top of noise
+//                    if (texture(grass_tex, uv+vec2(0.0f, 0.03f)).g > 0) {
+//                        baseColor -= texture(grass_tex, uv+vec2(0.0f, 0.03f)).g*vec4(2.0f, 2.01f, 2.01f, 0.0f);
+//                    }
 //                    baseColor = windValue > 0.49 ? sampleColor(dist, bladeLength) : tip_color;
                 } else {
 //                    baseColor = wind_color;
-                    baseColor = wheatTopColor(fragUV.x, fragUV.y) + vec4(0.08, 0.08, 0.08, 0.0);
+                    baseColor = wheatTopColor(fragUV.x, fragUV.y) + vec4(0.06, 0.06, 0.06, 0.0);
                 }
                 break;
             } else if (dist < bladeLength) {
@@ -211,7 +218,16 @@ void main(void) {
 //                baseColor = sampleColor(dist, bladeLength);
                 baseColor = wheatSideColor(fragUV.x, dist);
             }
+            
+//            if (texture(grass_tex, uv+vec2(0.0f, bladeLength-0.01f)).g > 0 && texture(grass_tex, uv+vec2(0.0f, bladeLength-0.01f)).r > 0) {
+//    //            baseColor -= vec4(0.01, 0.01, 0.01, 0.0);
+//                baseColor -= vec4(100.0, 100.0, 100.0, 0.0);
+//            }
         }
+        
+//        vec3 samp = texture(grass_tex, uv).rgb;
+//        float new_height =  samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
+        
 
         // Move on to the next pixel, down the blades
         fragUV += vec2(0.0, SCREEN_PIXEL_SIZE.y);

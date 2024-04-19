@@ -337,6 +337,7 @@ void EntityModel::applyForce() {
     }
     
     Vec2 speed;
+    Vec2 normMovement = getMovement().getNormalization();
     
     switch (_state) {
         case STANDING: {
@@ -344,9 +345,15 @@ void EntityModel::applyForce() {
             break;
         }
         case SNEAKING:
+            speed.set(normMovement).scale(SNEAK_SPEED);
+            setLinearVelocity(speed);
+            break;
         case WALKING:
+            speed.set(normMovement).scale(WALK_SPEED);
+            setLinearVelocity(speed);
+            break;
         case RUNNING: {
-            Vec2::normalize(getMovement(), &speed)->scale( getMaxSpeed());
+            speed.set(normMovement).scale(RUN_SPEED);
             setLinearVelocity(speed);
             break;
         }

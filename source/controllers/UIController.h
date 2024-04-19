@@ -114,5 +114,5 @@ public:
     
     void updateInfoNodes(int numCarrots, int numBarrots);
     
-    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots);
+    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive);
 };

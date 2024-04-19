@@ -185,7 +185,7 @@ void UIController::updateInfoNodes(int numCarrots, int numBarrots) {
     _barrotsRemainingText->setText("remaining baby carrots: " + std::to_string(numBarrots));
 }
 
-void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera, int numCarrots, int numBarrots) {
+void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive) {
     _cameraZoom = camera->getZoom();
     _uinode->setPosition(camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/_cameraZoom);
     if (_input->withJoystick()) {
@@ -196,6 +196,8 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
         _joymain->setVisible(false);
         _joyback->setVisible(false);
     }
+    _carrotsRemainingBoard->setVisible(debugActive);
+    _barrotsRemainingBoard->setVisible(debugActive);
     updateSwipeSpline();
     updateInfoNodes(numCarrots, numBarrots);
 }

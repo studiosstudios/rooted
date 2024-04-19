@@ -312,25 +312,15 @@ void InputController::processJoystick(const cugl::Vec2 pos) {
     Vec2 diff =  pos - _jtouch.position;
     _joyCenter = touch2Screen(pos);
 
-    // Max out the diff
     if (diff.lengthSquared() > JSTICK_RADIUS*JSTICK_RADIUS) {
         diff.normalize();
-        diff *= JSTICK_RADIUS;
     }
+    else {
+        diff.divide(JSTICK_RADIUS);
+    }
+    diff.y *= -1;
     
-    if (std::fabsf(diff.x) > JSTICK_DEADZONE) {
-        _movement.x = ((std::fabsf(diff.x) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE));
-        _movement.x *= _movement.x * signum(diff.x);
-    } else {
-        _movement.x = 0;
-    }
-    
-    if (std::fabsf(diff.y) > JSTICK_DEADZONE) {
-        _movement.y = ((std::fabsf(diff.y) - JSTICK_DEADZONE) / (JSTICK_RADIUS - JSTICK_DEADZONE));
-        _movement.y *= _movement.y * -signum(diff.y); // Negative here because of inverted y;
-    } else {
-        _movement.y = 0;
-    }
+    _movement.set(diff);
 }
 
 /**

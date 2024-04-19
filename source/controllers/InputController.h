@@ -151,6 +151,8 @@ protected:
     cugl::Timestamp _rtime;
 	/** The timestamp for a double tap in the middle */
 	cugl::Timestamp _mtime;
+    /** Maximum vector for joystick for scaling purposes */
+//    cugl::Vec2 maxJoystickVec = Vec2()
     
     /** List holding points for swipe drawing */
     std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> _swipePoints;

@@ -198,7 +198,11 @@
         "largerMap": "level-editor/largerMaptest.json",
         "evenLargerMap": "level-editor/evenLargerMap.json",
         "gridUnit1": "level-editor/gridUnit.json",
-        "gridUnit2": "level-editor/gridUnit2.json"
+        "gridUnit2": "level-editor/gridUnit2.json",
+        "gridUnit3": "level-editor/gridUnit3.json",
+        "gridUnit4": "level-editor/gridUnit4.json",
+        "gridUnit5": "level-editor/gridUnit5.json",
+        "gridUnit6": "level-editor/gridUnit6.json"
     },
     "sounds": {
         "menu": {

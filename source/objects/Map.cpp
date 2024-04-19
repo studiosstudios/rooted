@@ -264,7 +264,7 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
                 } else if (type == "Carrot") {
                     _carrotSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else {
-                    CUWarn("TILED JSON: Unrecognized entity: %s. Are you sure you have placed the objected in the correct layer?", type.c_str());
+                    CUWarn("TILED JSON: Unrecognized entity: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
                 }
             } else {
                 CUWarn("TILED JSON: Unrecognized layer name: %s", name.c_str());
@@ -568,6 +568,7 @@ void Map::spawnBabyCarrots() {
     //        babyNode->setColor(Color4::BLUE);
         baby->setSceneNode(babyNode);
         babyNode->setName("baby");
+        babyNode->setPriority(float(DrawOrder::ENTITIES));
         //    babyNode->setColor(Color4::BLACK);
         baby->setDrawScale(
                            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM

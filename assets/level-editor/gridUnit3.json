@@ -43,27 +43,27 @@
          "objects":[
                 {
                  "gid":7,
-                 "height":96,
-                 "id":110,
+                 "height":64,
+                 "id":115,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
-                 "width":96,
-                 "x":64,
-                 "y":224
+                 "width":128,
+                 "x":128,
+                 "y":128
                 }, 
                 {
                  "gid":7,
                  "height":64,
-                 "id":111,
+                 "id":116,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
-                 "width":96,
-                 "x":320,
-                 "y":96
+                 "width":64,
+                 "x":352,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -79,50 +79,86 @@
                 {
                  "gid":2,
                  "height":32,
-                 "id":106,
+                 "id":119,
                  "name":"",
                  "rotation":0,
                  "type":"Carrot",
                  "visible":true,
                  "width":32,
-                 "x":64,
-                 "y":64
-                }, 
-                {
-                 "gid":1,
-                 "height":32,
-                 "id":107,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Farmer",
-                 "visible":true,
-                 "width":32,
-                 "x":384,
+                 "x":32,
                  "y":192
                 }, 
                 {
                  "gid":3,
                  "height":32,
-                 "id":112,
+                 "id":120,
                  "name":"",
                  "rotation":0,
                  "type":"Baby",
                  "visible":true,
                  "width":32,
-                 "x":64,
-                 "y":256
+                 "x":224,
+                 "y":192
                 }, 
                 {
-                 "gid":3,
+                 "gid":1,
                  "height":32,
-                 "id":113,
+                 "id":121,
                  "name":"",
                  "rotation":0,
-                 "type":"Baby",
+                 "type":"Farmer",
                  "visible":true,
                  "width":32,
                  "x":416,
                  "y":64
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":122,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":32,
+                 "y":64
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":123,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":448,
+                 "y":128
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":124,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":64
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":126,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":128,
+                 "y":256
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -131,7 +167,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":114,
+ "nextobjectid":127,
  "orientation":"orthogonal",
  "properties":[
         {

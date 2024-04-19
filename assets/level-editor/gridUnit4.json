@@ -8,20 +8,20 @@
          "name":"wheat",
          "objects":[
                 {
-                 "gid":4,
+                 "gid":5,
                  "height":288,
-                 "id":90,
+                 "id":112,
                  "name":"",
                  "properties":[
                         {
                          "name":"blade_color_scale",
                          "type":"float",
-                         "value":25
+                         "value":1
                         }, 
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"testMap"
+                         "value":"shader_base"
                         }],
                  "rotation":0,
                  "type":"Map",
@@ -43,27 +43,39 @@
          "objects":[
                 {
                  "gid":7,
-                 "height":96,
-                 "id":110,
+                 "height":64,
+                 "id":113,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
                  "width":96,
-                 "x":64,
-                 "y":224
+                 "x":96,
+                 "y":96
                 }, 
                 {
                  "gid":7,
                  "height":64,
-                 "id":111,
+                 "id":114,
                  "name":"",
                  "rotation":0,
                  "type":"PlantingSpot",
                  "visible":true,
-                 "width":96,
-                 "x":320,
+                 "width":64,
+                 "x":352,
                  "y":96
+                }, 
+                {
+                 "gid":7,
+                 "height":64,
+                 "id":115,
+                 "name":"",
+                 "rotation":0,
+                 "type":"PlantingSpot",
+                 "visible":true,
+                 "width":128,
+                 "x":160,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -77,51 +89,87 @@
          "name":"entities",
          "objects":[
                 {
+                 "gid":1,
+                 "height":32,
+                 "id":116,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Farmer",
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":64
+                }, 
+                {
                  "gid":2,
                  "height":32,
-                 "id":106,
+                 "id":117,
                  "name":"",
                  "rotation":0,
                  "type":"Carrot",
                  "visible":true,
                  "width":32,
                  "x":64,
-                 "y":64
+                 "y":192
                 }, 
                 {
-                 "gid":1,
+                 "gid":2,
                  "height":32,
-                 "id":107,
+                 "id":118,
                  "name":"",
                  "rotation":0,
-                 "type":"Farmer",
+                 "type":"Carrot",
                  "visible":true,
                  "width":32,
-                 "x":384,
+                 "x":416,
                  "y":192
                 }, 
                 {
                  "gid":3,
                  "height":32,
-                 "id":112,
+                 "id":124,
                  "name":"",
                  "rotation":0,
                  "type":"Baby",
                  "visible":true,
                  "width":32,
-                 "x":64,
-                 "y":256
+                 "x":256,
+                 "y":224
                 }, 
                 {
                  "gid":3,
                  "height":32,
-                 "id":113,
+                 "id":125,
                  "name":"",
                  "rotation":0,
                  "type":"Baby",
                  "visible":true,
                  "width":32,
-                 "x":416,
+                 "x":320,
+                 "y":160
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":126,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":32,
+                 "y":64
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":127,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":448,
                  "y":64
                 }],
          "opacity":1,
@@ -131,7 +179,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":114,
+ "nextobjectid":128,
  "orientation":"orthogonal",
  "properties":[
         {

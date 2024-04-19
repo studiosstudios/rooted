@@ -535,7 +535,7 @@ public:
      *
      * @return true if this character is facing right
      */
-    bool getFacing() const { return _facing; }
+    cugl::Vec2 getFacing();
     
     std::string getUUID() const { return _uuid; }
     

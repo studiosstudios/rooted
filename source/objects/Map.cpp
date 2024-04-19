@@ -758,11 +758,16 @@ void Map::resetPlayers() {
 }
 
 void Map::spawnRock(std::shared_ptr<EntityModel> player) {
-    auto rock = cugl::physics2::WheelObstacle::alloc(player->getPosition(), 0.5);
+    auto rockTexture = _assets->get<Texture>("rock");
+
+    float radius = (0.5f*rockTexture->getSize()/_scale).x;
+    
+    auto rock = cugl::physics2::WheelObstacle::alloc(player->getPosition(), radius);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setSensor(true);
+    rock->setBullet(true);
+    rock->setLinearVelocity(player->getFacing() * WALK_SPEED);
     
-    auto rockTexture = _assets->get<Texture>("rock");
     auto rockNode = scene2::PolygonNode::allocWithTexture(rockTexture);
     rockNode->setColor(Color4::ORANGE);
     rockNode->setPriority(float(DrawOrder::ENTITIES));

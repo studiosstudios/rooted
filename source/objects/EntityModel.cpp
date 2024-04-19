@@ -374,11 +374,28 @@ bool EntityModel::isDashing() {
     return _state == DASHING;
 }
 
-
-void EntityModel::throwRock() {
-    CULog("throwing rock");
-    
-    // spawn a physics object
+cugl::Vec2 EntityModel::getFacing() {
+    switch (_facing) {
+        case EAST:
+            return Vec2(1, 0);
+        case NORTHEAST:
+            return Vec2(1, 1);
+        case NORTH:
+            return Vec2(0, 1);
+        case NORTHWEST:
+            return Vec2(-1, 1);
+        case WEST:
+            return Vec2(-1, 0);
+        case SOUTHWEST:
+            return Vec2(-1, -1);
+        case SOUTH:
+            return Vec2(0, -1);
+        case SOUTHEAST:
+            return Vec2(1, -1);
+        default:
+            return Vec2();
+            break;
+    }
 }
 
 /**

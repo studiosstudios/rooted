@@ -177,7 +177,8 @@ void InputController::update(float dt) {
     
     _unrootPressed = _keyUnroot;
     
-    _throwRockPressed = _keyThrowRock;
+    _throwRockPressed  = _keyThrowRock;
+    _keyThrowRock = false;
 
     // _movement is now updated directly in processJoystick
 
@@ -371,7 +372,8 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
         case Zone::MAIN:
             // Only check for double tap in Main if nothing else down
             if (_jtouch.touchids.empty() && _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
-                _keyDebug = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
+                _keyThrowRock = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
+//                _keyDebug = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
             }
             
             // Keep count of touches in Main zone if next to each other.

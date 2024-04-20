@@ -158,7 +158,6 @@ void Collectible::update(float dt) {
     
     // magic number, this will just determine what age means
     _age -= 0.5f;
-    CULog("%f", _age);
 }
 
 

@@ -204,6 +204,7 @@ void SpriteNode::setFrame(int frame) {
     float dx = x-_bounds.origin.x;
     float dy = y-_bounds.origin.y;
     _bounds.origin.set(x,y);
+    _origin = float(y)/_texture->getSize().height;
     shiftTexture(dx, dy);
 }
 

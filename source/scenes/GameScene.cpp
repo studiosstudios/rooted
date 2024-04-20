@@ -449,7 +449,12 @@ void GameScene::postUpdate(float remain) {
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        _network->pushOutEvent(ResetEvent::allocResetEvent());
+        if(_network->isHost()){
+            _network->pushOutEvent(ResetEvent::allocResetEvent());
+        }
+        else{
+            //do nothing and wait for host to reset
+        }
     }
     else{
         _action.postUpdate(remain);
@@ -489,6 +494,9 @@ void GameScene::postUpdate(float remain) {
 //            _network->disconnect();
 //        }
     }
+    
+    _map->getCharacter()->getSceneNode()->TexturedNode::setIsPlayer(true);
+    
 }
 
 /**

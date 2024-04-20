@@ -10,6 +10,7 @@ using namespace cugl;
 /** Time after dashing when carrot can be captured */
 #define CAPTURE_TIME    10 //TEMPORARY DASH TO ROOT SOLUTION
 #define DASH_TIME       2
+#define EVADE_DIST      2
 /** The sound effect for a bunny rooting a carrot */
 #define ROOTING_BUNNY_EFFECT      "bunny-root"
 /** The sound effect for a carrot being rooted*/
@@ -103,6 +104,14 @@ void ActionController::preUpdate(float dt) {
         
         // Step baby carrot AI
         for (auto babyCarrot : _map->getBabyCarrots()) {
+            // I'm slightly worried that this could get expensive but when I think about it
+            // it's really no different than just checking for collisions so idk
+            for (auto farmer : _map->getFarmers()) {
+                if (farmer->getPosition().distance(babyCarrot->getPosition()) <= EVADE_DIST) {
+                    babyCarrot->setState(State::EVADE);
+                    babyCarrot->setTarget(babyCarrot->getPosition().add(farmer->getPosition().subtract(babyCarrot->getPosition()).normalize().scale(-3)).clamp(Vec2(1, 1), Vec2(13, 13)));
+                }
+            }
             _ai.updateBabyCarrot(babyCarrot);
         }
         

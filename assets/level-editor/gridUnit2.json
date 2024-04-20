@@ -8,20 +8,20 @@
          "name":"wheat",
          "objects":[
                 {
-                 "gid":4,
+                 "gid":13,
                  "height":288,
-                 "id":90,
+                 "id":114,
                  "name":"",
                  "properties":[
                         {
                          "name":"blade_color_scale",
                          "type":"float",
-                         "value":25
+                         "value":10
                         }, 
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"testMap"
+                         "value":"unit_3"
                         }],
                  "rotation":0,
                  "type":"Map",
@@ -42,7 +42,7 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":7,
+                 "gid":14,
                  "height":96,
                  "id":110,
                  "name":"",
@@ -51,10 +51,10 @@
                  "visible":true,
                  "width":96,
                  "x":64,
-                 "y":224
+                 "y":240
                 }, 
                 {
-                 "gid":7,
+                 "gid":14,
                  "height":64,
                  "id":111,
                  "name":"",
@@ -62,8 +62,8 @@
                  "type":"PlantingSpot",
                  "visible":true,
                  "width":96,
-                 "x":320,
-                 "y":96
+                 "x":319,
+                 "y":112
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -131,7 +131,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":114,
+ "nextobjectid":115,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -141,7 +141,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.10.1",
  "tileheight":32,
  "tilesets":[
         {
@@ -153,7 +153,7 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":7,
+         "firstgid":14,
          "source":"environment.tsx"
         }],
  "tilewidth":32,

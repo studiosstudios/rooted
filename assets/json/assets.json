@@ -128,6 +128,24 @@
         "grid": {
             "file":     "textures/maps/grid.png"
         },
+        "unit_1": {
+            "file":     "textures/maps/unit_1.png"
+        },
+        "unit_2": {
+            "file":     "textures/maps/unit_2.png"
+        },
+        "unit_3": {
+            "file":     "textures/maps/unit_3.png"
+        },
+        "unit_4": {
+            "file":     "textures/maps/unit_4.png"
+        },
+        "unit_5": {
+            "file":     "textures/maps/unit_5.png"
+        },
+        "unit_6": {
+            "file":     "textures/maps/unit_6.png"
+        },
         "shader_clouds": {
             "file":     "textures/clouds.png",
             "wrapS":    "repeat",
@@ -143,6 +161,16 @@
         },
         "shader_grass_gradient": {
             "file":     "textures/grass_gradient.png"
+        },
+        "shader_wheat_side": {
+            "file":     "textures/wheat_side.png",
+            "wrapS":    "repeat",
+            "wrapT":    "repeat"
+        },
+        "shader_wheat_top": {
+            "file":     "textures/wheat_top.png",
+            "wrapS":    "repeat",
+            "wrapT":    "repeat"
         },
         "bkg": {
             "file": "textures/mainmenubkg.png"
@@ -191,6 +219,12 @@
         },
         "rock": {
             "file": "textures/rock.png"
+        },
+        "backbutton": {
+            "file": "textures/back.png"
+        },
+        "playercountasset" : {
+            "file" : "textures/temp_player_count.png"
         }
     },
     "jsons": {
@@ -281,6 +315,14 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 16
         },
+        "gaeguBold40": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 40
+        },
+        "gaeguBold50": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 50
+        },
         "gaeguBold60": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 60
@@ -300,6 +342,14 @@
         "gaeguBold90": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 90
+        },
+        "gaeguBold100": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 100
+        },
+        "gaeguBold120": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 120
         }
     },
     "widgets": {
@@ -308,13 +358,17 @@
         "textfield" : "widgets/textfield.json",
         "labelbox" : "widgets/labelbox.json",
         "mainmenu" : "widgets/mainmenu.json",
+        "loadingscreen": "widgets/loadingscreen.json",
         "redbuttonbigwidget" : "widgets/redbuttonbigwidget.json",
         "redbuttonsmallwidget" : "widgets/redbuttonsmallwidget.json",
         "numbuttonwidget" : "widgets/numbuttonwidget.json",
         "numpadwidget" : "widgets/numpadwidget.json",
         "lobbyclient" : "widgets/lobbyclient.json",
         "lobbyhost" : "widgets/lobbyhost.json",
-        "prelobby": "widgets/prelobby.json"
+        "prelobby": "widgets/prelobby.json",
+        "backbuttonwidget" : "widgets/backbuttonwidget.json",
+        "lobbyidwidget" : "widgets/lobbyidwidget.json",
+        "playercountwidget" : "widgets/playercountwidget.json"
     },
     "scene2s" : {
         "host": {
@@ -339,6 +393,12 @@
             "type": "Widget",
             "data": {
                 "key": "prelobby"
+            }
+        },
+        "loadingscreen": {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "loadingscreen"
             }
         }
     }

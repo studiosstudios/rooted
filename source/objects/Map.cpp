@@ -760,11 +760,11 @@ void Map::resetPlayers() {
 void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     auto rockTexture = _assets->get<Texture>("rock");
     
-    auto rock = EntityModel::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x);
+    auto rock = Collectible::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName("rock");
-    rock->setSensor(true);
-    rock->setBullet(true);
+//    rock->setSensor(true);
+//    rock->setBullet(true);
     rock->setLinearVelocity(player->getFacing() * RUN_SPEED);
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);

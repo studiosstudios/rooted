@@ -9,15 +9,15 @@
 #define Collectible_h
 
 #include <cugl/cugl.h>
-#include <cugl/physics2/CUWheelObstacle.h>
+#include <cugl/physics2/CUBoxObstacle.h>
 
-class Collectible : public cugl::physics2::WheelObstacle {
+class Collectible : public cugl::physics2::BoxObstacle {
 private:
     /** This macro disables the copy constructor (not allowed on physics objects) */
     CU_DISALLOW_COPY_AND_ASSIGN(Collectible);
     
     /** How long the collectible should last */
-    float age;
+    float _age;
 
 protected:
     /** The scene graph node for the Collectible. */
@@ -33,7 +33,7 @@ protected:
     * This is very useful when the fixtures have a very different shape than
     * the texture (e.g. a circular shape attached to a square texture).
     */
-    virtual void resetDebug() override;
+    void resetDebug() override;
     
     /** The current movement (horizontal and vertical) of the object */
     cugl::Vec2 _movement;
@@ -55,6 +55,8 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
+    
+    int _wheatContacts;
 
 
 public:
@@ -66,7 +68,7 @@ public:
      * This constructor does not initialize any of the dude values beyond
      * the defaults.  To use a DudeModel, you must call init().
      */
-    Collectible() : WheelObstacle() { }
+    Collectible() : BoxObstacle() { }
     
     /**
      * Destroys this DudeModel, releasing all resources.
@@ -126,7 +128,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2 pos, const cugl::Size size) override {
+    virtual bool init(const cugl::Vec2 pos, const cugl::Size size) {
         return init(pos, size, 1.0f);
     }
     
@@ -182,8 +184,8 @@ public:
      *
      * @return  A newly allocated DudeModel at the given position
      */
-    static std::shared_ptr<EntityModel> alloc(const cugl::Vec2& pos) {
-        std::shared_ptr<EntityModel> result = std::make_shared<EntityModel>();
+    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos) {
+        std::shared_ptr<Collectible> result = std::make_shared<Collectible>();
         return (result->init(pos) ? result : nullptr);
     }
 
@@ -288,7 +290,7 @@ public:
      *
      * Virtual, should be implemented by all derived classes with respect to their specific animation durations.
      */
-    virtual void updateCurAnimDurationForState() {};
+    void updateCurAnimDurationForState() {};
     
     /**
      * Returns whether the current EntityModel's state is one where the animation should be cycling
@@ -306,30 +308,30 @@ public:
     
 #pragma mark -
 #pragma mark Attribute Properties
-    /**
-     * Returns how much force to apply to get the dude moving
-     *
-     * Multiply this by the input to get the movement value.
-     *
-     * @return how much force to apply to get the dude moving
-     */
-    float getForce() const { return DUDE_FORCE; }
-    
-    /**
-     * Returns ow hard the brakes are applied to get a dude to stop moving
-     *
-     * @return ow hard the brakes are applied to get a dude to stop moving
-     */
-    float getDamping() const { return DUDE_DAMPING; }
-    
-    /**
-     * Returns the upper limit on dude left-right movement.
-     *
-     * This does NOT apply to vertical movement.
-     *
-     * @return the upper limit on dude left-right movement.
-     */
-    float getMaxSpeed() const { return DUDE_MAXSPEED; }
+//    /**
+//     * Returns how much force to apply to get the dude moving
+//     *
+//     * Multiply this by the input to get the movement value.
+//     *
+//     * @return how much force to apply to get the dude moving
+//     */
+//    float getForce() const { return DUDE_FORCE; }
+//    
+//    /**
+//     * Returns ow hard the brakes are applied to get a dude to stop moving
+//     *
+//     * @return ow hard the brakes are applied to get a dude to stop moving
+//     */
+//    float getDamping() const { return DUDE_DAMPING; }
+//    
+//    /**
+//     * Returns the upper limit on dude left-right movement.
+//     *
+//     * This does NOT apply to vertical movement.
+//     *
+//     * @return the upper limit on dude left-right movement.
+//     */
+//    float getMaxSpeed() const { return DUDE_MAXSPEED; }
             
     bool isInWheat() const { return _wheatContacts > 0; }
 
@@ -364,25 +366,13 @@ public:
      */
     void update(float dt) override;
     
-    
-    /**
-     *  Steps the state machine of this EntityModel.
-     *
-     *  This method should be called after all relevant input attributes are set.
-     */
-    virtual void updateState();
-    
     /**
      * Applies the force to the body of this dude
      *
      * This method should be called after the force attribute is set.
      */
     void applyForce();
-    
-    void setEntityState(EntityState state) {
-        _state = state;
-    }
-    
+
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
 
     virtual void updateWheatHeightNode();

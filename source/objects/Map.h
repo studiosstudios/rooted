@@ -13,6 +13,7 @@
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
+#include "Collectible.h"
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
 #include "../shaders/ShaderRenderer.h"
@@ -89,7 +90,7 @@ private:
     /** 2D vector representing tiling of randomly generated map */
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
     
-    std::vector<std::shared_ptr<EntityModel>> _rocks;
+    std::vector<std::shared_ptr<Collectible>> _rocks;
 
     
 public:

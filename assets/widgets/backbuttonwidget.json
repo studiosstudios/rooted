@@ -1,10 +1,5 @@
 {
-    "variables": {
-        "text" : ["children", "stats", "data", "text"],
-        "fontsize" : ["children", "stats", "data", "font"],
-        "angle" : ["data", "angle"],
-        "anchor" : ["data", "anchor"]
-    },
+    "variables": {},
     "contents": {
         "type": "Button",
         "format": {
@@ -16,29 +11,29 @@
                 0
             ],
             "size": [
-                281,
-                143
+                185.25,
+                126.75
             ],
             "angle": 0,
             "position": [
-                0,
-                0
+                30,
+                0.25
             ],
             "visible": true,
-            "upnode": "woodsmall"
+            "upnode": "backbutton"
         },
         "children": {
-            "woodsmall": {
+            "backbutton": {
                 "type": "Image",
                 "data": {
-                    "texture": "woodsmall",
+                    "texture": "backbutton",
                     "anchor": [
                         0,
                         1
                     ],
                     "size": [
-                        281,
-                        143
+                        185.25,
+                        126.75
                     ],
                     "angle": 0,
                     "position": [
@@ -55,25 +50,25 @@
                     "y_offset": 0
                 }
             },
-            "stats": {
+            "back": {
                 "type": "Label",
                 "data": {
                     "anchor": [
-                        0.5,
-                        0.5
+                        0,
+                        1
                     ],
                     "size": [
-                        200,
-                        84
+                        111,
+                        43
                     ],
                     "position": [
-                        75.35000610351562,
-                        29.25
+                        46.125,
+                        42.875
                     ],
                     "angle": 0,
                     "visible": true,
-                    "font": "gaeguBold67",
-                    "text": "stats",
+                    "font": "gaeguBold50",
+                    "text": "back",
                     "foreground": "#ffffffff",
                     "background": "#00000000",
                     "padding": [
@@ -87,11 +82,11 @@
                 },
                 "children": {},
                 "layout": {
-                    "x_anchor": "center",
-                    "y_anchor": "middle",
+                    "x_anchor": "left",
+                    "y_anchor": "top",
                     "absolute": false,
-                    "x_offset": 0,
-                    "y_offset": 0
+                    "x_offset": 0.25,
+                    "y_offset": -0.32
                 }
             }
         }

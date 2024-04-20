@@ -33,11 +33,13 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     /** The network connection (as made by this scene) */
     std::shared_ptr<NetworkController> _network;
+    
+    std::shared_ptr<cugl::scene2::SceneNode> _clientscene;
 
     /** The menu button for starting a game */
     std::shared_ptr<cugl::scene2::Button> _startgame;
     /** The back button for the menu scene */
-    std::shared_ptr<cugl::scene2::Button> _backout;
+    std::shared_ptr<cugl::scene2::Button> _backoutclient;
     /** The game id label (for updating) */
     std::shared_ptr<cugl::scene2::TextField> _gameid;
     /** The players label (for updating) */
@@ -50,6 +52,13 @@ protected:
     /** The clear input button  */
     std::shared_ptr<cugl::scene2::Button> _clear;
     
+    /** The loading scene */
+    std::shared_ptr<cugl::scene2::SceneNode> _loadingscene;
+    /** The text displayed in the waiting screen */
+    std::shared_ptr<cugl::scene2::Label> _loadingtext;
+    /** The back button for the waiting screen */
+    std::shared_ptr<cugl::scene2::Button> _backoutloading;
+
     /** The network configuration */
     cugl::net::NetcodeConfig _config;
     
@@ -142,6 +151,8 @@ private:
      * networking.
      */
     void configureStartButton();
+    
+    void switchScene();
 };
 
 #endif /* __NL_GAME_SCENE_H__ */

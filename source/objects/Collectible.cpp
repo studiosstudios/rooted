@@ -158,6 +158,7 @@ void Collectible::update(float dt) {
     
     // magic number, this will just determine what age means
     _age -= 0.5f;
+    CULog("%f", _age);
 }
 
 
@@ -174,7 +175,8 @@ void Collectible::resetDebug() {
     BoxObstacle::resetDebug();
 }
 
-std::shared_ptr<cugl::scene2::SceneNode> Collectible::allocWheatHeightNode() {
+std::shared_ptr<cugl::scene2::SceneNode> Collectible::allocWheatHeightNode(float initCharHeight) {
+    _initCharacterHeight = initCharHeight;
     pf = PolyFactory(0.01);
     _wheatHeightTarget = 0.0;
     _wheatSizeTarget = 0.75;
@@ -184,13 +186,13 @@ std::shared_ptr<cugl::scene2::SceneNode> Collectible::allocWheatHeightNode() {
     _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
     _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
     _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
-    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    _wheatHeightNode->setPosition(getX(), getY()-_initCharacterHeight);
     return _wheatHeightNode;
 }
 
 void Collectible::updateWheatHeightNode() {
     // TODO: slowly decrease height of the collectible
-    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    _wheatHeightNode->setPosition(getX(), getY()-_initCharacterHeight);
     _wheatSizeTarget = 0.75;
     _wheatHeightTarget = round(getLinearVelocity().length());
     _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.2;

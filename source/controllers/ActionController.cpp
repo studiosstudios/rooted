@@ -81,6 +81,18 @@ void ActionController::preUpdate(float dt) {
         }
     }
     
+    // remove dead rocks
+    for(auto it = _map->getRocks().begin(); it != _map->getRocks().end();) {
+        if ((*it)->getAge() <= 0) {
+//            _map->getWorld()->removeChild(it->getSceneNode());
+//            it->setDebugScene(nullptr);
+            it = _map->getRocks().erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+    
     // for now, leave this as a carrot only option
     if (_input->didThrowRock()) {
         _map->spawnRock(playerEntity);

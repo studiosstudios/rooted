@@ -57,6 +57,8 @@ protected:
     bool _inWheat;
     
     int _wheatContacts;
+    
+    float _initCharacterHeight;
 
 
 public:
@@ -128,7 +130,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2 pos, const cugl::Size size) {
+    virtual bool init(const cugl::Vec2 pos, const cugl::Size size) override {
         return init(pos, size, 1.0f);
     }
     
@@ -337,6 +339,8 @@ public:
 
     void changeWheatContacts(int dx) { _wheatContacts += dx; }
     
+    float getAge() { return _age; }
+    
 #pragma mark -
 #pragma mark Physics Methods
     /**
@@ -373,7 +377,7 @@ public:
      */
     void applyForce();
 
-    virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
+    virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode(float initCharHeight);
 
     virtual void updateWheatHeightNode();
 

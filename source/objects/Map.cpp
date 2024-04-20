@@ -763,8 +763,6 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     auto rock = Collectible::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName("rock");
-//    rock->setSensor(true);
-//    rock->setBullet(true);
     rock->setLinearVelocity(player->getFacing() * RUN_SPEED);
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
@@ -781,7 +779,7 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     
     _rocks.push_back(rock);
     
-    auto wheatnode = rock->allocWheatHeightNode();
+    auto wheatnode = rock->allocWheatHeightNode(player->getHeight());
     _wheatscene->getRoot()->addChild(wheatnode);
     
     _world->initObstacle(rock);

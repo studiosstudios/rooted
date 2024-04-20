@@ -33,6 +33,8 @@ private:
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
+    /** references to the rocks */
+    std::vector<std::shared_ptr<Collectible>> _rocks;
     /** references to the walls */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
@@ -90,8 +92,6 @@ private:
     /** 2D vector representing tiling of randomly generated map */
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
     
-    std::vector<std::shared_ptr<Collectible>> _rocks;
-
     
 public:
     /**
@@ -271,8 +271,10 @@ public:
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
-    std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
+    std::vector<std::shared_ptr<Collectible>> &getRocks() { return _rocks; }
     
+    std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
+
     void resetPlantingSpots();
     
     void resetPlayers();

@@ -6,11 +6,11 @@ Movement | Desktop | Mobile
 | ---- | ---- | ----
 Move  | ↑,↓,←,→ | Joystick
 Dash  | X | Swipe up
-Root  | Z | Swipe down
-Toggle player character  | 	S | N/A
-Toggle player visibility  | V | Swipe right
+Root held carrot (farmer only) | Z | Swipe down
+Unroot nearby carrot (carrot only) | Z | Swipe down
+Escape from farmer's clutches (carrot only) | - | Shake phone
 Reset | R | Multitouch swipe
 Toggle debug | D | Double tap
 
 
-This alpha release demonstrates the integration of our game's customs shaders to model the wheat fields with rustling, along with more fleshed out networking events, UI additions to the menu scenes, some implementations of character animations, haptic feedback, and a full end-to-end game loop with win/lose condition support.
+This open beta release has new assets for the wheat, grass, farmer, carrots and planting spots, larger maps with map randomization, accelerometer integration for escaping from the farmer when caught, a new wheat rustling effect, refined baby carrot AI and new menu UI and in-game UI. Because we do not have haptics support for Android, this our release is for **iOS only**.

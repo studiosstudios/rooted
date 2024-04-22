@@ -95,6 +95,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _backoutprelobby->addListener([this](const std::string& name, bool down) {
         if (!down) {
             _choice = Choice::MAIN;
+            _currmenuchoice = Choice::MAIN;
         }
     });
     
@@ -103,8 +104,8 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     // TODO: SET UP STATS SCENE HERE
     
     // set choices
-    _choice = Choice::NONE;
-    _currmenuchoice = Choice::MAIN;
+    _choice = NONE;
+    _currmenuchoice = MAIN;
 
     setActive(false);
     return true;
@@ -138,53 +139,42 @@ void MenuScene::setActive(bool value) {
             switchScene(_currmenuchoice);
         } else {
             // deactivate all buttons
-            _hostbutton->deactivate();
-            _joinbutton->deactivate();
-            _playbutton->deactivate();
-            _statsbutton->deactivate();
-            _optionsbutton->deactivate();
-            _backoutprelobby->deactivate();
-            // If any were pressed, reset them
-            _hostbutton->setDown(false);
-            _joinbutton->setDown(false);
-            _playbutton->setDown(false);
-            _statsbutton->setDown(false);
-            _optionsbutton->setDown(false);
-            _backoutprelobby->setDown(false);
+            for (const auto& pair : _screenButtonMap) {
+                for (const auto& b : pair.second) {
+                    b->deactivate();
+                    b->setDown(false);
+                }
+            }
         }
     }
 }
 
 void MenuScene::update(float timestep) {
-    if (_choice != Choice::HOST && _choice != Choice::JOIN) {
+    if (_choice != HOST && _choice != JOIN && _choice != NONE) {
         switchScene(_choice);
         _choice = NONE;
     }
 }
 
 void MenuScene::switchScene(MenuScene::Choice sceneType) {
-    // TODO: this should be more automated
     if (isActive()) {
+        removeAllChildren();
+        // deactivate all buttons
+        for (const auto& pair : _screenButtonMap) {
+            for (const auto& b : pair.second) {
+                b->deactivate();
+            }
+        }
+        // activate the switched scenes buttons
+        for (const auto& b : _screenButtonMap[sceneType]) {
+            b->activate();
+        }
         switch (sceneType) {
             case MAIN:
-                removeAllChildren();
                 addChild(_menuscene);
-                _hostbutton->deactivate();
-                _joinbutton->deactivate();
-                _backoutprelobby->deactivate();
-                _playbutton->activate();
-                _statsbutton->activate();
-                _optionsbutton->activate();
                 break;
             case LOBBY:
-                removeAllChildren();
                 addChild(_lobbyscene);
-                _hostbutton->activate();
-                _joinbutton->activate();
-                _backoutprelobby->activate();
-                _playbutton->deactivate();
-                _statsbutton->deactivate();
-                _optionsbutton->deactivate();
                 break;
             default:
                 break;

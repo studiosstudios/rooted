@@ -128,7 +128,7 @@ public:
     Choice getChoice() const { return _choice; }
     
     void switchScene(MenuScene::Choice sceneType);
-
+    
 };
 
 #endif /* __MENU_SCENE_H__ */

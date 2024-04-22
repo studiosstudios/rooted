@@ -58,10 +58,12 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _optionsbutton;
     /** The menu button to back out into title screen from the prelobby */
     std::shared_ptr<cugl::scene2::Button> _backoutprelobby;
-    /** The player menu choice */
+    /** The player menu choice (for the external scene manager, i.e. the main app) */
     Choice _choice;
     /** The player choice when changing menus within this scene */
     Choice _currmenuchoice;
+    /** The map connecting the current "scene" with the Buttons associated with that "scene" (excluding the actual scene) */
+    std::map<Choice, std::vector<std::shared_ptr<cugl::scene2::Button>>> _screenButtonMap;
     
 public:
 #pragma mark -

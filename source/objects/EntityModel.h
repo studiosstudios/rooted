@@ -55,9 +55,18 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
-#define FARMER_FRONT_WALK_SPRITE "farmer-front-walk"
+#define FARMER_SOUTH_WALK_SPRITE "farmer-south-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
+#define FARMER_NORTHEAST_WALK_SPRITE "farmer-northeast-walk"
+#define FARMER_SOUTHEAST_WALK_SPRITE "farmer-southeast-walk"
+
+#define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
+#define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
+#define CARROT_EAST_WALK_SPRITE "carrot-east-walk"
+#define CARROT_NORTHEAST_WALK_SPRITE "carrot-northeast-walk"
+#define CARROT_SOUTHEAST_WALK_SPRITE "carrot-southeast-walk"
+
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -
@@ -67,7 +76,11 @@
 /** The amount to slow the character down */
 #define DUDE_DAMPING    10.0f
 /** The maximum character speed */
-#define DUDE_MAXSPEED   5.0f
+#define DUDE_MAXSPEED   5.4f
+
+#define RUN_SPEED       3.6f
+#define WALK_SPEED      2.6f
+#define SNEAK_SPEED     1.8f
 
 
 #pragma mark -
@@ -80,6 +93,27 @@
 * on a platform.  The round shapes on the end caps lead to smoother movement.
 */
 class EntityModel : public cugl::physics2::BoxObstacle {
+public:
+    int dashTimer;
+    
+    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
+    
+    /** State that a rooted! player entity can be in. Some of these states are specific
+        to only a certain type of character (ex. only a bunny can be PLANTING), so
+        we need to enforce the corresponding invariants for which staztes an entity can
+        be in. */
+    enum EntityState {
+        STANDING,
+        SNEAKING,
+        WALKING,
+        RUNNING,
+        DASHING,
+        CARRYING,   // bunny only
+        PLANTING,   // bunny only
+        CAUGHT,     // carrot only
+        ROOTED      // carrot only
+    };
+    
 private:
 	/** This macro disables the copy constructor (not allowed on physics objects) */
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
@@ -111,7 +145,7 @@ protected:
     EntityFacing _facing;
 
 	/** The scene graph node for the Dude. */
-	std::shared_ptr<cugl::scene2::SceneNode> _node;
+	std::shared_ptr<cugl::scene2::SpriteNode> _node;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _eastWalkSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _southWalkSprite;
@@ -126,7 +160,12 @@ protected:
     
     int _wheatContacts;
     
-    float animTime;
+    /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
+    float curAnimDuration = 1.5f;
+    
+    /** The amount of time that has elapsed in the current animation cycle
+        For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
+    float curAnimTime;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -136,21 +175,6 @@ protected:
 	* the texture (e.g. a circular shape attached to a square texture).
 	*/
 	virtual void resetDebug() override;
-    
-    /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
-    
-    /** State that a rooted! player entity can be in. Some of these states are specific
-        to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which states an entity can
-        be in. */
-    enum EntityState {
-        MOVING,
-        DASHING,
-        CARRYING,   // bunny only
-        PLANTING,   // bunny only
-        CAUGHT,     // carrot only
-        ROOTED      // carrot only
-    };
     
     /** Current EntityState that this entity is in. */
     EntityState _state;
@@ -167,10 +191,23 @@ protected:
     bool _unrootInput;
     
     cugl::Vec2 _dashCache;
-    
+    /** Polygon factory for the wheat node. */
+    cugl::PolyFactory pf;
+    /** The wheat height adjustment node in the wheat scene from this entity's velocity */
+    std::shared_ptr<cugl::scene2::PolygonNode> _wheatHeightNode;
+    /** Target height for wheat node. This is very temporary */
+    float _wheatHeightTarget;
+    /** Current rendered height for wheat node. This is very temporary */
+    float _currWheatHeight;
+    /** Target size for wheat node. This is very temporary */
+    float _wheatSizeTarget;
+    /** Current rendered height for wheat node. This is very temporary */
+    float _currWheatSize;
+    /** Query id for in wheat query from wheat scene */
+    unsigned int _wheatQueryId;
+    /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
+    bool _inWheat;
 
-public:
-    int dashTimer;
 
 public:
     
@@ -355,7 +392,7 @@ public:
      *
      * @return the scene graph node representing this DudeModel.
      */
-	const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+	const std::shared_ptr<cugl::scene2::SpriteNode>& getSceneNode() const { return _node; }
 
     /**
      * Sets the scene graph node representing this DudeModel.
@@ -375,7 +412,7 @@ public:
      *
      * @param node  The scene graph node representing this DudeModel, which has been added to the world node already.
      */
-	void setSceneNode(const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+	void setSceneNode(const std::shared_ptr<cugl::scene2::SpriteNode>& node) {
         if (_node != nullptr) {
             _node->setVisible(false);
         }
@@ -398,8 +435,26 @@ public:
      */
     void setDrawScale(float scale) { _drawScale = scale; };
     
+    /**
+     * Updates the current value in curAnimDuration with the current EntityModel's state value
+     *
+     * Virtual, should be implemented by all derived classes with respect to their specific animation durations.
+     */
+    virtual void updateCurAnimDurationForState() {};
+    
+    /**
+     * Returns whether the current EntityModel's state is one where the animation should be cycling
+     *
+     * Examples of states where this would return false is if the player is currently not moving or DASHING or ROOTED.
+     */
     bool animationShouldStep();
     
+    /**
+     * Sets all of the sprite nodes associated with this EntityModel
+     *
+     * This currently only includes the 5-directional movement sprites, but
+     * TODO: It should later include all action sprites.
+     */
     void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
@@ -412,6 +467,11 @@ public:
         _southWalkSprite = southNode;
     }
     
+    /**
+     * Steps the current sprite's animation by dt.
+     *
+     * This steps the current sprite node associated with this EntityModel by incrementing curAnimTime by dt and comparing it with curAnimDuration
+     */
     void stepAnimation(float dt);
     
     EntityFacing calculateFacing(cugl::Vec2 movement);
@@ -530,7 +590,55 @@ public:
      */
     void applyForce();
 
+    /** Whether this EntityModel is in the DASHING state*/
     bool isDashing();
+    
+    /** Whether this EntityModel is NOT in the STANDING state */
+    bool isNotStanding();
+    
+    /** Whether this EntityModel is in SNEAKING/WALKING/RUNNING state 
+     *  This does NOT include if the state is DASHING. Use `isDashing` for that.
+     */
+    bool isMoving() { return _state == SNEAKING || _state == WALKING || _state == RUNNING; };
+    
+    /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
+    EntityState getMovementState() {
+        if (_movement.lengthSquared() <= 0.15 * 0.15) {
+            // If joystick movement is too minor, we don't actually let it cause a movement
+            return STANDING;
+        }
+        else if (_movement.lengthSquared() <= 0.8 * 0.8) {
+            return SNEAKING;
+        }
+        else if (_movement.lengthSquared() <= 0.9 * 0.9) {
+            return WALKING;
+        }
+        return RUNNING;
+    }
+    
+    EntityState getEntityState(){
+        return _state;
+    }
+    
+    void setEntityState(EntityState state) {
+        _state = state;
+    }
+    
+    virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
+    
+    virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode(std::shared_ptr<cugl::Texture> &rustle);
+
+    virtual void updateWheatHeightNode();
+
+    std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
+
+    unsigned int getWheatQueryId() { return _wheatQueryId; };
+
+    void setWheatQueryId(unsigned int id) { _wheatQueryId = id; };
+
+    bool isInWheat() { return _inWheat; }
+
+    void setInWheat(bool inWheat) { _inWheat = inWheat; }
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

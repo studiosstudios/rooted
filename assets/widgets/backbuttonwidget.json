@@ -1,0 +1,94 @@
+{
+    "variables": {},
+    "contents": {
+        "type": "Button",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                0
+            ],
+            "size": [
+                185.25,
+                126.75
+            ],
+            "angle": 0,
+            "position": [
+                30,
+                0.25
+            ],
+            "visible": true,
+            "upnode": "backbutton"
+        },
+        "children": {
+            "backbutton": {
+                "type": "Image",
+                "data": {
+                    "texture": "backbutton",
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        185.25,
+                        126.75
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "back": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        111,
+                        43
+                    ],
+                    "position": [
+                        46.125,
+                        42.875
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold50",
+                    "text": "back",
+                    "foreground": "#ffffffff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "middle",
+                    "halign": "center"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.25,
+                    "y_offset": -0.32
+                }
+            }
+        }
+    }
+}

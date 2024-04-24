@@ -40,10 +40,12 @@ protected:
     std::shared_ptr<cugl::Texture> _cloudtex;
     std::shared_ptr<cugl::Texture> _gradienttex;
     std::shared_ptr<cugl::Texture> _grassgradienttex;
+    std::shared_ptr<cugl::Texture> _wheatsidetex;
+    std::shared_ptr<cugl::Texture> _wheattoptex;
     std::vector<std::shared_ptr<cugl::Texture>> _textures;
     float _aspectRatio;
-    float _bladeColorScale;
     bool _fullHeight;
+    Size _worldSize;
     
     
 public:
@@ -52,13 +54,13 @@ public:
 
     ~ShaderRenderer() {}
     
-    static std::shared_ptr<ShaderRenderer> alloc(const std::shared_ptr<cugl::AssetManager> &assets,
-                                                 std::string name, float bladeColorScale, Size size, bool fullHeight) {
+    static std::shared_ptr<ShaderRenderer> alloc(const std::shared_ptr<Texture> &wheattex, const std::shared_ptr<cugl::AssetManager> &assets,
+                                                 Size size, bool fullHeight) {
         std::shared_ptr<ShaderRenderer> result = std::make_shared<ShaderRenderer>();
-        return (result->init(assets, name, bladeColorScale, size, fullHeight) ? result : nullptr);
+        return (result->init(wheattex, assets, size, fullHeight) ? result : nullptr);
     }
     
-    bool init(const std::shared_ptr<cugl::AssetManager> &assets, std::string name, float bladeColorScale, Size size, bool fullHeight);
+    bool init(const std::shared_ptr<Texture> &wheattex, const std::shared_ptr<cugl::AssetManager> &assets, Size size, bool fullHeight);
     
     void setSize(Size size) { _size = size; }
     

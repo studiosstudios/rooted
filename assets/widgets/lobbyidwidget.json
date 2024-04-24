@@ -1,0 +1,108 @@
+{
+    "variables": {},
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0.5,
+                1
+            ],
+            "size": [
+                560,
+                210
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                0
+            ],
+            "visible": true
+        },
+        "children": {
+            "lobbyidbkg": {
+                "type": "Image",
+                "data": {
+                    "texture": "lobbyidbkg",
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        560,
+                        210
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "textfield": {
+                "type": "TextField",
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        324,
+                        106
+                    ],
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true,
+                    "font": "gaeguBold100",
+                    "text": " ",
+                    "cursor": false,
+                    "cursorwidth": 10,
+                    "cursorcolor": "#000000ff",
+                    "foreground": "#000000ff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "middle",
+                    "halign": "center"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.24,
+                    "y_offset": -0.21
+                }
+            },
+            "backspace": {
+                "type"   : "Button",
+                "data": {
+                    "anchor"   : [0.5, 0.5]
+                },
+                "layout" : {
+                    "x_anchor" : "fill",
+                    "y_anchor" : "fill",
+                    "x_offset" : 2,
+                    "y_offset" : 2,
+                    "absolute" : true
+                }
+            }
+        }
+    }
+}

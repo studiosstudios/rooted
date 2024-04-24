@@ -1,0 +1,99 @@
+{
+    "variables": {
+        "text" : ["children", "stats", "data", "text"],
+        "fontsize" : ["children", "stats", "data", "font"],
+        "angle" : ["data", "angle"],
+        "anchor" : ["data", "anchor"]
+    },
+    "contents": {
+        "type": "Button",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                0
+            ],
+            "size": [
+                281,
+                143
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                0
+            ],
+            "visible": true,
+            "upnode": "woodsmall"
+        },
+        "children": {
+            "woodsmall": {
+                "type": "Image",
+                "data": {
+                    "texture": "woodsmall",
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        281,
+                        143
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "stats": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        200,
+                        84
+                    ],
+                    "position": [
+                        75.35000610351562,
+                        29.25
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold67",
+                    "text": "stats",
+                    "foreground": "#ffffffff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "middle",
+                    "halign": "center"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "middle",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            }
+        }
+    }
+}

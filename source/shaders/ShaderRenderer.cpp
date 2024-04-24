@@ -6,18 +6,24 @@
 //
 
 #include "ShaderRenderer.h"
+#include "../RootedConstants.h"
 
 using namespace cugl;
 
 #pragma mark -
 #pragma mark Asset Constants
+/** The base texture for the wheat shader */
 # define BASE_TEXTURE       "shader_base"
-/** The key for the earth texture in the asset manager */
+/** The cloud texture for the cloud shader */
 #define CLOUD_TEXTURE       "shader_clouds"
-/** The name of a wall (for object identification) */
+/** The noise texture for the shader */
 #define NOISE_TEXTURE       "shader_noise"
-/** The name of a platform (for object identification) */
+/** The gradient texture for the wheat shader */
 #define GRADIENT_TEXTURE    "shader_gradient"
+/** The texture for the side of the wheat for the wheat shader */
+#define WHEAT_SIDE_TEXTURE  "shader_wheat_side"
+/** The texture for the top of the wheat for the wheat shader */
+#define WHEAT_TOP_TEXTURE   "shader_wheat_top"
 
 #define WIND_SPEED 1.0
 #define CLOUD_SPEED 0.05
@@ -66,29 +72,24 @@ const std::string cloudsVert =
 
 using namespace std;
 
-bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, string name, float bladeColorScale, Size size, bool fullHeight) {
+bool ShaderRenderer::init(const shared_ptr<Texture> &wheattex, const std::shared_ptr<cugl::AssetManager> &assets, Size size, bool fullHeight) {
     
     _assets = assets;
     _fullHeight = fullHeight;
+    _worldSize = Size(size);
 
     _windTime = 0;
     _cloudTime = 0;
 
-    _bladeColorScale = bladeColorScale;
-
     _cloudtex = _assets->get<Texture>("shader_clouds");
-    _wheattex = _assets->get<Texture>(name);
     _noisetex = _assets->get<Texture>("shader_noise");
     _gradienttex = _assets->get<Texture>("shader_gradient");
     _grassgradienttex = _assets->get<Texture>("shader_grass_gradient");
+    _wheatsidetex = _assets->get<Texture>(WHEAT_SIDE_TEXTURE);
+    _wheattoptex = _assets->get<Texture>(WHEAT_TOP_TEXTURE);
+    _wheattex = wheattex;
 
-    _size = _wheattex->getSize();
-
-    if (size.height < size.width) {
-        _size *= size.width/_size.width;
-    } else {
-        _size *= size.height/_size.height;
-    }
+    _size = _wheattex->getSize() * float(SCENE_HEIGHT)/_wheattex->getSize().height;
     
     _aspectRatio = _size.width/_size.height;
 
@@ -96,8 +97,10 @@ bool ShaderRenderer::init(const std::shared_ptr<cugl::AssetManager> &assets, str
     _textures.push_back(_noisetex);
     _textures.push_back(_gradienttex);
     _textures.push_back(_grassgradienttex);
+    _textures.push_back(_wheatsidetex);
+    _textures.push_back(_wheattoptex);
     _textures.push_back(_wheattex);
-    
+
     for (int i = 0; i < _textures.size(); i++) {
         _textures[i]->setBindPoint(i);
     }
@@ -240,19 +243,18 @@ void ShaderRenderer::buildShaders() {
     _wheatShader->setSampler("grass_tex", _wheattex);
     _wheatShader->setSampler("noise_tex", _noisetex);
     _wheatShader->setSampler("gradient_tex", _gradienttex);
+    _wheatShader->setSampler("wheat_side_tex", _wheatsidetex);
+    _wheatShader->setSampler("wheat_top_tex", _wheattoptex);
     _wheatShader->setUniform1f("WIND_TIME", _windTime);
-//    _wheatShader->setUniform4f("tip_color", 0.96863, 0.8, 0.294118, 1.0);
-//    _wheatShader->setUniform4f("tip_color", 0.996078, 0.976471, 0.517647, 1.0);
     _wheatShader->setUniform4f("tip_color", 1.0, 0.866667, 0.231373, 1.0);
-//    _wheatShader->setUniform4f("wind_color", 1.0, 0.984314, 0.639216, 1.0);
     _wheatShader->setUniform4f("wind_color", 1.0, 0.9058824, 0.309804, 1.0);
     _wheatShader->setUniform1f("wind_speed", WIND_SPEED);
-    _wheatShader->setUniform2f("wind_direction", 1.0, 1.0);
+    _wheatShader->setUniform2f("wind_direction", WIND_DIRECTION[0], WIND_DIRECTION[1]);
     _wheatShader->setUniform1f("player_transparency", 0.6);
-    _wheatShader->setUniform1f("transparency_radius",20.0);
+    _wheatShader->setUniform1f("transparency_radius",0.0);
     _wheatShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0 / _wheattex->getWidth(), 1.0 / _wheattex->getHeight());
-    _wheatShader->setUniform1f("blade_color_scale", _bladeColorScale);
-    _wheatShader->setUniform1f("MAX_BLADE_LENGTH", 30 * _fullHeight);
+    _wheatShader->setUniform1f("MAX_BLADE_LENGTH", MAX_WHEAT_HEIGHT * _fullHeight);
+    _wheatShader->setUniform1f("STEP_SIZE", STEP_SIZE);
 
     _groundShader = Shader::alloc(SHADER(groundVert), SHADER(groundFrag));
     _groundShader->setSampler("noise_tex", _noisetex);
@@ -260,7 +262,8 @@ void ShaderRenderer::buildShaders() {
     _groundShader->setSampler("gradient_tex", _grassgradienttex);
     _groundShader->setUniform1f("WIND_TIME", _windTime);
     _groundShader->setUniform1f("wind_speed", WIND_SPEED);
-    _groundShader->setUniform2f("wind_direction", 1.0, 1.0);
+    _groundShader->setUniform1f("radius", 0.012 * DEFAULT_WIDTH / _worldSize.width);
+    _groundShader->setUniform2f("wind_direction", WIND_DIRECTION[0], WIND_DIRECTION[1]);
     _groundShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_wheattex->getWidth(),1.0/_wheattex->getHeight());
 
     _cloudsShader = Shader::alloc(SHADER(cloudsVert), SHADER(cloudsFrag));
@@ -269,7 +272,8 @@ void ShaderRenderer::buildShaders() {
     _cloudsShader->setUniform1f("WIND_TIME", _windTime);
     _cloudsShader->setUniform1f("CLOUD_TIME", _cloudTime);
     _cloudsShader->setUniform1f("cloud_speed", CLOUD_SPEED);
-    _cloudsShader->setUniform2f("wind_direction", 1.0, 1.0);
+    _cloudsShader->setUniform1f("scale", DEFAULT_WIDTH / _worldSize.width);
+    _cloudsShader->setUniform2f("wind_direction", WIND_DIRECTION[0], WIND_DIRECTION[1]);
     _cloudsShader->setUniform1f("cloud_alpha_scale", 0.5);
     _cloudsShader->setUniform2f("SCREEN_PIXEL_SIZE", 1.0/_wheattex->getWidth(),1.0/_wheattex->getHeight());
 

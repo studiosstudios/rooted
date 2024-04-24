@@ -19,7 +19,6 @@ private:
     shared_ptr<Shader> _coverShader;
     shared_ptr<scene2::SceneNode> _root;
     shared_ptr<Texture> _wheattex;
-    float _bladeColorScale;
     float _windTime;
     shared_ptr<Texture> _noisetex;
     bool _fullHeight;
@@ -30,18 +29,18 @@ public:
 
     ~EntitiesNode();
 
-    static std::shared_ptr<EntitiesNode> alloc(const std::shared_ptr<scene2::SceneNode> &node, const std::shared_ptr<cugl::AssetManager> &assets,
-                                               string name, float bladeColorScale, Size size, bool fullHeight) {
+    static std::shared_ptr<EntitiesNode> alloc(const std::shared_ptr<scene2::SceneNode> &node, const shared_ptr<Texture> &wheattex,
+                                               const std::shared_ptr<cugl::AssetManager> &assets, bool fullHeight) {
         shared_ptr<EntitiesNode> result = make_shared<EntitiesNode>();
-        return (result->init(node, assets, name, bladeColorScale, size, fullHeight) ? result : nullptr);
+        return (result->init(node, wheattex, assets, fullHeight) ? result : nullptr);
     }
 
     void update(float timestep);
 
     void clearNode();
 
-    bool init(const std::shared_ptr<scene2::SceneNode> &node, const std::shared_ptr<cugl::AssetManager> &assets,
-              string name, float bladeColorScale, Size size, bool fullHeight);
+    bool init(const std::shared_ptr<scene2::SceneNode> &node, const shared_ptr<Texture> &wheattex,
+              const std::shared_ptr<cugl::AssetManager> &assets,bool fullHeight);
 
     void dispose() override;
 

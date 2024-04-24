@@ -51,9 +51,9 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _menuscene->setContentSize(dimen);
     _menuscene->doLayout(); // Repositions the HUD
     
-    _lobbyscene = _assets->get<scene2::SceneNode>("network");
+    _lobbyscene = _assets->get<scene2::SceneNode>("prelobby");
     _lobbyscene->setContentSize(dimen);
-    _menuscene->doLayout();
+    _lobbyscene->doLayout();
     
     _choice = Choice::NONE;
     _currmenuchoice = Choice::MAIN;
@@ -62,8 +62,10 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _playbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_play"));
     _optionsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_options"));
     _statsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_stats"));
-    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_host"));
-    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("network_buttons_join"));
+    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_host"));
+    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_join"));
+    
+    _backoutprelobby = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_back"));
     
     // Program the buttons
     _playbutton->addListener([this](const std::string& name, bool down) {
@@ -80,6 +82,11 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _joinbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
             _choice = Choice::JOIN;
+        }
+    });
+    _backoutprelobby->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _choice = Choice::MAIN;
         }
     });
 
@@ -120,12 +127,14 @@ void MenuScene::setActive(bool value) {
             _playbutton->deactivate();
             _statsbutton->deactivate();
             _optionsbutton->deactivate();
+            _backoutprelobby->deactivate();
             // If any were pressed, reset them
             _hostbutton->setDown(false);
             _joinbutton->setDown(false);
             _playbutton->setDown(false);
             _statsbutton->setDown(false);
             _optionsbutton->setDown(false);
+            _backoutprelobby->setDown(false);
         }
     }
 }
@@ -146,6 +155,7 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
                 addChild(_menuscene);
                 _hostbutton->deactivate();
                 _joinbutton->deactivate();
+                _backoutprelobby->deactivate();
                 _playbutton->activate();
                 _statsbutton->activate();
                 _optionsbutton->activate();
@@ -155,6 +165,7 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
                 addChild(_lobbyscene);
                 _hostbutton->activate();
                 _joinbutton->activate();
+                _backoutprelobby->activate();
                 _playbutton->deactivate();
                 _statsbutton->deactivate();
                 _optionsbutton->deactivate();

@@ -1,0 +1,151 @@
+{
+    "variables": {},
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                0
+            ],
+            "size": [
+                1024,
+                576
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                0
+            ],
+            "visible": true
+        },
+        "children": {
+            "wheatbkg": {
+                "type": "Image",
+                "data": {
+                    "texture": "wheatbkg",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        1024,
+                        576
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "fill",
+                    "y_anchor": "fill",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "lobbybuttons": {
+                "type": "Node",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        560,
+                        576
+                    ],
+                    "angle": 0,
+                    "position": [
+                        218,
+                        0
+                    ],
+                    "visible": true
+                },
+                "children": {
+                    "join": {
+                        "type": "Widget",
+                        "data": {
+                            "key" : "redbuttonbigwidget",
+                            "variables" : {
+                            "text" : "join",
+                            "anchor": [
+                                0.5,
+                                0
+                            ]
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "center",
+                            "y_anchor": "bottom",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": 0.01
+                        }
+                    },
+                    "numpad": {
+                        "type": "Widget",
+                        "data": {
+                            "key" : "numpadwidget"
+                        },
+                        "layout": {
+                            "x_anchor": "center",
+                            "y_anchor": "middle",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": 0
+                        }
+                    },
+                    "idfield": {
+                        "type": "Widget",
+                        "data": {
+                            "key" : "lobbyidwidget"
+                        },
+                        "layout": {
+                            "x_anchor": "center",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": -0.02
+                        }
+                    }
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "fill",
+                    "absolute": false,
+                    "x_offset": -0.01,
+                    "y_offset": 0
+                }
+            },
+            "back": {
+                "type": "Widget",
+                "data": {
+                    "key" : "backbuttonwidget"
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "bottom",
+                    "absolute": false,
+                    "x_offset": 0.03,
+                    "y_offset": 0
+                }
+            }
+        },
+        "layout": {
+            "x_anchor": "center",
+            "y_anchor": "fill",
+            "absolute": false,
+            "x_offset": -0.01,
+            "y_offset": 0
+        }
+    }
+}

@@ -784,6 +784,60 @@ public:
      * @return the current depth of this sprite batch.
      */
     float getDepth() const;
+    
+    /**
+     * Sets the height of the active texture for this sprite batch.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @param height The height of the active texture
+     */
+    void setHeight(float height);
+    
+    /**
+     * Returns the height of the active texture for this sprite batch.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @return The height of the active texture
+     */
+    float getHeight() const;
+
+    /**
+     * Sets the y origin of the active texture for this sprite batch.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @param origin The y origin of the active texture
+     */
+    void setOrigin(float origin);
+
+    /**
+     * Returns the y origin of the active texture for this sprite batch.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @return The y origin of the active texture
+     */
+    float getOrigin() const;
+
+    /**
+    * Sets if current texture is the player.
+    * This is used exclusively by the wheat cover shader and does not do anything
+    * for the default sprite batch shader
+    *
+    * @param bool If active texture is player
+    */
+    void setIsPlayer(bool player);
+
+    /**
+     * Gets if current texture is the player
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @return If active texture is player
+     */
+    bool getIsPlayer() const;
 
     /**
      * Sets the blur radius in pixels (0 if there is no blurring).

@@ -1,0 +1,132 @@
+{
+    "variables": {"anchor": ["data", "anchor"]},
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                1
+            ],
+            "size": [
+                140,
+                140
+            ],
+            "angle": 0,
+            "position": [
+                630,
+                391
+            ],
+            "visible": true
+        },
+        "children": {
+            "playercountasset": {
+                "type": "Image",
+                "data": {
+                    "texture": "playercountasset",
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        140,
+                        140
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "playertext": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        133,
+                        50
+                    ],
+                    "position": [
+                        3,
+                        90
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold40",
+                    "text": "players:",
+                    "foreground": "#000000ff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "middle",
+                    "halign": "center"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.02,
+                    "y_offset": 0
+                }
+            },
+            "players": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        133,
+                        50
+                    ],
+                    "position": [
+                        3,
+                        90
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold40",
+                    "text": "1",
+                    "foreground": "#000000ff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "middle",
+                    "halign": "center"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.02,
+                    "y_offset": -0.3
+                }
+            }
+        }
+    }
+}

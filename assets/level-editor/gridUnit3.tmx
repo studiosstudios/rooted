@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="128">
+ <editorsettings>
+  <export target="gridUnit3.json" format="json"/>
+ </editorsettings>
+ <properties>
+  <property name="map-type" propertytype="MapType" value="middle-middle"/>
+ </properties>
+ <tileset firstgid="1" source="entities.tsx"/>
+ <tileset firstgid="4" source="maps.tsx"/>
+ <tileset firstgid="14" source="environment.tsx"/>
+ <objectgroup id="9" name="wheat">
+  <object id="127" gid="8" x="0" y="288" width="512" height="288"/>
+ </objectgroup>
+ <objectgroup id="8" name="environment">
+  <object id="115" type="PlantingSpot" gid="14" x="128" y="143" width="128" height="64"/>
+  <object id="116" type="PlantingSpot" gid="14" x="352" y="240" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup id="7" name="entities">
+  <object id="119" gid="2" x="32" y="192" width="32" height="32"/>
+  <object id="120" gid="3" x="224" y="192" width="32" height="32"/>
+  <object id="121" gid="1" x="416" y="64" width="32" height="32"/>
+  <object id="122" gid="3" x="32" y="64" width="32" height="32"/>
+  <object id="123" gid="3" x="448" y="128" width="32" height="32"/>
+  <object id="124" gid="3" x="256" y="64" width="32" height="32"/>
+  <object id="126" gid="3" x="128" y="256" width="32" height="32"/>
+ </objectgroup>
+</map>

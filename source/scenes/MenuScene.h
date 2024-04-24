@@ -56,6 +56,8 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _statsbutton;
     /** The menu button to change options */
     std::shared_ptr<cugl::scene2::Button> _optionsbutton;
+    /** The menu button to back out into title screen from the prelobby */
+    std::shared_ptr<cugl::scene2::Button> _backoutprelobby;
     /** The player menu choice */
     Choice _choice;
     /** The player choice when changing menus within this scene */

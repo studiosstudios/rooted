@@ -9,7 +9,7 @@
 
 using namespace cugl;
 
-bool CollisionController::init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network) {
+bool CollisionController::init(std::shared_ptr<Map> &map,  const std::shared_ptr<NetworkController> &network) {
     _map = map;
     _network = network;
     _network->attachEventType<CaptureBarrotEvent>();

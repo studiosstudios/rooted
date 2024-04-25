@@ -28,7 +28,7 @@ using namespace cugl;
  * Initializes an ActionController
  */
 bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-    std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets) {
+    const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets) {
     _map = map;
     _input = input;
     _world = _map->getWorld();

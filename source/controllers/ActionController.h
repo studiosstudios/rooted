@@ -59,7 +59,7 @@ public:
      * Initializes an ActionController
      */
     bool init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-              std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets);
+              const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets);
 
     /**
      * The method called to indicate the start of a deterministic loop.

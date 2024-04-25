@@ -307,7 +307,7 @@ public:
      *
      * @return whether this device is host.
      */
-    bool isHost() const {
+    virtual bool isHost() const {
         return _isHost;
     }
     
@@ -468,7 +468,7 @@ public:
      *
      * @return true if there are remaining custom inbound events.
      */
-    bool isInAvailable();
+    virtual bool isInAvailable();
     
     /**
      * Returns the next custom inbound event and removes it from the queue.
@@ -478,7 +478,7 @@ public:
      *
      * @return the next custom inbound event
      */
-    std::shared_ptr<NetEvent> popInEvent();
+    virtual std::shared_ptr<NetEvent> popInEvent();
     
     /**
      * Queues an outbound event to be sent to peers.
@@ -488,7 +488,7 @@ public:
      *
      * @param e The event to send
      */
-    void pushOutEvent(const std::shared_ptr<NetEvent>& e);
+    virtual void pushOutEvent(const std::shared_ptr<NetEvent>& e);
     
     /**
      * Updates the network controller.

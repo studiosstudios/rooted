@@ -49,7 +49,7 @@ public:
     /**
      * Initializes a Collision Controller
      */
-    bool init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network);
+    bool init(std::shared_ptr<Map> &map,  const std::shared_ptr<NetworkController> &network);
 
 
 //  MARK: - Callbacks

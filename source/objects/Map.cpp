@@ -225,7 +225,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     _babyCarrotSpawns = std::vector(_babyCarrotSpawns.begin(), _babyCarrotSpawns.begin() + std::min(numBabyCarrots, int(_babyCarrotSpawns.size())));
     _plantingSpawns = std::vector(_plantingSpawns.begin(), _plantingSpawns.begin() + std::min(numPlantingSpots, int(_plantingSpawns.size())));
 }
-
+ 
 void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
     
     CUAssertLog(json != nullptr, "Failed to load tiled json");
@@ -363,21 +363,39 @@ void Map::dispose() {
         }
         (*it) = nullptr;
     }
-    _boundaries.clear();
+    _farmers.clear();
     for (auto it = _boundaries.begin(); it != _boundaries.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
         }
         (*it) = nullptr;
     }
-    _farmers.clear();
+    _boundaries.clear();
+    for (auto it = _plantingSpot.begin(); it != _plantingSpot.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _plantingSpot.clear();
     if (_world != nullptr) {
         _world->clear();
+        _world->dispose();
         _world = nullptr;
     }
-    _shaderedEntitiesNode->dispose();
-    _shaderrenderer->dispose();
-    _wheatscene->dispose();
+    _character = nullptr;
+    if (_shaderedEntitiesNode != nullptr) {
+        _shaderedEntitiesNode->dispose();
+        _shaderedEntitiesNode = nullptr;
+    }
+    if (_wheatscene != nullptr) {
+        _wheatscene->dispose();
+        _wheatscene = nullptr;
+    }
+    if (_shaderrenderer != nullptr) {
+        _shaderrenderer->dispose();
+        _shaderrenderer = nullptr;
+    }
     
     _mapInfo.clear();
     _carrotSpawns.clear();
@@ -425,12 +443,10 @@ std::vector<std::shared_ptr<EntityModel>> Map::loadBabyEntities() {
 }
 
 void Map::acquireMapOwnership() {
+    //REMINDER TO MYSELF: UNDO NETWORLD CHANGE
     auto ownerMap = _world->getOwnedObstacles();
     std::cout << "owned obstacles size: " << ownerMap.size();
     for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-        ownerMap.insert({*it, 0});
-    }
-    for (auto it = _babies.begin(); it != _babies.end(); ++it) {
         ownerMap.insert({*it, 0});
     }
     for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
@@ -440,6 +456,9 @@ void Map::acquireMapOwnership() {
         ownerMap.insert({*it, 0});
     }
     for (auto it = _boundaries.begin(); it != _boundaries.end(); ++it) {
+        ownerMap.insert({*it, 0});
+    }
+    for (auto it = _plantingSpot.begin(); it != _plantingSpot.end(); ++it) {
         ownerMap.insert({*it, 0});
     }
     std::cout << "owned obstacles size: " << _world->getOwnedObstacles().size();

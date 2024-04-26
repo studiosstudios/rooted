@@ -236,7 +236,10 @@
         "gridUnit3": "level-editor/gridUnit3.json",
         "gridUnit4": "level-editor/gridUnit4.json",
         "gridUnit5": "level-editor/gridUnit5.json",
-        "gridUnit6": "level-editor/gridUnit6.json"
+        "gridUnit6": "level-editor/gridUnit6.json",
+        "tutorialTop": "level-editor/tutorialTop.json",
+        "tutorialMid": "level-editor/tutorialMid.json",
+        "tutorialBottom": "level-editor/tutorialBottom.json"
     },
     "sounds": {
         "menu": {

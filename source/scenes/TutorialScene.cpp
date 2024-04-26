@@ -455,7 +455,7 @@ Size TutorialScene::computeActiveSize() const {
 void TutorialScene::render(const std::shared_ptr<SpriteBatch> &batch) {
     _map->getWheatScene()->render(batch);
     Scene2::render(batch);
-//    _map->getWheatScene()->renderToScreen(1.0); //for debugging the wheat texture
+    _map->getWheatScene()-> renderToScreen(1.0); //for debugging the wheat texture
 }
 
 void TutorialScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){

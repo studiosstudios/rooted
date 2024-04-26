@@ -134,9 +134,9 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
     
-    bool showGrid = false; //change this to show the grid in debug
+    bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
-        for (int x = 0; x < _worldbounds.size.width; x++) {
+        for (int x = 0; x < _mapbounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _worldbounds.size.height)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -144,7 +144,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
             _debugnode->addChild(rect);
         }
         
-        for (int y = 0; y < _worldbounds.size.height; y++) {
+        for (int y = 0; y < _mapbounds.size.height; y++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(_worldbounds.size.width, 1)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -199,24 +199,34 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
 
 void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots){
     
-    _rand32.seed(randSeed);
-    //random size (must be 16x9 for now)
     if (_tutorial) {
-        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 2);
-        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * 2));
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * 3));
+        _mapInfo.resize(1, std::vector<std::pair<std::string, float>>(3));
+        
+        //load in tutorial map
+        std::shared_ptr<JsonValue> json = _assets->get<JsonValue>("tutorialBottom");
+        loadTiledJson(json, 0, 0);
+        json = _assets->get<JsonValue>("tutorialMid");
+        loadTiledJson(json, 0, 1);
+        json = _assets->get<JsonValue>("tutorialTop");
+        loadTiledJson(json, 0, 2);
+        
+        
     } else {
+        _rand32.seed(randSeed);
         _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
         _mapbounds.set(_worldbounds);
-    }
-    
-    _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
-    
-    //randomly select a map for each location and object info lists
-    for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
-        for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
-            std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
-            std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
-            loadTiledJson(json, i, j);
+        
+        _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
+        
+        //randomly select a map for each location and object info lists
+        for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
+            for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
+                std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
+                std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
+                loadTiledJson(json, i, j);
+            }
         }
     }
     
@@ -240,9 +250,14 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
     std::shared_ptr<JsonValue> layers = json->get("layers");
     int height = json->getFloat("height");
     int tileSize = json->getInt("tilewidth");
-    CULog("i: %d \t j: %d", i, j);
     for (auto layer : layers->children()) {
         std::string name = layer->getString("name");
+        
+        //default empty wheat texture
+        if (name == "wheat") {
+            _mapInfo[i][j] = std::pair("", 0);
+        }
+        
         auto objects = layer->get("objects");
         for (auto object : objects->children()) {
             readProperties(object, tileSize, height);

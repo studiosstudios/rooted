@@ -79,16 +79,12 @@ protected:
     bool _complete;
     /** Whether or not debug mode is active */
     bool _debug;
-    bool _gameOver;
     /** Whether we have failed at this world (and need a reset) */
     bool _failed;
     /** Countdown active for winning or losing */
     int _countdown;
     /** Host is by default a farmer (will need to change this later) */
     bool _isHost;
-
-    /** Initial camera position */
-    Vec3 _initCamera;
     
     int _seed;
     
@@ -205,8 +201,6 @@ public:
      * @return true if the level is completed.
      */
     bool isComplete() const { return _complete; }
-    
-    bool isGameOver() const {return _gameOver; }
 
     /**
      * Sets whether the level is completed.
@@ -216,8 +210,7 @@ public:
      * @param value whether the level is completed.
      */
     void setComplete(bool value);
-    
-    void setGameOver(bool value) { _gameOver = value; };
+
     /**
     * Returns true if the level is failed.
     *

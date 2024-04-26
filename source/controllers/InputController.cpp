@@ -45,6 +45,7 @@ _keyDash(false),
 _keyDashPressed(false),
 _keyContinue(false),
 _continuePressed(false),
+_paused(false),
 _currentSwipeColor(Color4::WHITE) {
 }
 
@@ -132,10 +133,10 @@ void InputController::update(float dt) {
     _keyExit   = keys->keyPressed(EXIT_KEY);
     _keyRustle = keys->keyPressed(KeyCode::M);
     _keyShowPlayer = keys->keyPressed(KeyCode::V);
-    _keyDash   = keys->keyPressed(KeyCode::X);
+    _keyDash   = keys->keyPressed(KeyCode::X) && !_paused;
     _keySwitch = keys->keyPressed(KeyCode::S);
-    _keyRoot   = keys->keyPressed(KeyCode::Z);
-    _keyUnroot = keys->keyPressed(KeyCode::Z);
+    _keyRoot   = keys->keyPressed(KeyCode::Z) && !_paused;
+    _keyUnroot = keys->keyPressed(KeyCode::Z) && !_paused;
     _keyContinue = keys->keyPressed(KeyCode::SPACE);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
@@ -153,6 +154,7 @@ void InputController::update(float dt) {
     } else {
         _movement.y = 0;
     }
+    _movement *= (1 - _paused);
     _movement.normalize();
 #endif
     Accelerometer* acc = Input::get<Accelerometer>();
@@ -289,7 +291,7 @@ void InputController::processJoystick(const cugl::Vec2 pos) {
     }
     diff.y *= -1;
     
-    _movement.set(diff);
+    _movement.set((1 - _paused) * diff);
 }
 
 /**
@@ -440,14 +442,14 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             if (_swipePoints->begin() != _swipePoints->end() && (screenPos.y - _swipePoints->back().first.y) > SWIPE_LENGTH) {
 //            if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
 //                std::cout << "Swiped!\n";
-                _keyDash = true;
+                _keyDash = true && !_paused;
                 _currentSwipeColor = Color4::ORANGE;
             }
             else if (_swipePoints->begin() != _swipePoints->end() && (_swipePoints->back().first.y - screenPos.y) > SWIPE_LENGTH) {
 //            else if ((pos.y-_rtouch.position.y) > SWIPE_LENGTH) {
 //                _keySwitch = true;
-                _keyRoot = true;
-                _keyUnroot = true;
+                _keyRoot = true && !_paused;
+                _keyUnroot = true && !_paused;
                 _rtouch.position = pos;
                 _currentSwipeColor = Color4::BLUE;
             }

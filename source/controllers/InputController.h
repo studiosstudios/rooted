@@ -92,6 +92,8 @@ protected:
     bool _switchPressed;
     
     bool _deviceShaking;
+    /** for pausing movement input during the tutorial **/
+    bool _paused;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
@@ -353,6 +355,10 @@ public:
     bool didShakeDevice() const { return _deviceShaking; }
 
     bool didContinue() const { return _continuePressed; }
+    
+    void pause() { _paused = true; }
+    
+    void unpause() { _paused = false; }
 
 #pragma mark -
 #pragma mark Swipe Drawing Logic

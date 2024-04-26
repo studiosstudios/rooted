@@ -86,7 +86,7 @@ public:
 
     /**
     * This method adds the zoom of the camera by a value.
-    * TEMP: keeping this so players can zoom in and out in the future
+    *
     * @param zoom The zoom value
     */
     void zoomIn(float zoom);

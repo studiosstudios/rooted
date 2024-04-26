@@ -38,8 +38,10 @@ private:
     std::shared_ptr<cugl::physics2::net::NetWorld> _world;
     /** The root node of this level */
     std::shared_ptr<scene2::SceneNode> _root;
-    /** The bounds of this level in physics coordinates */
-    Rect _bounds;
+    /** The bounds of this world in physics coordinates - must be 16x9 for */
+    Rect _worldbounds;
+    /** The bounds of this map in physics coordinates */
+    Rect _mapbounds;
     /** The global gravity for this level */
     Vec2 _gravity;
     /** The scale between the physics world and the screen */
@@ -90,6 +92,8 @@ private:
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
     
     bool _tutorial;
+    
+    
 
     
 public:
@@ -146,11 +150,18 @@ public:
 #pragma mark Physics Attributes
 
     /**
-     * Returns the bounds of this level in physics coordinates
+     * Returns the bounds of this world in physics coordinates
      *
-     * @return the bounds of this level in physics coordinates
+     * @return the bounds of this world in physics coordinates
      */
-    const Rect &getBounds() const { return _bounds; }
+    const Rect &getWorldBounds() const { return _worldbounds; }
+    
+    /**
+     * Returns the bounds of this map in physics coordinates
+     *
+     * @return the bounds of this map in physics coordinates
+     */
+    const Rect &getMapBounds() const { return _mapbounds; }
 
 #pragma mark Drawing Methods
 

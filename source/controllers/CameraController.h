@@ -34,7 +34,8 @@ protected:
     float _maxZoom;
     /* Draw scale */
     float _scale;
-
+    /* The proportion of the scene that the camera should stay inside */
+    Vec2 _frac;
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -62,7 +63,7 @@ public:
     *
     * @return true if the controller is initialized properly, false otherwise
     */
-    bool init(const std::shared_ptr<EntityModel> target, const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale);
+    bool init(const std::shared_ptr<EntityModel> target, const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Vec2 frac);
 #pragma mark -
 #pragma mark Camera Handling
 
@@ -108,7 +109,7 @@ public:
     */
     std::shared_ptr<cugl::OrthographicCamera> getCamera() { return _camera; };
     
-    const Vec2 getScreenPosition();
+    const Vec2 boundPosition(Vec2 pos);
 };
 
 #endif

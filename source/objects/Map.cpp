@@ -35,7 +35,7 @@ Map::Map() :
         _world(nullptr),
         _worldnode(nullptr),
         _debugnode(nullptr) {
-    _bounds.size.set(1.0f, 1.0f);
+    _worldbounds.size.set(1.0f, 1.0f);
 }
 
 /**
@@ -112,8 +112,8 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     }
 
     _root = node;
-    _scale.set(_root->getContentSize().width / _bounds.size.width,
-               _root->getContentSize().height / _bounds.size.height);
+    _scale.set(_root->getContentSize().width / _worldbounds.size.width,
+               _root->getContentSize().height / _worldbounds.size.height);
     
     // Create, but transfer ownership to root
     // needs to be an ordered node in order to reorder some elements
@@ -134,18 +134,18 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
     
-    bool showGrid = true; //change this to show the grid in debug
+    bool showGrid = false; //change this to show the grid in debug
     if (showGrid) {
-        for (int x = 0; x < _bounds.size.width; x++) {
-            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _bounds.size.height)));
+        for (int x = 0; x < _worldbounds.size.width; x++) {
+            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _worldbounds.size.height)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
             rect->setPosition(Vec2(x, 0));
             _debugnode->addChild(rect);
         }
         
-        for (int y = 0; y < _bounds.size.height; y++) {
-            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(_bounds.size.width, 1)));
+        for (int y = 0; y < _worldbounds.size.height; y++) {
+            std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(_worldbounds.size.width, 1)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
             rect->setPosition(Vec2(0, y));
@@ -202,16 +202,18 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     _rand32.seed(randSeed);
     //random size (must be 16x9 for now)
     if (_tutorial) {
-        _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 2);
+        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * 2));
     } else {
-        _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+        _mapbounds.set(_worldbounds);
     }
     
-    _mapInfo.resize(_bounds.size.height / MAP_UNIT_HEIGHT, std::vector<std::pair<std::string, float>>(_bounds.size.width / MAP_UNIT_WIDTH));
+    _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
     
     //randomly select a map for each location and object info lists
-    for (int i = 0; i < _bounds.size.width / MAP_UNIT_WIDTH; i++ ) {
-        for (int j = 0; j < _bounds.size.height / MAP_UNIT_HEIGHT; j++) {
+    for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
+        for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
             std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
             std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
             loadTiledJson(json, i, j);
@@ -238,6 +240,7 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
     std::shared_ptr<JsonValue> layers = json->get("layers");
     int height = json->getFloat("height");
     int tileSize = json->getInt("tilewidth");
+    CULog("i: %d \t j: %d", i, j);
     for (auto layer : layers->children()) {
         std::string name = layer->getString("name");
         auto objects = layer->get("objects");
@@ -283,11 +286,11 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
 void Map::populate() {
 
     /** Create the physics world */
-    _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
+    _world = physics2::net::NetWorld::alloc(getWorldBounds(), Vec2(0, 0));
     
-    _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _bounds.size);
+    _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _worldbounds.size);
 
-    _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, _bounds.size, FULL_WHEAT_HEIGHT);
+    _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, _worldbounds.size, FULL_WHEAT_HEIGHT);
     _shaderrenderer->setScale(_scale.x);
     _shaderrenderer->buildShaders();
     _groundnode = ShaderNode::alloc(_shaderrenderer, ShaderNode::ShaderType::GROUND);
@@ -311,10 +314,10 @@ void Map::populate() {
     spawnBabyCarrots();
     
     //place boundary walls
-    loadBoundary(Vec2(-0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
-    loadBoundary(Vec2(_bounds.size.width+0.5, _bounds.size.height/2), Size(1, _bounds.size.height));
-    loadBoundary(Vec2(_bounds.size.width/2, -0.5), Size(_bounds.size.width, 1));
-    loadBoundary(Vec2(_bounds.size.width/2, _bounds.size.height+0.5), Size(_bounds.size.width, 1));
+    loadBoundary(Vec2(-0.5, _mapbounds.size.height/2), Size(1, _mapbounds.size.height));
+    loadBoundary(Vec2(_mapbounds.size.width+0.5, _mapbounds.size.height/2), Size(1, _mapbounds.size.height));
+    loadBoundary(Vec2(_mapbounds.size.width/2, -0.5), Size(_mapbounds.size.width, 1));
+    loadBoundary(Vec2(_mapbounds.size.width/2, _mapbounds.size.height+0.5), Size(_mapbounds.size.width, 1));
     
     //add grass background node
     float grassScale = 16.0 * DEFAULT_DRAWSCALE / _scale.x;

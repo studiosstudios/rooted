@@ -24,8 +24,8 @@ void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby
         Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
         babyCarrot->setTarget(newTarget);
     }
-    float mapWidth = _map->getBounds().size.width;
-    float mapHeight = _map->getBounds().size.height;
+    float mapWidth = _map->getMapBounds().size.width;
+    float mapHeight = _map->getMapBounds().size.height;
     if (babyCarrot->getState() == State::HOLD) {
         if (((float) std::rand()/ RAND_MAX) < 0.5) {
             Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));

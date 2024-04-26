@@ -143,9 +143,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     setFailure(false);
     
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
-    _cam.setZoom(zoom);
+    
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
+    
+    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
+    _cam.setZoom(beginning_zoom);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
-    _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
@@ -257,7 +261,11 @@ void GameScene::reset() {
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    _cam.setZoom(zoom);
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
+    
+    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
+    _cam.setZoom(beginning_zoom);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);

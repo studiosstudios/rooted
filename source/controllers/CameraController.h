@@ -36,6 +36,9 @@ protected:
     float _scale;
     /* The proportion of the scene that the camera should stay inside */
     Vec2 _frac;
+    /* Amount of time to hold camera in zoom out pos upon cam init */
+    int _startTimer;
+    
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -85,10 +88,10 @@ public:
 
     /**
     * This method adds the zoom of the camera by a value.
-    * TEMP: keeping this so players can zoom in and out in the future
+    *
     * @param zoom The zoom value
     */
-    void addZoom(float zoom);
+    void zoomIn(float zoom);
 
     /**
     * This method sets the target of the camera.

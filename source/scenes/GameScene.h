@@ -86,9 +86,6 @@ protected:
     int _countdown;
     /** Host is by default a farmer (will need to change this later) */
     bool _isHost;
-
-    /** Initial camera position */
-    Vec3 _initCamera;
     
     int _seed;
     

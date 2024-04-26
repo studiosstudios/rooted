@@ -40,12 +40,13 @@ void CameraController::update(float dt) {
         _startTimer--;
     }
     if(_startTimer == 0){
-        if(_camera->getZoom() < DEFAULT_CAMERA_ZOOM-ZOOM_ERR){
+        float targetZoom = DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale;
+        if(_camera->getZoom() < targetZoom-ZOOM_ERR){
             _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
-            zoomIn((DEFAULT_CAMERA_ZOOM-_camera->getZoom())*ZOOM_RATE);
+            zoomIn((targetZoom-_camera->getZoom())*ZOOM_RATE);
         }
-        else if (_camera->getZoom() < DEFAULT_CAMERA_ZOOM){
-            _camera->setZoom(DEFAULT_CAMERA_ZOOM);
+        else if (_camera->getZoom() < targetZoom){
+            _camera->setZoom(targetZoom);
             _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
         }
     }

@@ -78,7 +78,7 @@ void CameraController::zoomIn(float zoom) {
     float originalZoom = _camera->getZoom();
     // Don't let it be greater than max zoom
     if (originalZoom + zoom > _maxZoom) return;
-    float truezoom = std::min(originalZoom + zoom, 2.0f);
+    float truezoom = std::min(originalZoom + zoom, DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale);
     _camera->setZoom(truezoom);
     // If this causes the camera to go out of bounds, revert the change
     if (_root->getSize().width < _camera->getViewport().getMaxX() / _camera->getZoom() || _root->getSize().height < _camera->getViewport().getMaxY() / _camera->getZoom()) {

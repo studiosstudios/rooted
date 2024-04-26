@@ -88,6 +88,8 @@ private:
     
     /** 2D vector representing tiling of randomly generated map */
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
+    
+    bool _tutorial;
 
     
 public:
@@ -120,12 +122,12 @@ public:
      *
      * @return  an autoreleased level file
      */
-    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets) {
+    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
         std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init(assets) ? result : nullptr);
+        return (result->init(assets, tutorial) ? result : nullptr);
     }
 
-    bool init(const std::shared_ptr<AssetManager> &assets);
+    bool init(const std::shared_ptr<AssetManager> &assets, bool tutorial);
     
     void generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots);
     

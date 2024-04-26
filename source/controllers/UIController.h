@@ -11,7 +11,6 @@
 #include <cugl/cugl.h>
 #include "../controllers/InputController.h"
 
-#endif /* UIController_h */
 
 class UIController {
 private:
@@ -112,3 +111,5 @@ public:
     
     void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive);
 };
+
+#endif /* UIController_h */

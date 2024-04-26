@@ -82,7 +82,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
     _seed = hex2dec(_network->getRoomID());
-    _map = Map::alloc(_assets); // Obtains ownership of root.
+    _map = Map::alloc(_assets, false); // Obtains ownership of root.
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
@@ -111,7 +111,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     addChild(_uinode);
     
     _input = InputController::alloc(getBounds());
-    Haptics::start();
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
     _active = true;

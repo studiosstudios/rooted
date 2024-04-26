@@ -71,6 +71,10 @@ protected:
 
     /** Initial camera position */
     Vec3 _initCamera;
+    
+    std::string _farmerUUID;
+    
+    std::string _carrotUUID;
 
     enum State {
         JAILBREAK,
@@ -167,24 +171,6 @@ public:
         _debug = value;
         _map->showDebug(value);
     }
-
-    /**
-     * Sets whether the level is completed.
-     *
-     * If true, the level will advance after a countdown
-     *
-     * @param value whether the level is completed.
-     */
-    void setComplete(bool value);
-
-    /**
-    * Sets whether the level is failed.
-    *
-    * If true, the level will reset after a countdown
-    *
-    * @param value whether the level is failed.
-    */
-    void setFailure(bool value);
 
 
 #pragma mark -

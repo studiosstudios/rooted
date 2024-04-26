@@ -184,13 +184,15 @@ void Map::showDebug(bool flag) {
  *
  * @return true if successfully loaded the asset from a file
  */
-bool Map::init(const std::shared_ptr<AssetManager> &assets) {
+bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
     setAssets(assets);
     auto json = _assets->get<JsonValue>("mapNames");
     if (json == nullptr) {
         CUAssertLog(false, "Failed to load map names");
     }
     _mapNames = json->get("names")->asStringArray();
+    
+    _tutorial = tutorial;
 
     return true;
 }
@@ -199,8 +201,11 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     
     _rand32.seed(randSeed);
     //random size (must be 16x9 for now)
-    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * (3 + floor(float(_rand32()) / _rand32.max() * 3.0)));
-    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+    if (_tutorial) {
+        _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
+    } else {
+        _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+    }
     
     _mapInfo.resize(_bounds.size.height / MAP_UNIT_HEIGHT, std::vector<std::pair<std::string, float>>(_bounds.size.width / MAP_UNIT_WIDTH));
     

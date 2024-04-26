@@ -83,13 +83,9 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
 
-    _map = Map::alloc(_assets); // Obtains ownership of root.
-//    if (!_map->populate()) {
-//        CULog("Failed to populate map");
-//        return false;
-//    }
+    _map = Map::alloc(_assets, true); // Obtains ownership of root.
 
-    _map->generate(0, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->generate(0, 1, 1, 20, 8);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -112,36 +108,25 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     addChild(_uinode);
 
     _input = InputController::alloc(getBounds());
-    Haptics::start();
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
-    _active = true;
     setDebug(false);
 
     _map->acquireMapOwnership();
     _babies = _map->loadBabyEntities();
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
-
-    std::shared_ptr<NetWorld> w = _map->getWorld();
-    _network->enablePhysics(w);
-    if (!_network->isHost()) {
-        _network->getPhysController()->acquireObs(_character, 0);
-    } else {
-        for (auto baby : _babies) {
-            _network->getPhysController()->acquireObs(baby, 0);
-        }
-    }
+    
+    _farmerUUID = "farmer";
+    _carrotUUID = "carrot";
+    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID}, _farmerUUID, _farmerUUID);
 
     _network->attachEventType<ResetEvent>();
 
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
-    setComplete(false);
-    setFailure(false);
 
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
     _cam.setZoom(zoom);
-    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
+    _cam.setPosition(_character->getPosition() * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
@@ -157,7 +142,6 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 void TutorialScene::dispose() {
     if (_active) {
         _input = nullptr;
-        Haptics::stop();
         _rootnode = nullptr;
         _uinode = nullptr;
         _collision.dispose();
@@ -191,7 +175,7 @@ void TutorialScene::reset() {
     // Load a new level
     _map->clearRootNode();
     _map->dispose();
-    _map->generate(0, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->generate(0, 1, 1, 20, 8);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -222,8 +206,6 @@ void TutorialScene::reset() {
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
     setDebug(false);
-    setComplete(false);
-    setFailure(false);
 }
 
 #pragma mark -

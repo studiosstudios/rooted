@@ -16,7 +16,7 @@ public:
 
     static std::shared_ptr<MockNetworkController> alloc() {
         auto res = std::make_shared<MockNetworkController>();
-        return (!res->init() ? res : nullptr);
+        return (res->init() ? res : nullptr);
     }
 
     bool init();

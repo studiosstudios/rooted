@@ -34,7 +34,8 @@ void RootedApp::onStartup() {
 #else
     Input::activate<Mouse>();
 #endif
-    
+
+    Haptics::start();
     Input::activate<Keyboard>();
     Input::activate<TextInput>();
     
@@ -74,6 +75,7 @@ void RootedApp::onStartup() {
 void RootedApp::onShutdown() {
     _loading.dispose();
     _gameplay.dispose();
+    _tutorial.dispose();
     _mainmenu.dispose();
     _hostgame.dispose();
     _joingame.dispose();
@@ -181,8 +183,13 @@ void RootedApp::preUpdate(float dt) {
         _mainmenu.setActive(true);
         _hostgame.init(_assets,_network);
         _joingame.init(_assets,_network);
+        _tutorial.init(_assets);
         _loaded = true;
         _status = MENU;
+        
+        _status = TUTORIAL;
+        _mainmenu.setActive(false);
+        _tutorial.setActive(true);
     } else if (_status == MENU) {
         updateMenuScene(dt);
         AudioEngine::get()->pause("game");
@@ -207,6 +214,10 @@ void RootedApp::preUpdate(float dt) {
 //        else if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
 //            AudioEngine::get()->play("game", source);
 //        }
+    }
+    else if (_status == TUTORIAL){
+        _tutorial.preUpdate(dt);
+        AudioEngine::get()->pause("menu");
     }
     if(_network){
         _network->updateNet();
@@ -240,6 +251,8 @@ void RootedApp::fixedUpdate() {
 //    _gameplay.fixedUpdate(time);
     if (_status == GAME) {
         _gameplay.fixedUpdate(time);
+    } else if (_status == TUTORIAL) {
+        _tutorial.fixedUpdate(time);
     }
 }
 
@@ -272,6 +285,8 @@ void RootedApp::postUpdate(float dt) {
 //    _gameplay.postUpdate(time);
     if (_status == GAME) {
         _gameplay.postUpdate(time);
+    } else if (_status == TUTORIAL) {
+        _tutorial.postUpdate(time);
     }
 }
 
@@ -414,6 +429,8 @@ void RootedApp::draw() {
             break;
         case GAME:
             _gameplay.render(_batch);
+        case TUTORIAL:
+            _tutorial.render(_batch);
         default:
             break;
     }

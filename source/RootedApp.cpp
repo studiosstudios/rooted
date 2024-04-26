@@ -172,11 +172,9 @@ void RootedApp::update(float dt) {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void RootedApp::preUpdate(float dt) {
-//    std::cout<<_status<<"\n";
     if (!_loaded && _loading.isActive()) {
         _loading.update(0.01f);
     } else if (_status == LOAD) {
-        // I don't think this is how I should do it but if it works for now it works.
         _network = NetworkController::alloc(_assets);
         _loading.dispose(); // Disables the input listeners in this mode
         _mainmenu.init(_assets);
@@ -186,10 +184,6 @@ void RootedApp::preUpdate(float dt) {
         _tutorial.init(_assets);
         _loaded = true;
         _status = MENU;
-        
-        _status = TUTORIAL;
-        _mainmenu.setActive(false);
-        _tutorial.setActive(true);
     } else if (_status == MENU) {
         updateMenuScene(dt);
         AudioEngine::get()->pause("game");
@@ -217,6 +211,11 @@ void RootedApp::preUpdate(float dt) {
     }
     else if (_status == TUTORIAL){
         _tutorial.preUpdate(dt);
+        if (_tutorial.returnToMenu()){
+            _tutorial.setActive(false);
+            _mainmenu.setActive(true);
+            _status = MENU;
+        }
         AudioEngine::get()->pause("menu");
     }
     if(_network){
@@ -311,6 +310,10 @@ void RootedApp::updateMenuScene(float timestep) {
             _joingame.setActive(true);
             _status = CLIENT;
             break;
+        case MenuScene::Choice::TUTORIAL:
+            _mainmenu.setActive(false);
+            _tutorial.setActive(true);
+            _status = TUTORIAL;
         default:
             // DO NOTHING
             break;

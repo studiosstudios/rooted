@@ -84,9 +84,9 @@ protected:
     };
 
     State _state;
-
-
-
+    
+    bool _returnToMenu;
+    
 
 #pragma mark Internal Object Management
 
@@ -148,6 +148,16 @@ public:
      */
     bool init(const std::shared_ptr<cugl::AssetManager> &assets);
 
+    /**
+     * Sets whether the scene is currently active
+     *
+     * This method should be used to toggle all the UI elements.  Buttons
+     * should be activated when it is made active and deactivated when
+     * it is not.
+     *
+     * @param value whether the scene is currently active
+     */
+    virtual void setActive(bool value) override;
 
 
 #pragma mark -
@@ -173,6 +183,10 @@ public:
         _debug = value;
         _map->showDebug(value);
     }
+    
+    bool returnToMenu() const { return _returnToMenu; }
+    
+    void setReturnToMenu(bool value) { _returnToMenu = false; }
 
 
 #pragma mark -

@@ -48,7 +48,8 @@ static int hex2dec(const std::string hex) {
  * This allows us to use a controller without a heap pointer.
  */
 TutorialScene::TutorialScene() : Scene2(),
-                         _debug(false) {
+_debug(false),
+_returnToMenu(false) {
 }
 
 /**
@@ -246,9 +247,11 @@ void TutorialScene::preUpdate(float dt) {
         _network->pushOutEvent(ResetEvent::allocResetEvent());
         return;
     }
+    // to exit to menu/quit out of tutorial
     if (_input->didExit()) {
-        CULog("Shutting down");
-        Application::get()->quit();
+        // switch screen back to the menu
+        _returnToMenu = true;
+        return;
     }
 
     _action.preUpdate(dt);
@@ -466,4 +469,23 @@ void TutorialScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){
         _network->popInEvent();
     }
     reset();
+}
+
+/**
+ * Sets whether the scene is currently active
+ *
+ * This method should be used to toggle all the UI elements.  Buttons
+ * should be activated when it is made active and deactivated when
+ * it is not.
+ *
+ * @param value whether the scene is currently active
+ */
+void TutorialScene::setActive(bool value) {
+    if (isActive() != value) {
+        Scene2::setActive(value);
+        if (value) {
+            // TODO: currently does not reset the scene
+            _returnToMenu = false;
+        }
+    }
 }

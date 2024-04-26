@@ -132,6 +132,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
+    _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
+    _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
 
     return true;
 }
@@ -455,7 +457,7 @@ Size TutorialScene::computeActiveSize() const {
 void TutorialScene::render(const std::shared_ptr<SpriteBatch> &batch) {
     _map->getWheatScene()->render(batch);
     Scene2::render(batch);
-    _map->getWheatScene()-> renderToScreen(1.0); //for debugging the wheat texture
+//    _map->getWheatScene()-> renderToScreen(1.0); //for debugging the wheat texture
 }
 
 void TutorialScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){

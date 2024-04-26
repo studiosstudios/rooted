@@ -28,7 +28,7 @@ private:
     /** reference to the map */
     std::shared_ptr<Map> _map;
     /** ai controller for baby carrots, only for host */
-    AIController _ai;
+    std::shared_ptr<AIController> _ai;
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
     std::shared_ptr<cugl::AssetManager> _assets;
@@ -84,6 +84,8 @@ public:
      * @param remain    The amount of time (in seconds) last fixedUpdate
      */
     void postUpdate(float remain);
+    
+    std::shared_ptr<AIController> getAIController() { return _ai; }
     
     void networkQueuePositions();
     

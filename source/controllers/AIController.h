@@ -13,12 +13,19 @@ class AIController {
     
 protected:
     std::shared_ptr<Map> _map;
+
+    Rect _babyBounds;
     
 public:
     AIController() {};
 
     ~AIController() {};
-    
+
+    static std::shared_ptr<AIController> alloc(std::shared_ptr<Map> &map) {
+        auto res = std::make_shared<AIController>();
+        return (res->init(map) ? res : nullptr);
+    }
+
     bool init(std::shared_ptr<Map> &map);
     
     void updateBabyCarrot(const std::shared_ptr<BabyCarrot> &baby);
@@ -26,6 +33,8 @@ public:
     void updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby);
     
     bool nearTarget(const Vec2 vec1, const Vec2 vec2);
+
+    void setBabyBounds(Rect rect) { _babyBounds.set(rect); }
 
 };
 

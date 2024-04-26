@@ -8,12 +8,13 @@
 
 #define RADIUS 0.2f
 #define MOVEMENT_SPEED 0.75f
-#define EDGE_DIST 5.0f
+#define EDGE_DIST 1.0f
 
 using namespace cugl;
 
 bool AIController::init(std::shared_ptr<Map> &map) {
     _map = map;
+    _babyBounds.set(_map->getMapBounds());
     srand(static_cast<unsigned int>( time(NULL) )^2);
     return true;
 }
@@ -24,16 +25,14 @@ void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby
         Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*27+2.5, ((float) std::rand()/ RAND_MAX)*13+2.5);
         babyCarrot->setTarget(newTarget);
     }
-    float mapWidth = _map->getMapBounds().size.width;
-    float mapHeight = _map->getMapBounds().size.height;
     if (babyCarrot->getState() == State::HOLD) {
         if (((float) std::rand()/ RAND_MAX) < 0.5) {
             Vec2 newTarget = Vec2(babyCarrot->getX()+(((float) std::rand()/ RAND_MAX)*2-1), babyCarrot->getY()+(((float) std::rand()/ RAND_MAX)*2-1));
             babyCarrot->setTarget(newTarget);
         } else {
             babyCarrot->setState(State::ROAM);
-            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*(mapWidth - EDGE_DIST * 2)+EDGE_DIST,
-                                  ((float) std::rand()/ RAND_MAX)*(mapHeight - EDGE_DIST * 2)+EDGE_DIST);
+            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*(_babyBounds.size.width - EDGE_DIST * 2) + EDGE_DIST + _babyBounds.origin.x,
+                                  ((float) std::rand()/ RAND_MAX)*(_babyBounds.size.height - EDGE_DIST * 2) + EDGE_DIST + _babyBounds.origin.y);
             babyCarrot->setTarget(newTarget);
         }
     } else {
@@ -43,8 +42,8 @@ void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby
             babyCarrot->setTarget(newTarget);
         } else {
             babyCarrot->setState(State::ROAM);
-            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*(mapWidth - EDGE_DIST * 2)+EDGE_DIST,
-                                  ((float) std::rand()/ RAND_MAX)*(mapHeight - EDGE_DIST * 2)+EDGE_DIST);
+            Vec2 newTarget = Vec2(((float) std::rand()/ RAND_MAX)*(_babyBounds.size.width - EDGE_DIST * 2) + EDGE_DIST + _babyBounds.origin.x,
+                                  ((float) std::rand()/ RAND_MAX)*(_babyBounds.size.height - EDGE_DIST * 2) + EDGE_DIST + _babyBounds.origin.y);
             babyCarrot->setTarget(newTarget);
         }
     }

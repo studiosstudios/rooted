@@ -101,6 +101,8 @@ public:
     * This method sets the position of the camera.
     */
     void setPosition(Vec3 pos);
+
+    void setFrac(Vec2 frac) { _frac = frac; }
     
     /**
     * Gets the camera

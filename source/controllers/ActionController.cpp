@@ -35,7 +35,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _network = network;
     _assets = assets;
     if (_network->isHost()) {
-        _ai.init(map);
+        _ai = AIController::alloc(map);
     }
     _network->attachEventType<CaptureEvent>();
     _network->attachEventType<RootEvent>();
@@ -95,7 +95,7 @@ void ActionController::preUpdate(float dt) {
                     babyCarrot->setTarget(babyCarrot->getPosition().add(farmer->getPosition().subtract(babyCarrot->getPosition()).normalize().scale(-3)).clamp(Vec2(1, 1), Vec2(13, 13)));
                 }
             }
-            _ai.updateBabyCarrot(babyCarrot);
+            _ai->updateBabyCarrot(babyCarrot);
         }
         
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){

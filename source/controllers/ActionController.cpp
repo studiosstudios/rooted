@@ -212,17 +212,17 @@ void ActionController::playRustling(std::shared_ptr<EntityModel> player, float d
         newVolume = isBarrot? calculateVolume(EntityModel::EntityState::WALKING, distance) : calculateVolume(player->getEntityState(), distance);
     }
     if(isBarrot){
-        if(AudioEngine::get()->getState("barrot") != AudioEngine::State::PLAYING && newVolume != 0){
-            AudioEngine::get()->play("barrot", source, true, newVolume, false);
-        }
-        else{
-            if(newVolume == 0){
-                AudioEngine::get()->clear("barrot", 0.5);
-            }
-            else if (AudioEngine::get()->getState("barrot") == AudioEngine::State::PLAYING){
-                AudioEngine::get()->setVolume("barrot", newVolume > 1 ? 1 : newVolume);
-            }
-        }
+//        if(AudioEngine::get()->getState("barrot") != AudioEngine::State::PLAYING && newVolume != 0){
+//            AudioEngine::get()->play("barrot", source, true, newVolume, false);
+//        }
+//        else{
+//            if(newVolume == 0){
+//                AudioEngine::get()->clear("barrot", 0.5);
+//            }
+//            else if (AudioEngine::get()->getState("barrot") == AudioEngine::State::PLAYING){
+//                AudioEngine::get()->setVolume("barrot", newVolume > 1 ? 1 : newVolume);
+//            }
+//        }
     }
     else{
         if(AudioEngine::get()->getState(player->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){

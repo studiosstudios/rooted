@@ -39,15 +39,17 @@ void CameraController::update(float dt) {
     if(_startTimer > 0){
         _startTimer--;
     }
-    if(_startTimer == 0 && _camera->getZoom() < DEFAULT_CAMERA_ZOOM-ZOOM_ERR){
-        _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
-        zoomIn((DEFAULT_CAMERA_ZOOM-_camera->getZoom())*ZOOM_RATE);
+    if(_startTimer == 0){
+        if(_camera->getZoom() < DEFAULT_CAMERA_ZOOM-ZOOM_ERR){
+            _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
+            zoomIn((DEFAULT_CAMERA_ZOOM-_camera->getZoom())*ZOOM_RATE);
+        }
+        else if (_camera->getZoom() < DEFAULT_CAMERA_ZOOM){
+            _camera->setZoom(DEFAULT_CAMERA_ZOOM);
+            _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
+        }
     }
-    else if (_startTimer == 0 && _camera->getZoom() < DEFAULT_CAMERA_ZOOM){
-        _camera->setZoom(DEFAULT_CAMERA_ZOOM);
-        _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
-    }
-    else if(std::abs(new_x-curr_x) < CAM_POSITION_ERR && std::abs(new_x-curr_x) < CAM_POSITION_ERR){
+    if(std::abs(new_x-curr_x) < CAM_POSITION_ERR && std::abs(new_x-curr_x) < CAM_POSITION_ERR){
         _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
     }
     else {

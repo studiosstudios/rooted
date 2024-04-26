@@ -64,6 +64,7 @@ private:
     bool _keyShowPlayer;
     
     bool _keySwitch;
+    bool _keyContinue;
   
 protected:
     // INPUT RESULTS
@@ -81,6 +82,8 @@ protected:
     bool _unrootPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
+    /** Whether to continue tutorial */
+    bool _continuePressed;
     
     // CAN REMOVE THIS, THIS IS JUST FOR TESTING
     bool _rustlePressed;
@@ -348,6 +351,8 @@ public:
     bool didSwitch() const { return _switchPressed; }
     
     bool didShakeDevice() const { return _deviceShaking; }
+
+    bool didContinue() const { return _continuePressed; }
 
 #pragma mark -
 #pragma mark Swipe Drawing Logic

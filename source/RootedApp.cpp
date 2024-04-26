@@ -429,8 +429,10 @@ void RootedApp::draw() {
             break;
         case GAME:
             _gameplay.render(_batch);
+            break;
         case TUTORIAL:
             _tutorial.render(_batch);
+            break;
         default:
             break;
     }

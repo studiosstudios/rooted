@@ -103,11 +103,11 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
+    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale * std::max(dimen.width/SCENE_WIDTH, dimen.height/SCENE_HEIGHT);
     addChild(_rootnode);
     addChild(_uinode);
 
-    _input = InputController::alloc(getBounds());
+    _input = InputController::alloc(getBounds()); 
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
     setDebug(false);

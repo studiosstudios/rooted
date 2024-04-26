@@ -83,6 +83,8 @@ protected:
         SHOWFARMER
     };
 
+    State _state;
+
 
 
 

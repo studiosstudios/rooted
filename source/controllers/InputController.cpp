@@ -43,6 +43,8 @@ _joystick(false),
 _hasJumped(false),
 _keyDash(false),
 _keyDashPressed(false),
+_keyContinue(false),
+_continuePressed(false),
 _currentSwipeColor(Color4::WHITE) {
 }
 
@@ -134,6 +136,7 @@ void InputController::update(float dt) {
     _keySwitch = keys->keyPressed(KeyCode::S);
     _keyRoot   = keys->keyPressed(KeyCode::Z);
     _keyUnroot = keys->keyPressed(KeyCode::Z);
+    _keyContinue = keys->keyPressed(KeyCode::SPACE);
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -173,6 +176,7 @@ void InputController::update(float dt) {
     _rootPressed = _keyRoot;
     
     _unrootPressed = _keyUnroot;
+    _continuePressed = _keyContinue;
 
     // _movement is now updated directly in processJoystick
 
@@ -182,6 +186,7 @@ void InputController::update(float dt) {
     _keyReset = false;
     _keyDebug = false;
     _keyShowPlayer = false;
+    _keyContinue = false;
 #endif
 }
 
@@ -195,6 +200,7 @@ void InputController::clear() {
     _dashPressed  = false;
     _keyShowPlayer = false;
     _rootPressed = false;
+    _continuePressed = false;
 }
 
 #pragma mark -
@@ -409,6 +415,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         }
         _mtime = event.timestamp;
     }
+    _keyContinue = true;
 }
 
 

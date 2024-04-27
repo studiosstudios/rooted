@@ -19,24 +19,6 @@
 
 using namespace cugl;
 
-/**
- * Converts a hexadecimal string to a decimal string
- *
- * This function assumes that the string is 4 hexadecimal characters
- * or less, and therefore it converts to a decimal string of five
- * characters or less (as is the case with the lobby server). We
- * pad the decimal string with leading 0s to bring it to 5 characters
- * exactly.
- *
- * @param hex the hexadecimal string to convert
- *
- * @return the decimal equivalent to hex
- */
-static int hex2dec(const std::string hex) {
-    Uint32 value = strtool::stou32(hex,0,16);
-    std::string result = strtool::to_string(value);
-    return stoi(result);
-}
 
 #pragma mark -
 #pragma mark Constructors
@@ -86,7 +68,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _map = Map::alloc(_assets, true); // Obtains ownership of root.
 
-    _map->generate(0, 1, 1, 20, 8);
+    _map->generate(0, 1, 2, 9, 1);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -118,16 +100,17 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     _farmerUUID = "farmer";
     _carrotUUID = "carrot";
-    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID}, _farmerUUID, _farmerUUID);
+    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID}, _farmerUUID, _carrotUUID);
 
     _network->attachEventType<ResetEvent>();
 
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     _cam.setZoom(zoom);
-    _cam.setPosition(_character->getPosition() * _scale);
+    _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
+    _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
@@ -135,6 +118,10 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     Application::get()->setClearColor(Color4::CLEAR);
     _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
+    
+    _input->pause();
+    _state = TutorialState::JAILBREAK;
+    _time = 0;
 
     return true;
 }
@@ -199,7 +186,7 @@ void TutorialScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
 
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     _cam.setZoom(zoom);
@@ -235,12 +222,10 @@ void TutorialScene::reset() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void TutorialScene::preUpdate(float dt) {
-    if (_map == nullptr || (_countdown >= 0 && _network->getNumPlayers() > 1)) {
-        return;
-    }
-
+    _time += dt;
+    
     _input->update(dt);
-
+    
     // Process the toggled key commands
     if (_input->didDebug()) { setDebug(!isDebug()); }
     if (_input->didReset()) {
@@ -253,8 +238,71 @@ void TutorialScene::preUpdate(float dt) {
         _returnToMenu = true;
         return;
     }
-
-    _action.preUpdate(dt);
+    
+    switch (_state) {
+        case JAILBREAK:
+            //wait a bit until baby carrots move in
+            if (_time > 1.0) {
+                _action.updateBabyCarrots();
+                
+                //move camera down
+                if (_time > 3.0) {
+                    float f = (_time - 3.0) / 3.0;
+                    _cam.setTarget(_map->getMapBounds().size.width/2.0 * _scale,
+                                   (1-f) * _map->getMapBounds().size.height/2.0 * _scale +
+                                   f * MAP_UNIT_HEIGHT / 2.0 * _scale);
+                }
+                
+                //move camera back up
+                if (_time > 7.0) {
+                    _cam.setTarget(_map->getMapBounds().size.width/2.0 * _scale,
+                                   _map->getMapBounds().size.height/2.0 * _scale);
+                    _character->setX(_map->getMapBounds().size.width/2.0);
+                }
+                
+                //move player down
+                if (_time > 7.5 && _time < 10.0) {
+                    _character->setMovement(Vec2(0,-1.0));
+                } else {
+                    _character->setMovement(Vec2::ZERO);
+                }
+                _character->updateState();
+                _character->applyForce();
+                _character->stepAnimation(dt);
+                
+            }
+            break;
+        case MOVEMENT:
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            break;
+        case CATCHBABIES:
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            break;
+        case SHOWFARMER:
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            break;
+        case ESCAPEFARMER:
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            break;
+        case ROCK:
+            break;
+        case FARMERROOTS:
+            break;
+        case UNROOT:
+            break;
+        case SWITCH:
+            break;
+        case CATCHCARROT:
+            break;
+        case ROOT:
+            break;
+        case FREEPLAY:
+            break;
+    }
 }
 
 /**
@@ -310,9 +358,6 @@ void TutorialScene::fixedUpdate(float step) {
         if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
             _action.processFreeEvent(freeEvent);
         }
-    }
-    if (_countdown >= 0 && _network->getNumPlayers() > 1){
-        return;
     }
 
     _map->getWorld()->update(step);
@@ -377,7 +422,54 @@ void TutorialScene::fixedUpdate(float step) {
  * @param remain    The amount of time (in seconds) last fixedUpdate
  */
 void TutorialScene::postUpdate(float remain) {
-    // Reset the game if we win or lose.
+    
+    // do state transitions
+    switch (_state) {
+        case JAILBREAK:
+            if (_time > 11.0) {
+                CULog("MOVE WITH JOYSTICK");
+                _state = MOVEMENT;
+                _input->unpause();
+                _time = 0;
+            }
+            break;
+        case MOVEMENT:
+            if (_input->didContinue()) {
+                _state = CATCHBABIES;
+                _time = 0;
+            }
+            break;
+        case CATCHBABIES:
+            if (_input->didContinue()) {
+                _map->changeCharacter("farmer");
+                _state = SHOWFARMER;
+                _time = 0;
+            }
+            break;
+        case SHOWFARMER:
+            if (_input->didContinue()) {
+                _map->changeCharacter("carrot");
+                _state = ESCAPEFARMER;
+                _time = 0;
+            }
+            break;
+        case ESCAPEFARMER:
+            break;
+        case ROCK:
+            break;
+        case FARMERROOTS:
+            break;
+        case UNROOT:
+            break;
+        case SWITCH:
+            break;
+        case CATCHCARROT:
+            break;
+        case ROOT:
+            break;
+        case FREEPLAY:
+            break;
+    }
 
     // TEMP CODE FOR OPEN BETA - CJ
     int i = _network->getNumPlayers() - 1;
@@ -389,23 +481,10 @@ void TutorialScene::postUpdate(float remain) {
     // TEMP CODE FOR OPEN BETA
 
     _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
+    _action.postUpdate(remain);
 
-    if (_countdown > 0) {
-        _countdown--;
-    } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        if(_network->isHost()){
-            _network->pushOutEvent(ResetEvent::allocResetEvent());
-        }
-        else{
-            //do nothing and wait for host to reset
-        }
-    }
-    else {
-        _action.postUpdate(remain);
-
-        // Since items may be deleted, garbage collect
-        _map->getWorld()->garbageCollect();
-    }
+    // Since items may be deleted, garbage collect
+    _map->getWorld()->garbageCollect();
 
     _map->getCharacter()->getSceneNode()->TexturedNode::setIsPlayer(true);
 

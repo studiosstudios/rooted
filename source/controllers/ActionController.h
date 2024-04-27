@@ -61,6 +61,8 @@ public:
     bool init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
               const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets);
 
+    void updateBabyCarrots();
+    
     /**
      * The method called to indicate the start of a deterministic loop.
      *

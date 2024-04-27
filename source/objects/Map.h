@@ -93,6 +93,10 @@ private:
     
     bool _tutorial;
     
+    std::vector<std::string> _playerUUIDs;
+    std::string _hostUUID;
+    std::string _thisUUID;
+    
     
 
     
@@ -282,6 +286,10 @@ public:
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
     std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
+    
+    /** Changes the player to the one specified by the UUID. This should ONLY be used by the tutorial scene,
+     behaviour with networking is undefined. */
+    std::shared_ptr<EntityModel> &changeCharacter(std::string UUID);
     
     void resetPlantingSpots();
     

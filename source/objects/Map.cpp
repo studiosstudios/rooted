@@ -411,6 +411,9 @@ void Map::dispose() {
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
     std::shared_ptr<EntityModel> ret;
+    _playerUUIDs = players;
+    _hostUUID = hostUUID;
+    _thisUUID = thisUUID;
     bool isHost = hostUUID == thisUUID;
 
     auto carrot = _carrots.begin();
@@ -788,4 +791,25 @@ void Map::resetPlayers() {
         carrot->resetCarrot();
     }
     _farmers.at(0)->resetFarmer();
+}
+
+std::shared_ptr<EntityModel> &Map::changeCharacter(std::string UUID) {
+    _character->setLinearVelocity(Vec2::ZERO);
+    _thisUUID = UUID;
+    if (_thisUUID == _hostUUID) {
+        _character = _farmers.at(0);
+    } else {
+        auto carrot = _carrots.begin();
+        for (std::string uuid : _playerUUIDs) {
+            if (uuid == _thisUUID) {
+                _character = (*carrot);
+                break;
+            }
+            carrot += uuid != _hostUUID;
+        }
+    }
+    
+    _character->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
+    return _character;
+
 }

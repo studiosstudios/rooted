@@ -13,8 +13,7 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Initializers
 
-bool CameraController::init(const std::shared_ptr<EntityModel> target, const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Vec2 frac) {
-    _target = target;
+bool CameraController::init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Vec2 frac) {
     _root = root;
     _lerp = lerp;
     _camera = camera;
@@ -33,7 +32,7 @@ bool CameraController::init(const std::shared_ptr<EntityModel> target, const std
 void CameraController::update(float dt) {
     float curr_x = _camera->getPosition().x;
     float curr_y = _camera->getPosition().y;
-    Vec2 newPos = boundPosition(_target->getPosition()*_scale);
+    Vec2 newPos = boundPosition(_posTarget);
     if(_startTimer > 0){
         _startTimer--;
     }
@@ -92,8 +91,4 @@ const Vec2 CameraController::boundPosition(Vec2 pos) {
     float new_x = std::min(std::max(pos.x, (float) ((viewWidth/2)/_camera->getZoom())), (float) (SCENE_WIDTH * _frac.x-(viewWidth/2)/_camera->getZoom()));
     float new_y = std::min(std::max(pos.y, (float) ((viewHeight/2)/_camera->getZoom())), (float) (SCENE_HEIGHT  * _frac.y-(viewHeight/2)/_camera->getZoom()));
     return Vec2(new_x, new_y);
-}
-
-void CameraController::setTarget(std::shared_ptr<EntityModel> target) {
-    _target = target;
 }

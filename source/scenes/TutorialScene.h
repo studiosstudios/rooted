@@ -76,16 +76,30 @@ protected:
     
     std::string _carrotUUID;
 
-    enum State {
-        JAILBREAK,
-        FIRSTMOVEMENT,
-        CATCHBABIES,
-        SHOWFARMER
+    enum TutorialState {
+        JAILBREAK,      //jailbreak cutscene
+        MOVEMENT,       //show dpad and teach movement
+        CATCHBABIES,    //teach baby carrots and dashing
+        SHOWFARMER,     //farmer appears cutscene - fade to black to farmer catching carrot
+        ESCAPEFARMER,   //teach shaking to escape farmer
+        ROCK,           //ignore for now?
+        FARMERROOTS,    //farmer roots an npc carrot cutscene
+        UNROOT,         //teach unrooting
+        SWITCH,         //fade to black and player is now farmer
+        CATCHCARROT,    //teach dash to catch carrot
+        ROOT,           //teach planting spots and rooting
+        FREEPLAY        //freeplay - potentially allow players to switch between playing as farmer and one of two carrots?
+                        //  quit button should appear
     };
 
-    State _state;
+    TutorialState _state;
     
     bool _returnToMenu;
+    /** time incrementer used to transition between scenes */
+    float _time;
+    
+    Size _mapBounds;
+    
     
 
 #pragma mark Internal Object Management

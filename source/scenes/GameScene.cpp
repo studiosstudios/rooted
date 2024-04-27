@@ -142,7 +142,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     setComplete(false);
     setFailure(false);
     
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
     float mapX = _map->getMapBounds().getMaxX()*_scale;
     float mapY = _map->getMapBounds().getMaxY()*_scale;
@@ -258,7 +258,7 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     float mapX = _map->getMapBounds().getMaxX()*_scale;
@@ -379,6 +379,7 @@ void GameScene::fixedUpdate(float step) {
     }
     
     _map->getWorld()->update(step);
+    _cam.setTarget(_character->getPosition()*_scale);
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());

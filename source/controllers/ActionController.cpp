@@ -84,20 +84,7 @@ void ActionController::preUpdate(float dt) {
     
     if (_network->isHost()) { // Farmer (host) specific actions
         auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
-        
-        // Step baby carrot AI
-        for (auto babyCarrot : _map->getBabyCarrots()) {
-            // I'm slightly worried that this could get expensive but when I think about it
-            // it's really no different than just checking for collisions so idk
-            for (auto farmer : _map->getFarmers()) {
-                if (farmer->getPosition().distance(babyCarrot->getPosition()) <= EVADE_DIST) {
-                    babyCarrot->setState(State::EVADE);
-                    babyCarrot->setTarget(babyCarrot->getPosition().add(farmer->getPosition().subtract(babyCarrot->getPosition()).normalize().scale(-3)).clamp(Vec2(1, 1), Vec2(13, 13)));
-                }
-            }
-            _ai->updateBabyCarrot(babyCarrot);
-        }
-        
+        updateBabyCarrots();
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
             //        std::cout<<"farmer did the rooting\n";
             Haptics::get()->playContinuous(1.0, 0.3, 0.2);
@@ -135,6 +122,21 @@ void ActionController::preUpdate(float dt) {
             _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
 //            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
         }
+    }
+}
+
+void ActionController::updateBabyCarrots() {
+    // Step baby carrot AI
+    for (auto babyCarrot : _map->getBabyCarrots()) {
+        // I'm slightly worried that this could get expensive but when I think about it
+        // it's really no different than just checking for collisions so idk
+        for (auto farmer : _map->getFarmers()) {
+            if (farmer->getPosition().distance(babyCarrot->getPosition()) <= EVADE_DIST) {
+                babyCarrot->setState(State::EVADE);
+                babyCarrot->setTarget(babyCarrot->getPosition().add(farmer->getPosition().subtract(babyCarrot->getPosition()).normalize().scale(-3)).clamp(Vec2(1, 1), Vec2(13, 13)));
+            }
+        }
+        _ai->updateBabyCarrot(babyCarrot);
     }
 }
 

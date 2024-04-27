@@ -68,12 +68,13 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
     
     //add wind texture nodes
     for (int i = 0; i < _windCount; i++) {
-        auto windNode = scene2::PolygonNode::allocWithPoly((Rect(Vec2::ZERO, Size(60, SCENE_HEIGHT*mapInfo.size()*2))));
+        auto windNode = scene2::PolygonNode::allocWithPoly((Rect(Vec2::ZERO, Size(100, SCENE_HEIGHT*mapInfo.size()*2))));
 //        auto windNode = scene2::PolygonNode::allocWithPoly((Rect(Vec2::ZERO, Size(SCENE_WIDTH, SCENE_HEIGHT))));
+        windNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
         windNode->setAngle(15);
         windNode->setScale(_scale);
         windNode->setAnchor(Vec2::ZERO);
-        windNode->setColor(Color4(0, 0, 30, 255));
+        windNode->setColor(Color4(0, 1, 3, 255));
         
         windNode->setPosition(mapInfo.size()*MAP_UNIT_WIDTH+MAP_UNIT_WIDTH, mapInfo[0].size()*MAP_UNIT_HEIGHT/2);
 //        windNode->setPosition(0, 0);
@@ -168,7 +169,8 @@ void WheatScene::updateWindEffect() {
         CULog("x: %f", new_pos.x);
 
         if (new_pos.x < 20) {
-            new_pos.x = 100;
+            new_pos.x = 3*MAP_UNIT_WIDTH+MAP_UNIT_WIDTH;
+            new_pos.y = 3*MAP_UNIT_HEIGHT/2;
         }
         node->setPosition(new_pos);
     }

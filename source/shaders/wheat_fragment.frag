@@ -185,7 +185,7 @@ void main(void) {
     }
 
     // Sample the wind
-    float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, WIND_TIME);
+//    float windValue = wind(outTexCoord/SCREEN_PIXEL_SIZE, WIND_TIME);
     for (float dist = 0.0f; dist <= MAX_BLADE_LENGTH; dist += STEP_SIZE) {
 
         // Get the height of the blade originating at the current pixel
@@ -194,25 +194,26 @@ void main(void) {
 
         if (bladeLength > 0.0f) {
             // Blades are pressed down by the wind
-            if (windValue > 0.5f) {
-                bladeLength -= 3.0f;
-            }
+//            if (windValue > 0.5f) {
+//                bladeLength -= 3.0f;
+//            }
 
             // Color basec on distance from root
             if (abs(dist - bladeLength) < 0.0001f) {
                 // Color grass tips
-                if (windValue <= 0.5f) {
+                baseColor = wheatTopColor(fragUV.x, fragUV.y);
+//                if (windValue <= 0.5f) {
 //                    baseColor = tip_color;
-                    baseColor = wheatTopColor(fragUV.x, fragUV.y);
+//                    baseColor = wheatTopColor(fragUV.x, fragUV.y);
                     // a little shading on top of noise
 //                    if (texture(grass_tex, uv+vec2(0.0f, 0.03f)).g > 0) {
 //                        baseColor -= texture(grass_tex, uv+vec2(0.0f, 0.03f)).g*vec4(2.0f, 2.01f, 2.01f, 0.0f);
 //                    }
 //                    baseColor = windValue > 0.49 ? sampleColor(dist, bladeLength) : tip_color;
-                } else {
+//                } else {
 //                    baseColor = wind_color;
-                    baseColor = wheatTopColor(fragUV.x, fragUV.y) + vec4(0.06, 0.06, 0.06, 0.0);
-                }
+//                    baseColor = wheatTopColor(fragUV.x, fragUV.y) + vec4(0.06, 0.06, 0.06, 0.0);
+//                }
                 break;
             } else if (dist < bladeLength) {
                 // Color grass stems

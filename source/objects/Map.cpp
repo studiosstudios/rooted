@@ -684,7 +684,6 @@ void Map::spawnCarrots() {
         carrotSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotSouthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
         carrotSouthWalkNode->setAnchor(Vec2(0.5, 0.25));
-        carrotSouthWalkNode->setHeight(carrotSouthWalkSprite->getHeight()/3.0 *0.1 / _scale.y * DEFAULT_DRAWSCALE); //do not know why these values are not multiplied by drawscale ratio
         
         auto carrotNorthWalkNode = scene2::SpriteNode::allocWithSheet(
                                                                       carrotNorthWalkSprite, 3, 5);
@@ -692,7 +691,6 @@ void Map::spawnCarrots() {
         carrotNorthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
         carrotNorthWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotNorthWalkNode->setVisible(false);
-        carrotNorthWalkNode->setHeight(carrotNorthWalkSprite->getHeight()/3.0 *0.1 / _scale.y * DEFAULT_DRAWSCALE);
         
         auto carrotEastWalkNode = scene2::SpriteNode::allocWithSheet(
                                                                      carrotEastWalkSprite, 3, 5);
@@ -700,21 +698,18 @@ void Map::spawnCarrots() {
         carrotEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
         carrotEastWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotEastWalkNode->setVisible(false);
-        carrotEastWalkNode->setHeight(carrotEastWalkSprite->getHeight()/3.0 *0.1 / _scale.y * DEFAULT_DRAWSCALE);
         
         auto carrotNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotNorthEastWalkSprite, 3, 5);
         carrotNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotNorthEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
         carrotNorthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotNorthEastWalkNode->setVisible(false);
-        carrotNorthEastWalkNode->setHeight(carrotNorthEastWalkSprite->getHeight()/3.0 *0.1 / _scale.y * DEFAULT_DRAWSCALE);
         
         auto carrotSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotSouthEastWalkSprite, 3, 5);
         carrotSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotSouthEastWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
         carrotSouthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotSouthEastWalkNode->setVisible(false);
-        carrotSouthEastWalkNode->setHeight(carrotSouthEastWalkSprite->getHeight()/3.0 *0.1 / _scale.y * DEFAULT_DRAWSCALE);
         
         _entitiesNode->addChild(carrotNorthWalkNode);
         _entitiesNode->addChild(carrotEastWalkNode);

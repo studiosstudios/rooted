@@ -281,6 +281,9 @@ public:
     
     void spawnRock(std::shared_ptr<EntityModel> player);
 
+    void destroyRock(std::shared_ptr<Collectible> rock);
+    
+    
 #pragma mark -
 #pragma mark Drawing
     void updateShaders(float step, Mat4 perspective);
@@ -326,7 +329,6 @@ private:
     void spawnCarrots();
     
     void spawnBabyCarrots();
-    
 };
 
 #endif //ROOTED_MAP_H

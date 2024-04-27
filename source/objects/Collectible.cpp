@@ -120,22 +120,22 @@ void Collectible::dispose() {
     _geometry = nullptr;
 }
 
-/**
- * Applies the force to the body of this dude
- *
- * This method should be called after the force attribute is set.
- */
-void Collectible::applyForce() {
-    if (!isEnabled()) {
-        return;
-    }
-    
-//    Vec2 speed;
-//    Vec2 normMovement = getMovement().getNormalization();
+///**
+// * Applies the force to the body of this dude
+// *
+// * This method should be called after the force attribute is set.
+// */
+//void Collectible::applyForce() {
+//    if (!isEnabled()) {
+//        return;
+//    }
 //    
-//    speed.set(normMovement).scale(SNEAK_SPEED);
-//    setLinearVelocity(speed);
-}
+////    Vec2 speed;
+////    Vec2 normMovement = getMovement().getNormalization();
+////    
+////    speed.set(normMovement).scale(SNEAK_SPEED);
+////    setLinearVelocity(speed);
+//}
 
 /**
  * Updates the object's physics state (NOT GAME LOGIC).

@@ -794,3 +794,15 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     
     _world->initObstacle(rock);
 }
+
+void Map::destroyRock(std::shared_ptr<Collectible> rock) {
+    // do not attempt to remove a rock that has already been removed
+    if (rock->isRemoved()) {
+        return;
+    }
+    rock->getDebugNode()->dispose();
+    rock->getWheatHeightNode()->dispose();
+    _entitiesNode->removeChild(rock->getSceneNode());
+    rock->setDebugScene(nullptr);
+    rock->markRemoved(true);
+}

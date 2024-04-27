@@ -780,9 +780,9 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     rock->setDrawScale(_scale.x);
     rockNode->setPriority(float(DrawOrder::ENTITIES));
 
-    rockNode->setScale(0.5f * _scale/DEFAULT_DRAWSCALE);
+    rockNode->setScale(0.3f * _scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
-    rockNode->setHeight(0.5f * _scale.y/DEFAULT_DRAWSCALE);
+    rockNode->setHeight(0.3f * _scale.y/DEFAULT_DRAWSCALE);
     rockNode->setName("rock");
     _entitiesNode->addChild(rockNode);
     rock->setDebugScene(_debugnode);

@@ -133,6 +133,4 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define MAX_WHEAT_HEIGHT 25.0
 #define STEP_SIZE 1.0
 
-
-
 #endif //ROOTED_ROOTEDCONSTANTS_H

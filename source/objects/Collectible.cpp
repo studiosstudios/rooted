@@ -11,6 +11,8 @@
 
 #pragma mark -
 #pragma mark Physics Constants
+#define AGE 30
+#define DECAY 0.5f
 
 using namespace cugl;
 
@@ -38,8 +40,7 @@ bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     Size nsize = size;
     _drawScale = scale;
     
-    // for now just make all of them of age 10
-    _age = 10;
+    _age = AGE;
     
     if (BoxObstacle::init(pos, nsize)) {
         setSensor(true);
@@ -157,7 +158,7 @@ void Collectible::update(float dt) {
     }
     
     // magic number, this will just determine what age means
-    _age -= 0.5f;
+    _age -= DECAY;
 }
 
 

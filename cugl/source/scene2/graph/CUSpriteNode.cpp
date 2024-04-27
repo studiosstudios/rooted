@@ -204,7 +204,6 @@ void SpriteNode::setFrame(int frame) {
     float dx = x-_bounds.origin.x;
     float dy = y-_bounds.origin.y;
     _bounds.origin.set(x,y);
-    _origin = float(y)/_texture->getSize().height;
     shiftTexture(dx, dy);
 }
 
@@ -281,6 +280,8 @@ void SpriteNode::updateTextureCoords() {
     
     Size tsize = _texture->getSize();
     Vec2 off = _bounds.origin;
+    _height = _bounds.size.height * _scale.y;
+    _origin = float(off.y)/tsize.height;
     for(auto it = _mesh.vertices.begin(); it != _mesh.vertices.end(); ++it) {
         float s = (it->position.x+off.x)/tsize.width;
         float t = 1-(it->position.y+off.y)/tsize.height;
@@ -310,4 +311,9 @@ void SpriteNode::updateTextureCoords() {
             it->gradcoord.y = t;
         }
     }
+}
+
+void SpriteNode::draw(const std::shared_ptr<SpriteBatch> &batch, const Affine2 &transform, Color4 tint) {
+    batch->setNumRows(_size/_cols);
+    PolygonNode::draw(batch, transform, tint);
 }

@@ -123,8 +123,10 @@ using namespace cugl;
 #define DIRTY_ORIGIN            0x2000
 /** If the texture is the player */
 #define DIRTY_PLAYER            0x4000
+/** If the texture is the player */
+#define DIRTY_NUM_ROWS          0x8000
 /** All values have changed */
-#define DIRTY_ALL_VALS          0x7FFF
+#define DIRTY_ALL_VALS          0xFFFF
 
 /**
  * Fills poly with a mesh defining the given rectangle.
@@ -198,6 +200,7 @@ public:
         zDepth = 0;
         height = 0;
         origin = 0;
+        numRows = 1;
         player = false;
         blur = 0;
         type = 0;
@@ -226,6 +229,7 @@ public:
         blockptr = copy->blockptr;
         zDepth = copy->zDepth;
         height = copy->height;
+        numRows = copy->numRows;
         origin = copy->origin;
         player = copy->player;
         blur  = copy->blur;
@@ -252,6 +256,7 @@ public:
         zDepth = 0;
         height = 0;
         origin = 0;
+        numRows = 1;
         player = false;
         blur = 0;
         type = 0;
@@ -283,6 +288,7 @@ public:
         height = 0;
         origin = 0;
         player = false;
+        numRows = 1;
         blur = 0;
         type = 0;
         dirty = 0;
@@ -326,6 +332,8 @@ public:
     float origin;
     /** If the texture is the player */
     bool player;
+    /** Number of rows in sprite sheet for wheat cover shader */
+    int numRows;
     /** The dirty bits relative to the previous set of uniforms */
     GLuint dirty;
 };
@@ -1034,6 +1042,32 @@ bool SpriteBatch::getIsPlayer() const {
 }
 
 /**
+ * Sets number of rows in the sprite sheet.
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @param numRows Number of rows in sprite sheet
+ */
+void SpriteBatch::setNumRows(int numRows) {
+    if (_context->numRows != numRows) {
+        if (_inflight) { record(); }
+        _context->numRows = numRows;
+        _context->dirty  = _context->dirty | DIRTY_NUM_ROWS;
+    }
+}
+
+/**
+ * Returns the number of rows in the sprite sheet.
+ * This is used exclusively by the wheat cover shader and does not do anything
+ * for the default sprite batch shader
+ *
+ * @return Number of rows in sprite sheet
+ */
+int SpriteBatch::getNumRows() const {
+    return _context->numRows;
+}
+
+/**
  * Sets the blur radius in pixels (0 if there is no blurring).
  *
  * This sprite batch supports a simple Gaussian blur. The blur
@@ -1291,6 +1325,9 @@ void SpriteBatch::flush() {
         }
         if (next->dirty & DIRTY_PLAYER) {
             _shader->setUniform1f("player", next->player ? 1.0 : 0.0);
+        }
+        if (next->dirty & DIRTY_NUM_ROWS) {
+            _shader->setUniform1f("num_rows", next->numRows);
         }
         
         GLuint amt = next->last-next->first;

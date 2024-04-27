@@ -464,7 +464,8 @@ public:
      * @return the obstacle for the given id.
      */
     std::shared_ptr<Obstacle> getObstacle(Uint64 oid) {
-        return _idToObs.at(oid);
+        auto res = _idToObs.find(oid);
+        return res == _idToObs.end() ? nullptr : res->second;
     }
     
     /**

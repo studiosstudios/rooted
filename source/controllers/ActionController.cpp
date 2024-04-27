@@ -218,7 +218,7 @@ void ActionController::playRustling(std::shared_ptr<EntityModel> player, float d
         }
         else{
             if(newVolume == 0){
-                AudioEngine::get()->clear("barrot");
+                AudioEngine::get()->clear("barrot", 0.5);
             }
             else if (AudioEngine::get()->getState("barrot") == AudioEngine::State::PLAYING){
                 AudioEngine::get()->setVolume("barrot", newVolume > 1 ? 1 : newVolume);
@@ -231,7 +231,7 @@ void ActionController::playRustling(std::shared_ptr<EntityModel> player, float d
         }
         else{
             if(newVolume == 0){
-                AudioEngine::get()->clear(player->getUUID());
+                AudioEngine::get()->clear(player->getUUID(),0.5);
             }
             else if (AudioEngine::get()->getState(player->getUUID()) == AudioEngine::State::PLAYING){
                 AudioEngine::get()->setVolume(player->getUUID(), newVolume > 1 ? 1 : newVolume);

@@ -47,25 +47,19 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _assets = assets;
     
     // Acquire the scene built by the asset loader and resize it the scene
+    
+    // SET UP MAIN MENU SCENE
     _menuscene = _assets->get<scene2::SceneNode>("mainmenu");
     _menuscene->setContentSize(dimen);
     _menuscene->doLayout(); // Repositions the HUD
     
-    _lobbyscene = _assets->get<scene2::SceneNode>("prelobby");
-    _lobbyscene->setContentSize(dimen);
-    _lobbyscene->doLayout();
-    
-    _choice = Choice::NONE;
-    _currmenuchoice = Choice::MAIN;
-        
-    // add all button behaviors
     _playbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_play"));
     _optionsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_options"));
     _statsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("mainmenu_menu_menubuttons_stats"));
-    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_host"));
-    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_join"));
     
-    _backoutprelobby = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_back"));
+    std::vector<std::shared_ptr<scene2::Button>> menubuttons = {_playbutton, _optionsbutton, _statsbutton};
+    
+    _screenButtonMap.insert({Choice::MAIN, menubuttons});
     
     // Program the buttons
     _playbutton->addListener([this](const std::string& name, bool down) {
@@ -74,6 +68,20 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
             _currmenuchoice = Choice::LOBBY;
         }
     });
+    
+    // SET UP LOBBY SCENE
+    _lobbyscene = _assets->get<scene2::SceneNode>("prelobby");
+    _lobbyscene->setContentSize(dimen);
+    _lobbyscene->doLayout();
+    
+    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_host"));
+    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_buttons_join"));
+    _backoutprelobby = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("prelobby_back"));
+    
+    std::vector<std::shared_ptr<scene2::Button>> lobbybuttons = {_hostbutton, _joinbutton, _backoutprelobby};
+    
+    _screenButtonMap.insert({Choice::LOBBY, lobbybuttons});
+    
     _hostbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
             _choice = Choice::HOST;
@@ -87,8 +95,17 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _backoutprelobby->addListener([this](const std::string& name, bool down) {
         if (!down) {
             _choice = Choice::MAIN;
+            _currmenuchoice = Choice::MAIN;
         }
     });
+    
+    // TODO: SET UP OPTIONS SCENE HERE
+    
+    // TODO: SET UP STATS SCENE HERE
+    
+    // set choices
+    _choice = NONE;
+    _currmenuchoice = MAIN;
 
     setActive(false);
     return true;
@@ -122,53 +139,42 @@ void MenuScene::setActive(bool value) {
             switchScene(_currmenuchoice);
         } else {
             // deactivate all buttons
-            _hostbutton->deactivate();
-            _joinbutton->deactivate();
-            _playbutton->deactivate();
-            _statsbutton->deactivate();
-            _optionsbutton->deactivate();
-            _backoutprelobby->deactivate();
-            // If any were pressed, reset them
-            _hostbutton->setDown(false);
-            _joinbutton->setDown(false);
-            _playbutton->setDown(false);
-            _statsbutton->setDown(false);
-            _optionsbutton->setDown(false);
-            _backoutprelobby->setDown(false);
+            for (const auto& pair : _screenButtonMap) {
+                for (const auto& b : pair.second) {
+                    b->deactivate();
+                    b->setDown(false);
+                }
+            }
         }
     }
 }
 
 void MenuScene::update(float timestep) {
-    if (_choice != Choice::HOST && _choice != Choice::JOIN) {
+    if (_choice != HOST && _choice != JOIN && _choice != NONE) {
         switchScene(_choice);
         _choice = NONE;
     }
 }
 
 void MenuScene::switchScene(MenuScene::Choice sceneType) {
-    // TODO: this should be more automated
     if (isActive()) {
+        removeAllChildren();
+        // deactivate all buttons
+        for (const auto& pair : _screenButtonMap) {
+            for (const auto& b : pair.second) {
+                b->deactivate();
+            }
+        }
+        // activate the switched scenes buttons
+        for (const auto& b : _screenButtonMap[sceneType]) {
+            b->activate();
+        }
         switch (sceneType) {
             case MAIN:
-                removeAllChildren();
                 addChild(_menuscene);
-                _hostbutton->deactivate();
-                _joinbutton->deactivate();
-                _backoutprelobby->deactivate();
-                _playbutton->activate();
-                _statsbutton->activate();
-                _optionsbutton->activate();
                 break;
             case LOBBY:
-                removeAllChildren();
                 addChild(_lobbyscene);
-                _hostbutton->activate();
-                _joinbutton->activate();
-                _backoutprelobby->activate();
-                _playbutton->deactivate();
-                _statsbutton->deactivate();
-                _optionsbutton->deactivate();
                 break;
             default:
                 break;

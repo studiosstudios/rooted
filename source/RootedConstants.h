@@ -29,6 +29,14 @@
 #define DEFAULT_CAMERA_ZOOM 1.0f
 /** Camera gliding rate */
 #define CAMERA_GLIDE_RATE 0.06f
+/** Camera zoom rate **/
+#define ZOOM_RATE 0.02f
+/** Camera zoom error **/
+#define ZOOM_ERR 0.005f
+/** Camera position error **/
+#define CAM_POSITION_ERR 0.1f
+/** Number of frames to hold zoom out */
+#define HOLD_CAM 40
 
 #pragma mark -
 #pragma mark Physics Constants

@@ -840,6 +840,24 @@ public:
     bool getIsPlayer() const;
 
     /**
+     * Sets number of rows in the sprite sheet.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @param numRows Number of rows in sprite sheet
+     */
+    void setNumRows(int numRows);
+
+    /**
+     * Returns the number of rows in the sprite sheet.
+     * This is used exclusively by the wheat cover shader and does not do anything
+     * for the default sprite batch shader
+     *
+     * @return Number of rows in sprite sheet
+     */
+    int getNumRows() const;
+
+    /**
      * Sets the blur radius in pixels (0 if there is no blurring).
      *
      * This sprite batch supports a simple Gaussian blur. The blur

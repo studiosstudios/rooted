@@ -114,6 +114,11 @@ void CollisionController::beginContact(b2Contact* contact) {
  * This method is called when two objects cease to touch.
  */
 void CollisionController::endContact(b2Contact* contact) {
+    
+    if (_map == nullptr) {
+        return;
+    }
+    
     b2Fixture* fix1 = contact->GetFixtureA();
     b2Fixture* fix2 = contact->GetFixtureB();
 

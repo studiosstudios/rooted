@@ -175,8 +175,8 @@ void ClientScene::setActive(bool value) {
             // only want to activate if you are not a touchscreen
             #ifndef CU_TOUCH_SCREEN
             _gameid->activate();
-            _gameid->setText("");
             #endif
+            _gameid->setText("");
             _backoutclient->activate();
             configureStartButton();
             _backClicked = false;

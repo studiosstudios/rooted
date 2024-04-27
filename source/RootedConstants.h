@@ -34,7 +34,7 @@
 /** Camera zoom error **/
 #define ZOOM_ERR 0.005f
 /** Camera position error **/
-#define CAM_POSITION_ERR 0.1f
+#define CAM_POSITION_ERR 0.01f
 /** Number of frames to hold zoom out */
 #define HOLD_CAM 40
 

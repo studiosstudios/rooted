@@ -82,6 +82,8 @@ void CameraController::zoomIn(float zoom) {
 }
 
 void CameraController::setPosition(Vec3 pos){
+    _posTarget.x = pos.x;
+    _posTarget.y = pos.y;
     _camera->setPosition(boundPosition(pos));
 }
 

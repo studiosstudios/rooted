@@ -122,6 +122,10 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _input->pause();
     _state = TutorialState::JAILBREAK;
     _time = 0;
+    
+    _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
+    _black->setColor(Color4::CLEAR);
+    _rootnode->addChild(_black);
 
     return true;
 }
@@ -261,7 +265,7 @@ void TutorialScene::preUpdate(float dt) {
                 }
                 
                 //move player down
-                if (_time > 7.5 && _time < 10.0) {
+                if (_time > 7.5 && _time < 9.75) {
                     _character->setMovement(Vec2(0,-1.0));
                 } else {
                     _character->setMovement(Vec2::ZERO);
@@ -281,10 +285,39 @@ void TutorialScene::preUpdate(float dt) {
             _cam.setTarget(_character->getPosition()*_scale);
             break;
         case SHOWFARMER:
-            _action.preUpdate(dt);
-            _cam.setTarget(_character->getPosition()*_scale);
+            {
+            if (_character->getName() == "carrot") { //wait until carrot animation finishes
+                _action.preUpdate(dt);
+                if (_character->getEntityState() == EntityModel::EntityState::STANDING) {
+                    _map->getFarmers().at(0)->setX(_character->getX());
+                    _character = _map->changeCharacter("farmer");
+                    _time = 0;
+                }
+            } else {
+                _action.updateBabyCarrots();
+                
+                //move farmer
+                if (_time > 0.5 && _time < 3.0) {
+                    _character->setMovement(Vec2(0, -1));
+                    _character->setDashInput(std::fmod((_time - dt), 0.7) > std::fmod(_time, 0.7)); //dash every 0.7s
+                } else {
+                    _character->setMovement(Vec2::ZERO);
+                }
+                _character->updateState();
+                _character->applyForce();
+                _character->stepAnimation(dt);
+                
+                //fade to black
+                if (_time > 2.5) {
+                    _black->setColor(Color4(0,0,0,std::min((_time-2.5) * 2 * 255,  255.0)));
+                }
+                
+            }
+                _cam.setTarget(_character->getPosition()*_scale);
+            }
             break;
         case ESCAPEFARMER:
+            _black->setColor(Color4(0,0,0, std::max(255.0 - _time * 2 * 255,  0.0)));
             _action.preUpdate(dt);
             _cam.setTarget(_character->getPosition()*_scale);
             break;
@@ -346,8 +379,10 @@ void TutorialScene::fixedUpdate(float step) {
         if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
             _action.processUnrootEvent(unrootEvent);
         }
-        if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
-            _action.processBarrotEvent(captureBarrotEvent);
+        if (_state == CATCHBABIES && _map->getBabyCarrots().size() > 1) {
+            if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
+                _action.processBarrotEvent(captureBarrotEvent);
+            }
         }
         if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
             processResetEvent(resetEvent);
@@ -426,7 +461,7 @@ void TutorialScene::postUpdate(float remain) {
     // do state transitions
     switch (_state) {
         case JAILBREAK:
-            if (_time > 11.0) {
+            if (_time > 10.0) {
                 CULog("MOVE WITH JOYSTICK");
                 _state = MOVEMENT;
                 _input->unpause();
@@ -434,22 +469,33 @@ void TutorialScene::postUpdate(float remain) {
             }
             break;
         case MOVEMENT:
-            if (_input->didContinue()) {
+            if (_character->getY() < 10) {
+                CULog("CATCH BABY CARROTS! SWIPE TO DASH");
                 _state = CATCHBABIES;
                 _time = 0;
             }
             break;
         case CATCHBABIES:
-            if (_input->didContinue()) {
-                _map->changeCharacter("farmer");
+            if (_map->getBabyCarrots().size() == 1) {
+                CULog("CATCH BABY CARROTS! SWIPE TO DASH");
+                _input->pause();
                 _state = SHOWFARMER;
                 _time = 0;
             }
             break;
         case SHOWFARMER:
-            if (_input->didContinue()) {
-                _map->changeCharacter("carrot");
+            if (_time > 4.5) {
+                CULog("ESCAPE FROM THE FARMER BY SHAKING DEVICE");
+                _input->unpause();
+                float x = _map->getMapBounds().size.width/2.0;
+                float y = _map->getMapBounds().size.height/2.0;
+                _character->setPosition(x, y);
+                _character = _map->changeCharacter("carrot");
+                _character->setPosition(x, y);
+                auto e = CaptureEvent::allocCaptureEvent(_character->getUUID());
+                _action.processCaptureEvent(std::dynamic_pointer_cast<CaptureEvent>(e));
                 _state = ESCAPEFARMER;
+                _cam.setPosition(_character->getPosition() * _scale);
                 _time = 0;
             }
             break;

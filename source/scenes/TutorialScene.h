@@ -97,8 +97,8 @@ protected:
     bool _returnToMenu;
     /** time incrementer used to transition between scenes */
     float _time;
-    
-    Size _mapBounds;
+    /** fade to black node */
+    std::shared_ptr<cugl::scene2::PolygonNode> _black;
     
     
 

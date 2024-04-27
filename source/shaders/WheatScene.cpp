@@ -54,8 +54,9 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
             auto wheattex = assets->get<Texture>(mapInfo[i][j].first);
             float bladeColorScale = mapInfo[i][j].second;
             auto wheatnode = scene2::PolygonNode::allocWithTexture(wheattex);
-            wheatnode->setScale(SCENE_WIDTH / wheattex->getWidth() / drawScale.x * MAP_UNIT_WIDTH / worldSize.width,
-                                SCENE_HEIGHT / wheattex->getHeight() / drawScale.y * MAP_UNIT_HEIGHT / worldSize.height);
+            _scale = Size(SCENE_WIDTH / wheattex->getWidth() / drawScale.x * MAP_UNIT_WIDTH / worldSize.width,
+                          SCENE_HEIGHT / wheattex->getHeight() / drawScale.y * MAP_UNIT_HEIGHT / worldSize.height);
+            wheatnode->setScale(_scale);
             wheatnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
             wheatnode->setColor(
                     Color4(255 / bladeColorScale, 255 / bladeColorScale, 255 / bladeColorScale,
@@ -63,6 +64,21 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
             wheatnode->setPosition(MAP_UNIT_WIDTH * i, MAP_UNIT_HEIGHT * j);
             _rootnode->addChild(wheatnode);
         }
+    }
+    
+    //add wind texture nodes
+    for (int i = 0; i < _windCount; i++) {
+        auto windNode = scene2::PolygonNode::allocWithPoly((Rect(Vec2::ZERO, Size(60, SCENE_HEIGHT*mapInfo.size()*2))));
+//        auto windNode = scene2::PolygonNode::allocWithPoly((Rect(Vec2::ZERO, Size(SCENE_WIDTH, SCENE_HEIGHT))));
+        windNode->setAngle(15);
+        windNode->setScale(_scale);
+        windNode->setAnchor(Vec2::ZERO);
+        windNode->setColor(Color4(0, 0, 30, 255));
+        
+        windNode->setPosition(mapInfo.size()*MAP_UNIT_WIDTH+MAP_UNIT_WIDTH, mapInfo[0].size()*MAP_UNIT_HEIGHT/2);
+//        windNode->setPosition(0, 0);
+        _rootnode->addChild(windNode);
+        _windNodes.push_back(windNode);
     }
 
     _target->setClearColor(Color4::CLEAR);
@@ -145,4 +161,16 @@ void WheatScene::clearQueries() {
     _queries.clear();
 }
 
+void WheatScene::updateWindEffect() {
+    for (auto node : _windNodes) {
+        Vec2 new_pos = node->getPosition()+(WIND_SPEED*Vec2(-WIND_DIRECTION[0], WIND_DIRECTION[1]))*_scale;
+        
+        CULog("x: %f", new_pos.x);
+
+        if (new_pos.x < 20) {
+            new_pos.x = 100;
+        }
+        node->setPosition(new_pos);
+    }
+}
 

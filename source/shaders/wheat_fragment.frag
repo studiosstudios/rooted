@@ -133,7 +133,7 @@ vec4 wheatTopColor(float x, float y) {
 float sampleBladeLength(vec2 uv) {
     vec3 samp = texture(grass_tex, uv).rgb;
 //    return samp.r > 0.0f ? clamp((samp.r + samp.g - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
-    return samp.r > 0.0f ? clamp((samp.r) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
+    return samp.r > 0.0f ? clamp((samp.r - samp.b) * 255.0f + 10.0f, 0.0, MAX_BLADE_LENGTH) : 0.0f;
 }
 
 /**

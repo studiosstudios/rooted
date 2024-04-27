@@ -298,6 +298,8 @@ void EntityModel::updateState() {
                 _state = DASHING;
                 dashTimer = 8;
                 stateChanged = true;
+                _makeDashTrail = true;
+                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
             }
             else {
                 nextState = getMovementState();
@@ -396,7 +398,8 @@ void EntityModel::update(float dt) {
     }
     
     if (_wheatHeightNode != nullptr) {
-        updateWheatHeightNode();
+//        updateWheatHeightNode();
+        updateWheatHeightNode(dt);
     }
 }
 
@@ -420,10 +423,10 @@ std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
     _wheatSizeTarget = 0.75;
     _currWheatHeight = _wheatHeightTarget;
     _currWheatSize = _wheatSizeTarget;
-    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(0.8, 0.8)));
+    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(100.0, 100.0)));
     _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
     _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
-    _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
+//    _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
     _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     return _wheatHeightNode;
 }
@@ -447,7 +450,6 @@ void EntityModel::updateWheatHeightNode() {
     _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     
     Vec2 velocity = getLinearVelocity();
-    float angle = atan2(velocity.y, velocity.x);
     
     if (_state == DASHING) {
         _wheatSizeTarget = 1.5;
@@ -464,4 +466,74 @@ void EntityModel::updateWheatHeightNode() {
                                       _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 }
 
+void EntityModel::updateWheatHeightNode(float dt) {
+//    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    
+    Vec2 velocity = getLinearVelocity();
+    
+//    if (_state == DASHING) {
+////        _wheatSizeTarget = 1.5;
+////        _wheatHeightTarget = -100;
+//        
+//    } else {
+//        _wheatSizeTarget = 0.75;
+//        _wheatHeightTarget = round(velocity.length());
+//        _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+//        _wheatHeightNode->setColor(Color4(0, 20, 0, 255));
+//        _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+//    }
+    
+    if (_makeDashTrail) {
+        _wheatSizeTarget = 1.5;
+        _wheatHeightTarget = -100;
+        CULog("making dash trail");
+        _timeSinceTrailSpawn += dt;
+        if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
+            CULog("add dash ellipse");
+            auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+            ellipse->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
+                                              _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+            ellipse->setPosition(getX() + _timeSinceTrailSpawn*50.0f, getY()-getHeight());
+            _dashTrail.push_back(ellipse);
+            _wheatHeightNode->addChild(ellipse);
+            _timeSinceTrailSpawn = 0.0f;
+            _wheatHeightNode->setColor(Color4(0, 0, 20, 255));
+//            _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+        }
+        
+        if (_dashTrail.size() >= _maxTrailPoints) {
+            CULog("finished dash trail");
+            _wheatHeightNode->removeAllChildren();
+            _makeDashTrail = false;
+            
+        }
+    } else {
+        _wheatSizeTarget = 0.75;
+        _wheatHeightTarget = round(velocity.length());
+        _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+        _wheatHeightNode->setColor(Color4(0, 20, 0, 255));
+        _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    }
+//    else {
+//        _wheatHeightNode->setColor(Color4(0, 0, 0,255));
+//    }
+    
+    _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+    _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+    
+    _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 
+//    for (auto it = _dashTrail.begin(); it != _dashTrail.end(); ++it) {
+//        auto ellipse = *it;
+//        auto size = ellipse->getSize();
+//        size.width -= _trailVanishRate * dt;
+//        size.height -= _trailVanishRate * dt;
+//        if (size.width <= 0.0f || size.height <= 0.0f) {
+//            _wheatHeightNode->removeChild(ellipse);
+//            it = _dashTrail.erase(it);
+//        }
+//        else {
+//            ellipse->SceneNode::setContentSize(size);
+//        }
+//    }
+}

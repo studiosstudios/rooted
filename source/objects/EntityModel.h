@@ -207,6 +207,19 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
+    
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashTrail;
+
+    int _maxTrailPoints = 10;
+    
+    float _trailSpawnInterval = 0.1f;
+    
+    float _trailVanishRate = 0.05f;
+    
+    float _timeSinceTrailSpawn = 0.0f;
+    
+    bool _makeDashTrail = false;
+
 
 
 public:
@@ -629,6 +642,8 @@ public:
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode(std::shared_ptr<cugl::Texture> &rustle);
 
     virtual void updateWheatHeightNode();
+    
+    virtual void updateWheatHeightNode(float dt);
 
     std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
 

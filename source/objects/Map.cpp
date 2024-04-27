@@ -751,6 +751,7 @@ void Map::updateShaders(float step, Mat4 perspective) {
     }
     _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / scale * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);
+    _wheatscene->updateWindEffect();
 }
 
 void Map::resetPlantingSpots() {

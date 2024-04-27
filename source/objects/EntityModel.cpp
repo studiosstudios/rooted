@@ -489,21 +489,23 @@ void EntityModel::updateWheatHeightNode(float dt) {
         CULog("making dash trail");
         _timeSinceTrailSpawn += dt;
         if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
-            CULog("add dash ellipse");
+//            CULog("add dash ellipse");
             auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
             ellipse->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
                                               _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
-            ellipse->setPosition(getX() + _timeSinceTrailSpawn*50.0f, getY()-getHeight());
+            ellipse->setPosition(getX(), getY()-getHeight());
             _dashTrail.push_back(ellipse);
-            _wheatHeightNode->addChild(ellipse);
+            _wheatHeightNode->getParent()->addChild(ellipse);
             _timeSinceTrailSpawn = 0.0f;
             _wheatHeightNode->setColor(Color4(0, 0, 20, 255));
-//            _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+            _dashNodes.push_back(ellipse);
         }
         
         if (_dashTrail.size() >= _maxTrailPoints) {
-            CULog("finished dash trail");
-            _wheatHeightNode->removeAllChildren();
+//            CULog("finished dash trail");
+            for (auto d : _dashNodes) {
+                d->SceneNode::dispose();
+            }
             _makeDashTrail = false;
             
         }

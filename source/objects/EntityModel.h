@@ -212,14 +212,15 @@ protected:
 
     int _maxTrailPoints = 10;
     
-    float _trailSpawnInterval = 0.1f;
+    float _trailSpawnInterval = 0.05f;
     
     float _trailVanishRate = 0.05f;
     
     float _timeSinceTrailSpawn = 0.0f;
     
     bool _makeDashTrail = false;
-
+    
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashNodes;
 
 
 public:

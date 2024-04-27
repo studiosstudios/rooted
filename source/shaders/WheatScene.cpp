@@ -74,7 +74,7 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
         windNode->setAngle(15);
         windNode->setScale(_scale);
         windNode->setAnchor(Vec2::ZERO);
-        windNode->setColor(Color4(0, 1, 3, 255));
+        windNode->setColor(Color4(0, 1, 4, 255));
         
         windNode->setPosition(mapInfo.size()*MAP_UNIT_WIDTH+MAP_UNIT_WIDTH, mapInfo[0].size()*MAP_UNIT_HEIGHT/2);
 //        windNode->setPosition(0, 0);
@@ -166,7 +166,7 @@ void WheatScene::updateWindEffect() {
     for (auto node : _windNodes) {
         Vec2 new_pos = node->getPosition()+(WIND_SPEED*Vec2(-WIND_DIRECTION[0], WIND_DIRECTION[1]))*_scale;
         
-        CULog("x: %f", new_pos.x);
+//        CULog("x: %f", new_pos.x);
 
         if (new_pos.x < 20) {
             new_pos.x = 3*MAP_UNIT_WIDTH+MAP_UNIT_WIDTH;

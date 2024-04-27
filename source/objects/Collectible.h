@@ -340,6 +340,8 @@ public:
     
     float getAge() { return _age; }
     
+    void setAge(float age) { _age = age; }
+    
 #pragma mark -
 #pragma mark Physics Methods
     /**

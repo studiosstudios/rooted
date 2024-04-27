@@ -88,6 +88,13 @@ void CollisionController::beginContact(b2Contact* contact) {
                 plantingSpot->setBelowAvatar(true);
             }
         }
+        
+        if (name1 == "rock") {
+            if (name2 == "carrot" || name2 == "baby" || name2 == "farmer") {
+                Collectible* rock = dynamic_cast<Collectible*>(bd1);
+                rock->setAge(0);
+            }
+        }
 
         // Swap everything
         b2Fixture* fixTemp = fix1;
@@ -210,6 +217,11 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         if (name1 == "carrot" && name2 == "farmer") {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             return !carrot->isSensor();
+        }
+        
+        // do not collide with yourself
+        if (name1 == "rock" && name2 == _map->getCharacter()->getName()) {
+            return false;
         }
         
         // Swap everything

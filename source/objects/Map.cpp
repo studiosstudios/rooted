@@ -73,6 +73,10 @@ void Map::setDrawScale(float value) {
     for (auto farmer: _farmers) {
         farmer->setDrawScale(value);
     }
+    
+    for (auto rock: _rocks) {
+        rock->setDrawScale(value);
+    }
 }
 
 /**
@@ -132,7 +136,6 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
 //    _entitiesNode->allocNode();
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
-    
     
     bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
@@ -796,9 +799,10 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     // set slightly below entities
     rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
 
-    rockNode->setScale(0.3f * _scale/DEFAULT_DRAWSCALE);
+    rockNode->setScale(0.02f * _scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
-    rockNode->setHeight(0.3f * _scale.y/DEFAULT_DRAWSCALE);
+    // 512 * scale
+//    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
     rockNode->setName("rock");
     _entitiesNode->addChild(rockNode);
     rock->setDebugScene(_debugnode);

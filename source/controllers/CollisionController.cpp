@@ -92,7 +92,7 @@ void CollisionController::beginContact(b2Contact* contact) {
         if (name1 == "rock") {
             if (name2 == "carrot" || name2 == "baby" || name2 == "farmer") {
                 Collectible* rock = dynamic_cast<Collectible*>(bd1);
-                rock->setAge(0);
+                rock->setAge(rock->getMaxAge() + 1);
             }
         }
 

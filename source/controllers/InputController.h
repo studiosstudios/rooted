@@ -161,8 +161,6 @@ protected:
     std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> _swipePoints;
     std::vector<cugl::Vec2> _swipePointsVec;
     /** Capacity for swipe drawing list */
-    int _swipePointsCapacity = 25;
-    int _internalSwipePointsCapacity = 10;
     cugl::Color4 _currentSwipeColor;
     std::deque<std::pair<cugl::Vec2, cugl::Timestamp>> _internalSwipePoints;
     Uint32 swipeDurationMillis = 250;
@@ -364,6 +362,14 @@ public:
         return _swipePoints;
     }
     
+    std::vector<cugl::Vec2> getSwipePointsVector() {
+        std::vector<cugl::Vec2> res;
+        for (auto it = _swipePoints->begin(); it != _swipePoints->end(); it++) {
+            res.push_back(it->first);
+        }
+        return res;
+    }
+    
     /**
      * Returns whether this point is 'notable'
      *
@@ -381,13 +387,13 @@ public:
     }
     
     void addSwipePoint(cugl::Vec2 point) {
-        if (_swipePoints->size() == _swipePointsCapacity) {
+        if (_swipePoints->size() == SWIPE_POINTS_CAPACITY) {
             _swipePoints->pop_back();
         }
         auto pointPair = std::pair(point, cugl::Timestamp());
         _swipePoints->push_front(pointPair);
         if (isNotablePoint(point)) {
-            if (_internalSwipePoints.size() == _internalSwipePointsCapacity) {
+            if (_internalSwipePoints.size() == INTERNAL_SWIPE_POINTS_CAPACITY) {
                 _internalSwipePoints.pop_back();
             }
             _internalSwipePoints.push_front(pointPair);
@@ -402,7 +408,7 @@ public:
     void cullSwipePointsByDuration() {
         cugl::Timestamp curTime = cugl::Timestamp();
         for (auto it = _swipePoints->begin(); it != _swipePoints->end();) {
-            if (it->second + swipeDurationMillis < curTime) {
+            if (it->second + SWIPE_DURATION_MILLIS < curTime) {
                 it = _swipePoints->erase(it);
             }
             else {
@@ -410,7 +416,7 @@ public:
             }
         }
         for (auto it = _internalSwipePoints.begin(); it != _internalSwipePoints.end();) {
-            if (it->second + swipeDurationMillis < curTime) {
+            if (it->second + INTERNAL_SWIPE_DURATION_MILLIS < curTime) {
                 it = _internalSwipePoints.erase(it);
             }
             else {

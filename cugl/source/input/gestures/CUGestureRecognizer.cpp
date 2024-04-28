@@ -857,6 +857,11 @@ std::vector<cugl::Vec2> GestureRecognizer::normalize(const Vec2* points, size_t 
     rotate_by(result, -angleInRadians);
     scale_to_ROOTED(result, _normbounds);
     translate_to(result, Vec2(0,0));
+//    std::cout<<"========\n";
+//    for (auto it = result.begin(); it != result.end(); it++) {
+//        std::cout << "Vec2("<<lround(it->x)<<","<<lround(it->y)<<")\n";
+//    }
+//    std::cout<<"========\n";
     return result;
 }
 

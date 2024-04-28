@@ -152,6 +152,135 @@ bool InputController::init(const Rect bounds) {
         Vec2(126,0),
 };
     _gesturer->addGesture("line", linegestvec);
+    _gesturer->addGesture("circle", std::vector<cugl::Vec2>{Vec2(-151,0),
+        Vec2(-149,9),
+        Vec2(-147,19),
+        Vec2(-143,27),
+        Vec2(-138,36),
+        Vec2(-133,44),
+        Vec2(-128,53),
+        Vec2(-123,61),
+        Vec2(-115,68),
+        Vec2(-107,74),
+        Vec2(-98,80),
+        Vec2(-90,86),
+        Vec2(-81,92),
+        Vec2(-72,96),
+        Vec2(-62,100),
+        Vec2(-52,104),
+        Vec2(-42,108),
+        Vec2(-32,111),
+        Vec2(-21,112),
+        Vec2(-10,113),
+        Vec2(0,113),
+        Vec2(11,113),
+        Vec2(21,109),
+        Vec2(31,106),
+        Vec2(41,102),
+        Vec2(50,97),
+        Vec2(56,89),
+        Vec2(63,82),
+        Vec2(69,74),
+        Vec2(76,66),
+        Vec2(80,58),
+        Vec2(83,49),
+        Vec2(87,40),
+        Vec2(91,31),
+        Vec2(94,22),
+        Vec2(95,12),
+        Vec2(96,3),
+        Vec2(97,-7),
+        Vec2(99,-16),
+        Vec2(98,-25),
+        Vec2(96,-35),
+        Vec2(94,-44),
+        Vec2(92,-53),
+        Vec2(90,-63),
+        Vec2(85,-71),
+        Vec2(80,-80),
+        Vec2(75,-88),
+        Vec2(70,-97),
+        Vec2(63,-104),
+        Vec2(55,-110),
+        Vec2(47,-116),
+        Vec2(38,-122),
+        Vec2(29,-127),
+        Vec2(19,-130),
+        Vec2(9,-133),
+        Vec2(-2,-137),
+        Vec2(-12,-135),
+        Vec2(-23,-133),
+        Vec2(-33,-131),
+        Vec2(-44,-128),
+        Vec2(-54,-124),
+        Vec2(-63,-120),
+        Vec2(-73,-116),
+        Vec2(-83,-111)});
+    _gesturer->addGesture("circle2", std::vector<cugl::Vec2>{
+        Vec2(-155,0),
+        Vec2(-151,-9),
+        Vec2(-148,-18),
+        Vec2(-144,-26),
+        Vec2(-140,-35),
+        Vec2(-135,-43),
+        Vec2(-129,-51),
+        Vec2(-124,-58),
+        Vec2(-119,-66),
+        Vec2(-112,-73),
+        Vec2(-105,-79),
+        Vec2(-98,-86),
+        Vec2(-91,-92),
+        Vec2(-84,-98),
+        Vec2(-75,-102),
+        Vec2(-66,-105),
+        Vec2(-57,-108),
+        Vec2(-49,-111),
+        Vec2(-39,-112),
+        Vec2(-30,-110),
+        Vec2(-21,-108),
+        Vec2(-12,-106),
+        Vec2(-3,-104),
+        Vec2(5,-99),
+        Vec2(13,-94),
+        Vec2(22,-89),
+        Vec2(30,-84),
+        Vec2(37,-78),
+        Vec2(43,-71),
+        Vec2(49,-64),
+        Vec2(55,-57),
+        Vec2(61,-49),
+        Vec2(66,-41),
+        Vec2(70,-33),
+        Vec2(74,-24),
+        Vec2(78,-15),
+        Vec2(82,-7),
+        Vec2(85,2),
+        Vec2(87,11),
+        Vec2(89,21),
+        Vec2(90,30),
+        Vec2(92,40),
+        Vec2(94,49),
+        Vec2(95,58),
+        Vec2(93,68),
+        Vec2(91,77),
+        Vec2(88,86),
+        Vec2(86,95),
+        Vec2(83,104),
+        Vec2(77,112),
+        Vec2(71,119),
+        Vec2(66,127),
+        Vec2(58,131),
+        Vec2(49,134),
+        Vec2(40,137),
+        Vec2(31,138),
+        Vec2(22,135),
+        Vec2(13,132),
+        Vec2(4,130),
+        Vec2(-4,125),
+        Vec2(-12,119),
+        Vec2(-20,114),
+        Vec2(-28,109),
+        Vec2(-36,104)});
     _swipePoints = std::make_shared<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>>();
     
     createZones();
@@ -500,8 +629,11 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
     }
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         addSwipePoint(screenPos);
+        
         if (!_keyDash) {
             if (_internalSwipePoints.size() > SWIPE_POINT_MINIMUM){
+//                std::cout << "Circle CCW: " << _gesturer->similarity("circle", getInternalSwipePointsVector(), true) << "\n";
+//                std::cout << "Circle CW: " << _gesturer->similarity("circle2", getInternalSwipePointsVector(), true) << "\n";
                 if (_gesturer->similarity("line", getInternalSwipePointsVector(), true) > SWIPE_GESTURE_SIMILARITY && _internalSwipePoints.front().first.distanceSquared(_internalSwipePoints.back().first) > SWIPE_LENGTH * SWIPE_LENGTH) {
                     _keyDash = true;
                     _currentSwipeColor = Color4::ORANGE;
@@ -523,6 +655,7 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             }
         }
     }
+}
 //    else if (_mtouch.touchids.size() > 1) {
 //        // We only process multifinger swipes in main
 //        int swipe = processSwipe(_mtouch.position, event.position, event.timestamp);
@@ -530,7 +663,6 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
 //            _keyReset = true;
 //        }
 //    }
-}
 
 int InputController::signum(int num) {
     if (num > 0) {

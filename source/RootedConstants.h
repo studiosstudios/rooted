@@ -115,13 +115,21 @@
 
 // SWIPE GESTURE CONSTANTS
 /** How far a swipe must go from its first "notable point" to its most recent "notable point" to be considered a swipe */
-#define SWIPE_LENGTH    180
+#define SWIPE_LENGTH    150
+/** The maximum number of swipe points that are stored at once (for drawing purposes) */
+#define SWIPE_POINTS_CAPACITY 25
+/** The maximum number of internal swipe points that are stored at once (for gesture recognition purposes) */
+#define INTERNAL_SWIPE_POINTS_CAPACITY 15
 /** The number of "notable points" a swipe must contain to be compared for similarity.*/
 #define SWIPE_POINT_MINIMUM 4
 /** The minimum similarity metric a dash swipe gesture must make in order to be considered a dash */
-#define SWIPE_GESTURE_SIMILARITY 0.9
+#define SWIPE_GESTURE_SIMILARITY 0.96
 /** The minimum distance a swipe move point must be from the last notable point to be considered a "notable point". This is a squared value, so 41^2 */
 #define SWIPE_DISTANCE_THRESHOLD 1681
+/** The length of time (in milliseconds) that a swipe point remains stored */
+#define SWIPE_DURATION_MILLIS 225
+/** The length of time (in milliseconds) that an internal swipe point remains stored*/
+#define INTERNAL_SWIPE_DURATION_MILLIS 225
 
 // The screen is divided into three zones: Joy(stick), Main, and Right.
 //

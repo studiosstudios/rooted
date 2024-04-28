@@ -62,6 +62,7 @@ void InputController::dispose() {
 #else
         Touchscreen* touch = Input::get<Touchscreen>();
         touch->removeBeginListener(LISTENER_KEY);
+        touch->removeMotionListener(LISTENER_KEY);
         touch->removeEndListener(LISTENER_KEY);
 #endif
         _active = false;
@@ -84,7 +85,7 @@ bool InputController::init(const Rect bounds) {
     bool success = true;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
-    
+
     _swipePoints = std::make_shared<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>>();
     
     createZones();
@@ -442,14 +443,14 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             if (_swipePoints->begin() != _swipePoints->end() && (screenPos.y - _swipePoints->back().first.y) > SWIPE_LENGTH) {
 //            if ((_rtouch.position.y-pos.y) > SWIPE_LENGTH) {
 //                std::cout << "Swiped!\n";
-                _keyDash = true && !_paused;
+                _keyDash = !_paused;
                 _currentSwipeColor = Color4::ORANGE;
             }
             else if (_swipePoints->begin() != _swipePoints->end() && (_swipePoints->back().first.y - screenPos.y) > SWIPE_LENGTH) {
 //            else if ((pos.y-_rtouch.position.y) > SWIPE_LENGTH) {
 //                _keySwitch = true;
-                _keyRoot = true && !_paused;
-                _keyUnroot = true && !_paused;
+                _keyRoot = !_paused;
+                _keyUnroot = !_paused;
                 _rtouch.position = pos;
                 _currentSwipeColor = Color4::BLUE;
             }

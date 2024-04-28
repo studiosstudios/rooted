@@ -181,7 +181,6 @@ void RootedApp::preUpdate(float dt) {
         _mainmenu.setActive(true);
         _hostgame.init(_assets,_network);
         _joingame.init(_assets,_network);
-        _tutorial.init(_assets);
         _loaded = true;
         _status = MENU;
     } else if (_status == MENU) {
@@ -313,6 +312,7 @@ void RootedApp::updateMenuScene(float timestep) {
         case MenuScene::Choice::TUTORIAL:
             _mainmenu.setActive(false);
             _tutorial.setActive(true);
+            _tutorial.init(_assets);
             _status = TUTORIAL;
         default:
             // DO NOTHING

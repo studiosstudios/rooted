@@ -110,10 +110,18 @@
 #define JSTICK_RADIUS    100
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    0
-/** How far we must swipe up for a jump gesture */
-#define SWIPE_LENGTH    180
 /** How fast a double click must be in milliseconds */
 #define DOUBLE_CLICK    400
+
+// SWIPE GESTURE CONSTANTS
+/** How far a swipe must go from its first "notable point" to its most recent "notable point" to be considered a swipe */
+#define SWIPE_LENGTH    180
+/** The number of "notable points" a swipe must contain to be compared for similarity.*/
+#define SWIPE_POINT_MINIMUM 4
+/** The minimum similarity metric a dash swipe gesture must make in order to be considered a dash */
+#define SWIPE_GESTURE_SIMILARITY 0.9
+/** The minimum distance a swipe move point must be from the last notable point to be considered a "notable point". This is a squared value, so 41^2 */
+#define SWIPE_DISTANCE_THRESHOLD 1681
 
 // The screen is divided into three zones: Joy(stick), Main, and Right.
 //

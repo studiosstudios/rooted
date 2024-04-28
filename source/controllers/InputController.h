@@ -16,6 +16,7 @@
 #define __PF_INPUT_H__
 #include <cugl/cugl.h>
 #include <unordered_set>
+#include "../RootedConstants.h"
 
 /**
  * This class represents player input in the Platform demo.
@@ -374,15 +375,9 @@ public:
      */
     bool isNotablePoint(cugl::Vec2 point) {
         if (_internalSwipePoints.empty()) {
-            std::cout << "Can add point\n";
             return true;
         }
-        float d = _internalSwipePoints.front().first.distanceSquared(point);
-        bool b = d > 1700;
-        if (b) {
-            std::cout << "Can add point " << d << "\n";
-        }
-        return b;
+        return _internalSwipePoints.front().first.distanceSquared(point) > SWIPE_DISTANCE_THRESHOLD;
     }
     
     void addSwipePoint(cugl::Vec2 point) {

@@ -161,6 +161,7 @@ protected:
     std::vector<cugl::Vec2> _swipePointsVec;
     /** Capacity for swipe drawing list */
     int _swipePointsCapacity = 25;
+    int _internalSwipePointsCapacity = 10;
     cugl::Color4 _currentSwipeColor;
     std::deque<std::pair<cugl::Vec2, cugl::Timestamp>> _internalSwipePoints;
     Uint32 swipeDurationMillis = 250;
@@ -377,7 +378,7 @@ public:
             return true;
         }
         float d = _internalSwipePoints.front().first.distanceSquared(point);
-        bool b = d > 150;
+        bool b = d > 1700;
         if (b) {
             std::cout << "Can add point " << d << "\n";
         }
@@ -391,6 +392,9 @@ public:
         auto pointPair = std::pair(point, cugl::Timestamp());
         _swipePoints->push_front(pointPair);
         if (isNotablePoint(point)) {
+            if (_internalSwipePoints.size() == _internalSwipePointsCapacity) {
+                _internalSwipePoints.pop_back();
+            }
             _internalSwipePoints.push_front(pointPair);
         }
     }
@@ -402,20 +406,37 @@ public:
     
     void cullSwipePointsByDuration() {
         cugl::Timestamp curTime = cugl::Timestamp();
-        for (auto it = _swipePoints->rbegin(); it != _swipePoints->rend();) {
-            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
-                break;
+        for (auto it = _swipePoints->begin(); it != _swipePoints->end();) {
+            if (it->second + swipeDurationMillis < curTime) {
+                it = _swipePoints->erase(it);
             }
-            std::advance(it, 1);
-            _swipePoints->erase(it.base());
-        }
-        for (auto it = _internalSwipePoints.rbegin(); it != _internalSwipePoints.rend();) {
-            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
-                break;
+            else {
+                it++;
             }
-            std::advance(it, 1);
-            _internalSwipePoints.erase(it.base());
         }
+        for (auto it = _internalSwipePoints.begin(); it != _internalSwipePoints.end();) {
+            if (it->second + swipeDurationMillis < curTime) {
+                it = _internalSwipePoints.erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+        
+//        for (auto it = _swipePoints->rbegin(); it != _swipePoints->rend();) {
+//            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
+//                break;
+//            }
+//            std::advance(it, 1);
+//            _swipePoints->erase(it.base());
+//        }
+//        for (auto it = _internalSwipePoints.rbegin(); it != _internalSwipePoints.rend();) {
+//            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
+//                break;
+//            }
+//            std::advance(it, 1);
+//            _internalSwipePoints.erase(it.base());
+//        }
     }
     
     cugl::Color4 getCurrentSwipeColor() {

@@ -111,7 +111,7 @@
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    0
 /** How far we must swipe up for a jump gesture */
-#define SWIPE_LENGTH    275
+#define SWIPE_LENGTH    180
 /** How fast a double click must be in milliseconds */
 #define DOUBLE_CLICK    400
 

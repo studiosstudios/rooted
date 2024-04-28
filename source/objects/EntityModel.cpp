@@ -299,7 +299,8 @@ void EntityModel::updateState() {
                 dashTimer = 8;
                 stateChanged = true;
                 _makeDashTrail = true;
-                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+//                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
             else {
                 nextState = getMovementState();
@@ -490,14 +491,15 @@ void EntityModel::updateWheatHeightNode(float dt) {
         _timeSinceTrailSpawn += dt;
         if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
 //            CULog("add dash ellipse");
-            auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
-            ellipse->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
-                                              _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+            auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.0, 1.0)));
+//            ellipse->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
+//                                              _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
             ellipse->setPosition(getX(), getY()-getHeight());
+            ellipse->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
             _dashTrail.push_back(ellipse);
-            _wheatHeightNode->getParent()->addChild(ellipse);
             _timeSinceTrailSpawn = 0.0f;
-            _wheatHeightNode->setColor(Color4(0, 0, 20, 255));
+            ellipse->setColor(Color4(0, 0, 20, 255));
+            _wheatHeightNode->getParent()->addChild(ellipse);
             _dashNodes.push_back(ellipse);
         }
         
@@ -512,18 +514,29 @@ void EntityModel::updateWheatHeightNode(float dt) {
     } 
     
     else if (_makeDashTrail == false && _dashTrail.size() > 0) {
+//        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+//        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
         CULog("shrinking trail");
         auto first_node = _dashTrail[0];
-        auto size = first_node->getSize();
-        size.width -= _trailVanishRate;
-        size.height -= _trailVanishRate;
+//        auto size = first_node->getSize();
+//        size.width -= _trailVanishRate;
+//        size.height -= _trailVanishRate;
+        first_node->setColor(first_node->getColor()-Color4(0,0,1,0));
         
-        if (size.width <= 0.0f || size.height <= 0.0f) {
+//        _wheatHeightTarget += 1;
+        if (first_node->getColor().b <= 0) {
             CULog("removed dash node");
             first_node->removeFromParent();
             _dashTrail.erase(_dashTrail.begin());
         }
-        first_node->SceneNode::setContentSize(size);
+//        if (size.width <= 0.0f || size.height <= 0.0f) {
+//            CULog("removed dash node");
+//            first_node->removeFromParent();
+//            _dashTrail.erase(_dashTrail.begin());
+//        }
+//        first_node->SceneNode::setContentSize(size);
+//        first_node->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+        
     }
     
     else {
@@ -532,14 +545,12 @@ void EntityModel::updateWheatHeightNode(float dt) {
         _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
         _wheatHeightNode->setColor(Color4(0, 20, 0, 255));
         _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+        _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
     }
 //    else {
 //        _wheatHeightNode->setColor(Color4(0, 0, 0,255));
 //    }
     
-    _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
-    _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
     
-    _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 
 }

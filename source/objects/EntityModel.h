@@ -210,11 +210,11 @@ protected:
     
     std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashTrail;
 
-    int _maxTrailPoints = 10;
+    int _maxTrailPoints = 12;
     
     float _trailSpawnInterval = 0.02f;
     
-    float _trailVanishRate = 1.0f;
+    float _trailVanishRate = 0.5f;
     
     float _timeSinceTrailSpawn = 0.0f;
     

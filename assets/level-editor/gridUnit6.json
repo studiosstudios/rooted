@@ -191,7 +191,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":136,
+ "nextobjectid":140,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -201,7 +201,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

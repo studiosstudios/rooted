@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="150">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="151">
  <editorsettings>
   <export target="tutorialTop.json" format="json"/>
  </editorsettings>
@@ -22,5 +22,6 @@
   <object id="143" gid="3" x="288" y="224" width="32" height="32"/>
   <object id="147" gid="3" x="192" y="224" width="32" height="32"/>
   <object id="148" gid="3" x="192" y="192" width="32" height="32"/>
+  <object id="150" gid="2" x="288" y="160" width="32" height="32"/>
  </objectgroup>
 </map>

@@ -139,6 +139,7 @@ void InputController::update(float dt) {
     _keyRoot   = keys->keyPressed(KeyCode::Z) && !_paused;
     _keyUnroot = keys->keyPressed(KeyCode::Z) && !_paused;
     _keyContinue = keys->keyPressed(KeyCode::SPACE);
+    _deviceShaking = keys->keyPressed(KeyCode::A) && !_paused;
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -159,10 +160,8 @@ void InputController::update(float dt) {
     _movement.normalize();
 #endif
     Accelerometer* acc = Input::get<Accelerometer>();
-    if(acc != nullptr)
-        _deviceShaking = acc->getAcceleration().lengthSquared() > 12;
-    else{
-        _deviceShaking = false;
+    if(acc != nullptr) {
+        _deviceShaking = acc->getAcceleration().lengthSquared() > 2.9;
     }
     _resetPressed = _keyReset;
     _debugPressed = _keyDebug;

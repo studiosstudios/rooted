@@ -297,6 +297,9 @@ public:
     void render(const std::shared_ptr<SpriteBatch> &batch);
 
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
+
+private:
+    void changeCharacter(std::string UUID);
 };
 
 #endif /* RootedTutorialScene_h */

@@ -68,7 +68,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _map = Map::alloc(_assets, true); // Obtains ownership of root.
 
-    _map->generate(0, 1, 2, 9, 1);
+    _map->generate(0, 1, 2, 9, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -169,7 +169,7 @@ void TutorialScene::reset() {
     // Load a new level
     _map->clearRootNode();
     _map->dispose();
-    _map->generate(0, 1, 1, 20, 8);
+    _map->generate(0, 1, 2, 9, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -183,6 +183,13 @@ void TutorialScene::reset() {
     _map->resetPlantingSpots();
     _map->resetPlayers();
 
+    _map->acquireMapOwnership();
+    _babies = _map->loadBabyEntities();
+    
+    _farmerUUID = "farmer";
+    _carrotUUID = "carrot";
+    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID}, _farmerUUID, _carrotUUID);
+    
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
 
@@ -190,16 +197,33 @@ void TutorialScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
 
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     _cam.setZoom(zoom);
-    _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.setZoom(zoom);
+    _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
+    _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
+    _initCamera = _cam.getCamera()->getPosition();
+
+    // XNA nostalgia
+//    Application::get()->setClearColor(Color4(142,114,78,255));
+    Application::get()->setClearColor(Color4::CLEAR);
+    _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
+    _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
     setDebug(false);
+    
+    _network->setHost(true);
+    _input->pause();
+    _state = TutorialState::JAILBREAK;
+    _time = 0;
+    _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
+    _black->setColor(Color4::CLEAR);
+    _rootnode->addChild(_black);
 }
 
 #pragma mark -
@@ -290,7 +314,7 @@ void TutorialScene::preUpdate(float dt) {
                 _action.preUpdate(dt);
                 if (_character->getEntityState() == EntityModel::EntityState::STANDING) {
                     _map->getFarmers().at(0)->setX(_character->getX());
-                    _character = _map->changeCharacter("farmer");
+                    changeCharacter(_farmerUUID);
                     _time = 0;
                 }
             } else {
@@ -319,11 +343,13 @@ void TutorialScene::preUpdate(float dt) {
         case ESCAPEFARMER:
         {
             _black->setColor(Color4(0,0,0, std::max(255.0 - _time * 2 * 255,  0.0)));
-            _character = _map->changeCharacter("carrot");
+            changeCharacter(_carrotUUID);
+            _cam.setTarget(_character->getPosition()*_scale);
             _action.preUpdate(dt);
+            _action.updateBabyCarrots();
             
             //move farmer
-            _character = _map->changeCharacter("farmer");
+            auto farmer = _map->getFarmers().at(0);
             float x = 0;
             float mod = fmod(_time + 1, 6);
             if (mod > 3 && mod < 5) {
@@ -331,12 +357,11 @@ void TutorialScene::preUpdate(float dt) {
             } else if (mod < 2) {
                 x = -0.2;
             }
-            _character->setMovement(Vec2(x, 0));
-            _character->updateState();
-            _character->applyForce();
-            _character->stepAnimation(dt);
-            
-            _cam.setTarget(_character->getPosition()*_scale);
+            farmer->setMovement(Vec2(x, 0));
+            farmer->updateState();
+            farmer->applyForce();
+            farmer->stepAnimation(dt);
+
             break;
         }
         case ROCK:
@@ -404,9 +429,6 @@ void TutorialScene::fixedUpdate(float step) {
         }
         if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
             processResetEvent(resetEvent);
-        }
-        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
-            _action.processMoveEvent(moveEvent);
         }
         if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
             _action.processFreeEvent(freeEvent);
@@ -507,7 +529,7 @@ void TutorialScene::postUpdate(float remain) {
                 float x = _map->getMapBounds().size.width/2.0;
                 float y = _map->getMapBounds().size.height/2.0;
                 _character->setPosition(x, y);
-                _character = _map->changeCharacter("carrot");
+                changeCharacter(_carrotUUID);
                 _character->setPosition(x, y);
                 auto e = CaptureEvent::allocCaptureEvent(_character->getUUID());
                 _action.processCaptureEvent(std::dynamic_pointer_cast<CaptureEvent>(e));
@@ -629,5 +651,15 @@ void TutorialScene::setActive(bool value) {
             // TODO: currently does not reset the scene
             _returnToMenu = false;
         }
+    }
+}
+
+void TutorialScene::changeCharacter(std::string UUID) {
+    if (UUID == _carrotUUID) {
+        _network->setHost(false);
+        _character = _map->changeCharacter(_carrotUUID);
+    } else if (UUID == _farmerUUID) {
+        _network->setHost(true);
+        _character = _map->changeCharacter(_farmerUUID);
     }
 }

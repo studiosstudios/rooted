@@ -6,6 +6,7 @@
 #include "MockNetworkController.h"
 
 bool MockNetworkController::init() {
+    _isHost = true;
     return true;
 }
 

@@ -11,6 +11,7 @@
 class MockNetworkController : public NetworkController {
 private:
     std::queue<std::shared_ptr<NetEvent>> _eventQueue;
+    bool _isHost;
 
 public:
 
@@ -21,7 +22,9 @@ public:
 
     bool init();
 
-    virtual bool isHost() const override { return true; }
+    void setHost(bool host) { _isHost = host; }
+
+    virtual bool isHost() const override { return _isHost; }
 
     virtual bool isInAvailable() override { return !_eventQueue.empty(); }
 

@@ -95,9 +95,9 @@ protected:
 	// These are all shown in the diagram below.
 	//
 	//   |---------------|
-	//   |   |       |   |
-	//   | L |   M   | R |
-	//   |   |       |   |
+	//   |           |   |
+	//   |---|   M   | R |
+	//   | L |       |   |
 	//   -----------------
 	//
 	// The meaning of any touch depends on the zone it begins in.
@@ -162,6 +162,9 @@ protected:
     /** Capacity for swipe drawing list */
     int _swipePointsCapacity = 25;
     cugl::Color4 _currentSwipeColor;
+    std::deque<cugl::Vec2> _internalSwipePoints;
+    
+    
     
     std::shared_ptr<cugl::GestureRecognizer> _gesturer;
 
@@ -353,15 +356,53 @@ public:
 
 #pragma mark -
 #pragma mark Swipe Drawing Logic
+    
+    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> getSwipePoints() {
+        return _swipePoints;
+    }
+    
+    /**
+     * Returns whether this point is 'notable'
+     *
+     * A notable point is one that
+     * 1. is the first point added to an empty _internalSwipePoints_
+     * 2. is greater than x^2 distance away from the previously added point in _internalSwipePoints_
+     *
+     * @param point the point to be identified as notable
+     */
+    bool isNotablePoint(cugl::Vec2 point) {
+        if (_internalSwipePoints.empty()) {
+            std::cout << "Can add point\n";
+            return true;
+        }
+        float d = _internalSwipePoints.front().distanceSquared(point);
+        bool b = d > 150;
+        if (b) {
+            std::cout << "Can add point " << d << "\n";
+        }
+        return b;
+    }
+    
     void addSwipePoint(cugl::Vec2 point) {
         if (_swipePoints->size() == _swipePointsCapacity) {
             _swipePoints->pop_back();
         }
         _swipePoints->push_front(std::pair(point, cugl::Timestamp()));
+        if (isNotablePoint(point)) {
+            _internalSwipePoints.push_front(point);
+        }
     }
     
-    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> getSwipePoints() {
-        return _swipePoints;
+    void clearSwipePoints() {
+        _swipePoints->clear();
+        _internalSwipePoints.clear();
+    }
+    
+    void cycleSwipePointsByDuration() {
+        cugl::Timestamp curTime = cugl::Timestamp();
+        for (auto it = sp->begin(); it != sp->end();) {
+            it = (it->second + swipeDurationMillis < curTime) ? sp->erase(it) : ++it;
+        }
     }
     
     cugl::Color4 getCurrentSwipeColor() {

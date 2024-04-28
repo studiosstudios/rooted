@@ -336,7 +336,7 @@ static void scale_to_uniform(std::vector<cugl::Vec2>& points, const Size bounds,
 /**
  * General scale method that either calls {@link #scale\_to} or {@link #scale\_to\_uniform} based on whether the points have a bounding box whose minor axis is smaller than the threshold
  *
- * This threshold is specific to this implementation for rooted! and is specifically 100 (pixels).
+ * This threshold is specific to this implementation for rooted! and is specifically 100 (pixels). (Because it seems like that's what works best for single-line swipes.
  *
  * @param points    a vector of points representing a gesture.
  * @param bounds    the bounding box for the normalization space

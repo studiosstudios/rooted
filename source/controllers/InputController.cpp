@@ -345,8 +345,8 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
             }
             break;
         case Zone::RIGHT:
-            if (_rtouch.touchids.empty() && _mtouch.touchids.empty()) {
-                _keyThrowRock = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
+            if ( _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
+                _keyThrowRock = (event.timestamp.ellapsedMillis(_rtime) <= DOUBLE_CLICK);
             }
             
             // Only process if no touch in zone
@@ -355,7 +355,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _rtouch.timestamp.mark();
                 _rtouch.touchids.insert(event.touch);
                 _keyDash = false;
-//                _keySwitch = false;
                 _keyRoot = false;
                 _keyShowPlayer = false;
                 _swipeFirstPoint = screenPos;
@@ -372,8 +371,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
         case Zone::MAIN:
             // Only check for double tap in Main if nothing else down
             if (_jtouch.touchids.empty() && _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
-                _keyThrowRock = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
-//                _keyDebug = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
+                _keyDebug = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
             }
             
             // Keep count of touches in Main zone if next to each other.

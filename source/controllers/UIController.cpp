@@ -113,14 +113,6 @@ void UIController::updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick) {
     _joymain->setPosition(joyStick.second / _cameraZoom - _offset / _cameraZoom);
 }
 
-void UIController::cullSwipePointsByDuration() {
-    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> sp = _input->getSwipePoints();
-    cugl::Timestamp curTime = cugl::Timestamp();
-    for (auto it = sp->begin(); it != sp->end();) {
-        it = (it->second + swipeDurationMillis < curTime) ? sp->erase(it) : ++it;
-    }
-}
-
 std::list<cugl::Vec2> UIController::getAdjustedSwipePoints() {
     std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> sp = _input->getSwipePoints();
     std::list<cugl::Vec2> adjustedPoints;
@@ -168,7 +160,7 @@ std::vector<Uint32> UIController::computeTriangulatedIndices(int numTriangles) {
 }
 
 void UIController::updateSwipeSpline() { // div by cameraZoom and offset
-    cullSwipePointsByDuration();
+    _input->cullSwipePointsByDuration();
     int numSwipePoints = _input->getSwipePoints()->size();
     if (numSwipePoints > 2) {
 //        std::list<cugl::Vec2> swipePoints = _input->getSwipePoints();

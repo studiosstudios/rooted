@@ -502,7 +502,7 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
         addSwipePoint(screenPos);
         if (!_keyDash) {
             if (_internalSwipePoints.size() > 3){
-                if (_gesturer->similarity("line", std::vector<Vec2>(_internalSwipePoints.begin(), _internalSwipePoints.end()).data(), _internalSwipePoints.size(), true) > 0.9 && _internalSwipePoints.front().distanceSquared(_internalSwipePoints.back()) > SWIPE_LENGTH * SWIPE_LENGTH) {
+                if (_gesturer->similarity("line", getInternalSwipePointsVector(), true) > 0.9 && _internalSwipePoints.front().first.distanceSquared(_internalSwipePoints.back().first) > SWIPE_LENGTH * SWIPE_LENGTH) {
                     _keyDash = true;
                     _currentSwipeColor = Color4::ORANGE;
                 }

@@ -158,10 +158,12 @@ protected:
     
     /** List holding points for swipe drawing */
     std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> _swipePoints;
+    std::vector<cugl::Vec2> _swipePointsVec;
     /** Capacity for swipe drawing list */
     int _swipePointsCapacity = 25;
-    std::optional<cugl::Vec2> _swipeFirstPoint;
     cugl::Color4 _currentSwipeColor;
+    
+    std::shared_ptr<cugl::GestureRecognizer> _gesturer;
 
     /**
      * Defines the zone boundaries, so we can quickly categorize touches.
@@ -362,12 +364,16 @@ public:
         return _swipePoints;
     }
     
-    std::optional<cugl::Vec2> getSwipeFirstPoint() {
-        return _swipeFirstPoint;
-    }
-    
     cugl::Color4 getCurrentSwipeColor() {
         return _currentSwipeColor;
+    }
+    
+    std::vector<cugl::Vec2> makeVector() {
+        std::vector<cugl::Vec2> res;
+        for (auto it = _swipePoints->begin(); it != _swipePoints->end(); it++) {
+            res.push_back(it->first);
+        }
+        return res;
     }
 
 

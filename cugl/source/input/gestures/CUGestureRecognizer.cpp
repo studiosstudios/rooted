@@ -59,6 +59,7 @@
 #include <cugl/util/CUDebug.h>
 #include <cugl/input/gestures/CUGestureRecognizer.h>
 #include <limits>
+#include <iostream>
 
 using namespace cugl;
 
@@ -184,8 +185,7 @@ static Size bound_dimensions(const std::vector<cugl::Vec2>& points) {
     float maxX = minX;
     float minY = points[0].y;
     float maxY = minY;
-
-    for(auto it = points.begin()+1; it != points.end(); ++it) {
+    for(auto it = points.begin()+1; it != points.end(); it++) {
         minX = std::min(minX, it->x);
         minY = std::min(minY, it->y);
         maxX = std::max(maxX, it->x);
@@ -290,6 +290,48 @@ static void scale_to(std::vector<cugl::Vec2>& points, const Size bounds) {
     for(auto it = points.begin(); it != points.end(); ++it) {
         it->x *= (bounds.width / box.width);
         it->y *= (bounds.height / box.height);
+    }
+}
+
+static void scale_to(std::vector<cugl::Vec2>& points, const Size bounds, const Size box) {
+    for(auto it = points.begin(); it != points.end(); ++it) {
+        it->x *= (bounds.width / box.width);
+        it->y *= (bounds.height / box.height);
+    }
+}
+
+
+/**
+ *  Scales the gesture UNIFORMLY to a specific size for normalization
+ *
+ *  Similar to {@link #scale\_to}, but rather than non-uniformly scaling the points' bounding box to fit exactly to the desired bounds,
+ *  this method scales the points uniformly by simply multiplying the major axis to fit the passed in bounds' major axis.
+ *
+ *  For the purposes of this implementation, we assume that the passed in bounds is a square. Otherwise, we would want to find the major axis of bounds as well.
+ *
+ * @param points    a vector of points representing a gesture.
+ * @param bounds    the bounding box for the normalization space
+ */
+static void scale_to_uniform(std::vector<cugl::Vec2>& points, const Size bounds, const Size box) {
+    bool majorAxisIsX = box.width > box.height;
+    for(auto it = points.begin(); it != points.end(); ++it) {
+        if (majorAxisIsX) {
+            it->x *= (bounds.width / box.width);
+        }
+        else {
+            it->y *= (bounds.height / box.height);
+        }
+    }
+}
+
+static void scale_to_ROOTED(std::vector<cugl::Vec2>& points, const Size bounds) {
+    Size box = bound_dimensions(points);
+    if ((box.width < box.height && box.width < 100) || (box.height < box.width && box.height < 100)) {
+        std::cout << "Swipe is single line, uniform scaling\n";
+        scale_to_uniform(points, bounds, box);
+    }
+    else {
+        scale_to(points, bounds, box);
     }
 }
 
@@ -796,7 +838,7 @@ std::vector<cugl::Vec2> GestureRecognizer::normalize(const Vec2* points, size_t 
     result = resample_points(points, psize, _normlength);
     float angleInRadians = indicative_angle(result);
     rotate_by(result, -angleInRadians);
-    scale_to(result, _normbounds);
+    scale_to_ROOTED(result, _normbounds);
     translate_to(result, Vec2(0,0));
     return result;
 }

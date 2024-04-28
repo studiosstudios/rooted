@@ -86,10 +86,71 @@ bool InputController::init(const Rect bounds) {
     
     _gesturer = cugl::GestureRecognizer::alloc();
     _gesturer->setOrientationTolerance(-1);
-    auto linegestvec = std::vector<Vec2>();
-    for (int i = 0; i < 64; i++) {
-        linegestvec.push_back(Vec2(0, i));
-    }
+    std::vector<Vec2> linegestvec {Vec2(-124,0),
+        Vec2(-121,0),
+        Vec2(-117,0),
+        Vec2(-113,0),
+        Vec2(-109,0),
+        Vec2(-106,0),
+        Vec2(-102,0),
+        Vec2(-98,0),
+        Vec2(-94,0),
+        Vec2(-90,0),
+        Vec2(-86,0),
+        Vec2(-82,0),
+        Vec2(-78,0),
+        Vec2(-74,0),
+        Vec2(-70,0),
+        Vec2(-66,0),
+        Vec2(-62,0),
+        Vec2(-58,0),
+        Vec2(-54,0),
+        Vec2(-50,0),
+        Vec2(-46,0),
+        Vec2(-42,0),
+        Vec2(-38,0),
+        Vec2(-34,0),
+        Vec2(-30,0),
+        Vec2(-26,0),
+        Vec2(-22,0),
+        Vec2(-18,0),
+        Vec2(-14,0),
+        Vec2(-10,0),
+        Vec2(-6,0),
+        Vec2(-2,0),
+        Vec2(2,0),
+        Vec2(6,0),
+        Vec2(10,0),
+        Vec2(14,0),
+        Vec2(18,0),
+        Vec2(22,0),
+        Vec2(26,0),
+        Vec2(30,0),
+        Vec2(34,0),
+        Vec2(38,0),
+        Vec2(42,0),
+        Vec2(46,0),
+        Vec2(50,0),
+        Vec2(54,0),
+        Vec2(58,0),
+        Vec2(62,0),
+        Vec2(66,0),
+        Vec2(70,0),
+        Vec2(74,0),
+        Vec2(78,0),
+        Vec2(82,0),
+        Vec2(86,0),
+        Vec2(90,0),
+        Vec2(94,0),
+        Vec2(98,0),
+        Vec2(102,0),
+        Vec2(106,0),
+        Vec2(110,0),
+        Vec2(114,0),
+        Vec2(118,0),
+        Vec2(122,0),
+        Vec2(126,0),
+};
     _gesturer->addGesture("line", linegestvec);
     _swipePoints = std::make_shared<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>>();
     
@@ -440,10 +501,9 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         addSwipePoint(screenPos);
         if (!_keyDash) {
-            if (_swipePoints->size() > 10){
+            if (_swipePoints->size() > 3){
                 auto v = makeVector();
-                std::cout << _gesturer->similarity("line", v) << "\n";
-                if (_gesturer->match(makeVector()) == "line") {
+                if (_gesturer->similarity("line", v) > 0.9 && v.front().distance(v.back()) > SWIPE_LENGTH) {
                     _keyDash = true;
                     _currentSwipeColor = Color4::ORANGE;
                 }

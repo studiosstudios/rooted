@@ -293,6 +293,15 @@ static void scale_to(std::vector<cugl::Vec2>& points, const Size bounds) {
     }
 }
 
+/**
+ * Scales the gesture to a specific size for normalization
+ *
+ * This version of the method takes in the points' bounding box rather than computing it within the method.
+ *
+ * @param points    a vector of points representing a gesture.
+ * @param bounds    the bounding box for the normalization space
+ * @param box           the bounding box for the gesture points
+ */
 static void scale_to(std::vector<cugl::Vec2>& points, const Size bounds, const Size box) {
     for(auto it = points.begin(); it != points.end(); ++it) {
         it->x *= (bounds.width / box.width);
@@ -324,6 +333,14 @@ static void scale_to_uniform(std::vector<cugl::Vec2>& points, const Size bounds,
     }
 }
 
+/**
+ * General scale method that either calls {@link #scale\_to} or {@link #scale\_to\_uniform} based on whether the points have a bounding box whose minor axis is smaller than the threshold
+ *
+ * This threshold is specific to this implementation for rooted! and is specifically 100 (pixels).
+ *
+ * @param points    a vector of points representing a gesture.
+ * @param bounds    the bounding box for the normalization space
+ */
 static void scale_to_ROOTED(std::vector<cugl::Vec2>& points, const Size bounds) {
     Size box = bound_dimensions(points);
     if ((box.width < box.height && box.width < 100) || (box.height < box.width && box.height < 100)) {

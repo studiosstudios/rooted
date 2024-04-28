@@ -57,7 +57,7 @@ private:
     std::shared_ptr<cugl::scene2::Label> _barrotsRemainingText;
     
     float swipeThickness = 8;
-    Uint32 swipeDurationMillis = 500;
+    Uint32 swipeDurationMillis = 175;
     cugl::Vec2 tmp;
     std::optional<cugl::Color4> swipeColor;
     

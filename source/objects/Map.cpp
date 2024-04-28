@@ -786,12 +786,15 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     auto rock = Collectible::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName("rock");
-    rock->setLinearVelocity(player->getFacing() * RUN_SPEED);
+    Vec2 temp(player->getFacing().normalize() * RUN_SPEED * 1.2);
+    rock->setInitVelocity(temp);
+    rock->setLinearVelocity(temp);
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
     rock->setSceneNode(rockNode);
     rock->setDrawScale(_scale.x);
-    rockNode->setPriority(float(DrawOrder::ENTITIES));
+    // set slightly below entities
+    rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
 
     rockNode->setScale(0.3f * _scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)

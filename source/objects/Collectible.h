@@ -11,6 +11,13 @@
 #include <cugl/cugl.h>
 #include <cugl/physics2/CUBoxObstacle.h>
 
+#pragma mark -
+#pragma mark Physics Constants
+
+#define MAX_COLLECTIBLE_AGE 1
+#define PROGRESS 0.02f
+
+
 class Collectible : public cugl::physics2::BoxObstacle {
 private:
     /** This macro disables the copy constructor (not allowed on physics objects) */
@@ -59,6 +66,8 @@ protected:
     int _wheatContacts;
     
     float _initCharacterHeight;
+    
+    cugl::Vec2 _initVelocity;
 
 public:
     
@@ -342,6 +351,10 @@ public:
     
     void setAge(float age) { _age = age; }
     
+    float getMaxAge() { return MAX_COLLECTIBLE_AGE; }
+        
+    void setInitVelocity(cugl::Vec2 invel) { _initVelocity = invel; }
+    
 #pragma mark -
 #pragma mark Physics Methods
     /**
@@ -370,6 +383,13 @@ public:
      * @param delta Number of seconds since last animation frame
      */
     void update(float dt) override;
+    
+    /**
+     * Applies the force to the body of this dude
+     *
+     * This method should be called after the force attribute is set.
+     */
+    void applyForce();
 
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode(float initCharHeight);
 

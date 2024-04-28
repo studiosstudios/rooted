@@ -72,6 +72,10 @@ void ActionController::preUpdate(float dt) {
     playerEntity->stepAnimation(dt);
     updateRustlingNoise();
     
+    for (auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++) {
+        (*it)->applyForce();
+    }
+    
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
     std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
@@ -82,7 +86,7 @@ void ActionController::preUpdate(float dt) {
         }
     }
     
-    // for now, leave this as a carrot only option
+    // TODO: move this to carrot only option
     if (_input->didThrowRock()) {
         _map->spawnRock(playerEntity);
     }
@@ -178,7 +182,7 @@ void ActionController::postUpdate(float dt) {
     }
     auto iit = _map->getRocks().begin();
     while(iit != _map->getRocks().end()){
-        if ((*iit)->getAge() <= 0) {
+        if ((*iit)->getAge() > (*iit)->getMaxAge()) {
             _map->destroyRock(*iit);
         }
         if ((*iit)->isRemoved()) {

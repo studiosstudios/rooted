@@ -9,11 +9,6 @@
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
 
-#pragma mark -
-#pragma mark Physics Constants
-#define AGE 30
-#define DECAY 0.5f
-
 using namespace cugl;
 
 #pragma mark -
@@ -40,7 +35,7 @@ bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     Size nsize = size;
     _drawScale = scale;
     
-    _age = AGE;
+    _age = 0;
     
     if (BoxObstacle::init(pos, nsize)) {
         setSensor(true);
@@ -82,7 +77,6 @@ void Collectible::stepAnimation(float dt) {
 #pragma mark Attribute Properties
 
 
-
 #pragma mark -
 #pragma mark Physics Methods
 /**
@@ -121,22 +115,19 @@ void Collectible::dispose() {
     _geometry = nullptr;
 }
 
-///**
-// * Applies the force to the body of this dude
-// *
-// * This method should be called after the force attribute is set.
-// */
-//void Collectible::applyForce() {
-//    if (!isEnabled()) {
-//        return;
-//    }
-//    
-////    Vec2 speed;
-////    Vec2 normMovement = getMovement().getNormalization();
-////    
-////    speed.set(normMovement).scale(SNEAK_SPEED);
-////    setLinearVelocity(speed);
-//}
+/**
+ * Applies the force to the body of this dude
+ *
+ * This method should be called after the force attribute is set.
+ */
+void Collectible::applyForce() {
+    if (!isEnabled()) {
+        return;
+    }
+    
+    // using a quadradic ease out like function
+    setLinearVelocity(_initVelocity * (2 * (MAX_COLLECTIBLE_AGE - _age)));
+}
 
 /**
  * Updates the object's physics state (NOT GAME LOGIC).
@@ -157,8 +148,7 @@ void Collectible::update(float dt) {
         updateWheatHeightNode();
     }
     
-    // magic number, this will just determine what age means
-    _age -= DECAY;
+    _age += PROGRESS;
 }
 
 

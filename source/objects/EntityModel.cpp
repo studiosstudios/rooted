@@ -486,7 +486,7 @@ void EntityModel::updateWheatHeightNode(float dt) {
     if (_makeDashTrail) {
         _wheatSizeTarget = 1.5;
         _wheatHeightTarget = -100;
-        CULog("making dash trail");
+//        CULog("making dash trail");
         _timeSinceTrailSpawn += dt;
         if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
 //            CULog("add dash ellipse");
@@ -502,14 +502,31 @@ void EntityModel::updateWheatHeightNode(float dt) {
         }
         
         if (_dashTrail.size() >= _maxTrailPoints) {
-//            CULog("finished dash trail");
-            for (auto d : _dashNodes) {
-                d->SceneNode::dispose();
-            }
             _makeDashTrail = false;
-            
         }
-    } else {
+//            CULog("finished dash trail");
+//            for (auto d : _dashNodes) {
+//                CULog("remove dash node");
+//                d->removeFromParent();
+//            }
+    } 
+    
+    else if (_makeDashTrail == false && _dashTrail.size() > 0) {
+        CULog("shrinking trail");
+        auto first_node = _dashTrail[0];
+        auto size = first_node->getSize();
+        size.width -= _trailVanishRate;
+        size.height -= _trailVanishRate;
+        
+        if (size.width <= 0.0f || size.height <= 0.0f) {
+            CULog("removed dash node");
+            first_node->removeFromParent();
+            _dashTrail.erase(_dashTrail.begin());
+        }
+        first_node->SceneNode::setContentSize(size);
+    }
+    
+    else {
         _wheatSizeTarget = 0.75;
         _wheatHeightTarget = round(velocity.length());
         _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
@@ -525,17 +542,4 @@ void EntityModel::updateWheatHeightNode(float dt) {
     
     _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 
-//    for (auto it = _dashTrail.begin(); it != _dashTrail.end(); ++it) {
-//        auto ellipse = *it;
-//        auto size = ellipse->getSize();
-//        size.width -= _trailVanishRate * dt;
-//        size.height -= _trailVanishRate * dt;
-//        if (size.width <= 0.0f || size.height <= 0.0f) {
-//            _wheatHeightNode->removeChild(ellipse);
-//            it = _dashTrail.erase(it);
-//        }
-//        else {
-//            ellipse->SceneNode::setContentSize(size);
-//        }
-//    }
 }

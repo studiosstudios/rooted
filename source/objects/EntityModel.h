@@ -212,9 +212,9 @@ protected:
 
     int _maxTrailPoints = 10;
     
-    float _trailSpawnInterval = 0.05f;
+    float _trailSpawnInterval = 0.02f;
     
-    float _trailVanishRate = 0.05f;
+    float _trailVanishRate = 1.0f;
     
     float _timeSinceTrailSpawn = 0.0f;
     

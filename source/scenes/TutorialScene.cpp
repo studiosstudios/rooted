@@ -299,7 +299,7 @@ void TutorialScene::preUpdate(float dt) {
                 //move farmer
                 if (_time > 0.5 && _time < 3.0) {
                     _character->setMovement(Vec2(0, -1));
-                    _character->setDashInput(std::fmod((_time - dt), 0.7) > std::fmod(_time, 0.7)); //dash every 0.7s
+                    _character->setDashInput(fmod((_time - dt), 0.7) > fmod(_time, 0.7)); //dash every 0.7s
                 } else {
                     _character->setMovement(Vec2::ZERO);
                 }
@@ -317,10 +317,28 @@ void TutorialScene::preUpdate(float dt) {
             }
             break;
         case ESCAPEFARMER:
+        {
             _black->setColor(Color4(0,0,0, std::max(255.0 - _time * 2 * 255,  0.0)));
+            _character = _map->changeCharacter("carrot");
             _action.preUpdate(dt);
+            
+            //move farmer
+            _character = _map->changeCharacter("farmer");
+            float x = 0;
+            float mod = fmod(_time + 1, 6);
+            if (mod > 3 && mod < 5) {
+                x = 0.2;
+            } else if (mod < 2) {
+                x = -0.2;
+            }
+            _character->setMovement(Vec2(x, 0));
+            _character->updateState();
+            _character->applyForce();
+            _character->stepAnimation(dt);
+            
             _cam.setTarget(_character->getPosition()*_scale);
             break;
+        }
         case ROCK:
             break;
         case FARMERROOTS:
@@ -477,7 +495,6 @@ void TutorialScene::postUpdate(float remain) {
             break;
         case CATCHBABIES:
             if (_map->getBabyCarrots().size() == 1) {
-                CULog("CATCH BABY CARROTS! SWIPE TO DASH");
                 _input->pause();
                 _state = SHOWFARMER;
                 _time = 0;

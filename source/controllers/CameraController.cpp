@@ -50,7 +50,7 @@ void CameraController::update(float dt) {
             _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
         }
     }
-    if(std::abs(new_x-curr_x) < CAM_POSITION_ERR && std::abs(new_x-curr_x) < CAM_POSITION_ERR){
+    if(std::abs(new_x-curr_x) < CAM_POSITION_ERR && std::abs(new_y-curr_y) < CAM_POSITION_ERR){
         _camera->setPosition(Vec3(new_x, new_y, _camera->getPosition().z));
     }
     else {

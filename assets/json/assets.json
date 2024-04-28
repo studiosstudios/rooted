@@ -259,7 +259,7 @@
         },
         "rustle": {
             "type":     "sample",
-            "file":     "sounds/rustling.ogg",
+            "file":     "sounds/rustlingAlt.ogg",
             "stream":   true,
             "volume":   0.5
         },

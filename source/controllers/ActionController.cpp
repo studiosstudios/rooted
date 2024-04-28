@@ -203,10 +203,9 @@ float calculateVolume(EntityModel::EntityState state, float distance){
 }
 
 void ActionController::playRustling(std::shared_ptr<EntityModel> player, float distance, bool isBarrot){
-    //TODO: check if player is in wheat, if not, setVolume to 0.
     std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
     float newVolume;
-    if(distance > 20){
+    if(distance > 20 || (player != nullptr && !player->isInWheat())){
         newVolume = 0;
     }
     else {

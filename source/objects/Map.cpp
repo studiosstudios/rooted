@@ -737,7 +737,7 @@ void Map::spawnCarrots() {
 }
 
 void Map::updateShaders(float step, Mat4 perspective) {
-    int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size());
+    int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size() + _rocks.size());
     float positions[2*size]; // must be 1d array
     float velocities[size];
     float ratio = _shaderrenderer->getAspectRatio();
@@ -756,6 +756,11 @@ void Map::updateShaders(float step, Mat4 perspective) {
         positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / scale;
         positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / scale * ratio;
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < _rocks.size(); i++) {
+        positions[2 * i + 2* (_carrots.size() + _farmers.size() + _babies.size())] = _rocks.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size() + _babies.size())] = 1 - (_rocks.at(i)->getY() - _rocks.at(i)->getHeight()/2) / scale * ratio;
+        velocities[i + _carrots.size() + _farmers.size() + _rocks.size()] = _rocks.at(i)->getLinearVelocity().length();
     }
     _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / scale * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);

@@ -176,10 +176,15 @@ void ActionController::postUpdate(float dt) {
             c->setSensor(false);
         }
     }
-    for(auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++){
-        if ((*it)->getAge() <= 0) {
-            _map->destroyRock(*it);
+    auto iit = _map->getRocks().begin();
+    while(iit != _map->getRocks().end()){
+        if ((*iit)->getAge() <= 0) {
+            _map->destroyRock(*iit);
         }
+        if ((*iit)->isRemoved()) {
+            _map->getRocks().erase(iit);
+        }
+        else ++iit;
     }
 }
 

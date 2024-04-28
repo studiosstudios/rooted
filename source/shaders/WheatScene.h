@@ -37,7 +37,7 @@ private:
 
     unsigned int _queryId;
     
-    int _windCount = 1;
+    int _windCount = 2;
     
     std::vector<std::shared_ptr<scene2::PolygonNode>> _windNodes;
     

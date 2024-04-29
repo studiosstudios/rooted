@@ -7,8 +7,6 @@
     "folders": [
         "."
     ],
-    "properties": [
-    ],
     "propertyTypes": [
         {
             "color": "#ffa0a0a4",
@@ -26,8 +24,7 @@
                 "tile",
                 "tileset",
                 "wangcolor",
-                "wangset",
-                "project"
+                "wangset"
             ]
         },
         {
@@ -46,8 +43,7 @@
                 "tile",
                 "tileset",
                 "wangcolor",
-                "wangset",
-                "project"
+                "wangset"
             ]
         },
         {
@@ -66,8 +62,7 @@
                 "tile",
                 "tileset",
                 "wangcolor",
-                "wangset",
-                "project"
+                "wangset"
             ]
         },
         {
@@ -90,28 +85,7 @@
             "type": "class",
             "useAs": [
                 "object",
-                "tile",
-                "project"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
-            "id": 8,
-            "members": [
-            ],
-            "name": "PlantingSpot",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
-                "project"
+                "tile"
             ]
         },
         {
@@ -131,6 +105,49 @@
                 "bottom-right"
             ],
             "valuesAsFlags": true
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 14,
+            "members": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Obstacle",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 8,
+            "members": [
+            ],
+            "name": "PlantingSpot",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
         }
     ]
 }

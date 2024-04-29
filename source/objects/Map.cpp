@@ -218,12 +218,14 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     std::shuffle(_farmerSpawns.begin(), _farmerSpawns.end(), _rand32);
     std::shuffle(_babyCarrotSpawns.begin(), _babyCarrotSpawns.end(), _rand32);
     std::shuffle(_plantingSpawns.begin(), _plantingSpawns.end(), _rand32);
+    std::shuffle(_obstacleSpawns.begin(), _obstacleSpawns.end(), _rand32);
     
     //take just first num{object} elements of each vector
     _carrotSpawns = std::vector(_carrotSpawns.begin(), _carrotSpawns.begin() + std::min(numCarrots, int(_carrotSpawns.size())));
     _farmerSpawns = std::vector(_farmerSpawns.begin(), _farmerSpawns.begin() + std::min(numFarmers, int(_farmerSpawns.size())));
     _babyCarrotSpawns = std::vector(_babyCarrotSpawns.begin(), _babyCarrotSpawns.begin() + std::min(numBabyCarrots, int(_babyCarrotSpawns.size())));
     _plantingSpawns = std::vector(_plantingSpawns.begin(), _plantingSpawns.begin() + std::min(numPlantingSpots, int(_plantingSpawns.size())));
+    _obstacleSpawns = std::vector(_obstacleSpawns.begin(), _obstacleSpawns.begin() + std::min(1, int(_obstacleSpawns.size())));
 }
  
 void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
@@ -253,7 +255,10 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
-                } else {
+                } else if (type == "Obstacle") {
+                    _obstacleSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
+                }
+                else {
                     CUWarn("TILED JSON: Unrecognized environmental object: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
                 }
             } else if (name == "entities"){
@@ -301,6 +306,7 @@ void Map::populate() {
     _worldnode->addChild(_cloudsnode);
     
     spawnPlantingSpots();
+    spawnObstacles();
     spawnFarmers();
     spawnCarrots();
     spawnBabyCarrots();
@@ -498,6 +504,18 @@ void Map::spawnPlantingSpots() {
 
         plantingSpot->setSceneNode(_assets, float(Map::DrawOrder::PLANTINGSPOT));
         addObstacle(plantingSpot, plantingSpot->getSceneNode());
+    }
+}
+
+void Map::spawnObstacles() {
+    for (Rect rect : _obstacleSpawns) {
+        std::shared_ptr<Obstacle> barn = Obstacle::alloc(rect.origin, rect.size, _scale.x);
+        barn->setDebugColor(DEBUG_COLOR);
+        barn->setName("barn");
+        _obstacles.push_back(barn);
+        barn->setSceneNode(_assets, float(Map::DrawOrder::OBSTACLES), "barn");
+        addObstacle(barn, barn->getSceneNode());
+//        _entitiesNode->addChild(barn);
     }
 }
 

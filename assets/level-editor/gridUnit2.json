@@ -64,6 +64,24 @@
                  "width":96,
                  "x":319,
                  "y":112
+                }, 
+                {
+                 "gid":15,
+                 "height":160,
+                 "id":115,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"barn"
+                        }],
+                 "rotation":0,
+                 "type":"Obstacle",
+                 "visible":true,
+                 "width":207,
+                 "x":320,
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -131,7 +149,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":115,
+ "nextobjectid":116,
  "orientation":"orthogonal",
  "properties":[
         {

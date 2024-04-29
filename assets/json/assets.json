@@ -33,6 +33,12 @@
                 "bot_right" : [384,   384, 511, 511]
             }
         },
+        "barn": {
+            "file":     "textures/barn.png"
+        },
+        "tractor": {
+            "file":     "textures/tractor.png"
+        },
         "dude": {
             "file":     "textures/dude.png"
         },

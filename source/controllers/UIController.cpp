@@ -163,7 +163,8 @@ cugl::Color4 UIController::getSwipeColorForInput() {
     if (_input->didDashThisSwipe()) {
         return Color4::ORANGE;
     }
-    else if (_character->isRootingUnrooting()) { // TODO: Blue should only show up when we CAN actually root/unroot. Need a way to get this check from the game state
+//    else if (_character->isRootingUnrooting()) { // TODO: Blue should only show up when we CAN actually root/unroot. Need a way to get this check from the game state
+    else if (_input->didRootNow()) { // temporary for demo purposes
         return Color4::BLUE;
     }
     return Color4::WHITE;

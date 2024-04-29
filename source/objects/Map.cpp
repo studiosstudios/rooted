@@ -823,6 +823,10 @@ void Map::destroyRock(std::shared_ptr<Collectible> rock) {
     if (rock->isRemoved()) {
         return;
     }
+    if (!rock->isFired()) {
+        _rockSpawns.at(rock->getSpawnIndex()).second = true;
+        _numRockSpawns--;
+    }
     rock->getDebugNode()->dispose();
     rock->getWheatHeightNode()->dispose();
     _entitiesNode->removeChild(rock->getSceneNode());
@@ -852,13 +856,13 @@ std::pair<Vec2, int> Map::getRandomRockSpawn() {
     return std::pair(rand.first.origin, randidx);
 }
 
-void Map::spawnRock(Vec2 pos) {
-    CULog("SPAWN ROCK");
+void Map::spawnRock(Vec2 pos, int idx) {
     auto rockTexture = _assets->get<Texture>("rock");
     
     auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, false);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName("rock");
+    rock->setSpawnIndex(idx);
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
     rock->setSceneNode(rockNode);

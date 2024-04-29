@@ -68,6 +68,8 @@ protected:
     cugl::Vec2 _initVelocity;
     
     bool _fired;
+    
+    int _spawnIndex;
 
 public:
     
@@ -404,6 +406,12 @@ public:
     bool isInWheat() { return _inWheat; }
 
     void setInWheat(bool inWheat) { _inWheat = inWheat; }
+    
+    void setSpawnIndex(int idx) { _spawnIndex = idx; }
+    
+    int getSpawnIndex() { return _spawnIndex; }
+    
+    bool isFired() { return _fired; }
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

@@ -411,5 +411,5 @@ void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event)
 }
 
 void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event){
-    _map->spawnRock(event->getPosition());
+    _map->spawnRock(event->getPosition(), event->getIndex());
 }

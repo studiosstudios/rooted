@@ -47,6 +47,8 @@ public:
     void deserialize(const std::vector<std::byte>& data) override;
 
     Vec2 getPosition() { return _pos; }
+    
+    int getIndex() { return _idx; }
 };
 
 

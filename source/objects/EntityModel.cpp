@@ -45,6 +45,7 @@
 #include <cugl/scene2/graph/CUPolygonNode.h>
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -300,7 +301,7 @@ void EntityModel::updateState() {
                 stateChanged = true;
                 _makeDashTrail = true;
 //                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
-                _wheatHeightNode->setColor(Color4(0,0,0,0));
+//                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
             else {
                 nextState = getMovementState();
@@ -400,7 +401,7 @@ void EntityModel::update(float dt) {
     
     if (_wheatHeightNode != nullptr) {
 //        updateWheatHeightNode();
-        updateWheatNodes();
+        updateWheatNodes(dt);
     }
 }
 
@@ -427,7 +428,7 @@ std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
     _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(100.0, 100.0)));
     _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
     _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
-//    _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
     _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     return _wheatHeightNode;
 }
@@ -467,7 +468,7 @@ void EntityModel::updateWheatHeightNode() {
                                       _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 }
 
-void EntityModel::updateWheatNodes() {
+void EntityModel::updateWheatNodes(float dt) {
 //    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     
     Vec2 velocity = getLinearVelocity();
@@ -515,45 +516,46 @@ void EntityModel::updateWheatNodes() {
     } 
     
     else if (_makeDashTrail == false && _dashTrail.size() > 0) {
-//        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
-//        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
-        CULog("shrinking trail");
-        auto first_node = _dashTrail[0];
-        auto size = first_node->getSize();
-        size.width -= _trailVanishRate;
-        size.height -= _trailVanishRate;
-//        first_node->setColor(first_node->getColor()-Color4(0,0,1,0));
-        
-//        _wheatHeightTarget += 1;
-        
-//        if (first_node->getColor().b <= 0) {
-//            CULog("removed dash node");
-//            first_node->removeFromParent();
-//            _dashTrail.erase(_dashTrail.begin());
-//        }
-        
-        if (size.width <= 0.0f || size.height <= 0.0f) {
-            CULog("removed dash node");
-            first_node->removeFromParent();
-            _dashTrail.erase(_dashTrail.begin());
+        _trailVanishTime -= dt;
+        if (_trailVanishTime <= 0) {
+    //        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+    //        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+    //        CULog("shrinking trail");
+            auto first_node = _dashTrail[0];
+            auto size = first_node->getSize();
+            size.width -= _trailVanishRate;
+            size.height -= _trailVanishRate;
+    //        first_node->setColor(first_node->getColor()-Color4(0,0,1,0));
+            
+    //        _wheatHeightTarget += 1;
+            
+    //        if (first_node->getColor().b <= 0) {
+    //            CULog("removed dash node");
+    //            first_node->removeFromParent();
+    //            _dashTrail.erase(_dashTrail.begin());
+    //        }
+            
+            if (size.width <= 0.0f || size.height <= 0.0f) {
+    //            CULog("removed dash node");
+                first_node->removeFromParent();
+                _dashTrail.erase(_dashTrail.begin());
+            }
+            first_node->SceneNode::setContentSize(size);
+    //        first_node->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
         }
-        first_node->SceneNode::setContentSize(size);
-//        first_node->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
-        
     }
     
     else {
+        _trailVanishTime = DASH_TRAIL_HOLD;
+//        CULog("rustling node");
         _wheatSizeTarget = 0.75;
         _wheatHeightTarget = round(velocity.length());
+        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+        
         _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
-        _wheatHeightNode->setColor(Color4(0, 20, 0, 255));
         _wheatHeightNode->setPosition(getX(), getY()-getHeight());
         _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
     }
-//    else {
-//        _wheatHeightNode->setColor(Color4(0, 0, 0,255));
-//    }
-    
-    
 
 }

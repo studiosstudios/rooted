@@ -47,6 +47,7 @@
 #include <cugl/physics2/CUBoxObstacle.h>
 #include <cugl/physics2/CUCapsuleObstacle.h>
 #include <cugl/scene2/graph/CUWireNode.h>
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Drawing Constants
@@ -210,7 +211,7 @@ protected:
     
     std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashTrail;
 
-    int _maxTrailPoints = 12;
+    int _maxTrailPoints = 15;
     
     float _trailSpawnInterval = 0.02f;
     
@@ -219,6 +220,8 @@ protected:
     float _timeSinceTrailSpawn = 0.0f;
     
     bool _makeDashTrail = false;
+    
+    float _trailVanishTime = DASH_TRAIL_HOLD;
     
     std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashNodes;
 
@@ -644,7 +647,7 @@ public:
 
     virtual void updateWheatHeightNode();
     
-    virtual void updateWheatNodes();
+    virtual void updateWheatNodes(float dt);
 
     std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
 

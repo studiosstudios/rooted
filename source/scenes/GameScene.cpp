@@ -188,12 +188,12 @@ void GameScene::dispose() {
         Haptics::stop();
         _rootnode = nullptr;
         _uinode = nullptr;
-        _collision.dispose();
+        _map = nullptr;
         _action.dispose();
+        _collision.dispose();
         _ui.dispose();
         _complete = false;
         _debug = false;
-        _map = nullptr;
         _character = nullptr;
         unload();
         Scene2::dispose();

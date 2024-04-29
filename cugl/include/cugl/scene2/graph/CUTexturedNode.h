@@ -127,10 +127,10 @@ protected:
     /** Whether or not to flip the texture vertically */
     bool _flipVertical;
     /** The height of this texture. This is used exclusively by the wheat cover shader. */
-    float _height;
+    float _height = 0.0;
     /** The y origin of this texture. This is used exclusively by the wheat cover shader. */
     float _origin = 0.0;
-    /** If this texture is the texture of the player character. */
+    /** If this texture is the texture of the player character. This is used exclusively by the wheat cover shader. */
     bool _isPlayer = false;
     
 

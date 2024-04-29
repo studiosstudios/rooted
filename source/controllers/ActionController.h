@@ -34,7 +34,8 @@ private:
     std::shared_ptr<cugl::AssetManager> _assets;
     
     /**
-     * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character
+     * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character.
+     * @param distance is 0 if the player is oneself
      */
     void playRustling(std::shared_ptr<EntityModel> player, float distance, bool isBarrot);
     

@@ -98,10 +98,10 @@ void UIController::initGameUINodes() {
     _speechBubble->setVisible(false);
     _uinode->addChild(_speechBubble);
     
-    _speechBubbleText = scene2::Label::allocWithText("Oh no, all of my baby carrots have escaped!", _assets->get<Font>("gaeguBold67"));
+    _speechBubbleText = scene2::Label::allocWithText("Oh no, all of my baby carrots have escaped!", _assets->get<Font>("gaeguBold75"));
     _speechBubbleText->setHorizontalAlignment(HorizontalAlign::CENTER);
     _speechBubbleText->setVerticalAlignment(VerticalAlign::TOP);
-    _speechBubbleText->setPadding(50, 0, 50, 0);
+    _speechBubbleText->setPadding(80, 0, 80, 0);
     _speechBubbleText->setContentSize(_speechBubble->getContentSize());
     _speechBubbleText->doLayout();
     _speechBubbleText->setWrap(true);
@@ -115,10 +115,10 @@ void UIController::initGameUINodes() {
     _dialogBox->setVisible(false);
     _uinode->addChild(_dialogBox);
     
-    _dialogBoxText = scene2::Label::allocWithText("Drag left side of screen to move. Swipe up to dash. \n Capture all of the baby carrots!", _assets->get<Font>("gaeguBold67"));
+    _dialogBoxText = scene2::Label::allocWithText("Drag left side of screen to move. Swipe up to dash. \n Capture all of the baby carrots!", _assets->get<Font>("gaeguBold75"));
     _dialogBoxText->setHorizontalAlignment(HorizontalAlign::CENTER);
     _dialogBoxText->setVerticalAlignment(VerticalAlign::TOP);
-    _dialogBoxText->setPadding(150, 0, 150, 0);
+    _dialogBoxText->setPadding(200, 0, 200, 0);
     _dialogBoxText->setContentSize(_dialogBox->getContentSize());
     _dialogBoxText->doLayout();
     _dialogBoxText->setWrap(true);

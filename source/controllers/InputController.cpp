@@ -346,7 +346,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 
                 _joyCenter = screenPos;
                 _joyAnchor = _joyCenter;
-                _joystick = true;
+                _joystick = !_paused;
             }
             break;
         case Zone::RIGHT:

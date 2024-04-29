@@ -332,6 +332,8 @@ public:
      * @return true if the virtual joystick is in use (touch only)
      */
     bool withJoystick() const { return _joystick; }
+    
+    void setWithJoystick(bool joystick) { _joystick = joystick; }
 
     /**
      * Returns the scene graph position of the virtual joystick

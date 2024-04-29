@@ -124,7 +124,7 @@ void EntityModel::stepAnimation(float dt) {
                 // https://www.desmos.com/calculator/kszulthvhz
 //                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
                 // LOOPING style animation
-                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
+                 _node->setFrame(lround(_node->getSpan() * curAnimTime / curAnimDuration) % _node->getSpan());
         }
         else if (_node->getFrame() != 0) {
             _node->setFrame(0);
@@ -180,7 +180,13 @@ void EntityModel::setMovement(Vec2 movement) {
 }
 
 void EntityModel::updateSprite(float dt, bool useMovement) {
-    EntityFacing face = calculateFacing(useMovement ? _movement : getLinearVelocity());
+    EntityFacing face;
+    if (_state != DASHING) {
+        face = calculateFacing(useMovement ? _movement : getLinearVelocity());
+    }
+    else {
+        face = calculateFacing(_dashVector);
+    }
     if (!((_prevState == _state) && (_facing == face))) {
         
         auto sprite = _southWalkSprite;
@@ -261,8 +267,14 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
     stepAnimation(dt);
 }
 
-void EntityModel::setDashInput(bool dashInput) {
+void EntityModel::setDashInput(bool dashInput, cugl::Vec2 dashVector) {
     _dashInput = dashInput;
+    if (_state != DASHING) {
+        // For now, only update dashVector when we're not already DASHING
+        // So that if we are DASHING, we maintain the same dash vector for applying force -CJ
+        _dashVector = dashVector;
+    }
+    
 }
 
 void EntityModel::setPlantInput(bool plantInput) {
@@ -414,7 +426,7 @@ void EntityModel::applyForce() {
             break;
         }
         case DASHING: {
-            setLinearVelocity(Vec2::normalize(getMovement(), &speed)->scale(DUDE_DASH));
+            setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(DUDE_DASH));
             break;
         }
         default: {

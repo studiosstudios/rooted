@@ -465,6 +465,7 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
 //                std::cout << "Circle CW: " << _gesturer->similarity("circle2", getInternalSwipePointsVector(), true) << "\n";
                 _keyDash = true;
                 _dashPressedThisSwipe = true;
+                loadDashVector();
                 _currentSwipeColor = Color4::ORANGE;
             }
                 

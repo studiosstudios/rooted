@@ -165,6 +165,8 @@ protected:
     cugl::Color4 _currentSwipeColor;
     std::deque<std::pair<cugl::Vec2, cugl::Timestamp>> _internalSwipePoints;
     
+    cugl::Vec2 _dashVector;
+    
     
     
     std::shared_ptr<cugl::GestureRecognizer> _lineGesturer;
@@ -364,6 +366,8 @@ public:
     bool didSwitch() const { return _switchPressed; }
     
     bool didShakeDevice() const { return _deviceShaking; }
+    
+    cugl::Vec2 getDashVector() { return _dashVector; }
 
 #pragma mark -
 #pragma mark Swipe Drawing Logic
@@ -460,6 +464,10 @@ public:
             res.push_back(it->first);
         }
         return res;
+    }
+    
+    void loadDashVector() {
+        cugl::Vec2::subtract(_internalSwipePoints.front().first, _internalSwipePoints.back().first, &_dashVector);
     }
 
 

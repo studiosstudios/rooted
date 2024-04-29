@@ -56,7 +56,7 @@ void ActionController::preUpdate(float dt) {
     auto playerEntity = _map->getCharacter();
     playerEntity->setMovement(_input->getMovement());
     bool didDash = _input->didDash();
-    playerEntity->setDashInput(didDash);
+    playerEntity->setDashInput(didDash, _input->getDashVector());
     if(didDash){
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
         AudioEngine::get()->play("dash", source);

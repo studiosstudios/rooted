@@ -224,6 +224,8 @@ protected:
     
     bool _dashInput;
     
+    cugl::Vec2 _dashVector;
+    
     bool _plantInput;
     
     bool _rootInput;
@@ -559,7 +561,7 @@ public:
      */
     virtual void setMovement(cugl::Vec2 value);
     
-    void setDashInput(bool dashInput);
+    void setDashInput(bool dashInput, cugl::Vec2 dashVector);
     
     void setPlantInput(bool plantInput);
     

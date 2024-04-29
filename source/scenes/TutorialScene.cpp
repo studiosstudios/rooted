@@ -623,9 +623,9 @@ void TutorialScene::fixedUpdate(float step) {
                 _action.processBarrotEvent(captureBarrotEvent);
             }
         }
-        if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
-            processResetEvent(resetEvent);
-        }
+//        if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
+//            processResetEvent(resetEvent);
+//        }
         if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
             _action.processFreeEvent(freeEvent);
         }

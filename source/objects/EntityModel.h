@@ -644,7 +644,7 @@ public:
 
     virtual void updateWheatHeightNode();
     
-    virtual void updateWheatHeightNode(float dt);
+    virtual void updateWheatNodes();
 
     std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
 

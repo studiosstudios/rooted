@@ -400,7 +400,7 @@ void EntityModel::update(float dt) {
     
     if (_wheatHeightNode != nullptr) {
 //        updateWheatHeightNode();
-        updateWheatHeightNode(dt);
+        updateWheatNodes();
     }
 }
 
@@ -467,7 +467,7 @@ void EntityModel::updateWheatHeightNode() {
                                       _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 }
 
-void EntityModel::updateWheatHeightNode(float dt) {
+void EntityModel::updateWheatNodes() {
 //    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     
     Vec2 velocity = getLinearVelocity();
@@ -488,20 +488,21 @@ void EntityModel::updateWheatHeightNode(float dt) {
         _wheatSizeTarget = 1.5;
         _wheatHeightTarget = -100;
 //        CULog("making dash trail");
-        _timeSinceTrailSpawn += dt;
-        if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
-//            CULog("add dash ellipse");
-            auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.0, 1.0)));
+//        _timeSinceTrailSpawn += dt;
+//        if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
+////            CULog("add dash ellipse");
+//            
+//        }
+        auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.0, 1.0)));
 //            ellipse->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
 //                                              _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
-            ellipse->setPosition(getX(), getY()-getHeight());
-            ellipse->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
-            _dashTrail.push_back(ellipse);
-            _timeSinceTrailSpawn = 0.0f;
-            ellipse->setColor(Color4(0, 0, 20, 255));
-            _wheatHeightNode->getParent()->addChild(ellipse);
-            _dashNodes.push_back(ellipse);
-        }
+        ellipse->setPosition(getX(), getY()-getHeight());
+        ellipse->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
+        _dashTrail.push_back(ellipse);
+        _timeSinceTrailSpawn = 0.0f;
+        ellipse->setColor(Color4(0, 0, 20, 255));
+        _wheatHeightNode->getParent()->addChild(ellipse);
+        _dashNodes.push_back(ellipse);
         
         if (_dashTrail.size() >= _maxTrailPoints) {
             _makeDashTrail = false;
@@ -518,23 +519,25 @@ void EntityModel::updateWheatHeightNode(float dt) {
 //        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
         CULog("shrinking trail");
         auto first_node = _dashTrail[0];
-//        auto size = first_node->getSize();
-//        size.width -= _trailVanishRate;
-//        size.height -= _trailVanishRate;
-        first_node->setColor(first_node->getColor()-Color4(0,0,1,0));
+        auto size = first_node->getSize();
+        size.width -= _trailVanishRate;
+        size.height -= _trailVanishRate;
+//        first_node->setColor(first_node->getColor()-Color4(0,0,1,0));
         
 //        _wheatHeightTarget += 1;
-        if (first_node->getColor().b <= 0) {
-            CULog("removed dash node");
-            first_node->removeFromParent();
-            _dashTrail.erase(_dashTrail.begin());
-        }
-//        if (size.width <= 0.0f || size.height <= 0.0f) {
+        
+//        if (first_node->getColor().b <= 0) {
 //            CULog("removed dash node");
 //            first_node->removeFromParent();
 //            _dashTrail.erase(_dashTrail.begin());
 //        }
-//        first_node->SceneNode::setContentSize(size);
+        
+        if (size.width <= 0.0f || size.height <= 0.0f) {
+            CULog("removed dash node");
+            first_node->removeFromParent();
+            _dashTrail.erase(_dashTrail.begin());
+        }
+        first_node->SceneNode::setContentSize(size);
 //        first_node->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
         
     }

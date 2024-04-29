@@ -78,7 +78,7 @@ void UIController::initGameUINodes() {
     _barrotsRemainingBoard->addChild(_barrotsRemainingText);
     
     _dashTimerNode = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2::ZERO, 32));
-    _dashTimerNode->setPosition(((Vec2(SCENE_WIDTH * 0.9f, SCENE_HEIGHT * 0.1f)) - _offset ) / _cameraZoom);
+    _dashTimerNode->setPosition(((Vec2(SCENE_WIDTH* 1.25f, SCENE_HEIGHT * 0.1f)) - _offset ) / _cameraZoom);
     _dashTimerNode->setScale(_drawScale/DEFAULT_DRAWSCALE);
     _dashTimerNode->setColor(Color4::GREEN);
     _uinode->addChild(_dashTimerNode);

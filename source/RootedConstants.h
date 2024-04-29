@@ -48,7 +48,7 @@
 #pragma mark -
 #pragma mark Game Logic Constants
 /** Time in seconds that must elapse before being able to perform another dash */
-#define DASH_COOLDOWN_SECS 8
+#define DASH_COOLDOWN_SECS 3
 
 #pragma mark -
 #pragma mark Asset Constants

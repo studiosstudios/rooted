@@ -57,7 +57,10 @@ private:
     
     /** UI elements for the tutorial */
     std::shared_ptr<cugl::scene2::NinePatch> _speechBubble;
+    std::shared_ptr<cugl::scene2::Label> _speechBubbleText;
     std::shared_ptr<cugl::scene2::NinePatch> _dialogBox;
+    std::shared_ptr<cugl::scene2::Label> _dialogBoxText;
+
     
     float swipeThickness = 8;
     Uint32 swipeDurationMillis = 500;
@@ -93,6 +96,7 @@ public:
     bool getSpeechBubbleVisible() { return _speechBubble->isVisible(); };
     void setDialogBoxVisible(bool visible);
     bool getDialogBoxVisible() { return _dialogBox->isVisible(); };
+    void setDialogBoxText(std::string text);
 
     void initJoystickNodes();
 

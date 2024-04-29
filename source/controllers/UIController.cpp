@@ -33,6 +33,10 @@ void UIController::setDialogBoxVisible(bool visible) {
     _dialogBox->setVisible(visible);
 }
 
+void UIController::setDialogBoxText(std::string text) {
+    _dialogBoxText->setText(text);
+}
+
 void UIController::initJoystickNodes() {
     _joynode = scene2::SceneNode::allocWithBounds(Vec2(JOY_ZONE_WIDTH * SCENE_WIDTH / _cameraZoom, JOY_ZONE_HEIGHT * SCENE_HEIGHT / _cameraZoom) + _offset);
 
@@ -88,19 +92,37 @@ void UIController::initGameUINodes() {
     // TUTORIAL UI STUFF
     _speechBubble = scene2::NinePatch::allocWithTexture(_assets->get<Texture>("speechbubble"), Rect(137, 666, 512, 512));
     _speechBubble->SceneNode::setContentSize(Size(1000, 500));
-    _speechBubble->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) - _offset) / _cameraZoom);
+    _speechBubble->setPosition((Vec2(SCENE_WIDTH/2 - 300, SCENE_HEIGHT/2 - 100)) / _cameraZoom);
     _speechBubble->setAnchor(Vec2::ANCHOR_CENTER);
     _speechBubble->setScale(0.18 * _drawScale/DEFAULT_DRAWSCALE);
     _speechBubble->setVisible(false);
     _uinode->addChild(_speechBubble);
+    
+    _speechBubbleText = scene2::Label::allocWithText("Oh no, all of my baby carrots have escaped!", _assets->get<Font>("gaeguBold67"));
+    _speechBubbleText->setHorizontalAlignment(HorizontalAlign::CENTER);
+    _speechBubbleText->setVerticalAlignment(VerticalAlign::TOP);
+    _speechBubbleText->setPadding(50, 0, 50, 0);
+    _speechBubbleText->setContentSize(_speechBubble->getContentSize());
+    _speechBubbleText->doLayout();
+    _speechBubbleText->setWrap(true);
+    _speechBubble->addChild(_speechBubbleText);
 
     _dialogBox = scene2::NinePatch::allocWithTexture(_assets->get<Texture>("dialoguebox"), Rect(137, 666, 512, 512));
-    _dialogBox->SceneNode::setContentSize(Size(1000, 500));
+    _dialogBox->SceneNode::setContentSize(Size(1300, 500));
     _dialogBox->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) - _offset) / _cameraZoom);
     _dialogBox->setAnchor(Vec2::ANCHOR_CENTER);
     _dialogBox->setScale(0.18 * _drawScale/DEFAULT_DRAWSCALE);
     _dialogBox->setVisible(false);
     _uinode->addChild(_dialogBox);
+    
+    _dialogBoxText = scene2::Label::allocWithText("Drag left side of screen to move. Swipe up to dash. \n Capture all of the baby carrots!", _assets->get<Font>("gaeguBold67"));
+    _dialogBoxText->setHorizontalAlignment(HorizontalAlign::CENTER);
+    _dialogBoxText->setVerticalAlignment(VerticalAlign::TOP);
+    _dialogBoxText->setPadding(150, 0, 150, 0);
+    _dialogBoxText->setContentSize(_dialogBox->getContentSize());
+    _dialogBoxText->doLayout();
+    _dialogBoxText->setWrap(true);
+    _dialogBox->addChild(_dialogBoxText);
 }
 
 bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,

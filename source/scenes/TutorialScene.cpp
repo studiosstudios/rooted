@@ -387,6 +387,7 @@ void TutorialScene::preUpdate(float dt) {
             farmer->stepAnimation(dt);
             
             if (_step == 3) {
+                _ui.setDialogBoxText("Shake to escape the farmer!");
                 _ui.setDialogBoxVisible(true);
                 _step = 4;
             }
@@ -425,6 +426,7 @@ void TutorialScene::preUpdate(float dt) {
                 farmer->stepAnimation(dt);
                 
                 if (_step == 5) {
+                    _ui.setDialogBoxText("Unroot the other carrot by swiping down!");
                     _ui.setDialogBoxVisible(true);
                     _step = 6;
                 }
@@ -487,6 +489,7 @@ void TutorialScene::preUpdate(float dt) {
                 _cam.setTarget(_character->getPosition()*_scale);
                 
                 if (_step == 7) {
+                    _ui.setDialogBoxText("Now just get the last baby carrot to win!");
                     _ui.setDialogBoxVisible(true);
                     _step = 8;
                 }

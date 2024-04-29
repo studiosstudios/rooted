@@ -637,7 +637,7 @@ public:
      *
      *  This method should be called after all relevant input attributes are set.
      */
-    virtual void updateState();
+    virtual void updateState(float dt);
     
     /**
      * Applies the force to the body of this dude
@@ -675,13 +675,19 @@ public:
         return RUNNING;
     }
     
-    void updateSprite();
+    /** If useMovement is true, use the current EntityModel's \_movement argument. If false, use \_velocity. */
+    void updateSprite(float dt, bool useMovement);
+    
+    void updateSprite(float dt) {
+        updateSprite(dt, true);
+    }
     
     EntityState getEntityState(){
         return _state;
     }
     
     void setEntityState(EntityState state) {
+        _prevState = _state;
         _state = state;
     }
     

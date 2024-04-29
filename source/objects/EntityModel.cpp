@@ -179,86 +179,86 @@ void EntityModel::setMovement(Vec2 movement) {
     _movement = movement;
 }
 
-void EntityModel::updateSprite() {
-    EntityFacing face = calculateFacing(_movement);
-    if ((_prevState == _state) && (_facing == face)) {
-        return;
+void EntityModel::updateSprite(float dt, bool useMovement) {
+    EntityFacing face = calculateFacing(useMovement ? _movement : getLinearVelocity());
+    if (!((_prevState == _state) && (_facing == face))) {
+        
+        auto sprite = _southWalkSprite;
+        switch (_state) {
+            case STANDING:
+                // TODO: Idle animations here
+            case SNEAKING:
+            case WALKING:
+                if (face == SOUTH) {
+                    sprite = _southWalkSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northWalkSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastWalkSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastWalkSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastWalkSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case RUNNING:
+                if (face == SOUTH) {
+                    sprite = _southRunSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northRunSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastRunSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastRunSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastRunSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case DASHING:
+                if (face == SOUTH) {
+                    sprite = _southDashSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northDashSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastDashSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastDashSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastDashSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case CARRYING:
+            case CAUGHT:
+            case ROOTING:
+            case UNROOTING:
+            case ROOTED:
+                break;
+        }
+        setSceneNode(sprite);
+        _facing = face;
     }
-    
-    auto sprite = _southWalkSprite;
-    switch (_state) {
-        case STANDING:
-            // TODO: Idle animations here
-        case SNEAKING:
-        case WALKING:
-            if (face == SOUTH) {
-                sprite = _southWalkSprite;
-            }
-            else if (face == NORTH) {
-                sprite = _northWalkSprite;
-            }
-            else if (face == EAST || face == WEST) {
-                sprite = _eastWalkSprite;
-            }
-            else if (face == NORTHEAST || face == NORTHWEST) {
-                sprite = _northEastWalkSprite;
-            }
-            else if (face == SOUTHEAST || face == SOUTHWEST) {
-                sprite = _southEastWalkSprite;
-            }
-            if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                sprite->flipHorizontal(!sprite->isFlipHorizontal());
-            }
-            break;
-        case RUNNING:
-            if (face == SOUTH) {
-                sprite = _southRunSprite;
-            }
-            else if (face == NORTH) {
-                sprite = _northRunSprite;
-            }
-            else if (face == EAST || face == WEST) {
-                sprite = _eastRunSprite;
-            }
-            else if (face == NORTHEAST || face == NORTHWEST) {
-                sprite = _northEastRunSprite;
-            }
-            else if (face == SOUTHEAST || face == SOUTHWEST) {
-                sprite = _southEastRunSprite;
-            }
-            if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                sprite->flipHorizontal(!sprite->isFlipHorizontal());
-            }
-            break;
-        case DASHING:
-            if (face == SOUTH) {
-                sprite = _southDashSprite;
-            }
-            else if (face == NORTH) {
-                sprite = _northDashSprite;
-            }
-            else if (face == EAST || face == WEST) {
-                sprite = _eastDashSprite;
-            }
-            else if (face == NORTHEAST || face == NORTHWEST) {
-                sprite = _northEastDashSprite;
-            }
-            else if (face == SOUTHEAST || face == SOUTHWEST) {
-                sprite = _southEastDashSprite;
-            }
-            if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                sprite->flipHorizontal(!sprite->isFlipHorizontal());
-            }
-            break;
-        case CARRYING:
-        case CAUGHT:
-        case ROOTING:
-        case UNROOTING:
-        case ROOTED:
-            break;
-    }
-    setSceneNode(sprite);
-    _facing = face;
+    stepAnimation(dt);
 }
 
 void EntityModel::setDashInput(bool dashInput) {
@@ -328,7 +328,7 @@ void EntityModel::dispose() {
  *
  *  This method should be called after all relevant input attributes are set.
  */
-void EntityModel::updateState() {
+void EntityModel::updateState(float dt) {
     if (!isEnabled()) {
         return;
     }
@@ -378,7 +378,7 @@ void EntityModel::updateState() {
     if (stateChanged) {
         updateCurAnimDurationForState();
     }
-    updateSprite();
+    updateSprite(dt);
 //    std::cout << _state << "\n";
 }
 

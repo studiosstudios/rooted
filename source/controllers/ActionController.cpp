@@ -64,13 +64,20 @@ void ActionController::preUpdate(float dt) {
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     EntityModel::EntityState oldState = playerEntity->getEntityState();
-    playerEntity->updateState();
+    playerEntity->updateState(dt);
     if(playerEntity->getEntityState() != oldState){
         _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
     }
     playerEntity->applyForce();
-    playerEntity->stepAnimation(dt);
+    
     updateRustlingNoise();
+    
+    auto players = _map->getPlayers();
+    for (auto it = players.begin(); it != players.end(); ++it) {
+        if ((*it)->getUUID() != playerEntity->getUUID()) {
+            (*it)->updateSprite(dt, false);
+        }
+    }
     
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ

@@ -378,6 +378,7 @@ void Map::dispose() {
         (*it) = nullptr;
     }
     _plantingSpot.clear();
+    _players.clear();
     if (_world != nullptr) {
         _world->clear();
         _world->dispose();
@@ -627,6 +628,7 @@ void Map::spawnFarmers() {
         _wheatscene->getRoot()->addChild(wheatnode);
         
         _farmers.push_back(farmer);
+        _players.push_back(farmer);
 
         _world->initObstacle(farmer);
     }
@@ -732,6 +734,7 @@ void Map::spawnCarrots() {
         carrot->setDebugColor(DEBUG_COLOR);
         carrot->setName("carrot");
         _carrots.push_back(carrot);
+        _players.push_back(carrot);
         
         auto carrotSouthWalkSprite = _assets->get<Texture>(CARROT_SOUTH_WALK_SPRITE);
         auto carrotNorthWalkSprite = _assets->get<Texture>(CARROT_NORTH_WALK_SPRITE);

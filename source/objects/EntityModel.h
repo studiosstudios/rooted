@@ -55,11 +55,19 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
+
 #define FARMER_SOUTH_WALK_SPRITE "farmer-south-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
 #define FARMER_NORTHEAST_WALK_SPRITE "farmer-northeast-walk"
 #define FARMER_SOUTHEAST_WALK_SPRITE "farmer-southeast-walk"
+
+#define FARMER_SOUTH_RUN_SPRITE "farmer-south-run"
+#define FARMER_NORTH_RUN_SPRITE "farmer-north-run"
+#define FARMER_EAST_RUN_SPRITE "farmer-east-run"
+#define FARMER_NORTHEAST_RUN_SPRITE "farmer-northeast-run"
+#define FARMER_SOUTHEAST_RUN_SPRITE "farmer-southeast-run"
+
 
 #define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
 #define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
@@ -155,6 +163,12 @@ protected:
     std::shared_ptr<cugl::scene2::SpriteNode> _northEastWalkSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _southEastWalkSprite;
     
+    std::shared_ptr<cugl::scene2::SpriteNode> _eastRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northEastRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southEastRunSprite;
+    
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
@@ -180,6 +194,9 @@ protected:
     
     /** Current EntityState that this entity is in. */
     EntityState _state;
+    
+    /** The state this EntityState was in from the previous frame */
+    EntityState _prevState;
     
     /** The current movement (horizontal and vertical) of the character */
     cugl::Vec2 _movement;
@@ -457,16 +474,27 @@ public:
      * This currently only includes the 5-directional movement sprites, but
      * TODO: It should later include all action sprites.
      */
-    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southNode) {
-        _northWalkSprite = northNode;
-        _northEastWalkSprite = northEastNode;
-        _eastWalkSprite = eastNode;
-        _southEastWalkSprite = southEastNode;
-        _southWalkSprite = southNode;
+    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode) {
+        _northWalkSprite = northWalkNode;
+        _northEastWalkSprite = northEastWalkNode;
+        _eastWalkSprite = eastWalkNode;
+        _southEastWalkSprite = southEastWalkNode;
+        _southWalkSprite = southWalkNode;
+        
+        _northRunSprite = northRunNode;
+        _northEastRunSprite = northEastRunNode;
+        _eastRunSprite = eastRunNode;
+        _southEastRunSprite = southEastRunNode;
+        _southRunSprite = southRunNode;
     }
     
     /**
@@ -607,18 +635,21 @@ public:
     
     /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
     EntityState getMovementState() {
-        if (_movement.lengthSquared() <= 0.15 * 0.15) {
+        auto lengthSquared = _movement.lengthSquared();
+        if (lengthSquared <= 0.0225) { // 0.15^2
             // If joystick movement is too minor, we don't actually let it cause a movement
             return STANDING;
         }
-        else if (_movement.lengthSquared() <= 0.8 * 0.8) {
+        else if (lengthSquared <= 0.1225) { // 0.35^2
             return SNEAKING;
         }
-        else if (_movement.lengthSquared() <= 0.9 * 0.9) {
+        else if (lengthSquared < 0.95) { // ~0.975^2
             return WALKING;
         }
         return RUNNING;
     }
+    
+    void updateSprite();
     
     EntityState getEntityState(){
         return _state;

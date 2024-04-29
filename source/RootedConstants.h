@@ -107,7 +107,7 @@
 /** This defines the joystick "deadzone" (how far we must move) */
 #define JSTICK_DEADZONE  15
 /** This defines the joystick radial size (for reseting the anchor) */
-#define JSTICK_RADIUS    100
+#define JSTICK_RADIUS    256
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    0
 /** How fast a double click must be in milliseconds */

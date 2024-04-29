@@ -60,6 +60,21 @@
         "farmer-southeast-walk": {
             "file":     "textures/farmer-southeast-walk.png"
         },
+        "farmer-south-run": {
+            "file":     "textures/farmer-south-run.png"
+        },
+        "farmer-north-run": {
+            "file":     "textures/farmer-north-run.png"
+        },
+        "farmer-east-run": {
+            "file":     "textures/farmer-east-run.png"
+        },
+        "farmer-northeast-run": {
+            "file":     "textures/farmer-northeast-run.png"
+        },
+        "farmer-southeast-run": {
+            "file":     "textures/farmer-southeast-run.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },

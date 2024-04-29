@@ -537,6 +537,32 @@ void Map::spawnFarmers() {
         farmerSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         farmerSouthEastWalkNode->setVisible(false);
         
+        // Run sprites
+        auto farmerSouthRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_SOUTH_RUN_SPRITE), 2, 4);
+        farmerSouthRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+        farmerSouthRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerSouthRunNode->setVisible(false);
+        
+        auto farmerNorthRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_NORTH_RUN_SPRITE), 2, 4, 6);
+        farmerNorthRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+        farmerNorthRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerNorthRunNode->setVisible(false);
+        
+        auto farmerEastRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_EAST_RUN_SPRITE), 2, 4);
+        farmerEastRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+        farmerEastRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerEastRunNode->setVisible(false);
+        
+        auto farmerNorthEastRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_NORTHEAST_RUN_SPRITE), 2, 4);
+        farmerNorthEastRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+        farmerNorthEastRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerNorthEastRunNode->setVisible(false);
+        
+        auto farmerSouthEastRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_SOUTHEAST_RUN_SPRITE), 3, 4);
+        farmerSouthEastRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+        farmerSouthEastRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        farmerSouthEastRunNode->setVisible(false);
+        
         auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
         carrotfarmerNode->setVisible(false);
         carrotfarmerNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
@@ -546,13 +572,23 @@ void Map::spawnFarmers() {
         _entitiesNode->addChild(farmerEastWalkNode);
         _entitiesNode->addChild(farmerNorthEastWalkNode);
         _entitiesNode->addChild(farmerSouthEastWalkNode);
+        _entitiesNode->addChild(farmerSouthRunNode);
+        _entitiesNode->addChild(farmerNorthRunNode);
+        _entitiesNode->addChild(farmerEastRunNode);
+        _entitiesNode->addChild(farmerNorthEastRunNode);
+        _entitiesNode->addChild(farmerSouthEastRunNode);
         _entitiesNode->addChild(carrotfarmerNode);
         
         farmer->setSpriteNodes(farmerNorthWalkNode,
                                farmerNorthEastWalkNode,
                                farmerEastWalkNode,
                                farmerSouthEastWalkNode,
-                               farmerSouthWalkNode);
+                               farmerSouthWalkNode,
+                               farmerNorthRunNode,
+                               farmerNorthEastRunNode,
+                               farmerEastRunNode,
+                               farmerSouthEastRunNode,
+                               farmerSouthRunNode);
         
         farmer->setNormalNode(farmerSouthWalkNode);
         farmer->setCaptureNode(carrotfarmerNode);
@@ -722,6 +758,11 @@ void Map::spawnCarrots() {
                              _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)
         carrot->setSpriteNodes(carrotNorthWalkNode,
+                               carrotNorthEastWalkNode,
+                               carrotEastWalkNode,
+                               carrotSouthEastWalkNode,
+                               carrotSouthWalkNode,
+                               carrotNorthWalkNode,
                                carrotNorthEastWalkNode,
                                carrotEastWalkNode,
                                carrotSouthEastWalkNode,

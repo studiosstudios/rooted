@@ -94,6 +94,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         // Gameplay attributes
         _facing = SOUTH;
         _state = STANDING;
+        _prevState = STANDING;
         updateCurAnimDurationForState();
         
         return true;
@@ -176,31 +177,68 @@ EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
  */
 void EntityModel::setMovement(Vec2 movement) {
     _movement = movement;
-    EntityFacing face = calculateFacing(movement);
-    if (_facing == face) {
+}
+
+void EntityModel::updateSprite() {
+    EntityFacing face = calculateFacing(_movement);
+    if ((_prevState == _state) && (_facing == face)) {
         return;
     }
-    // Grab the correct sprite
+    bool flippableSprite = false;
     auto sprite = _southWalkSprite;
-    if (face == SOUTH) {
-        sprite = _southWalkSprite;
-    }
-    else if (face == NORTH) {
-        sprite = _northWalkSprite;
-    }
-    else if (face == EAST || face == WEST) {
-        sprite = _eastWalkSprite;
-    }
-    else if (face == NORTHEAST || face == NORTHWEST) {
-        sprite = _northEastWalkSprite;
-    }
-    else if (face == SOUTHEAST || face == SOUTHWEST) {
-        sprite = _southEastWalkSprite;
-    }
-    // Change facing for the sprite
-//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
-    if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-        sprite->flipHorizontal(!sprite->isFlipHorizontal());
+    switch (_state) {
+        case STANDING:
+            // TODO: Idle animations here
+        case SNEAKING:
+        case WALKING:
+            flippableSprite = true;
+            if (face == SOUTH) {
+                sprite = _southWalkSprite;
+            }
+            else if (face == NORTH) {
+                sprite = _northWalkSprite;
+            }
+            else if (face == EAST || face == WEST) {
+                sprite = _eastWalkSprite;
+            }
+            else if (face == NORTHEAST || face == NORTHWEST) {
+                sprite = _northEastWalkSprite;
+            }
+            else if (face == SOUTHEAST || face == SOUTHWEST) {
+                sprite = _southEastWalkSprite;
+            }
+            if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                sprite->flipHorizontal(!sprite->isFlipHorizontal());
+            }
+            break;
+        case RUNNING:
+            flippableSprite = true;
+            if (face == SOUTH) {
+                sprite = _southRunSprite;
+            }
+            else if (face == NORTH) {
+                sprite = _northRunSprite;
+            }
+            else if (face == EAST || face == WEST) {
+                sprite = _eastRunSprite;
+            }
+            else if (face == NORTHEAST || face == NORTHWEST) {
+                sprite = _northEastRunSprite;
+            }
+            else if (face == SOUTHEAST || face == SOUTHWEST) {
+                sprite = _southEastRunSprite;
+            }
+            if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                sprite->flipHorizontal(!sprite->isFlipHorizontal());
+            }
+            break;
+        case DASHING:
+        case CARRYING:
+        case CAUGHT:
+        case ROOTING:
+        case UNROOTING:
+        case ROOTED:
+            break;
     }
     setSceneNode(sprite);
     _facing = face;
@@ -278,9 +316,9 @@ void EntityModel::updateState() {
         return;
     }
     
+    _prevState = _state;
     bool stateChanged = false;
     EntityState nextState = _state;
-    
     
     switch (_state) {
         case STANDING: {
@@ -323,6 +361,7 @@ void EntityModel::updateState() {
     if (stateChanged) {
         updateCurAnimDurationForState();
     }
+    updateSprite();
 //    std::cout << _state << "\n";
 }
 

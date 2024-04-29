@@ -88,7 +88,7 @@ void ActionController::preUpdate(float dt) {
     }
     
     // TODO: move this to carrot only option
-    if (_input->didThrowRock()) {
+    if (_input->didThrowRock() && _map->getCharacter()->hasRock()) {
         _map->fireRock(playerEntity);
     }
     
@@ -412,4 +412,30 @@ void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event)
 
 void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event){
     _map->spawnRock(event->getPosition(), event->getIndex());
+}
+
+void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){
+    //this is terrible and should be redone later but i am tired
+    if (event->getUUID() == _map->getFarmers().at(0)->getUUID()) {
+        if (_map->getFarmers().at(0)->hasRock()) return;
+        _map->getFarmers().at(0)->setHasRock(true);
+        for (auto rock : _map->getRocks()) {
+            if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
+                _map->destroyRock(rock);
+            }
+        }
+    } else {
+        for(auto carrot : _map->getCarrots()){
+            if(event->getUUID() == carrot->getUUID()){
+                if (carrot->hasRock()) return;
+                for (auto rock : _map->getRocks()) {
+                    if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
+                        _map->destroyRock(rock);
+                    }
+                }
+                carrot->setHasRock(true);
+                return;
+            }
+        }
+    }
 }

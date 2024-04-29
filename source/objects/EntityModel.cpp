@@ -85,6 +85,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     nsize.width  *= DUDE_HSHRINK;
     nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
+    _hasRock = false;
     dashTimer = 0;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);

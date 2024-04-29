@@ -385,6 +385,13 @@ void Map::dispose() {
         (*it) = nullptr;
     }
     _plantingSpot.clear();
+    for (auto it = _rocks.begin(); it != _rocks.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _rocks.clear();
     if (_world != nullptr) {
         _world->clear();
         _world->dispose();
@@ -855,7 +862,8 @@ std::pair<Vec2, int> Map::getRandomRockSpawn() {
     rand.second = false;
     _numRockSpawns++;
     _spawnCooldown = SPAWN_COOLDOWN;
-    return std::pair(rand.first.origin, randidx);
+    CULog("spawn idx: %d", randidx);
+    return std::pair(rand.first.origin, valididxs.at(randidx));
 }
 
 void Map::spawnRock(Vec2 pos, int idx) {
@@ -863,7 +871,7 @@ void Map::spawnRock(Vec2 pos, int idx) {
     
     auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, false);
     rock->setDebugColor(DEBUG_COLOR);
-    rock->setName("rock");
+    rock->setName("rock_spawn");
     rock->setSpawnIndex(idx);
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
@@ -876,7 +884,7 @@ void Map::spawnRock(Vec2 pos, int idx) {
     // Create the polygon node (empty, as the model will initialize)
     // 512 * scale
 //    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
-    rockNode->setName("rock");
+    rockNode->setName("rock_spawn");
     _entitiesNode->addChild(rockNode);
     rock->setDebugScene(_debugnode);
     

@@ -207,6 +207,7 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
+    bool _hasRock;
 
 
 public:
@@ -546,6 +547,10 @@ public:
     void changeWheatContacts(int dx) { _wheatContacts += dx; }
     
     void throwRock();
+    
+    void setHasRock(bool hasRock) { _hasRock = hasRock; }
+    
+    bool hasRock() { return _hasRock; }
 
     
 #pragma mark -

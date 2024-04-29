@@ -18,6 +18,7 @@
 #include "../events/CaptureBarrotEvent.h"
 #include "../events/FreeEvent.h"
 #include "../events/SpawnRockEvent.h"
+#include "../events/CollectedRockEvent.h"
 
 class ActionController {
 private:
@@ -109,6 +110,9 @@ public:
     
     /** Spawns rock*/
     void processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event);
+    
+    /** Someone has collected a rock*/
+    void processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event);
 };
 
 

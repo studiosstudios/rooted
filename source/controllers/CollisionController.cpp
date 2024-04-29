@@ -13,6 +13,7 @@ bool CollisionController::init(std::shared_ptr<Map> &map,  std::shared_ptr<Netwo
     _map = map;
     _network = network;
     _network->attachEventType<CaptureBarrotEvent>();
+    _network->attachEventType<CollectedRockEvent>();
     return true;
 }
 
@@ -60,6 +61,12 @@ void CollisionController::beginContact(b2Contact* contact) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 plantingSpot->setBelowAvatar(true);
             }
+            if (name2 == "rock_spawn") {
+                Collectible* collectible = dynamic_cast<Collectible*>(bd2);
+                if (_map->getCharacter()->getUUID() == carrot->getUUID() && !(carrot->isCaptured() || carrot->isRooted()) && !carrot->hasRock()){
+                    _network->pushOutEvent(CollectedRockEvent::allocCollectedRockEvent(carrot->getUUID(), collectible->getSpawnIndex()));
+                }
+            }
         }
         
         if (name1 == "baby") {
@@ -87,6 +94,12 @@ void CollisionController::beginContact(b2Contact* contact) {
                 farmer->setCanPlant(true);
                 plantingSpot->setBelowAvatar(true);
             }
+            if (name2 == "rock_spawn") {
+                Collectible* collectible = dynamic_cast<Collectible*>(bd2);
+                if (_map->getCharacter()->getUUID() == farmer->getUUID() && !farmer->hasRock()){
+                    _network->pushOutEvent(CollectedRockEvent::allocCollectedRockEvent(farmer->getUUID(), collectible->getSpawnIndex()));
+                }
+            }
         }
         
         if (name1 == "rock") {
@@ -95,6 +108,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 rock->setAge(rock->getMaxAge() + 1);
             }
         }
+        
 
         // Swap everything
         b2Fixture* fixTemp = fix1;

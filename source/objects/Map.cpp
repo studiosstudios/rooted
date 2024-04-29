@@ -23,7 +23,7 @@
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
 
-const bool FULL_WHEAT_HEIGHT = false; //change this to turn off wheat height and make shaders more efficient (hopefully)
+const bool FULL_WHEAT_HEIGHT = true; //change this to turn off wheat height and make shaders more efficient (hopefully)
 
 using namespace cugl;
 
@@ -286,6 +286,7 @@ void Map::populate() {
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
     
     _numRockSpawns = 0;
+    _spawnCooldown = SPAWN_COOLDOWN;
     _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _bounds.size);
 
     _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, _bounds.size, FULL_WHEAT_HEIGHT);
@@ -408,6 +409,7 @@ void Map::dispose() {
     _farmerSpawns.clear();
     _babyCarrotSpawns.clear();
     _plantingSpawns.clear();
+    _rockSpawns.clear();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {

@@ -145,6 +145,11 @@ void Collectible::update(float dt) {
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
+        
+        if (!_fired) {
+            _node->setPositionY(_node->getPositionY() + (std::sin(_age*1.5) + 1.0) * _drawScale/4.0);
+            _node->setColor(Color4(255,255,255,std::min(255.0, _age * 255.0 / 1.5)));
+        }
     }
     
     if (_wheatHeightNode != nullptr) {

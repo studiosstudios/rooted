@@ -189,7 +189,7 @@ void ActionController::postUpdate(float dt) {
     }
     auto iit = _map->getRocks().begin();
     while(iit != _map->getRocks().end()){
-        if ((*iit)->getAge() > (*iit)->getMaxAge()) {
+        if ((*iit)->isFired() && (*iit)->getAge() > (*iit)->getMaxAge()) {
             _map->destroyRock(*iit);
         }
         if ((*iit)->isRemoved()) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="131">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="132">
  <editorsettings>
   <export target="gridUnit4.json" format="json"/>
  </editorsettings>
@@ -16,8 +16,9 @@
   <object id="113" gid="14" x="96" y="112" width="96" height="64"/>
   <object id="114" gid="14" x="352" y="112" width="64" height="64"/>
   <object id="115" gid="14" x="160" y="240" width="128" height="64"/>
-  <object id="129" gid="15" x="416" y="256" width="32" height="32"/>
-  <object id="130" gid="15" x="256" y="96" width="32" height="32"/>
+  <object id="129" gid="15" x="448" y="256" width="32" height="32"/>
+  <object id="130" gid="15" x="256" y="32" width="32" height="32"/>
+  <object id="131" gid="15" x="288" y="32" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="entities">
   <object id="116" gid="1" x="256" y="64" width="32" height="32"/>

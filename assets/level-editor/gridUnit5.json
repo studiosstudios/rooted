@@ -86,8 +86,32 @@
                  "type":"Rock",
                  "visible":true,
                  "width":32,
-                 "x":352,
-                 "y":192
+                 "x":128,
+                 "y":256
+                }, 
+                {
+                 "gid":15,
+                 "height":32,
+                 "id":139,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":32,
+                 "y":224
+                }, 
+                {
+                 "gid":15,
+                 "height":32,
+                 "id":140,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -215,7 +239,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":139,
+ "nextobjectid":141,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -514,26 +514,26 @@ void Map::spawnFarmers() {
         auto farmerSouthEastWalkSprite  = _assets->get<Texture>(FARMER_SOUTHEAST_WALK_SPRITE);
 
         auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
-        farmerSouthWalkNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
+        farmerSouthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
         farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         
         auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
-        farmerNorthWalkNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
+        farmerNorthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
         farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         farmerNorthWalkNode->setVisible(false);
         
         auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
-        farmerEastWalkNode->setScale(0.11f * _scale/DEFAULT_DRAWSCALE);
+        farmerEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
         farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         farmerEastWalkNode->setVisible(false);
         
         auto farmerNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthEastWalkSprite, 3, 4);
-        farmerNorthEastWalkNode->setScale(0.12f * _scale/DEFAULT_DRAWSCALE);
+        farmerNorthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
         farmerNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         farmerNorthEastWalkNode->setVisible(false);
         
         auto farmerSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthEastWalkSprite, 3, 4, 9);
-        farmerSouthEastWalkNode->setScale(0.14f * _scale/DEFAULT_DRAWSCALE);
+        farmerSouthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
         farmerSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         farmerSouthEastWalkNode->setVisible(false);
         

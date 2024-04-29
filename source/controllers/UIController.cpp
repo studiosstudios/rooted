@@ -103,6 +103,7 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _uinode->addChild(_swipeNode);
     
     _postroundscene = _assets->get<scene2::SceneNode>("postround");
+    _postroundscene->setScale(1 / _cameraZoom);
     _postroundscene->doLayout(); // Repositions the HUD
     _postroundscene->setVisible(false);
     _uinode->addChild(_postroundscene);

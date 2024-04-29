@@ -322,11 +322,13 @@ void TutorialScene::preUpdate(float dt) {
                 _ui.setSpeechBubbleVisible(false);
                 _ui.setDialogBoxVisible(true);
                 _step = 2;
+                _input->showDisplayJoystick();
             }
             else if (_step == 2 && _input->didContinue()) {
                 _ui.setDialogBoxVisible(false);
                 _step = 3;
                 _input->unpause();
+                _input->resetJoystick();
             }
             break;
         case CATCHBABIES:

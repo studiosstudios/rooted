@@ -297,6 +297,12 @@ void InputController::processJoystick(const cugl::Vec2 pos) {
     _movement.set((1 - _paused) * diff);
 }
 
+void InputController::showDisplayJoystick() {
+    _joystick = true;
+    _joyCenter = touch2Screen(cugl::Vec2(SCENE_WIDTH / 3, SCENE_HEIGHT));
+    _joyAnchor = touch2Screen(cugl::Vec2(SCENE_WIDTH / 3, SCENE_HEIGHT));
+}
+
 /**
  * Returns a nonzero value if this is a quick left or right swipe
  *

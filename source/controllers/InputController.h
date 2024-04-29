@@ -333,7 +333,10 @@ public:
      */
     bool withJoystick() const { return _joystick; }
     
-    void setWithJoystick(bool joystick) { _joystick = joystick; }
+    /** This is to show the joystick without any inputs */
+    void showDisplayJoystick();
+    
+    void resetJoystick() { _joystick = false; }
 
     /**
      * Returns the scene graph position of the virtual joystick

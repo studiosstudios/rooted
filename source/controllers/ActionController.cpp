@@ -118,7 +118,8 @@ void ActionController::preUpdate(float dt) {
 
     if(!_network->isHost()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
-        if(_input->didShakeDevice() && rand() % 20 < 1 && carrotEntity->isCaptured()){
+        if(_input->didShakeDevice() && rand() % 20 < 21 && carrotEntity->isCaptured()){
+            CULog("free event");
             _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
 //            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
         }

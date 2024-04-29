@@ -42,12 +42,14 @@ void Carrot::gotRooted(){
     _isCaptured = false;
     _isRooted = true;
     getSceneNode()->setVisible(true);
+    setBodyType(b2BodyType::b2_staticBody);
 }
 
 /**
  * Sets carrot state after getting unrooted
  */
 void Carrot::gotUnrooted(){
+    setBodyType(b2BodyType::b2_dynamicBody);
     _isRooted = false;
 }
 
@@ -76,4 +78,8 @@ void Carrot::resetCarrot(){
     _isCaptured = false;
     _isRooted = false;
     _numBabyCarrots = 0;
+}
+
+void Carrot::update(float dt) {
+    EntityModel::update(dt);
 }

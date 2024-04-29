@@ -698,6 +698,7 @@ void Map::spawnCarrots() {
         carrotSouthWalkNode->setScale(0.1f * _scale/DEFAULT_DRAWSCALE);
         carrotSouthWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotSouthWalkNode->setHeight(carrotSouthWalkSprite->getHeight()/3.0 *0.1); //do not know why these values are not multiplied by drawscale ratio
+        carrotSouthWalkNode->setFrame(0);
         
         auto carrotNorthWalkNode = scene2::SpriteNode::allocWithSheet(
                                                                       carrotNorthWalkSprite, 3, 5);

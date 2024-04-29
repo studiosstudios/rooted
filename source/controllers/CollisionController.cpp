@@ -52,7 +52,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
             if (name2 == "baby") {
                 BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
-                if(_map->getCharacter()->getUUID() == carrot->getUUID() && !(carrot->isCaptured() || carrot->isRooted())){
+                if(_map->getCharacter()->getUUID() == carrot->getUUID()){
                     _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), b2babycarrot->getID()));
                 }
             }
@@ -205,6 +205,11 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         // Baby carrots don't collide with each other
         if (name1 == "baby" && name2 == "baby") {
             return false;
+        }
+        
+        if (name2 == "baby" && name1 == "carrot") {
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+            return !(carrot->isCaptured() || carrot->isRooted());
         }
         
         if (name1 == "carrot" && name2 == "farmer") {

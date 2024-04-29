@@ -100,7 +100,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     _farmerUUID = "farmer";
     _carrotUUID = "carrot";
-    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID}, _farmerUUID, _carrotUUID);
+    _carrot2UUID = "carrot2";
+    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID, _carrot2UUID}, _farmerUUID, _carrotUUID);
 
     _network->attachEventType<ResetEvent>();
 
@@ -126,6 +127,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
     _rootnode->addChild(_black);
+    
+    _pausePhysics = false;
 
     return true;
 }
@@ -188,7 +191,7 @@ void TutorialScene::reset() {
     
     _farmerUUID = "farmer";
     _carrotUUID = "carrot";
-    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID}, _farmerUUID, _carrotUUID);
+    _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID, _carrot2UUID}, _farmerUUID, _carrotUUID);
     
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
@@ -224,6 +227,8 @@ void TutorialScene::reset() {
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
     _rootnode->addChild(_black);
+    
+    _pausePhysics = false;
 }
 
 #pragma mark -
@@ -366,9 +371,32 @@ void TutorialScene::preUpdate(float dt) {
         }
         case ROCK:
             break;
-        case FARMERROOTS:
-            break;
-        case UNROOT:
+        case UNROOT: {
+            if (_time > 0.25 && _time < 2.5) {
+                _character = _map->changeCharacter(_carrot2UUID);
+                _cam.setTarget(_character->getPosition()*_scale);
+                _character = _map->changeCharacter(_carrotUUID);
+                _pausePhysics = true;
+            } else {
+                _character = _map->changeCharacter(_carrotUUID);
+                _cam.setTarget(_character->getPosition()*_scale);
+            }
+            
+            if (_time > 3.0) {
+                _input->unpause();
+                _pausePhysics = false;
+                
+                _action.preUpdate(dt);
+                _action.updateBabyCarrots();
+                
+                //move farmer
+                auto farmer = _map->getFarmers().at(0);
+                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                farmer->updateState();
+                farmer->applyForce();
+                farmer->stepAnimation(dt);
+            }
+        }
             break;
         case SWITCH:
             break;
@@ -434,8 +462,8 @@ void TutorialScene::fixedUpdate(float step) {
             _action.processFreeEvent(freeEvent);
         }
     }
-
-    _map->getWorld()->update(step);
+     
+    if (!_pausePhysics) _map->getWorld()->update(step);
     _cam.update(step);
 
     _map->updateShaders(step, _cam.getCamera()->getCombined());
@@ -526,25 +554,45 @@ void TutorialScene::postUpdate(float remain) {
             if (_time > 4.5) {
                 CULog("ESCAPE FROM THE FARMER BY SHAKING DEVICE");
                 _input->unpause();
+                
+                //root the npc carrot
+                auto plantingspot = _map->getPlantingSpots().at(1);
+                changeCharacter(_carrot2UUID);
+                _character->setPosition(plantingspot->getPosition());
+                changeCharacter(_farmerUUID);
+                _character->setPosition(plantingspot->getPosition());
+                auto e = RootEvent::allocRootEvent(_carrot2UUID, plantingspot->getPlantingID());
+                _action.processRootEvent(std::dynamic_pointer_cast<RootEvent>(e));
+                
+                //capture the player carrot
                 float x = _map->getMapBounds().size.width/2.0;
                 float y = _map->getMapBounds().size.height/2.0;
                 _character->setPosition(x, y);
                 changeCharacter(_carrotUUID);
                 _character->setPosition(x, y);
-                auto e = CaptureEvent::allocCaptureEvent(_character->getUUID());
+                e = CaptureEvent::allocCaptureEvent(_character->getUUID());
                 _action.processCaptureEvent(std::dynamic_pointer_cast<CaptureEvent>(e));
+                
                 _state = ESCAPEFARMER;
                 _cam.setPosition(_character->getPosition() * _scale);
                 _time = 0;
             }
             break;
         case ESCAPEFARMER:
-            break;
-        case ROCK:
-            break;
-        case FARMERROOTS:
+            if (_time > 1.0 && !(std::dynamic_pointer_cast<Carrot>(_character))->isCaptured()) {
+                _input->pause();
+                _time = 0;
+                _state = UNROOT;
+                CULog("unroot your friend");
+            }
             break;
         case UNROOT:
+            if (!_map->getCarrots().at(1)->isRooted()) {
+                _time = 0;
+                _state = SWITCH;
+            }
+            break;
+        case ROCK:
             break;
         case SWITCH:
             break;
@@ -655,11 +703,6 @@ void TutorialScene::setActive(bool value) {
 }
 
 void TutorialScene::changeCharacter(std::string UUID) {
-    if (UUID == _carrotUUID) {
-        _network->setHost(false);
-        _character = _map->changeCharacter(_carrotUUID);
-    } else if (UUID == _farmerUUID) {
-        _network->setHost(true);
-        _character = _map->changeCharacter(_farmerUUID);
-    }
+    _network->setHost(UUID == _farmerUUID);
+    _character = _map->changeCharacter(UUID);
 }

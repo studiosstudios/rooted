@@ -75,6 +75,8 @@ protected:
     std::string _farmerUUID;
     
     std::string _carrotUUID;
+    
+    std::string _carrot2UUID;
 
     enum TutorialState {
         JAILBREAK,      //jailbreak cutscene
@@ -82,9 +84,8 @@ protected:
         CATCHBABIES,    //teach baby carrots and dashing
         SHOWFARMER,     //farmer appears cutscene - fade to black to farmer catching carrot
         ESCAPEFARMER,   //teach shaking to escape farmer
-        ROCK,           //ignore for now?
-        FARMERROOTS,    //farmer roots an npc carrot cutscene
         UNROOT,         //teach unrooting
+        ROCK,           //ignore for now?
         SWITCH,         //fade to black and player is now farmer
         CATCHCARROT,    //teach dash to catch carrot
         ROOT,           //teach planting spots and rooting
@@ -99,6 +100,8 @@ protected:
     float _time;
     /** fade to black node */
     std::shared_ptr<cugl::scene2::PolygonNode> _black;
+    
+    bool _pausePhysics;
     
     
 

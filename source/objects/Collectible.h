@@ -10,12 +10,10 @@
 
 #include <cugl/cugl.h>
 #include <cugl/physics2/CUBoxObstacle.h>
+#include "RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants
-
-#define MAX_COLLECTIBLE_AGE 1
-#define PROGRESS 0.02f
 
 
 class Collectible : public cugl::physics2::BoxObstacle {
@@ -68,6 +66,8 @@ protected:
     float _initCharacterHeight;
     
     cugl::Vec2 _initVelocity;
+    
+    bool _fired;
 
 public:
     
@@ -105,7 +105,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), 1.0f); }
+    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), 1.0f, true); }
     
     /**
      * Initializes a new dude at the given position.
@@ -121,7 +121,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), 1.0f); }
+    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), 1.0f, true); }
     
     /**
      * Initializes a new dude at the given position.
@@ -139,7 +139,7 @@ public:
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
     virtual bool init(const cugl::Vec2 pos, const cugl::Size size) override {
-        return init(pos, size, 1.0f);
+        return init(pos, size, 1.0f, true);
     }
     
     /**
@@ -158,7 +158,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale);
+    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired);
 
     
 #pragma mark -
@@ -235,9 +235,9 @@ public:
      *
      * @return  A newly allocated DudeModel at the given position with the given scale
      */
-    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired) {
         std::shared_ptr<Collectible> result = std::make_shared<Collectible>();
-        return (result->init(pos, size, scale) ? result : nullptr);
+        return (result->init(pos, size, scale, fired) ? result : nullptr);
     }
     
 

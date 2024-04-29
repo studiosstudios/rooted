@@ -23,7 +23,7 @@
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
 
-const bool FULL_WHEAT_HEIGHT = true; //change this to turn off wheat height and make shaders more efficient (hopefully)
+const bool FULL_WHEAT_HEIGHT = false; //change this to turn off wheat height and make shaders more efficient (hopefully)
 
 using namespace cugl;
 
@@ -203,7 +203,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     _rand32.seed(randSeed);
     //random size (must be 16x9 for now)
     _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * (3 + floor(float(_rand32()) / _rand32.max() * 3.0)));
-    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 1);
     
     _mapInfo.resize(_bounds.size.height / MAP_UNIT_HEIGHT, std::vector<std::pair<std::string, float>>(_bounds.size.width / MAP_UNIT_WIDTH));
     
@@ -256,6 +256,8 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
+                } else if (type == "Rock") {
+                    _rockSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), true));
                 } else {
                     CUWarn("TILED JSON: Unrecognized environmental object: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
                 }
@@ -283,6 +285,7 @@ void Map::populate() {
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
     
+    _numRockSpawns = 0;
     _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _bounds.size);
 
     _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, _bounds.size, FULL_WHEAT_HEIGHT);
@@ -783,10 +786,10 @@ void Map::resetPlayers() {
     _farmers.at(0)->resetFarmer();
 }
 
-void Map::spawnRock(std::shared_ptr<EntityModel> player) {
+void Map::fireRock(std::shared_ptr<EntityModel> player) {
     auto rockTexture = _assets->get<Texture>("rock");
     
-    auto rock = Collectible::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x);
+    auto rock = Collectible::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x, true);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName("rock");
     Vec2 temp(player->getFacing().normalize() * RUN_SPEED * 1.2);
@@ -799,7 +802,7 @@ void Map::spawnRock(std::shared_ptr<EntityModel> player) {
     // set slightly below entities
     rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
 
-    rockNode->setScale(0.02f * _scale/DEFAULT_DRAWSCALE);
+    rockNode->setScale(0.05f * _scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
     // 512 * scale
 //    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
@@ -825,4 +828,56 @@ void Map::destroyRock(std::shared_ptr<Collectible> rock) {
     _entitiesNode->removeChild(rock->getSceneNode());
     rock->setDebugScene(nullptr);
     rock->markRemoved(true);
+}
+
+bool Map::shouldSpawnRock() {
+    _spawnCooldown--;
+    return _spawnCooldown < 0 && _numRockSpawns < MAX_NUM_COLLECTIBLES && _numRockSpawns < _rockSpawns.size() && _rand32() / _rand32.max() < SPAWN_RATE ;
+}
+
+std::pair<Vec2, int> Map::getRandomRockSpawn() {
+    std::vector<int> valididxs;
+    int i = 0;
+    for (auto &spawn : _rockSpawns) {
+        if (spawn.second) {
+            valididxs.push_back(i);
+        }
+        i++;
+    }
+    int randidx = floor(float(_rand32()) / _rand32.max() * valididxs.size());
+    auto &rand = _rockSpawns.at(valididxs.at(randidx));
+    rand.second = false;
+    _numRockSpawns++;
+    _spawnCooldown = SPAWN_COOLDOWN;
+    return std::pair(rand.first.origin, randidx);
+}
+
+void Map::spawnRock(Vec2 pos) {
+    CULog("SPAWN ROCK");
+    auto rockTexture = _assets->get<Texture>("rock");
+    
+    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, false);
+    rock->setDebugColor(DEBUG_COLOR);
+    rock->setName("rock");
+    
+    auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
+    rock->setSceneNode(rockNode);
+    rock->setDrawScale(_scale.x);
+    // set slightly below entities
+    rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
+
+    rockNode->setScale(0.05f * _scale/DEFAULT_DRAWSCALE);
+    // Create the polygon node (empty, as the model will initialize)
+    // 512 * scale
+//    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
+    rockNode->setName("rock");
+    _entitiesNode->addChild(rockNode);
+    rock->setDebugScene(_debugnode);
+    
+    _rocks.push_back(rock);
+    
+    auto wheatnode = rock->allocWheatHeightNode(10);
+    _wheatscene->getRoot()->addChild(wheatnode);
+    
+    _world->initObstacle(rock);
 }

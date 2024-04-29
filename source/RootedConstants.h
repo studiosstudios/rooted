@@ -141,4 +141,12 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define MAX_WHEAT_HEIGHT 25.0
 #define STEP_SIZE 1.0
 
+#pragma mark -
+#pragma mark COLLECTIBLE
+#define SPAWN_RATE 0.005
+#define MAX_NUM_COLLECTIBLES 4
+#define MAX_COLLECTIBLE_AGE 1
+#define SPAWN_COOLDOWN 300
+#define PROGRESS 0.02f
+
 #endif //ROOTED_ROOTEDCONSTANTS_H

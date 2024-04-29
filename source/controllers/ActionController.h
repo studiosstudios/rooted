@@ -17,6 +17,7 @@
 #include "../events/MoveEvent.h"
 #include "../events/CaptureBarrotEvent.h"
 #include "../events/FreeEvent.h"
+#include "../events/SpawnRockEvent.h"
 
 class ActionController {
 private:
@@ -105,6 +106,9 @@ public:
     
     /** Updates character states after a carrot frees itself */
     void processFreeEvent(const std::shared_ptr<FreeEvent>& event);
+    
+    /** Spawns rock*/
+    void processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event);
 };
 
 

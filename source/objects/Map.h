@@ -83,6 +83,12 @@ private:
     
     std::vector<Rect> _plantingSpawns;
     
+    std::vector<std::pair<Rect, bool>> _rockSpawns;
+    
+    int _numRockSpawns;
+    
+    int _spawnCooldown;
+    
     /** Vector of key names for all map units in assets json */
     std::vector<std::string> _mapNames;
     
@@ -279,9 +285,15 @@ public:
     
     void resetPlayers();
     
-    void spawnRock(std::shared_ptr<EntityModel> player);
+    void fireRock(std::shared_ptr<EntityModel> player);
 
     void destroyRock(std::shared_ptr<Collectible> rock);
+    
+    bool shouldSpawnRock();
+    
+    std::pair<Vec2, int> getRandomRockSpawn();
+    
+    void spawnRock(Vec2 pos);
     
     
 #pragma mark -

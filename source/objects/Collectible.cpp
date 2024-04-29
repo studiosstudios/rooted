@@ -30,10 +30,11 @@ using namespace cugl;
  *
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
-bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired) {
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
     _drawScale = scale;
+    _fired = fired;
     
     _age = 0;
     
@@ -126,7 +127,9 @@ void Collectible::applyForce() {
     }
     
     // using a quadradic ease out like function
-    setLinearVelocity(_initVelocity * (2 * (MAX_COLLECTIBLE_AGE - _age)));
+    if (_fired) {
+        setLinearVelocity(_initVelocity * (2 * (MAX_COLLECTIBLE_AGE - _age)));
+    }
 }
 
 /**

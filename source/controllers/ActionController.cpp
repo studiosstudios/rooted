@@ -42,6 +42,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _network->attachEventType<UnrootEvent>();
     _network->attachEventType<MoveEvent>();
     _network->attachEventType<FreeEvent>();
+    _network->attachEventType<SpawnRockEvent>();
     return true;
 }
 
@@ -88,7 +89,7 @@ void ActionController::preUpdate(float dt) {
     
     // TODO: move this to carrot only option
     if (_input->didThrowRock()) {
-        _map->spawnRock(playerEntity);
+        _map->fireRock(playerEntity);
     }
     
     if (_network->isHost()) { // Farmer (host) specific actions
@@ -119,6 +120,12 @@ void ActionController::preUpdate(float dt) {
                     _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
                 }
             }
+        }
+        
+        if (_map->shouldSpawnRock()) {
+            //optional spawn rock
+            auto spawn = _map->getRandomRockSpawn();
+            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second));
         }
     }
     else { // Carrot specific actions
@@ -401,4 +408,8 @@ void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event)
             return;
         }
     }
+}
+
+void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event){
+    _map->spawnRock(event->getPosition());
 }

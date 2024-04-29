@@ -114,6 +114,21 @@
         "carrot-southeast-dash": {
             "file":     "textures/carrot-southeast-dash.png"
         },
+        "barrot-south-walk": {
+            "file":     "textures/barrot-south-walk.png"
+        },
+        "barrot-north-walk": {
+            "file":     "textures/barrot-north-walk.png"
+        },
+        "barrot-east-walk": {
+            "file":     "textures/barrot-east-walk.png"
+        },
+        "barrot-northeast-walk": {
+            "file":     "textures/barrot-northeast-walk.png"
+        },
+        "barrot-southeast-walk": {
+            "file":     "textures/barrot-southeast-walk.png"
+        },
         "baby": {
             "file":     "textures/baby.png"
         },

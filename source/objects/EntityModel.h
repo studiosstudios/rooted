@@ -84,6 +84,12 @@
 #define CARROT_NORTHEAST_DASH_SPRITE "carrot-northeast-dash"
 #define CARROT_SOUTHEAST_DASH_SPRITE "carrot-southeast-dash"
 
+#define BARROT_SOUTH_WALK_SPRITE "barrot-south-walk"
+#define BARROT_NORTH_WALK_SPRITE "barrot-north-walk"
+#define BARROT_EAST_WALK_SPRITE "barrot-east-walk"
+#define BARROT_NORTHEAST_WALK_SPRITE "barrot-northeast-walk"
+#define BARROT_SOUTHEAST_WALK_SPRITE "barrot-southeast-walk"
+
 #define BABY_TEXTURE   "baby"
 
 #pragma mark -

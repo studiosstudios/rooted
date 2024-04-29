@@ -637,25 +637,66 @@ void Map::spawnFarmers() {
 void Map::spawnBabyCarrots() {
     for (Rect rect : _babyCarrotSpawns) {
         std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, rect.size, _scale.x);
+        baby->setEntityState(EntityModel::EntityState::WALKING);
         baby->setDebugColor(DEBUG_COLOR);
         baby->setName("baby");
         baby->setID((unsigned)_babies.size());
         _babies.push_back(baby);
         
-        _assets->get<Texture>(BABY_TEXTURE)->setName("baby");
-        auto babyNode = scene2::SpriteNode::allocWithSheet(
-                _assets->get<Texture>(BABY_TEXTURE), 1, 1);
-    //        babyNode->setColor(Color4::BLUE);
-        baby->setSceneNode(babyNode);
-        babyNode->setName("baby");
-        babyNode->setPriority(float(DrawOrder::ENTITIES));
-        //    babyNode->setColor(Color4::BLACK);
+        // TODO: Stagger baby carrot animation times with a random number generator -CJ
+        
+        auto babySouthWalkNode = scene2::SpriteNode::allocWithSheet(
+                _assets->get<Texture>(BARROT_SOUTH_WALK_SPRITE), 2, 5);
+        babySouthWalkNode->setPriority(float(DrawOrder::ENTITIES));
+        babySouthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+        
+        auto babyNorthWalkNode = scene2::SpriteNode::allocWithSheet(
+                _assets->get<Texture>(BARROT_NORTH_WALK_SPRITE), 2, 5);
+        babyNorthWalkNode->setPriority(float(DrawOrder::ENTITIES));
+        babyNorthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+        
+        auto babyEastWalkNode = scene2::SpriteNode::allocWithSheet(
+                _assets->get<Texture>(BARROT_EAST_WALK_SPRITE), 2, 5);
+        babyEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
+        babyEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+        
+        auto babyNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(
+                _assets->get<Texture>(BARROT_NORTHEAST_WALK_SPRITE), 2, 5);
+        babyNorthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
+        babyNorthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+        
+        auto babySouthEastWalkNode = scene2::SpriteNode::allocWithSheet(
+                _assets->get<Texture>(BARROT_SOUTHEAST_WALK_SPRITE), 2, 5);
+        babySouthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
+        babySouthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+        
+        _entitiesNode->addChild(babySouthWalkNode);
+        _entitiesNode->addChild(babyNorthWalkNode);
+        _entitiesNode->addChild(babyEastWalkNode);
+        _entitiesNode->addChild(babyNorthEastWalkNode);
+        _entitiesNode->addChild(babySouthEastWalkNode);
+        
+        baby->setSpriteNodes(babyNorthWalkNode, // lol
+                             babyNorthEastWalkNode,
+                             babyEastWalkNode,
+                             babySouthEastWalkNode,
+                             babySouthWalkNode,
+                             babyNorthWalkNode, // lol
+                             babyNorthEastWalkNode,
+                             babyEastWalkNode,
+                             babySouthEastWalkNode,
+                             babySouthWalkNode,
+                             babyNorthWalkNode, // lol
+                             babyNorthEastWalkNode,
+                             babyEastWalkNode,
+                             babySouthEastWalkNode,
+                             babySouthWalkNode);
+        
+        baby->setSceneNode(babySouthWalkNode);
         baby->setDrawScale(
                            _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-        babyNode->setScale(_scale/DEFAULT_DRAWSCALE);
-        // Create the polygon node (empty, as the model will initialize)
-        babyNode->setHeight(32*_scale.y/DEFAULT_DRAWSCALE);
-        _entitiesNode->addChild(babyNode);
+        
+        
         baby->setDebugScene(_debugnode);
         
         auto wheatnode = baby->allocWheatHeightNode();

@@ -78,6 +78,10 @@ void ActionController::preUpdate(float dt) {
             (*it)->updateSprite(dt, false);
         }
     }
+    auto barrots = _map->getBabyCarrots();
+    for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+        (*it)->updateSprite(dt, false);
+    }
     
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ

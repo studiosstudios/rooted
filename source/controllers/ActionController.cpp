@@ -89,7 +89,6 @@ void ActionController::preUpdate(float dt) {
     
     // TODO: move this to carrot only option
     if (_input->didThrowRock() && playerEntity->hasRock()) {
-        _map->fireRock(playerEntity);
         _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2));
         playerEntity->setHasRock(false);
     }

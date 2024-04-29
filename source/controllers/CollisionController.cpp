@@ -239,7 +239,8 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         }
         
         // do not collide with yourself
-        if (name1 == "rock" && name2 == _map->getCharacter()->getName()) {
+        //temp do not collide with players
+        if (name1 == "rock" && (name2 == "carrot" || name2 == "farmer")) {
             return false;
         }
         

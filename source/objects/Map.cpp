@@ -203,7 +203,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     _rand32.seed(randSeed);
     //random size (must be 16x9 for now)
     _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * (3 + floor(float(_rand32()) / _rand32.max() * 3.0)));
-    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 1);
+    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
     
     _mapInfo.resize(_bounds.size.height / MAP_UNIT_HEIGHT, std::vector<std::pair<std::string, float>>(_bounds.size.width / MAP_UNIT_WIDTH));
     

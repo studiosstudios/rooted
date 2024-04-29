@@ -524,12 +524,51 @@ void TutorialScene::preUpdate(float dt) {
             break;
         case CARROTWIN:
             break;
-        case SWITCH:
-            _black->setColor(Color4(0,0,0, std::min(_time * 2.0 * 255,  255.0)));
+        case SWITCH: {
+            _black->setColor(Color4(0,0,0, std::max(255.0 - _time * 2 * 255,  0.0)));
+            _action.preUpdate(dt);
+            
+        }
             break;
-        case CATCHCARROT:
+        case CATCHCARROT: {
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            
+            if (_step == 9) {
+                _ui.setDialogBoxText("These pesky carrots always escape. Dash to capture them.");
+                _ui.setDialogBoxVisible(true);
+                _step = 10;
+            }
+            else if (_step == 10 && _input->didContinue()) {
+                _ui.setDialogBoxVisible(false);
+                _step = 11;
+            }
+            
+            auto carrot = _map->getCarrots().at(0);
+            carrot->setMovement((_character->getPosition() - carrot->getPosition()).getNormalization() * 0.2);
+            carrot->updateState();
+            carrot->applyForce();
+            carrot->stepAnimation(dt);
+        }
             break;
-        case ROOT:
+        case ROOT: {
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            if (_step == 11) {
+                _ui.setDialogBoxText("Got one. Swipe down at a rooting spot to root them!");
+                _ui.setDialogBoxVisible(true);
+                _step = 12;
+            }
+            else if (_step == 12 && _input->didContinue()) {
+                _ui.setDialogBoxVisible(false);
+                _step = 13;
+            }
+            if (_time > 3) {
+                _pausePhysics = false;
+                _input->unpause();
+            }
+           
+        }
             break;
         case FARMERWIN:
             break;
@@ -754,15 +793,44 @@ void TutorialScene::postUpdate(float remain) {
             break;
         case CARROTWIN:
             if (_time > 1.5){
+                _ui.setWinVisible(false);
+                changeCharacter(_farmerUUID);
+                float x = _map->getMapBounds().size.width/2.0;
+                float y = _map->getMapBounds().size.height/2.0;
+                _character->setPosition(x, y);
                 _state = SWITCH;
                 _time = 0;
+                _pausePhysics = true;
+                _input->pause();
             }
             break;
         case SWITCH:
+            if (_time > 3) {
+                _time = 0;
+                _pausePhysics = false;
+                _input->unpause();
+                _state = CATCHCARROT;
+            }
             break;
         case CATCHCARROT:
+            if (_time > 1.0 && (std::dynamic_pointer_cast<Carrot>(_map->getCarrots().at(0)))->isCaptured()) {
+                _time = 0;
+                _pausePhysics = true;
+                _input->pause();
+                _state = ROOT;
+            }
             break;
         case ROOT:
+            if (_time > 1.0 && (std::dynamic_pointer_cast<Carrot>(_map->getCarrots().at(0)))->isRooted()) {
+                _time = 0;
+                _pausePhysics = true;
+                _input->pause();
+                _state = FARMERWIN;
+                pauseNonEssentialAudio();
+                std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+                AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
+                _ui.setWinVisible(true);
+            }
             break;
         case FARMERWIN:
             break;

@@ -109,8 +109,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     addChild(_rootnode);
     addChild(_uinode);
-    
-    _input = InputController::alloc(getBounds());
+
+    _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
     _active = true;
@@ -124,6 +124,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    
+    // TODO: Putting this set here for now, little weird that's it's separate from the rest of ui init -CJ
+    _ui.setCharacter(_character);
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -458,7 +461,7 @@ void GameScene::postUpdate(float remain) {
     }
     // TEMP CODE FOR OPEN BETA
     
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug, _character->canDash());
     
     if (_countdown > 0) {
         _countdown--;

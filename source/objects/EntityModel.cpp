@@ -45,6 +45,7 @@
 #include <cugl/scene2/graph/CUPolygonNode.h>
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -95,6 +96,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         // Gameplay attributes
         _facing = SOUTH;
         _state = STANDING;
+        _prevState = STANDING;
         updateCurAnimDurationForState();
         
         return true;
@@ -112,7 +114,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == PLANTING;
+    return isMoving() || _state == DASHING || _state == ROOTING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -124,7 +126,7 @@ void EntityModel::stepAnimation(float dt) {
                 // https://www.desmos.com/calculator/kszulthvhz
 //                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
                 // LOOPING style animation
-                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
+                 _node->setFrame(lround(_node->getSpan() * curAnimTime / curAnimDuration) % _node->getSpan());
         }
         else if (_node->getFrame() != 0) {
             _node->setFrame(0);
@@ -177,38 +179,104 @@ EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
  */
 void EntityModel::setMovement(Vec2 movement) {
     _movement = movement;
-    EntityFacing face = calculateFacing(movement);
-    if (_facing == face) {
-        return;
-    }
-    // Grab the correct sprite
-    auto sprite = _southWalkSprite;
-    if (face == SOUTH) {
-        sprite = _southWalkSprite;
-    }
-    else if (face == NORTH) {
-        sprite = _northWalkSprite;
-    }
-    else if (face == EAST || face == WEST) {
-        sprite = _eastWalkSprite;
-    }
-    else if (face == NORTHEAST || face == NORTHWEST) {
-        sprite = _northEastWalkSprite;
-    }
-    else if (face == SOUTHEAST || face == SOUTHWEST) {
-        sprite = _southEastWalkSprite;
-    }
-    // Change facing for the sprite
-//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
-    if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-        sprite->flipHorizontal(!sprite->isFlipHorizontal());
-    }
-    setSceneNode(sprite);
-    _facing = face;
 }
 
-void EntityModel::setDashInput(bool dashInput) {
+void EntityModel::updateSprite(float dt, bool useMovement) {
+    EntityFacing face;
+    if (_state != DASHING) {
+        face = calculateFacing(useMovement ? _movement : getLinearVelocity());
+    }
+    else {
+        face = calculateFacing(_dashVector);
+    }
+    if (!((_prevState == _state) && (_facing == face))) {
+        
+        auto sprite = _southWalkSprite;
+        switch (_state) {
+            case STANDING:
+                // TODO: Idle animations here
+            case SNEAKING:
+            case WALKING:
+                if (face == SOUTH) {
+                    sprite = _southWalkSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northWalkSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastWalkSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastWalkSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastWalkSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case RUNNING:
+                if (face == SOUTH) {
+                    sprite = _southRunSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northRunSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastRunSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastRunSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastRunSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case DASHING:
+                if (face == SOUTH) {
+                    sprite = _southDashSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northDashSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastDashSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastDashSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastDashSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case CARRYING:
+            case CAUGHT:
+            case ROOTING:
+            case UNROOTING:
+            case ROOTED:
+                break;
+        }
+        setSceneNode(sprite);
+        _facing = face;
+    }
+    stepAnimation(dt);
+}
+
+void EntityModel::setDashInput(bool dashInput, cugl::Vec2 dashVector) {
     _dashInput = dashInput;
+    if (_state != DASHING) {
+        // For now, only update dashVector when we're not already DASHING
+        // So that if we are DASHING, we maintain the same dash vector for applying force -CJ
+        _dashVector = dashVector;
+    }
+    
 }
 
 void EntityModel::setPlantInput(bool plantInput) {
@@ -274,14 +342,18 @@ void EntityModel::dispose() {
  *
  *  This method should be called after all relevant input attributes are set.
  */
-void EntityModel::updateState() {
+void EntityModel::updateState(float dt) {
     if (!isEnabled()) {
         return;
     }
     
+    if (_dashCooldown > 0) {
+        _dashCooldown = std::max(0.0f, _dashCooldown - dt);
+    }
+    
+    _prevState = _state;
     bool stateChanged = false;
     EntityState nextState = _state;
-    
     
     switch (_state) {
         case STANDING: {
@@ -295,9 +367,10 @@ void EntityModel::updateState() {
         case WALKING:
         case RUNNING: {
             // Moving -> Dashing
-            if (dashTimer == 0 && _dashInput) {
+            if (_dashCooldown == 0 && dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
+                _dashCooldown = DASH_COOLDOWN_SECS;
                 stateChanged = true;
             }
             else {
@@ -324,6 +397,7 @@ void EntityModel::updateState() {
     if (stateChanged) {
         updateCurAnimDurationForState();
     }
+    updateSprite(dt);
 //    std::cout << _state << "\n";
 }
 
@@ -359,7 +433,7 @@ void EntityModel::applyForce() {
             break;
         }
         case DASHING: {
-            setLinearVelocity(Vec2::normalize(getMovement(), &speed)->scale(DUDE_DASH));
+            setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(DUDE_DASH));
             break;
         }
         default: {

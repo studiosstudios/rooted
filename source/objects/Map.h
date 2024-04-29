@@ -29,6 +29,8 @@ private:
     std::vector<std::shared_ptr<Carrot>> _carrots;
     /** references to the farmer */
     std::vector<std::shared_ptr<Farmer>> _farmers;
+    /** references to all human player EntityModels*/
+    std::vector<std::shared_ptr<EntityModel>> _players;
     /** references to the boundaries around the world **/
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
@@ -287,6 +289,8 @@ public:
     std::vector<std::shared_ptr<Carrot>> &getCarrots() { return _carrots; }
 
     std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
+    
+    std::vector<std::shared_ptr<EntityModel>> &getPlayers() { return _players; }
 
     std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 

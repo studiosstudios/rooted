@@ -57,7 +57,7 @@ void ActionController::preUpdate(float dt) {
     auto playerEntity = _map->getCharacter();
     playerEntity->setMovement(_input->getMovement());
     bool didDash = _input->didDash();
-    playerEntity->setDashInput(didDash);
+    playerEntity->setDashInput(didDash, _input->getDashVector());
     if(didDash){
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
         AudioEngine::get()->play("dash", source);
@@ -65,16 +65,26 @@ void ActionController::preUpdate(float dt) {
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     EntityModel::EntityState oldState = playerEntity->getEntityState();
-    playerEntity->updateState();
+    playerEntity->updateState(dt);
     if(playerEntity->getEntityState() != oldState){
         _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
     }
     playerEntity->applyForce();
-    playerEntity->stepAnimation(dt);
-    updateRustlingNoise();
     
+    updateRustlingNoise();
+
     for (auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++) {
         (*it)->applyForce();
+    }
+    auto players = _map->getPlayers();
+    for (auto it = players.begin(); it != players.end(); ++it) {
+        if ((*it)->getUUID() != playerEntity->getUUID()) {
+            (*it)->updateSprite(dt, false);
+        }
+    }
+    auto barrots = _map->getBabyCarrots();
+    for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+        (*it)->updateSprite(dt, false);
     }
     
     // Find current character's planting spot
@@ -210,7 +220,8 @@ float calculateVolume(EntityModel::EntityState state, float distance){
     float stateToNum;
     switch(state){
         case EntityModel::EntityState::STANDING:
-        case EntityModel::EntityState::PLANTING:
+        case EntityModel::EntityState::ROOTING:
+        case EntityModel::EntityState::UNROOTING:
         case EntityModel::EntityState::CAUGHT:
         case EntityModel::EntityState::ROOTED:
             stateToNum = 0;

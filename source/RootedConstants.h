@@ -45,6 +45,10 @@
 /** The number of frame to wait before reinitializing the game */
 #define EXIT_COUNT      240
 
+#pragma mark -
+#pragma mark Game Logic Constants
+/** Time in seconds that must elapse before being able to perform another dash */
+#define DASH_COOLDOWN_SECS 3
 
 #pragma mark -
 #pragma mark Asset Constants
@@ -107,13 +111,31 @@
 /** This defines the joystick "deadzone" (how far we must move) */
 #define JSTICK_DEADZONE  15
 /** This defines the joystick radial size (for reseting the anchor) */
-#define JSTICK_RADIUS    100
+#define JSTICK_RADIUS    256
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    0
-/** How far we must swipe up for a jump gesture */
-#define SWIPE_LENGTH    200
 /** How fast a double click must be in milliseconds */
 #define DOUBLE_CLICK    400
+
+// SWIPE GESTURE CONSTANTS
+/** How far a swipe must go from its first "notable point" to its most recent "notable point" to be considered a swipe */
+#define SWIPE_LENGTH    150
+/** The maximum number of swipe points that are stored at once (for drawing purposes) */
+#define SWIPE_POINTS_CAPACITY 25
+/** The maximum number of internal swipe points that are stored at once (for gesture recognition purposes) */
+#define INTERNAL_SWIPE_POINTS_CAPACITY 15
+/** The number of "notable points" a swipe must contain to be compared for similarity.*/
+#define SWIPE_POINT_MINIMUM 4
+/** The minimum similarity score a dash line swipe gesture must make in order to be considered a dash */
+#define LINE_GESTURE_SIMILARITY 0.96
+/** The minimum similarity score a circle swipe gesture must make in order to be considered a root/unroot (forgiving score because circle can have more variance)*/
+#define CIRCLE_GESTURE_SIMILARITY 0.7
+/** The minimum distance a swipe move point must be from the last notable point to be considered a "notable point". This is a squared value, so 41^2 */
+#define SWIPE_DISTANCE_THRESHOLD 1681
+/** The length of time (in milliseconds) that a swipe point remains stored */
+#define SWIPE_DURATION_MILLIS 225
+/** The length of time (in milliseconds) that an internal swipe point remains stored*/
+#define INTERNAL_SWIPE_DURATION_MILLIS 225
 
 // The screen is divided into three zones: Joy(stick), Main, and Right.
 //

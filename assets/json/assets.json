@@ -60,6 +60,30 @@
         "farmer-southeast-walk": {
             "file":     "textures/farmer-southeast-walk.png"
         },
+        "farmer-south-run": {
+            "file":     "textures/farmer-south-run.png"
+        },
+        "farmer-north-run": {
+            "file":     "textures/farmer-north-run.png"
+        },
+        "farmer-east-run": {
+            "file":     "textures/farmer-east-run.png"
+        },
+        "farmer-northeast-run": {
+            "file":     "textures/farmer-northeast-run.png"
+        },
+        "farmer-southeast-run": {
+            "file":     "textures/farmer-southeast-run.png"
+        },
+        "farmer-south-dash": {
+            "file":     "textures/farmer-south-dash.png"
+        },
+        "farmer-north-dash": {
+            "file":     "textures/farmer-north-dash.png"
+        },
+        "farmer-east-dash": {
+            "file":     "textures/farmer-east-dash.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },
@@ -74,6 +98,36 @@
         },
         "carrot-southeast-walk": {
             "file":     "textures/carrot-southeast-walk.png"
+        },
+        "carrot-south-dash": {
+            "file":     "textures/carrot-south-dash.png"
+        },
+        "carrot-north-dash": {
+            "file":     "textures/carrot-north-dash.png"
+        },
+        "carrot-east-dash": {
+            "file":     "textures/carrot-east-dash.png"
+        },
+        "carrot-northeast-dash": {
+            "file":     "textures/carrot-northeast-dash.png"
+        },
+        "carrot-southeast-dash": {
+            "file":     "textures/carrot-southeast-dash.png"
+        },
+        "barrot-south-walk": {
+            "file":     "textures/barrot-south-walk.png"
+        },
+        "barrot-north-walk": {
+            "file":     "textures/barrot-north-walk.png"
+        },
+        "barrot-east-walk": {
+            "file":     "textures/barrot-east-walk.png"
+        },
+        "barrot-northeast-walk": {
+            "file":     "textures/barrot-northeast-walk.png"
+        },
+        "barrot-southeast-walk": {
+            "file":     "textures/barrot-southeast-walk.png"
         },
         "baby": {
             "file":     "textures/baby.png"
@@ -248,7 +302,9 @@
         "gridUnit6": "level-editor/gridUnit6.json",
         "tutorialTop": "level-editor/tutorialTop.json",
         "tutorialMid": "level-editor/tutorialMid.json",
-        "tutorialBottom": "level-editor/tutorialBottom.json"
+        "tutorialBottom": "level-editor/tutorialBottom.json",
+        "line-gesture": "json/line-gesture.json",
+        "circle-gesture": "json/circle-gesture.json"
     },
     "sounds": {
         "menu": {

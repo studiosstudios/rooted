@@ -88,7 +88,7 @@ void UIController::initGameUINodes() {
     _barrotsRemainingText->setContentSize(_barrotsRemainingBoard->getContentSize());
     _barrotsRemainingText->doLayout();
     _barrotsRemainingBoard->addChild(_barrotsRemainingText);
-    
+
     // TUTORIAL UI STUFF
     _speechBubble = scene2::NinePatch::allocWithTexture(_assets->get<Texture>("speechbubble"), Rect(137, 666, 512, 512));
     _speechBubble->SceneNode::setContentSize(Size(1000, 500));
@@ -123,6 +123,13 @@ void UIController::initGameUINodes() {
     _dialogBoxText->doLayout();
     _dialogBoxText->setWrap(true);
     _dialogBox->addChild(_dialogBoxText);
+
+    _dashTimerNode = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2::ZERO, 32));
+    _dashTimerNode->setPosition(((Vec2(SCENE_WIDTH* 1.25f, SCENE_HEIGHT * 0.1f)) - _offset ) / _cameraZoom);
+    _dashTimerNode->setScale(_drawScale/DEFAULT_DRAWSCALE);
+    _dashTimerNode->setColor(Color4::GREEN);
+    _uinode->addChild(_dashTimerNode);
+
 }
 
 bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
@@ -158,14 +165,6 @@ void UIController::updateJoystick(std::pair<cugl::Vec2, cugl::Vec2> joyStick) {
         // is still pre-zoom coordinates
     }
     _joymain->setPosition(joyStick.second / _cameraZoom - _offset / _cameraZoom);
-}
-
-void UIController::cullSwipePointsByDuration() {
-    std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> sp = _input->getSwipePoints();
-    cugl::Timestamp curTime = cugl::Timestamp();
-    for (auto it = sp->begin(); it != sp->end();) {
-        it = (it->second + swipeDurationMillis < curTime) ? sp->erase(it) : ++it;
-    }
 }
 
 std::list<cugl::Vec2> UIController::getAdjustedSwipePoints() {
@@ -214,17 +213,27 @@ std::vector<Uint32> UIController::computeTriangulatedIndices(int numTriangles) {
     return indices;
 }
 
+cugl::Color4 UIController::getSwipeColorForInput() {
+    if (_input->didDashThisSwipe()) {
+        return Color4::ORANGE;
+    }
+//    else if (_character->isRootingUnrooting()) { // TODO: Blue should only show up when we CAN actually root/unroot. Need a way to get this check from the game state
+    else if (_input->didRootNow()) { // temporary for demo purposes
+        return Color4::BLUE;
+    }
+    return Color4::WHITE;
+}
+
 void UIController::updateSwipeSpline() { // div by cameraZoom and offset
-    cullSwipePointsByDuration();
+    _input->cullSwipePointsByDuration();
     int numSwipePoints = _input->getSwipePoints()->size();
     if (numSwipePoints > 2) {
-//        std::list<cugl::Vec2> swipePoints = _input->getSwipePoints();
         std::vector<cugl::Vec2> swipePointsTri = computeTriangulatedPoints();
         auto poly = Poly2(swipePointsTri, computeTriangulatedIndices(swipePointsTri.size()-2));
         _swipeNode->setPolygon(poly);
         _swipeNode->setPosition(poly.getBounds().origin);
         _swipeNode->setVisible(true);
-        _swipeNode->setColor(_input->getCurrentSwipeColor());
+        _swipeNode->setColor(getSwipeColorForInput());
     }
     else {
         _swipeNode->setVisible(false);
@@ -236,7 +245,11 @@ void UIController::updateInfoNodes(int numCarrots, int numBarrots) {
     _barrotsRemainingText->setText("remaining baby carrots: " + std::to_string(numBarrots));
 }
 
-void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive) {
+void UIController::updateDashTimerNode(bool canDash) {
+    _dashTimerNode->setColor(canDash ? Color4::GREEN : Color4::RED);
+}
+
+void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive, bool canDash) {
     _cameraZoom = camera->getZoom();
     _uinode->setPosition(camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/_cameraZoom);
     if (_input->withJoystick()) {
@@ -251,4 +264,5 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
     _barrotsRemainingBoard->setVisible(debugActive);
     updateSwipeSpline();
     updateInfoNodes(numCarrots, numBarrots);
+    updateDashTimerNode(canDash);
 }

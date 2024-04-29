@@ -90,7 +90,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     addChild(_rootnode);
     addChild(_uinode);
 
-    _input = InputController::alloc(getBounds()); 
+    _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
     setDebug(false);
@@ -102,7 +102,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _carrotUUID = "carrot";
     _carrot2UUID = "carrot2";
     _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID, _carrot2UUID}, _farmerUUID, _carrotUUID);
-
+    _ui.setCharacter(_character);
     _network->attachEventType<ResetEvent>();
 
     // set the camera after all of the network is loaded
@@ -281,6 +281,10 @@ void TutorialScene::preUpdate(float dt) {
             //wait a bit until baby carrots move in
             if (_time > 1.0) {
                 _action.updateBabyCarrots();
+                auto barrots = _map->getBabyCarrots();
+                for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+                    (*it)->updateSprite(dt, false);
+                }
                 
                 //move camera down
                 if (_time > 3.0) {
@@ -303,7 +307,7 @@ void TutorialScene::preUpdate(float dt) {
                 } else {
                     _character->setMovement(Vec2::ZERO);
                 }
-                _character->updateState();
+                _character->updateState(dt);
                 _character->applyForce();
                 _character->stepAnimation(dt);
                 
@@ -346,15 +350,19 @@ void TutorialScene::preUpdate(float dt) {
                 }
             } else {
                 _action.updateBabyCarrots();
+                auto barrots = _map->getBabyCarrots();
+                for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+                    (*it)->updateSprite(dt, false);
+                }
                 
                 //move farmer
                 if (_time > 0.5 && _time < 3.0) {
                     _character->setMovement(Vec2(0, -1));
-                    _character->setDashInput(fmod((_time - dt), 0.7) > fmod(_time, 0.7)); //dash every 0.7s
+                    _character->setDashInput(fmod((_time - dt), 0.7) > fmod(_time, 0.7), Vec2(0, -1)); //dash every 0.7s
                 } else {
                     _character->setMovement(Vec2::ZERO);
                 }
-                _character->updateState();
+                _character->updateState(dt);
                 _character->applyForce();
                 _character->stepAnimation(dt);
                 
@@ -374,6 +382,10 @@ void TutorialScene::preUpdate(float dt) {
             _cam.setTarget(_character->getPosition()*_scale);
             _action.preUpdate(dt);
             _action.updateBabyCarrots();
+            auto barrots = _map->getBabyCarrots();
+            for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+                (*it)->updateSprite(dt, false);
+            }
             
             //move farmer
             auto farmer = _map->getFarmers().at(0);
@@ -385,7 +397,7 @@ void TutorialScene::preUpdate(float dt) {
                 x = -0.2;
             }
             farmer->setMovement(Vec2(x, 0));
-            farmer->updateState();
+            farmer->updateState(dt);
             farmer->applyForce();
             farmer->stepAnimation(dt);
             
@@ -425,11 +437,15 @@ void TutorialScene::preUpdate(float dt) {
                 // only move after you get past dialogue
                 if (_step == 7) {
                     _action.updateBabyCarrots();
+                    auto barrots = _map->getBabyCarrots();
+                    for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+                        (*it)->updateSprite(dt, false);
+                    }
                     
                     //move farmer
                     auto farmer = _map->getFarmers().at(0);
                     farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
-                    farmer->updateState();
+                    farmer->updateState(dt);
                     farmer->applyForce();
                     farmer->stepAnimation(dt);
                 }
@@ -456,14 +472,14 @@ void TutorialScene::preUpdate(float dt) {
             //move farmer
             auto farmer = _map->getFarmers().at(0);
             farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
-            farmer->updateState();
+            farmer->updateState(dt);
             farmer->applyForce();
             farmer->stepAnimation(dt);
             
             //move unrooted carrot
             auto carrot = _map->getCarrots().at(1);
             carrot->setMovement(Vec2(-1, 0));
-            carrot->updateState();
+            carrot->updateState(dt);
             carrot->setSensor(true);
             carrot->applyForce();
             carrot->stepAnimation(dt);
@@ -480,12 +496,16 @@ void TutorialScene::preUpdate(float dt) {
             } else {
                 _action.preUpdate(dt);
                 _action.updateBabyCarrots();
+                auto barrots = _map->getBabyCarrots();
+                for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+                    (*it)->updateSprite(dt, false);
+                }
                 _cam.setTarget(_character->getPosition()*_scale);
                 
                 //move farmer
                 auto farmer = _map->getFarmers().at(0);
                 farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
-                farmer->updateState();
+                farmer->updateState(dt);
                 farmer->applyForce();
                 farmer->stepAnimation(dt);
             }
@@ -498,10 +518,14 @@ void TutorialScene::preUpdate(float dt) {
                 // only move after you get past dialogue
                 if (_step >= 9) {
                     _action.updateBabyCarrots();
+                    auto barrots = _map->getBabyCarrots();
+                    for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+                        (*it)->updateSprite(dt, false);
+                    }
                     //move farmer
                     auto farmer = _map->getFarmers().at(0);
                     farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
-                    farmer->updateState();
+                    farmer->updateState(dt);
                     farmer->applyForce();
                     farmer->stepAnimation(dt);
                 }
@@ -546,7 +570,7 @@ void TutorialScene::preUpdate(float dt) {
             
             auto carrot = _map->getCarrots().at(0);
             carrot->setMovement((_character->getPosition() - carrot->getPosition()).getNormalization() * 0.2);
-            carrot->updateState();
+            carrot->updateState(dt);
             carrot->applyForce();
             carrot->stepAnimation(dt);
         }
@@ -588,7 +612,7 @@ void TutorialScene::preUpdate(float dt) {
                 _input->unpause();
                 auto carrot = _map->getCarrots().at(0);
                 carrot->setMovement((_character->getPosition() - carrot->getPosition()).getNormalization() * 0.2);
-                carrot->updateState();
+                carrot->updateState(dt);
                 carrot->applyForce();
                 carrot->stepAnimation(dt);
             }
@@ -888,7 +912,7 @@ void TutorialScene::postUpdate(float remain) {
     }
     // TEMP CODE FOR OPEN BETA
 
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug, _character->canDash());
     _action.postUpdate(remain);
 
     // Since items may be deleted, garbage collect

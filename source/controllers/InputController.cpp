@@ -33,6 +33,7 @@ _dashPressed(false),
 _showPlayerPressed(false),
 _switchPressed(false),
 _rootPressed(false),
+_throwRockPressed(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
@@ -47,6 +48,7 @@ _keyContinue(false),
 _continuePressed(false),
 _keyContinuePressed(false),
 _paused(false),
+_keyThrowRock(false),
 _currentSwipeColor(Color4::WHITE) {
 }
 
@@ -139,8 +141,11 @@ void InputController::update(float dt) {
     _keySwitch = keys->keyPressed(KeyCode::S);
     _keyRoot   = keys->keyPressed(KeyCode::Z) && !_paused;
     _keyUnroot = keys->keyPressed(KeyCode::Z) && !_paused;
-    _keyContinue = keys->keyPressed(KeyCode::SPACE);
+    _keyContinue = keys->keyPressed(KeyCode::D);
     _deviceShaking = keys->keyPressed(KeyCode::A) && !_paused;
+    _keyRoot   = keys->keyPressed(KeyCode::Z);
+    _keyUnroot = keys->keyPressed(KeyCode::Z);
+    _keyThrowRock = keys->keyPressed(KeyCode::SPACE) && !_paused;
 
     if (keys->keyDown(KeyCode::ARROW_LEFT)) {
         _movement.x = -1.0f;
@@ -179,9 +184,11 @@ void InputController::update(float dt) {
     _rootPressed = _keyRoot;
     
     _unrootPressed = _keyUnroot;
-    
+
     _continuePressed  = (_keyContinue && !_keyContinuePressed);
     _keyContinuePressed = _keyContinue;
+    _throwRockPressed  = _keyThrowRock;
+    _keyThrowRock = false;
 
     // _movement is now updated directly in processJoystick
 
@@ -356,19 +363,27 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
             }
             break;
         case Zone::RIGHT:
+            if ( _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
+                _keyThrowRock = (event.timestamp.ellapsedMillis(_rtime) <= DOUBLE_CLICK);
+            }
+            
             // Only process if no touch in zone
             if (_rtouch.touchids.empty()) {
                 _rtouch.position = event.position;
                 _rtouch.timestamp.mark();
                 _rtouch.touchids.insert(event.touch);
                 _keyDash = false;
-//                _keySwitch = false;
                 _keyRoot = false;
                 _keyShowPlayer = false;
                 _swipeFirstPoint = screenPos;
                 _swipePoints->clear();
                 _currentSwipeColor = Color4::WHITE;
                 addSwipePoint(screenPos);
+            } else {
+                Vec2 offset = event.position-_rtouch.position;
+                if (offset.lengthSquared() < NEAR_TOUCH*NEAR_TOUCH) {
+                    _rtouch.touchids.insert(event.touch);
+                }
             }
             break;
         case Zone::MAIN:

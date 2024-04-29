@@ -207,6 +207,7 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
+    bool _hasRock;
 
 
 public:
@@ -535,7 +536,7 @@ public:
      *
      * @return true if this character is facing right
      */
-    bool getFacing() const { return _facing; }
+    cugl::Vec2 getFacing();
     
     std::string getUUID() const { return _uuid; }
     
@@ -544,6 +545,12 @@ public:
     bool isInWheat() const { return _wheatContacts > 0; }
 
     void changeWheatContacts(int dx) { _wheatContacts += dx; }
+    
+    void throwRock();
+    
+    void setHasRock(bool hasRock) { _hasRock = hasRock; }
+    
+    bool hasRock() { return _hasRock; }
 
     
 #pragma mark -

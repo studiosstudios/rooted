@@ -18,6 +18,7 @@
 #include "../events/CaptureEvent.h"
 #include "../events/UnrootEvent.h"
 #include "../events/CaptureBarrotEvent.h"
+#include "../events/CollectedRockEvent.h"
 
 class CollisionController {
 protected:

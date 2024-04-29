@@ -13,6 +13,7 @@
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
+#include "Collectible.h"
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
 #include "../shaders/ShaderRenderer.h"
@@ -32,6 +33,8 @@ private:
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
+    /** references to the rocks */
+    std::vector<std::shared_ptr<Collectible>> _rocks;
     /** references to the walls */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
@@ -82,6 +85,12 @@ private:
     
     std::vector<Rect> _plantingSpawns;
     
+    std::vector<std::pair<Rect, bool>> _rockSpawns;
+    
+    int _numRockSpawns;
+    
+    int _spawnCooldown;
+    
     /** Vector of key names for all map units in assets json */
     std::vector<std::string> _mapNames;
     
@@ -90,14 +99,12 @@ private:
     
     /** 2D vector representing tiling of randomly generated map */
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
-    
+
     bool _tutorial;
     
     std::vector<std::string> _playerUUIDs;
     std::string _hostUUID;
     std::string _thisUUID;
-    
-    
 
     
 public:
@@ -285,16 +292,27 @@ public:
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
-    std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
-    
+    std::vector<std::shared_ptr<Collectible>> &getRocks() { return _rocks; }
+
     /** Changes the player to the one specified by the UUID. This should ONLY be used by the tutorial scene,
      behaviour with networking is undefined. */
     std::shared_ptr<EntityModel> &changeCharacter(std::string UUID);
-    
+
+    std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
+
     void resetPlantingSpots();
     
     void resetPlayers();
 
+    void destroyRock(std::shared_ptr<Collectible> rock);
+    
+    bool shouldSpawnRock();
+    
+    std::pair<Vec2, int> getRandomRockSpawn();
+    
+    void spawnRock(Vec2 pos, int idx, Vec2 vel);
+    
+    
 #pragma mark -
 #pragma mark Drawing
     void updateShaders(float step, Mat4 perspective);
@@ -340,7 +358,6 @@ private:
     void spawnCarrots();
     
     void spawnBabyCarrots();
-
 };
 
 #endif //ROOTED_MAP_H

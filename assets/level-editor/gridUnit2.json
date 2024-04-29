@@ -64,6 +64,42 @@
                  "width":96,
                  "x":319,
                  "y":112
+                }, 
+                {
+                 "gid":15,
+                 "height":32,
+                 "id":116,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":32,
+                 "y":64
+                }, 
+                {
+                 "gid":15,
+                 "height":32,
+                 "id":118,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
+                 "y":288
+                }, 
+                {
+                 "gid":15,
+                 "height":32,
+                 "id":117,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":64
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -131,7 +167,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":115,
+ "nextobjectid":119,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -141,7 +177,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

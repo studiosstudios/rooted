@@ -13,6 +13,7 @@ bool CollisionController::init(std::shared_ptr<Map> &map,  const std::shared_ptr
     _map = map;
     _network = network;
     _network->attachEventType<CaptureBarrotEvent>();
+    _network->attachEventType<CollectedRockEvent>();
     return true;
 }
 
@@ -60,6 +61,12 @@ void CollisionController::beginContact(b2Contact* contact) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 plantingSpot->setBelowAvatar(true);
             }
+            if (name2 == "rock_spawn") {
+                Collectible* collectible = dynamic_cast<Collectible*>(bd2);
+                if (_map->getCharacter()->getUUID() == carrot->getUUID() && !(carrot->isCaptured() || carrot->isRooted()) && !carrot->hasRock()){
+                    _network->pushOutEvent(CollectedRockEvent::allocCollectedRockEvent(carrot->getUUID(), collectible->getSpawnIndex()));
+                }
+            }
         }
         
         if (name1 == "baby") {
@@ -87,7 +94,21 @@ void CollisionController::beginContact(b2Contact* contact) {
                 farmer->setCanPlant(true);
                 plantingSpot->setBelowAvatar(true);
             }
+            if (name2 == "rock_spawn") {
+                Collectible* collectible = dynamic_cast<Collectible*>(bd2);
+                if (_map->getCharacter()->getUUID() == farmer->getUUID() && !farmer->hasRock()){
+                    _network->pushOutEvent(CollectedRockEvent::allocCollectedRockEvent(farmer->getUUID(), collectible->getSpawnIndex()));
+                }
+            }
         }
+        
+        if (name1 == "rock") {
+            if (name2 == "carrot" || name2 == "baby" || name2 == "farmer") {
+                Collectible* rock = dynamic_cast<Collectible*>(bd1);
+                rock->setAge(rock->getMaxAge() + 1);
+            }
+        }
+        
 
         // Swap everything
         b2Fixture* fixTemp = fix1;
@@ -220,6 +241,12 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         if (name1 == "carrot" && name2 == "farmer") {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             return !carrot->isSensor();
+        }
+        
+        // do not collide with yourself
+        //temp do not collide with players
+        if (name1 == "rock" && (name2 == "carrot" || name2 == "farmer")) {
+            return false;
         }
         
         // Swap everything

@@ -217,6 +217,9 @@
         "carrot-count-board" : {
             "file": "textures/carrot-count-board.png"
         },
+        "rock": {
+            "file": "textures/rock.png"
+        },
         "backbutton": {
             "file": "textures/back.png"
         },

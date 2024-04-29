@@ -373,6 +373,12 @@ void GameScene::fixedUpdate(float step) {
         if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
             _action.processFreeEvent(freeEvent);
         }
+        if(auto spawnRockEvent = std::dynamic_pointer_cast<SpawnRockEvent>(e)){
+            _action.processSpawnRockEvent(spawnRockEvent);
+        }
+        if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
+            _action.processCollectedRockEvent(collectedRockEvent);
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;

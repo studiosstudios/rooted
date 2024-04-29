@@ -73,6 +73,10 @@ void Map::setDrawScale(float value) {
     for (auto farmer: _farmers) {
         farmer->setDrawScale(value);
     }
+    
+    for (auto rock: _rocks) {
+        rock->setDrawScale(value);
+    }
 }
 
 /**
@@ -132,7 +136,6 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
 //    _entitiesNode->allocNode();
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
-    
     
     bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
@@ -276,6 +279,8 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
+                } else if (type == "Rock") {
+                    _rockSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), true));
                 } else {
                     CUWarn("TILED JSON: Unrecognized environmental object: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
                 }
@@ -302,8 +307,10 @@ void Map::populate() {
 
     /** Create the physics world */
     _world = physics2::net::NetWorld::alloc(getWorldBounds(), Vec2(0, 0));
-    
+
     _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _worldbounds.size);
+    _numRockSpawns = 0;
+    _spawnCooldown = 0;
 
     _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, _worldbounds.size, FULL_WHEAT_HEIGHT);
     _shaderrenderer->setScale(_scale.x);
@@ -401,6 +408,13 @@ void Map::dispose() {
         (*it) = nullptr;
     }
     _plantingSpot.clear();
+    for (auto it = _rocks.begin(); it != _rocks.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it));
+        }
+        (*it) = nullptr;
+    }
+    _rocks.clear();
     if (_world != nullptr) {
         _world->clear();
         _world->dispose();
@@ -425,6 +439,7 @@ void Map::dispose() {
     _farmerSpawns.clear();
     _babyCarrotSpawns.clear();
     _plantingSpawns.clear();
+    _rockSpawns.clear();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
@@ -764,7 +779,7 @@ void Map::spawnCarrots() {
 }
 
 void Map::updateShaders(float step, Mat4 perspective) {
-    int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size());
+    int size = (unsigned)(_carrots.size() + _farmers.size() + _babies.size() + _rocks.size());
     float positions[2*size]; // must be 1d array
     float velocities[size];
     float ratio = _shaderrenderer->getAspectRatio();
@@ -783,6 +798,11 @@ void Map::updateShaders(float step, Mat4 perspective) {
         positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / scale;
         positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / scale * ratio;
         velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
+    }
+    for (int i = 0; i < _rocks.size(); i++) {
+        positions[2 * i + 2* (_carrots.size() + _farmers.size() + _babies.size())] = _rocks.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size() + _babies.size())] = 1 - (_rocks.at(i)->getY() - _rocks.at(i)->getHeight()/2) / scale * ratio;
+        velocities[i + _carrots.size() + _farmers.size() + _rocks.size()] = _rocks.at(i)->getLinearVelocity().length();
     }
     _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / scale * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);
@@ -809,7 +829,7 @@ std::shared_ptr<EntityModel> &Map::changeCharacter(std::string UUID) {
         _character = _farmers.at(0);
     } else {
         auto carrot = _carrots.begin();
-        for (std::string uuid : _playerUUIDs) {
+        for (std::string uuid: _playerUUIDs) {
             if (uuid == _thisUUID) {
                 _character = (*carrot);
                 break;
@@ -817,8 +837,77 @@ std::shared_ptr<EntityModel> &Map::changeCharacter(std::string UUID) {
             carrot += uuid != _hostUUID;
         }
     }
-    
+
     _character->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
     return _character;
+}
 
+void Map::destroyRock(std::shared_ptr<Collectible> rock) {
+    // do not attempt to remove a rock that has already been removed
+    if (rock->isRemoved()) {
+        return;
+    }
+    if (!rock->isFired()) {
+        _rockSpawns.at(rock->getSpawnIndex()).second = true;
+        _numRockSpawns--;
+    }
+    rock->getDebugNode()->dispose();
+    rock->getWheatHeightNode()->dispose();
+    _entitiesNode->removeChild(rock->getSceneNode());
+    rock->setDebugScene(nullptr);
+    rock->markRemoved(true);
+}
+
+bool Map::shouldSpawnRock() {
+    _spawnCooldown--;
+    return _spawnCooldown < 0 && _numRockSpawns < MAX_NUM_COLLECTIBLES && _numRockSpawns < _rockSpawns.size() && _rand32() / _rand32.max() < SPAWN_RATE ;
+}
+
+std::pair<Vec2, int> Map::getRandomRockSpawn() {
+    std::vector<int> valididxs;
+    int i = 0;
+    for (auto &spawn : _rockSpawns) {
+        if (spawn.second) {
+            valididxs.push_back(i);
+        }
+        i++;
+    }
+    int randidx = floor(float(_rand32()) / _rand32.max() * valididxs.size());
+    auto &rand = _rockSpawns.at(valididxs.at(randidx));
+    rand.second = false;
+    _numRockSpawns++;
+    _spawnCooldown = SPAWN_COOLDOWN;
+    return std::pair(rand.first.origin, valididxs.at(randidx));
+}
+
+void Map::spawnRock(Vec2 pos, int idx, Vec2 vel) {
+    auto rockTexture = _assets->get<Texture>("rock");
+
+    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, !vel.isZero());
+    rock->setDebugColor(DEBUG_COLOR);
+    rock->setName(vel.isZero() ? "rock_spawn" : "rock");
+    rock->setSpawnIndex(idx);
+    rock->setInitVelocity(vel);
+    rock->setLinearVelocity(vel);
+    
+    auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
+    rock->setSceneNode(rockNode);
+    rock->setDrawScale(_scale.x);
+    // set slightly below entities
+    rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
+
+    rockNode->setScale(0.05f * _scale/DEFAULT_DRAWSCALE);
+    // Create the polygon node (empty, as the model will initialize)
+    // 512 * scale
+//    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
+    rockNode->setName(vel.isZero() ? "rock_spawn" : "rock");
+    _entitiesNode->addChild(rockNode);
+    rock->setDebugScene(_debugnode);
+    
+    _rocks.push_back(rock);
+    
+    auto wheatnode = rock->allocWheatHeightNode(1);
+    _wheatscene->getRoot()->addChild(wheatnode);
+    
+    _world->initObstacle(rock);
 }

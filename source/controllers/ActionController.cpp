@@ -42,6 +42,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _network->attachEventType<UnrootEvent>();
     _network->attachEventType<MoveEvent>();
     _network->attachEventType<FreeEvent>();
+    _network->attachEventType<SpawnRockEvent>();
     return true;
 }
 
@@ -72,6 +73,10 @@ void ActionController::preUpdate(float dt) {
     playerEntity->stepAnimation(dt);
     updateRustlingNoise();
     
+    for (auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++) {
+        (*it)->applyForce();
+    }
+    
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
     std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
@@ -80,6 +85,12 @@ void ActionController::preUpdate(float dt) {
             plantingSpot = ps;
             break;
         }
+    }
+    
+    // TODO: move this to carrot only option
+    if (_input->didThrowRock() && playerEntity->hasRock()) {
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2));
+        playerEntity->setHasRock(false);
     }
     
     if (_network->isHost()) { // Farmer (host) specific actions
@@ -97,6 +108,12 @@ void ActionController::preUpdate(float dt) {
                     _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
                 }
             }
+        }
+        
+        if (_map->shouldSpawnRock()) {
+            //optional spawn rock
+            auto spawn = _map->getRandomRockSpawn();
+            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO));
         }
     }
     else { // Carrot specific actions
@@ -173,6 +190,16 @@ void ActionController::postUpdate(float dt) {
         else if(!c->isRooted()){
             c->setSensor(false);
         }
+    }
+    auto iit = _map->getRocks().begin();
+    while(iit != _map->getRocks().end()){
+        if ((*iit)->isFired() && (*iit)->getAge() > (*iit)->getMaxAge()) {
+            _map->destroyRock(*iit);
+        }
+        if ((*iit)->isRemoved()) {
+            _map->getRocks().erase(iit);
+        }
+        else ++iit;
     }
 }
 
@@ -383,6 +410,36 @@ void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event)
         if(event->getUUID() == carrot->getUUID()){
             carrot->escaped();
             return;
+        }
+    }
+}
+
+void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event){
+    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity());
+}
+
+void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){
+    //this is terrible and should be redone later but i am tired
+    if (event->getUUID() == _map->getFarmers().at(0)->getUUID()) {
+        if (_map->getFarmers().at(0)->hasRock()) return;
+        _map->getFarmers().at(0)->setHasRock(true);
+        for (auto rock : _map->getRocks()) {
+            if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
+                _map->destroyRock(rock);
+            }
+        }
+    } else {
+        for(auto carrot : _map->getCarrots()){
+            if(event->getUUID() == carrot->getUUID()){
+                if (carrot->hasRock()) return;
+                for (auto rock : _map->getRocks()) {
+                    if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
+                        _map->destroyRock(rock);
+                    }
+                }
+                carrot->setHasRock(true);
+                return;
+            }
         }
     }
 }

@@ -76,6 +76,12 @@ void UIController::initGameUINodes() {
     _barrotsRemainingText->setContentSize(_barrotsRemainingBoard->getContentSize());
     _barrotsRemainingText->doLayout();
     _barrotsRemainingBoard->addChild(_barrotsRemainingText);
+    
+    _dashTimerNode = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2::ZERO, 32));
+    _dashTimerNode->setPosition(((Vec2(SCENE_WIDTH * 0.9f, SCENE_HEIGHT * 0.1f)) - _offset ) / _cameraZoom);
+    _dashTimerNode->setScale(_drawScale/DEFAULT_DRAWSCALE);
+    _dashTimerNode->setColor(Color4::GREEN);
+    _uinode->addChild(_dashTimerNode);
 }
 
 bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
@@ -191,7 +197,11 @@ void UIController::updateInfoNodes(int numCarrots, int numBarrots) {
     _barrotsRemainingText->setText("remaining baby carrots: " + std::to_string(numBarrots));
 }
 
-void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive) {
+void UIController::updateDashTimerNode(bool canDash) {
+    _dashTimerNode->setColor(canDash ? Color4::GREEN : Color4::RED);
+}
+
+void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive, bool canDash) {
     _cameraZoom = camera->getZoom();
     _uinode->setPosition(camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2/_cameraZoom);
     if (_input->withJoystick()) {
@@ -206,4 +216,5 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
     _barrotsRemainingBoard->setVisible(debugActive);
     updateSwipeSpline();
     updateInfoNodes(numCarrots, numBarrots);
+    updateDashTimerNode(canDash);
 }

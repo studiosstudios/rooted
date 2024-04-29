@@ -455,7 +455,7 @@ void GameScene::postUpdate(float remain) {
     }
     // TEMP CODE FOR OPEN BETA
     
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug, _character->canDash());
     
     if (_countdown > 0) {
         _countdown--;

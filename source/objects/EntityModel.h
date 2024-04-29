@@ -226,6 +226,8 @@ protected:
     
     cugl::Vec2 _dashVector;
     
+    float _dashCooldown;
+    
     bool _plantInput;
     
     bool _rootInput;
@@ -568,6 +570,8 @@ public:
     void setRootInput(bool rootInput);
     
     void setUnrootInput(bool unrootInput);
+    
+    bool canDash() { return _dashCooldown == 0; }
     
     /**
      * Returns how much force to apply to get the dude moving

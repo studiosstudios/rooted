@@ -45,6 +45,10 @@
 /** The number of frame to wait before reinitializing the game */
 #define EXIT_COUNT      240
 
+#pragma mark -
+#pragma mark Game Logic Constants
+/** Time in seconds that must elapse before being able to perform another dash */
+#define DASH_COOLDOWN_SECS 8
 
 #pragma mark -
 #pragma mark Asset Constants

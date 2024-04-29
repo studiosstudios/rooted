@@ -28,7 +28,7 @@ private:
 //    /** PolyFactory for drawing the joystick circle.
 //     *  TODO: We can remove this once we get proper assets for the joystick
 //     */
-//    cugl::PolyFactory _pf;
+    cugl::PolyFactory _pf;
 //    
 //    /** */
 //    cugl::Spline2 _spline;
@@ -51,6 +51,8 @@ private:
     std::shared_ptr<cugl::scene2::TexturedNode> _winNode;
     /** Pointer to the TextureNode of the DEFEAT. message*/
     std::shared_ptr<cugl::scene2::TexturedNode> _loseNode;
+    
+    std::shared_ptr<cugl::scene2::PolygonNode> _dashTimerNode;
     
     /** Pointer to the TextureNode of the top-left CARROT count */
     std::shared_ptr<cugl::scene2::TexturedNode> _carrotsRemainingBoard;
@@ -117,5 +119,7 @@ public:
     
     void updateInfoNodes(int numCarrots, int numBarrots);
     
-    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive);
+    void updateDashTimerNode(bool canDash);
+    
+    void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive, bool canDash);
 };

@@ -45,6 +45,7 @@
 #include <cugl/scene2/graph/CUPolygonNode.h>
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -345,6 +346,10 @@ void EntityModel::updateState(float dt) {
         return;
     }
     
+    if (_dashCooldown > 0) {
+        _dashCooldown = std::max(0.0f, _dashCooldown - dt);
+    }
+    
     _prevState = _state;
     bool stateChanged = false;
     EntityState nextState = _state;
@@ -361,9 +366,10 @@ void EntityModel::updateState(float dt) {
         case WALKING:
         case RUNNING: {
             // Moving -> Dashing
-            if (dashTimer == 0 && _dashInput) {
+            if (_dashCooldown == 0 && dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
+                _dashCooldown = DASH_COOLDOWN_SECS;
                 stateChanged = true;
             }
             else {

@@ -63,8 +63,10 @@ void InputController::dispose() {
 #endif
         _active = false;
         _swipePoints = nullptr;
-        _gesturer->dispose();
-        _gesturer = nullptr;
+        _lineGesturer->dispose();
+        _circleGesturer->dispose();
+        _lineGesturer = nullptr;
+        _circleGesturer = nullptr;
     }
 }
 
@@ -84,8 +86,8 @@ bool InputController::init(const Rect bounds) {
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
     
-    _gesturer = cugl::GestureRecognizer::alloc();
-    _gesturer->setOrientationTolerance(-1);
+    _lineGesturer = cugl::GestureRecognizer::alloc();
+    _lineGesturer->setOrientationTolerance(-1);
     std::vector<Vec2> linegestvec {Vec2(-124,0),
         Vec2(-121,0),
         Vec2(-117,0),
@@ -151,8 +153,10 @@ bool InputController::init(const Rect bounds) {
         Vec2(122,0),
         Vec2(126,0),
 };
-    _gesturer->addGesture("line", linegestvec);
-    _gesturer->addGesture("circle", std::vector<cugl::Vec2>{Vec2(-151,0),
+    _lineGesturer->addGesture("line", linegestvec);
+    _circleGesturer = cugl::GestureRecognizer::alloc();
+    _circleGesturer->setSimilarityThreshold(CIRCLE_GESTURE_SIMILARITY);
+    _circleGesturer->addGesture("circle", std::vector<cugl::Vec2>{Vec2(-151,0),
         Vec2(-149,9),
         Vec2(-147,19),
         Vec2(-143,27),
@@ -216,7 +220,7 @@ bool InputController::init(const Rect bounds) {
         Vec2(-63,-120),
         Vec2(-73,-116),
         Vec2(-83,-111)});
-    _gesturer->addGesture("circle2", std::vector<cugl::Vec2>{
+    _circleGesturer->addGesture("circle2", std::vector<cugl::Vec2>{
         Vec2(-155,0),
         Vec2(-151,-9),
         Vec2(-148,-18),
@@ -630,14 +634,23 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         addSwipePoint(screenPos);
         
+        // If this swipe was already used for a dash, can't use it for any other gestures
         if (!_keyDash) {
-            if (_internalSwipePoints.size() > SWIPE_POINT_MINIMUM){
+        
+            // Handle circle (root/unroot gesture)
+            bool validCircleGesture = (_swipePoints->size() > SWIPE_POINT_MINIMUM && _circleGesturer->match(getSwipePointsVector()).length() > 0);
+            _keyRoot = validCircleGesture;
+            _keyUnroot = validCircleGesture;
+        
+            // Handle dash
+            if (_internalSwipePoints.size() > SWIPE_POINT_MINIMUM &&
+                _lineGesturer->similarity("line", getInternalSwipePointsVector(), true) > LINE_GESTURE_SIMILARITY &&
+                _internalSwipePoints.front().first.distanceSquared(_internalSwipePoints.back().first) > SWIPE_LENGTH * SWIPE_LENGTH){
 //                std::cout << "Circle CCW: " << _gesturer->similarity("circle", getInternalSwipePointsVector(), true) << "\n";
 //                std::cout << "Circle CW: " << _gesturer->similarity("circle2", getInternalSwipePointsVector(), true) << "\n";
-                if (_gesturer->similarity("line", getInternalSwipePointsVector(), true) > SWIPE_GESTURE_SIMILARITY && _internalSwipePoints.front().first.distanceSquared(_internalSwipePoints.back().first) > SWIPE_LENGTH * SWIPE_LENGTH) {
-                    _keyDash = true;
-                    _currentSwipeColor = Color4::ORANGE;
-                }
+                _keyDash = true;
+                _currentSwipeColor = Color4::ORANGE;
+            }
                 
                 //            if (_swipePoints->begin() != _swipePoints->end() && (screenPos.y - _swipePoints->back().first.y) > SWIPE_LENGTH) {
                 //                _keyDash = true;
@@ -655,7 +668,6 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             }
         }
     }
-}
 //    else if (_mtouch.touchids.size() > 1) {
 //        // We only process multifinger swipes in main
 //        int swipe = processSwipe(_mtouch.position, event.position, event.timestamp);

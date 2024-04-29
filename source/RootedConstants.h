@@ -122,8 +122,10 @@
 #define INTERNAL_SWIPE_POINTS_CAPACITY 15
 /** The number of "notable points" a swipe must contain to be compared for similarity.*/
 #define SWIPE_POINT_MINIMUM 4
-/** The minimum similarity metric a dash swipe gesture must make in order to be considered a dash */
-#define SWIPE_GESTURE_SIMILARITY 0.96
+/** The minimum similarity score a dash line swipe gesture must make in order to be considered a dash */
+#define LINE_GESTURE_SIMILARITY 0.96
+/** The minimum similarity score a circle swipe gesture must make in order to be considered a root/unroot (forgiving score because circle can have more variance)*/
+#define CIRCLE_GESTURE_SIMILARITY 0.7
 /** The minimum distance a swipe move point must be from the last notable point to be considered a "notable point". This is a squared value, so 41^2 */
 #define SWIPE_DISTANCE_THRESHOLD 1681
 /** The length of time (in milliseconds) that a swipe point remains stored */

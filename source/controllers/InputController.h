@@ -167,7 +167,9 @@ protected:
     
     
     
-    std::shared_ptr<cugl::GestureRecognizer> _gesturer;
+    std::shared_ptr<cugl::GestureRecognizer> _lineGesturer;
+    std::shared_ptr<cugl::GestureRecognizer> _circleGesturer;
+
 
     /**
      * Defines the zone boundaries, so we can quickly categorize touches.

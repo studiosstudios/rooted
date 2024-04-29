@@ -103,6 +103,8 @@ public:
     
     std::vector<Uint32> computeTriangulatedIndices(int numTriangles);
     
+    cugl::Color4 getSwipeColorForInput();
+    
     void updateSwipeSpline();
     
     void updateInfoNodes(int numCarrots, int numBarrots);

@@ -43,6 +43,7 @@ _joystick(false),
 _hasJumped(false),
 _keyDash(false),
 _keyDashPressed(false),
+_dashPressedThisSwipe(false),
 _currentSwipeColor(Color4::WHITE) {
 }
 
@@ -156,6 +157,7 @@ bool InputController::init(const Rect bounds) {
     _lineGesturer->addGesture("line", linegestvec);
     _circleGesturer = cugl::GestureRecognizer::alloc();
     _circleGesturer->setSimilarityThreshold(CIRCLE_GESTURE_SIMILARITY);
+    _circleGesturer->setOrientationTolerance(-1);
     _circleGesturer->addGesture("circle", std::vector<cugl::Vec2>{Vec2(-151,0),
         Vec2(-149,9),
         Vec2(-147,19),
@@ -551,6 +553,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _keyDash = false;
                 _keyRoot = false;
                 _keyShowPlayer = false;
+                _dashPressedThisSwipe = false;
                 _swipePoints->clear();
                 _currentSwipeColor = Color4::WHITE;
                 addSwipePoint(screenPos);
@@ -649,6 +652,7 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
 //                std::cout << "Circle CCW: " << _gesturer->similarity("circle", getInternalSwipePointsVector(), true) << "\n";
 //                std::cout << "Circle CW: " << _gesturer->similarity("circle2", getInternalSwipePointsVector(), true) << "\n";
                 _keyDash = true;
+                _dashPressedThisSwipe = true;
                 _currentSwipeColor = Color4::ORANGE;
             }
                 

@@ -159,17 +159,26 @@ std::vector<Uint32> UIController::computeTriangulatedIndices(int numTriangles) {
     return indices;
 }
 
+cugl::Color4 UIController::getSwipeColorForInput() {
+    if (_input->didDashThisSwipe()) {
+        return Color4::ORANGE;
+    }
+    else if ((_input->didRootNow() || _input->didUnrootNow()) && true) { // TODO: Blue should only show up when we CAN actually root/unroot. Need a way to get this check from the game state
+        return Color4::BLUE;
+    }
+    return Color4::WHITE;
+}
+
 void UIController::updateSwipeSpline() { // div by cameraZoom and offset
     _input->cullSwipePointsByDuration();
     int numSwipePoints = _input->getSwipePoints()->size();
     if (numSwipePoints > 2) {
-//        std::list<cugl::Vec2> swipePoints = _input->getSwipePoints();
         std::vector<cugl::Vec2> swipePointsTri = computeTriangulatedPoints();
         auto poly = Poly2(swipePointsTri, computeTriangulatedIndices(swipePointsTri.size()-2));
         _swipeNode->setPolygon(poly);
         _swipeNode->setPosition(poly.getBounds().origin);
         _swipeNode->setVisible(true);
-        _swipeNode->setColor(_input->getCurrentSwipeColor());
+        _swipeNode->setColor(getSwipeColorForInput());
     }
     else {
         _swipeNode->setVisible(false);

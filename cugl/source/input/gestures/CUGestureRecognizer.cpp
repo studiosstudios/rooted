@@ -344,7 +344,6 @@ static void scale_to_uniform(std::vector<cugl::Vec2>& points, const Size bounds,
 static void scale_to_ROOTED(std::vector<cugl::Vec2>& points, const Size bounds) {
     Size box = bound_dimensions(points);
     if ((box.width < box.height && box.width < 100) || (box.height < box.width && box.height < 100)) {
-        std::cout << "Swipe is single line, uniform scaling\n";
         scale_to_uniform(points, bounds, box);
     }
     else {
@@ -636,6 +635,7 @@ const std::string GestureRecognizer::match(const Vec2* points,  size_t psize,
                 case Algorithm::ONEDOLLAR:
                     distance = distance_at_best_angle(normalized, it->second.getPoints(),
                                                       -M_PI_4,M_PI_4,DEG2RAD(2.0));
+//                    std::cout << "Compared with template " << it->first << " distance is: "<<distance <<"\n";
                     break;
                 case Algorithm::PROTRACTOR:
                     distance = optimal_cosine_distance(it->second.getVector(),vectorized);
@@ -652,10 +652,10 @@ const std::string GestureRecognizer::match(const Vec2* points,  size_t psize,
     if (_algorithm == Algorithm::ONEDOLLAR) {
         float halfdiag = 0.5f * ((Vec2)_normbounds).length();
         similarity = 1.0f - (bestdist / halfdiag);
+//        std::cout << "MATCH | HalfDiag: " << halfdiag << " | Distance: " << bestdist << "| Similarity: " << similarity << " | Accuracy: " << _accuracy << "\n";
     } else {
         similarity = std::atan2(1.0,bestdist)/M_PI_2;
     }
-    
     if (similarity < _accuracy) {
         return "";
     }
@@ -706,6 +706,7 @@ float GestureRecognizer::similarity(const std::string name, const Vec2* points,
                                               -DEG2RAD(45), DEG2RAD(45), DEG2RAD(2.0));
             halfdiag = 0.5f * ((Vec2)_normbounds).length();
             score = 1.0 - (distance / halfdiag);
+//            std::cout << "SIMILARITY | HalfDiag: " << halfdiag << " | Distance: " << distance << "| Similarity: " << score << "\n";
             break;
         case Algorithm::PROTRACTOR:
             distance = optimal_cosine_distance(it->second.getVector(),vectorize(points,psize));

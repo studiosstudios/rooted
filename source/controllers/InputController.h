@@ -76,6 +76,8 @@ protected:
     bool _exitPressed;
     /** Whether the dash action was chosen. */
     bool _dashPressed;
+    /** Whether the dash action was chosen within the last swipe instance. Set to true when dash is true, and set to false on a new swipe instance.*/
+    bool _dashPressedThisSwipe;
     /** Whether the root action was chosen */
     bool _rootPressed;
     /** Whether the unroot action was chosen */
@@ -160,10 +162,8 @@ protected:
     /** List holding points for swipe drawing */
     std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> _swipePoints;
     std::vector<cugl::Vec2> _swipePointsVec;
-    /** Capacity for swipe drawing list */
     cugl::Color4 _currentSwipeColor;
     std::deque<std::pair<cugl::Vec2, cugl::Timestamp>> _internalSwipePoints;
-    Uint32 swipeDurationMillis = 250;
     
     
     
@@ -349,9 +349,17 @@ public:
     
     bool didDash() const { return _dashPressed; }
     
+    bool didDashNow() const { return _keyDash; }
+    
+    bool didDashThisSwipe() const { return _dashPressedThisSwipe; }
+    
     bool didRoot() const { return _rootPressed; }
     
+    bool didRootNow() const { return _keyRoot; }
+    
     bool didUnroot() const { return _unrootPressed; }
+    
+    bool didUnrootNow() const { return _keyUnroot; }
 
     bool didSwitch() const { return _switchPressed; }
     

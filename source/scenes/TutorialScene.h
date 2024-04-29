@@ -100,6 +100,9 @@ protected:
 
     TutorialState _state;
     
+    /** indicates which dialogue step we are at SUPER JANK */
+    int _step;
+    
     bool _returnToMenu;
     /** time incrementer used to transition between scenes */
     float _time;

@@ -65,6 +65,7 @@ private:
     
     bool _keySwitch;
     bool _keyContinue;
+    bool _keyContinuePressed;
   
 protected:
     // INPUT RESULTS

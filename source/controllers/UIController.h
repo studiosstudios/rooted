@@ -55,6 +55,10 @@ private:
     std::shared_ptr<cugl::scene2::TexturedNode> _barrotsRemainingBoard;
     std::shared_ptr<cugl::scene2::Label> _barrotsRemainingText;
     
+    /** UI elements for the tutorial */
+    std::shared_ptr<cugl::scene2::NinePatch> _speechBubble;
+    std::shared_ptr<cugl::scene2::NinePatch> _dialogBox;
+    
     float swipeThickness = 8;
     Uint32 swipeDurationMillis = 500;
     cugl::Vec2 tmp;
@@ -85,7 +89,11 @@ public:
 #pragma mark -
     void setWinVisible(bool visible);
     void setLoseVisible(bool visible);
-    
+    void setSpeechBubbleVisible(bool visible);
+    bool getSpeechBubbleVisible() { return _speechBubble->isVisible(); };
+    void setDialogBoxVisible(bool visible);
+    bool getDialogBoxVisible() { return _dialogBox->isVisible(); };
+
     void initJoystickNodes();
 
     void initGameUINodes();

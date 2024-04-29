@@ -114,8 +114,6 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
-    // XNA nostalgia
-//    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
     _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
@@ -130,6 +128,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
+    
+    _step = 0;
 
     return true;
 }
@@ -231,6 +231,8 @@ void TutorialScene::reset() {
     _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
+    
+    _step = 0;
 }
 
 #pragma mark -
@@ -310,6 +312,21 @@ void TutorialScene::preUpdate(float dt) {
         case MOVEMENT:
             _action.preUpdate(dt);
             _cam.setTarget(_character->getPosition()*_scale);
+            // show dialog boxes one by one
+            if (_step == 0) {
+                _ui.setSpeechBubbleVisible(true);
+                _step = 1;
+            }
+            if (_step == 1 && _input->didContinue()) {
+                _ui.setSpeechBubbleVisible(false);
+                _ui.setDialogBoxVisible(true);
+                _step = 2;
+            }
+            else if (_step == 2 && _input->didContinue()) {
+                _ui.setDialogBoxVisible(false);
+                _black->setColor(Color4(0,0,0,0));
+                _step = 3;
+            }
             break;
         case CATCHBABIES:
             _action.preUpdate(dt);
@@ -368,6 +385,15 @@ void TutorialScene::preUpdate(float dt) {
             farmer->updateState();
             farmer->applyForce();
             farmer->stepAnimation(dt);
+            
+            if (_step == 3) {
+                _ui.setDialogBoxVisible(true);
+                _step = 4;
+            }
+            else if (_step == 4 && _input->didContinue()) {
+                _ui.setDialogBoxVisible(false);
+                _step = 5;
+            }
 
             break;
         }
@@ -397,6 +423,15 @@ void TutorialScene::preUpdate(float dt) {
                 farmer->updateState();
                 farmer->applyForce();
                 farmer->stepAnimation(dt);
+                
+                if (_step == 5) {
+                    _ui.setDialogBoxVisible(true);
+                    _step = 6;
+                }
+                else if (_step == 6 && _input->didContinue()) {
+                    _ui.setDialogBoxVisible(false);
+                    _step = 7;
+                }
             }
         }
             break;
@@ -446,9 +481,20 @@ void TutorialScene::preUpdate(float dt) {
         case LASTBABY:
             {
                 _action.preUpdate(dt);
-                _action.updateBabyCarrots();
+                if (!_ui.getDialogBoxVisible()) {
+                    _action.updateBabyCarrots();
+                }
                 _cam.setTarget(_character->getPosition()*_scale);
                 
+                if (_step == 7) {
+                    _ui.setDialogBoxVisible(true);
+                    _step = 8;
+                }
+                else if (_step == 8 && _input->didContinue()) {
+                    _ui.setDialogBoxVisible(false);
+                    _step = 9;
+                }
+
                 //move farmer
                 auto farmer = _map->getFarmers().at(0);
                 farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);

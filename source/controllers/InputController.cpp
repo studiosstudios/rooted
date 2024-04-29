@@ -45,6 +45,7 @@ _keyDash(false),
 _keyDashPressed(false),
 _keyContinue(false),
 _continuePressed(false),
+_keyContinuePressed(false),
 _paused(false),
 _currentSwipeColor(Color4::WHITE) {
 }
@@ -178,7 +179,9 @@ void InputController::update(float dt) {
     _rootPressed = _keyRoot;
     
     _unrootPressed = _keyUnroot;
-    _continuePressed = _keyContinue;
+    
+    _continuePressed  = (_keyContinue && !_keyContinuePressed);
+    _keyContinuePressed = _keyContinue;
 
     // _movement is now updated directly in processJoystick
 

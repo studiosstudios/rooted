@@ -563,16 +563,36 @@ void TutorialScene::preUpdate(float dt) {
                 _ui.setDialogBoxVisible(false);
                 _step = 13;
             }
-            if (_time > 3) {
+            if (_time > 2) {
                 _pausePhysics = false;
                 _input->unpause();
             }
-           
         }
             break;
         case FARMERWIN:
             break;
-        case FREEPLAY:
+        case FREEPLAY: {
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            if (_step == 13) {
+                _ui.setDialogBoxText("Time to play a real example game!");
+                _ui.setDialogBoxVisible(true);
+                _step = 14;
+            }
+            else if (_step == 14 && _input->didContinue()) {
+                _ui.setDialogBoxVisible(false);
+                _step = 14;
+            }
+            if (_time > 2) {
+                _pausePhysics = false;
+                _input->unpause();
+                auto carrot = _map->getCarrots().at(0);
+                carrot->setMovement((_character->getPosition() - carrot->getPosition()).getNormalization() * 0.2);
+                carrot->updateState();
+                carrot->applyForce();
+                carrot->stepAnimation(dt);
+            }
+        }
             break;
     }
 }
@@ -833,6 +853,27 @@ void TutorialScene::postUpdate(float remain) {
             }
             break;
         case FARMERWIN:
+            if (_time > 2.0){
+                _ui.setWinVisible(false);
+                // current character is still farmer
+                float x = _map->getMapBounds().size.width/2.0;
+                float y = _map->getMapBounds().size.height/2.0;
+                _character->setPosition(x, y);
+                _state = FREEPLAY;
+                _time = 0;
+                _pausePhysics = true;
+                _input->pause();
+                
+                auto carrot1 = _map->getCarrots().at(0);
+                auto carrot2 = _map->getCarrots().at(1);
+                carrot1->setBodyType(b2BodyType::b2_staticBody);
+                carrot2->setBodyType(b2BodyType::b2_staticBody);
+                carrot1->resetCarrot();
+                carrot2->resetCarrot();
+                carrot1->setPosition(x*1.2, y*0.5);
+//                carrot2->setPosition(x*0.8, y*0.5);
+                
+            }
             break;
         case FREEPLAY:
             break;

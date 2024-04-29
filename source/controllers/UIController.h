@@ -10,6 +10,7 @@
 
 #include <cugl/cugl.h>
 #include "../controllers/InputController.h"
+#include "../objects/EntityModel.h"
 
 #endif /* UIController_h */
 
@@ -20,6 +21,9 @@ private:
     
     /** reference to the input controller */
     std::shared_ptr<InputController> _input;
+    
+    /** Reference to this player's EntityModel */
+    std::shared_ptr<EntityModel> _character;
     
 //    /** PolyFactory for drawing the joystick circle.
 //     *  TODO: We can remove this once we get proper assets for the joystick
@@ -85,6 +89,10 @@ public:
 #pragma mark -
     void setWinVisible(bool visible);
     void setLoseVisible(bool visible);
+    
+    void setCharacter(const std::shared_ptr<EntityModel>& character) {
+        _character = character;
+    }
     
     void initJoystickNodes();
 

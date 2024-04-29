@@ -126,6 +126,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
     
+    // TODO: Putting this set here for now, little weird that's it's separate from the rest of ui init -CJ
+    _ui.setCharacter(_character);
+    
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
     if (!_network->isHost()) {

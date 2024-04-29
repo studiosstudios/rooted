@@ -180,7 +180,8 @@ float calculateVolume(EntityModel::EntityState state, float distance){
     float stateToNum;
     switch(state){
         case EntityModel::EntityState::STANDING:
-        case EntityModel::EntityState::PLANTING:
+        case EntityModel::EntityState::ROOTING:
+        case EntityModel::EntityState::UNROOTING:
         case EntityModel::EntityState::CAUGHT:
         case EntityModel::EntityState::ROOTED:
             stateToNum = 0;

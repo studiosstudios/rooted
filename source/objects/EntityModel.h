@@ -109,9 +109,11 @@ public:
         RUNNING,
         DASHING,
         CARRYING,   // bunny only
-        PLANTING,   // bunny only
+        ROOTING,   // bunny only
         CAUGHT,     // carrot only
-        ROOTED      // carrot only
+        ROOTED,      // carrot only
+        UNROOTING   // carrot only
+        
     };
     
 private:
@@ -600,6 +602,8 @@ public:
      *  This does NOT include if the state is DASHING. Use `isDashing` for that.
      */
     bool isMoving() { return _state == SNEAKING || _state == WALKING || _state == RUNNING; };
+    
+    bool isRootingUnrooting() { return _state == ROOTING || _state == UNROOTING; }
     
     /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
     EntityState getMovementState() {

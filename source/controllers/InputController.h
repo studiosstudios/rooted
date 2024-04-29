@@ -363,17 +363,14 @@ public:
     
     bool didShakeDevice() const { return _deviceShaking; }
 
-<<<<<<< HEAD
     bool didContinue() const { return _continuePressed; }
     
     void pause() { _paused = true; }
     
     void unpause() { _paused = false; }
 
-=======
     bool didThrowRock() const { return _throwRockPressed; }
-    
->>>>>>> rock-throwing
+
 #pragma mark -
 #pragma mark Swipe Drawing Logic
     void addSwipePoint(cugl::Vec2 point) {

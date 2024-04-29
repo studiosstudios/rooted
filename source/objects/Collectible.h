@@ -10,7 +10,7 @@
 
 #include <cugl/cugl.h>
 #include <cugl/physics2/CUBoxObstacle.h>
-#include "RootedConstants.h"
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants

@@ -161,7 +161,7 @@ void InputController::update(float dt) {
     _movement.normalize();
 #endif
     Accelerometer* acc = Input::get<Accelerometer>();
-    if(acc != nullptr) {
+    if(acc != nullptr && !_paused) {
         _deviceShaking = acc->getAcceleration().lengthSquared() > 2.9;
     }
     _resetPressed = _keyReset;

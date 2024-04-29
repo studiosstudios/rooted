@@ -314,6 +314,7 @@ void TutorialScene::preUpdate(float dt) {
             _cam.setTarget(_character->getPosition()*_scale);
             // show dialog boxes one by one
             if (_step == 0) {
+                _input->pause();
                 _ui.setSpeechBubbleVisible(true);
                 _step = 1;
             }
@@ -324,8 +325,8 @@ void TutorialScene::preUpdate(float dt) {
             }
             else if (_step == 2 && _input->didContinue()) {
                 _ui.setDialogBoxVisible(false);
-                _black->setColor(Color4(0,0,0,0));
                 _step = 3;
+                _input->unpause();
             }
             break;
         case CATCHBABIES:
@@ -387,6 +388,7 @@ void TutorialScene::preUpdate(float dt) {
             farmer->stepAnimation(dt);
             
             if (_step == 3) {
+                _input->pause();
                 _ui.setDialogBoxText("Shake to escape the farmer!");
                 _ui.setDialogBoxVisible(true);
                 _step = 4;
@@ -394,6 +396,7 @@ void TutorialScene::preUpdate(float dt) {
             else if (_step == 4 && _input->didContinue()) {
                 _ui.setDialogBoxVisible(false);
                 _step = 5;
+                _input->unpause();
             }
 
             break;
@@ -412,27 +415,34 @@ void TutorialScene::preUpdate(float dt) {
             }
             
             if (_time > 3.0) {
-                _input->unpause();
-                _pausePhysics = false;
+//                _input->unpause();
+//                _pausePhysics = false;
                 
                 _action.preUpdate(dt);
-                _action.updateBabyCarrots();
                 
-                //move farmer
-                auto farmer = _map->getFarmers().at(0);
-                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
-                farmer->updateState();
-                farmer->applyForce();
-                farmer->stepAnimation(dt);
-                
+                // only move after you get past dialogue
+                if (_step == 7) {
+                    _action.updateBabyCarrots();
+                    
+                    //move farmer
+                    auto farmer = _map->getFarmers().at(0);
+                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                    farmer->updateState();
+                    farmer->applyForce();
+                    farmer->stepAnimation(dt);
+                }
+                    
                 if (_step == 5) {
-                    _ui.setDialogBoxText("Unroot the other carrot by swiping down!");
+                    _input->pause();
+                    _ui.setDialogBoxText("Unroot the other carrot by going near it and swiping down!");
                     _ui.setDialogBoxVisible(true);
                     _step = 6;
                 }
                 else if (_step == 6 && _input->didContinue()) {
                     _ui.setDialogBoxVisible(false);
                     _step = 7;
+                    _input->unpause();
+                    _pausePhysics = false;
                 }
             }
         }
@@ -483,27 +493,31 @@ void TutorialScene::preUpdate(float dt) {
         case LASTBABY:
             {
                 _action.preUpdate(dt);
-                if (!_ui.getDialogBoxVisible()) {
+                // only move after you get past dialogue
+                if (_step >= 9) {
                     _action.updateBabyCarrots();
+                    //move farmer
+                    auto farmer = _map->getFarmers().at(0);
+                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                    farmer->updateState();
+                    farmer->applyForce();
+                    farmer->stepAnimation(dt);
                 }
                 _cam.setTarget(_character->getPosition()*_scale);
                 
                 if (_step == 7) {
+                    _input->pause();
                     _ui.setDialogBoxText("Now just get the last baby carrot to win!");
                     _ui.setDialogBoxVisible(true);
                     _step = 8;
+                    _pausePhysics = true;
                 }
                 else if (_step == 8 && _input->didContinue()) {
                     _ui.setDialogBoxVisible(false);
                     _step = 9;
+                    _input->unpause();
+                    _pausePhysics = false;
                 }
-
-                //move farmer
-                auto farmer = _map->getFarmers().at(0);
-                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
-                farmer->updateState();
-                farmer->applyForce();
-                farmer->stepAnimation(dt);
             }
             break;
         case CARROTWIN:
@@ -638,7 +652,6 @@ void TutorialScene::fixedUpdate(float step) {
  * @param remain    The amount of time (in seconds) last fixedUpdate
  */
 void TutorialScene::postUpdate(float remain) {
-    
     // do state transitions
     switch (_state) {
         case JAILBREAK:

@@ -222,6 +222,12 @@
         },
         "playercountasset" : {
             "file" : "textures/temp_player_count.png"
+        },
+        "speechbubble": {
+            "file": "textures/speechbubble.png"
+        },
+        "dialoguebox": {
+            "file": "textures/dialoguebox.png"
         }
     },
     "jsons": {

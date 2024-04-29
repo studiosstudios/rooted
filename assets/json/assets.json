@@ -75,6 +75,15 @@
         "farmer-southeast-run": {
             "file":     "textures/farmer-southeast-run.png"
         },
+        "farmer-south-dash": {
+            "file":     "textures/farmer-south-dash.png"
+        },
+        "farmer-north-dash": {
+            "file":     "textures/farmer-north-dash.png"
+        },
+        "farmer-east-dash": {
+            "file":     "textures/farmer-east-dash.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },
@@ -89,6 +98,21 @@
         },
         "carrot-southeast-walk": {
             "file":     "textures/carrot-southeast-walk.png"
+        },
+        "carrot-south-dash": {
+            "file":     "textures/carrot-south-dash.png"
+        },
+        "carrot-north-dash": {
+            "file":     "textures/carrot-north-dash.png"
+        },
+        "carrot-east-dash": {
+            "file":     "textures/carrot-east-dash.png"
+        },
+        "carrot-northeast-dash": {
+            "file":     "textures/carrot-northeast-dash.png"
+        },
+        "carrot-southeast-dash": {
+            "file":     "textures/carrot-southeast-dash.png"
         },
         "baby": {
             "file":     "textures/baby.png"

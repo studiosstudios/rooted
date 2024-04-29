@@ -68,12 +68,21 @@
 #define FARMER_NORTHEAST_RUN_SPRITE "farmer-northeast-run"
 #define FARMER_SOUTHEAST_RUN_SPRITE "farmer-southeast-run"
 
+#define FARMER_SOUTH_DASH_SPRITE "farmer-south-dash"
+#define FARMER_NORTH_DASH_SPRITE "farmer-north-dash"
+#define FARMER_EAST_DASH_SPRITE "farmer-east-dash"
 
 #define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
 #define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
 #define CARROT_EAST_WALK_SPRITE "carrot-east-walk"
 #define CARROT_NORTHEAST_WALK_SPRITE "carrot-northeast-walk"
 #define CARROT_SOUTHEAST_WALK_SPRITE "carrot-southeast-walk"
+
+#define CARROT_SOUTH_DASH_SPRITE "carrot-south-dash"
+#define CARROT_NORTH_DASH_SPRITE "carrot-north-dash"
+#define CARROT_EAST_DASH_SPRITE "carrot-east-dash"
+#define CARROT_NORTHEAST_DASH_SPRITE "carrot-northeast-dash"
+#define CARROT_SOUTHEAST_DASH_SPRITE "carrot-southeast-dash"
 
 #define BABY_TEXTURE   "baby"
 
@@ -168,6 +177,12 @@ protected:
     std::shared_ptr<cugl::scene2::SpriteNode> _northRunSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _northEastRunSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _southEastRunSprite;
+    
+    std::shared_ptr<cugl::scene2::SpriteNode> _eastDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northEastDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southEastDashSprite;
     
 	/** The scale between the physics world and the screen */
 	float _drawScale;
@@ -483,7 +498,12 @@ public:
                         const std::shared_ptr<cugl::scene2::SpriteNode>& northEastRunNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& eastRunNode,
                         const std::shared_ptr<cugl::scene2::SpriteNode>& southEastRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode) {
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southDashNode) {
         _northWalkSprite = northWalkNode;
         _northEastWalkSprite = northEastWalkNode;
         _eastWalkSprite = eastWalkNode;
@@ -495,6 +515,12 @@ public:
         _eastRunSprite = eastRunNode;
         _southEastRunSprite = southEastRunNode;
         _southRunSprite = southRunNode;
+        
+        _northDashSprite = northDashNode;
+        _northEastDashSprite = northEastDashNode;
+        _eastDashSprite = eastDashNode;
+        _southEastDashSprite = southEastDashNode;
+        _southDashSprite = southDashNode;
     }
     
     /**

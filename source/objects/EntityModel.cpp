@@ -184,14 +184,13 @@ void EntityModel::updateSprite() {
     if ((_prevState == _state) && (_facing == face)) {
         return;
     }
-    bool flippableSprite = false;
+    
     auto sprite = _southWalkSprite;
     switch (_state) {
         case STANDING:
             // TODO: Idle animations here
         case SNEAKING:
         case WALKING:
-            flippableSprite = true;
             if (face == SOUTH) {
                 sprite = _southWalkSprite;
             }
@@ -212,7 +211,6 @@ void EntityModel::updateSprite() {
             }
             break;
         case RUNNING:
-            flippableSprite = true;
             if (face == SOUTH) {
                 sprite = _southRunSprite;
             }
@@ -233,6 +231,25 @@ void EntityModel::updateSprite() {
             }
             break;
         case DASHING:
+            if (face == SOUTH) {
+                sprite = _southDashSprite;
+            }
+            else if (face == NORTH) {
+                sprite = _northDashSprite;
+            }
+            else if (face == EAST || face == WEST) {
+                sprite = _eastDashSprite;
+            }
+            else if (face == NORTHEAST || face == NORTHWEST) {
+                sprite = _northEastDashSprite;
+            }
+            else if (face == SOUTHEAST || face == SOUTHWEST) {
+                sprite = _southEastDashSprite;
+            }
+            if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                sprite->flipHorizontal(!sprite->isFlipHorizontal());
+            }
+            break;
         case CARRYING:
         case CAUGHT:
         case ROOTING:

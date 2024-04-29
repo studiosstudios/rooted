@@ -73,6 +73,9 @@ private:
     /** The draw scale */
     float _drawScale;
     
+    /** The scenes for game over */
+    std::shared_ptr<cugl::scene2::SceneNode> _postroundscene;
+    
 public:
 #pragma mark Constructor/Destructor/Dispose
 #pragma mark -
@@ -86,6 +89,7 @@ public:
 #pragma mark -
     void setWinVisible(bool visible);
     void setLoseVisible(bool visible);
+    void setEndVisible(bool visible);
     
     void initJoystickNodes();
 

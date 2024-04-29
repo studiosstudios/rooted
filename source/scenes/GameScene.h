@@ -88,7 +88,7 @@ protected:
     
     int _seed;
     
-    
+    bool _isGameOverScreen;
 
 
 #pragma mark Internal Object Management

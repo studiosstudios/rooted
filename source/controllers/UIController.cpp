@@ -25,6 +25,10 @@ void UIController::setLoseVisible(bool visible) {
     _loseNode->setVisible(visible);
 }
 
+void UIController::setEndVisible(bool visible) {
+    _postroundscene->setVisible(visible);
+}
+
 void UIController::initJoystickNodes() {
     _joynode = scene2::SceneNode::allocWithBounds(Vec2(JOY_ZONE_WIDTH * SCENE_WIDTH / _cameraZoom, JOY_ZONE_HEIGHT * SCENE_HEIGHT / _cameraZoom) + _offset);
 
@@ -97,6 +101,12 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _swipeNode = scene2::PolygonNode::alloc();
     _swipeNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _uinode->addChild(_swipeNode);
+    
+    _postroundscene = _assets->get<scene2::SceneNode>("postround");
+    _postroundscene->doLayout(); // Repositions the HUD
+    _postroundscene->setVisible(false);
+    _uinode->addChild(_postroundscene);
+    
     return true;
 }
 

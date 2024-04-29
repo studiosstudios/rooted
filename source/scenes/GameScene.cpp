@@ -142,14 +142,14 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
     setComplete(false);
     setFailure(false);
+    _isGameOverScreen = false;
     
     _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
     
     float mapX = _map->getBounds().getMaxX()*_scale;
     float mapY = _map->getBounds().getMaxY()*_scale;
     
-    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
-    _cam.setZoom(beginning_zoom);
+    _cam.setZoom(1);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
 
     // XNA nostalgia
@@ -456,13 +456,17 @@ void GameScene::postUpdate(float remain) {
     
     if (_countdown > 0) {
         _countdown--;
-    } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        if(_network->isHost()){
-            _network->pushOutEvent(ResetEvent::allocResetEvent());
-        }
-        else{
-            //do nothing and wait for host to reset
-        }
+    } else if (_countdown == 0 && _network->getNumPlayers() > 1 && !_isGameOverScreen) {
+        // display the end game screen
+        _isGameOverScreen = true;
+        
+        _ui.setEndVisible(true);
+//        if(_network->isHost()){
+//            _network->pushOutEvent(ResetEvent::allocResetEvent());
+//        }
+//        else{
+//            //do nothing and wait for host to reset
+//        }
     }
     else{
         _action.postUpdate(remain);

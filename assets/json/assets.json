@@ -222,6 +222,15 @@
         },
         "playercountasset" : {
             "file" : "textures/temp_player_count.png"
+        },
+        "postroundstatbkg": {
+            "file": "textures/postroundstatbkg.png"
+        },
+        "carrotsingle": {
+            "file": "textures/carrotsingle.png"
+        },
+        "bluearrowbutton": {
+            "file": "textures/bluearrow.png"
         }
     },
     "jsons": {
@@ -324,6 +333,10 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 60
         },
+        "gaeguBold65": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 65
+        },
         "gaeguBold67": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 67
@@ -365,7 +378,8 @@
         "prelobby": "widgets/prelobby.json",
         "backbuttonwidget" : "widgets/backbuttonwidget.json",
         "lobbyidwidget" : "widgets/lobbyidwidget.json",
-        "playercountwidget" : "widgets/playercountwidget.json"
+        "playercountwidget" : "widgets/playercountwidget.json",
+        "postround": "widgets/postround.json"
     },
     "scene2s" : {
         "host": {
@@ -390,6 +404,12 @@
             "type": "Widget",
             "data": {
                 "key": "prelobby"
+            }
+        },
+        "postround": {
+            "type": "Widget",
+            "data": {
+                "key": "postround"
             }
         },
         "loadingscreen": {

@@ -110,7 +110,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     addChild(_rootnode);
     addChild(_uinode);
     
-    _input = InputController::alloc(getBounds());
+    _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     Haptics::start();
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);

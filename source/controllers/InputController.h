@@ -262,11 +262,11 @@ public:
      *
      * @return true if the controller was initialized successfully
      */
-    bool init(const cugl::Rect bounds);
+    bool init(const cugl::Rect bounds, const std::shared_ptr<cugl::JsonValue>& lineData, const std::shared_ptr<cugl::JsonValue>& circleData);
 
-    static std::shared_ptr<InputController> alloc(const cugl::Rect bounds) {
+    static std::shared_ptr<InputController> alloc(const cugl::Rect bounds, const std::shared_ptr<cugl::JsonValue>& lineData, const std::shared_ptr<cugl::JsonValue>& circleData) {
         std::shared_ptr<InputController> result = std::make_shared<InputController>();
-        return (result->init(bounds) ? result : nullptr);
+        return (result->init(bounds, lineData, circleData) ? result : nullptr);
     }
     
 #pragma mark -

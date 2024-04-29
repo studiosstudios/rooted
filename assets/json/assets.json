@@ -236,7 +236,9 @@
         "gridUnit3": "level-editor/gridUnit3.json",
         "gridUnit4": "level-editor/gridUnit4.json",
         "gridUnit5": "level-editor/gridUnit5.json",
-        "gridUnit6": "level-editor/gridUnit6.json"
+        "gridUnit6": "level-editor/gridUnit6.json",
+        "line-gesture": "json/line-gesture.json",
+        "circle-gesture": "json/circle-gesture.json"
     },
     "sounds": {
         "menu": {

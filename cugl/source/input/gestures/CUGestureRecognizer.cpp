@@ -611,6 +611,7 @@ void GestureRecognizer::dispose() {
 const std::string GestureRecognizer::match(const Vec2* points,  size_t psize,
                                            float& similarity) {
     CUAssertLog(psize > 1, "A gesture must have at least two points");
+    std::cout << "TEMPLATE SIZE " << _templates.size() << "\n";
     if (_templates.empty()) {
         similarity = 0;
         return "";
@@ -770,6 +771,7 @@ bool GestureRecognizer::addGesture(const std::string name, const Vec2* points,
     gesture.setPoints(normalized);
     gesture.setVector(vectorized);
     _templates[name] = gesture;
+    std::cout << "ADDED GESTURE " <<_templates.size() << "\n";
     return true;
 }
 

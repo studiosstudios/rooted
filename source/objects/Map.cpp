@@ -862,17 +862,18 @@ std::pair<Vec2, int> Map::getRandomRockSpawn() {
     rand.second = false;
     _numRockSpawns++;
     _spawnCooldown = SPAWN_COOLDOWN;
-    CULog("spawn idx: %d", randidx);
     return std::pair(rand.first.origin, valididxs.at(randidx));
 }
 
-void Map::spawnRock(Vec2 pos, int idx) {
+void Map::spawnRock(Vec2 pos, int idx, Vec2 vel) {
     auto rockTexture = _assets->get<Texture>("rock");
-    
-    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, false);
+
+    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, !vel.isZero());
     rock->setDebugColor(DEBUG_COLOR);
-    rock->setName("rock_spawn");
+    rock->setName(vel.isZero() ? "rock_spawn" : "rock");
     rock->setSpawnIndex(idx);
+    rock->setInitVelocity(vel);
+    rock->setLinearVelocity(vel);
     
     auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
     rock->setSceneNode(rockNode);
@@ -884,7 +885,7 @@ void Map::spawnRock(Vec2 pos, int idx) {
     // Create the polygon node (empty, as the model will initialize)
     // 512 * scale
 //    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
-    rockNode->setName("rock_spawn");
+    rockNode->setName(vel.isZero() ? "rock_spawn" : "rock");
     _entitiesNode->addChild(rockNode);
     rock->setDebugScene(_debugnode);
     

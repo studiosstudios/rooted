@@ -18,6 +18,7 @@ protected:
 
     Vec2 _pos;
     int _idx;
+    Vec2 _vel;
 
 public:
     /**
@@ -29,7 +30,7 @@ public:
     */
     std::shared_ptr<NetEvent> newEvent() override;
 
-    static std::shared_ptr<NetEvent> allocSpawnRockEvent(Vec2 pos, int idx);
+    static std::shared_ptr<NetEvent> allocSpawnRockEvent(Vec2 pos, int idx, Vec2 vel);
 
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -47,6 +48,8 @@ public:
     void deserialize(const std::vector<std::byte>& data) override;
 
     Vec2 getPosition() { return _pos; }
+    
+    Vec2 getVelocity() { return _vel; }
     
     int getIndex() { return _idx; }
 };

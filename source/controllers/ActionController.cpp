@@ -88,8 +88,10 @@ void ActionController::preUpdate(float dt) {
     }
     
     // TODO: move this to carrot only option
-    if (_input->didThrowRock() && _map->getCharacter()->hasRock()) {
+    if (_input->didThrowRock() && playerEntity->hasRock()) {
         _map->fireRock(playerEntity);
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2));
+        playerEntity->setHasRock(false);
     }
     
     if (_network->isHost()) { // Farmer (host) specific actions
@@ -125,7 +127,7 @@ void ActionController::preUpdate(float dt) {
         if (_map->shouldSpawnRock()) {
             //optional spawn rock
             auto spawn = _map->getRandomRockSpawn();
-            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second));
+            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO));
         }
     }
     else { // Carrot specific actions
@@ -411,7 +413,7 @@ void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event)
 }
 
 void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event){
-    _map->spawnRock(event->getPosition(), event->getIndex());
+    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity());
 }
 
 void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){

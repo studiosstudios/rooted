@@ -203,7 +203,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     _rand32.seed(randSeed);
     //random size (must be 16x9 for now)
     _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * (3 + floor(float(_rand32()) / _rand32.max() * 3.0)));
-    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
+    _bounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
     
     _mapInfo.resize(_bounds.size.height / MAP_UNIT_HEIGHT, std::vector<std::pair<std::string, float>>(_bounds.size.width / MAP_UNIT_WIDTH));
     
@@ -286,7 +286,7 @@ void Map::populate() {
     _world = physics2::net::NetWorld::alloc(getBounds(), Vec2(0, 0));
     
     _numRockSpawns = 0;
-    _spawnCooldown = SPAWN_COOLDOWN;
+    _spawnCooldown = 0;
     _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _bounds.size);
 
     _shaderrenderer = ShaderRenderer::alloc(_wheatscene->getTexture(), _assets, _bounds.size, FULL_WHEAT_HEIGHT);
@@ -795,38 +795,6 @@ void Map::resetPlayers() {
     _farmers.at(0)->resetFarmer();
 }
 
-void Map::fireRock(std::shared_ptr<EntityModel> player) {
-    auto rockTexture = _assets->get<Texture>("rock");
-    
-    auto rock = Collectible::alloc(player->getPosition(), Vec2(0.5, 0.5), _scale.x, true);
-    rock->setDebugColor(DEBUG_COLOR);
-    rock->setName("rock");
-    Vec2 temp(player->getFacing().normalize() * RUN_SPEED * 1.2);
-    rock->setInitVelocity(temp);
-    rock->setLinearVelocity(temp);
-    
-    auto rockNode = scene2::SpriteNode::allocWithSheet(rockTexture, 1, 1);
-    rock->setSceneNode(rockNode);
-    rock->setDrawScale(_scale.x);
-    // set slightly below entities
-    rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
-
-    rockNode->setScale(0.05f * _scale/DEFAULT_DRAWSCALE);
-    // Create the polygon node (empty, as the model will initialize)
-    // 512 * scale
-//    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
-    rockNode->setName("rock");
-    _entitiesNode->addChild(rockNode);
-    rock->setDebugScene(_debugnode);
-    
-    _rocks.push_back(rock);
-    
-    auto wheatnode = rock->allocWheatHeightNode(player->getHeight());
-    _wheatscene->getRoot()->addChild(wheatnode);
-    
-    _world->initObstacle(rock);
-}
-
 void Map::destroyRock(std::shared_ptr<Collectible> rock) {
     // do not attempt to remove a rock that has already been removed
     if (rock->isRemoved()) {
@@ -891,7 +859,7 @@ void Map::spawnRock(Vec2 pos, int idx, Vec2 vel) {
     
     _rocks.push_back(rock);
     
-    auto wheatnode = rock->allocWheatHeightNode(10);
+    auto wheatnode = rock->allocWheatHeightNode(1);
     _wheatscene->getRoot()->addChild(wheatnode);
     
     _world->initObstacle(rock);

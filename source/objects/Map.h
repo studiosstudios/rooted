@@ -284,8 +284,6 @@ public:
     void resetPlantingSpots();
     
     void resetPlayers();
-    
-    void fireRock(std::shared_ptr<EntityModel> player);
 
     void destroyRock(std::shared_ptr<Collectible> rock);
     

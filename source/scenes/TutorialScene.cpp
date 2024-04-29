@@ -68,7 +68,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _map = Map::alloc(_assets, true); // Obtains ownership of root.
 
-    _map->generate(0, 1, 2, 9, 2);
+    _map->generate(0, 1, 2, 10, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -126,7 +126,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
-    _rootnode->addChild(_black);
+    addChild(_black);
+    _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
 
@@ -172,7 +173,7 @@ void TutorialScene::reset() {
     // Load a new level
     _map->clearRootNode();
     _map->dispose();
-    _map->generate(0, 1, 2, 9, 2);
+    _map->generate(0, 1, 2, 10, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -226,7 +227,8 @@ void TutorialScene::reset() {
     _time = 0;
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
-    _rootnode->addChild(_black);
+    addChild(_black);
+    _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
 }
@@ -398,11 +400,73 @@ void TutorialScene::preUpdate(float dt) {
             }
         }
             break;
+        case CARROTLEAVES: {
+            _action.preUpdate(dt);
+            _cam.setTarget(_character->getPosition()*_scale);
+            
+            //move farmer
+            auto farmer = _map->getFarmers().at(0);
+            farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+            farmer->updateState();
+            farmer->applyForce();
+            farmer->stepAnimation(dt);
+            
+            //move unrooted carrot
+            auto carrot = _map->getCarrots().at(1);
+            carrot->setMovement(Vec2(-1, 0));
+            carrot->updateState();
+            carrot->setSensor(true);
+            carrot->applyForce();
+            carrot->stepAnimation(dt);
+        }
+            break;
+        case BABYENTERS: {
+            if (_map->getBabyCarrots().at(0)->getY() < 17) {
+                _cam.setTarget(_map->getBabyCarrots().at(0)->getPosition()*_scale);
+                if (!_pausePhysics) {
+                    _pausePhysics = true;
+                    _input->pause();
+                    _time = 0;
+                }
+            } else {
+                _action.preUpdate(dt);
+                _action.updateBabyCarrots();
+                _cam.setTarget(_character->getPosition()*_scale);
+                
+                //move farmer
+                auto farmer = _map->getFarmers().at(0);
+                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                farmer->updateState();
+                farmer->applyForce();
+                farmer->stepAnimation(dt);
+            }
+            
+        }
+            break;
+        case LASTBABY:
+            {
+                _action.preUpdate(dt);
+                _action.updateBabyCarrots();
+                _cam.setTarget(_character->getPosition()*_scale);
+                
+                //move farmer
+                auto farmer = _map->getFarmers().at(0);
+                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                farmer->updateState();
+                farmer->applyForce();
+                farmer->stepAnimation(dt);
+            }
+            break;
+        case CARROTWIN:
+            break;
         case SWITCH:
+            _black->setColor(Color4(0,0,0, std::min(_time * 2.0 * 255,  255.0)));
             break;
         case CATCHCARROT:
             break;
         case ROOT:
+            break;
+        case FARMERWIN:
             break;
         case FREEPLAY:
             break;
@@ -450,7 +514,7 @@ void TutorialScene::fixedUpdate(float step) {
         if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
             _action.processUnrootEvent(unrootEvent);
         }
-        if (_state == CATCHBABIES && _map->getBabyCarrots().size() > 1) {
+        if (_state == CATCHBABIES || _state == LASTBABY) {
             if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
                 _action.processBarrotEvent(captureBarrotEvent);
             }
@@ -589,16 +653,54 @@ void TutorialScene::postUpdate(float remain) {
         case UNROOT:
             if (!_map->getCarrots().at(1)->isRooted()) {
                 _time = 0;
-                _state = SWITCH;
+                _map->getCarrots().at(1)->setSensor(true);
+                _state = CARROTLEAVES;
+            }
+            break;
+        case CARROTLEAVES:
+            if (_map->getCarrots().at(1)->getX() < -2) {
+                _time = 0;
+                _map->getBabyCarrots().at(0)->setBodyType(b2BodyType::b2_dynamicBody);
+                _state = BABYENTERS;
+            }
+            break;
+        case BABYENTERS:
+            if (_pausePhysics && _time > 2.0) {
+                _time = 0;
+                _pausePhysics = false;
+                _input->unpause();
+                _cam.setTarget(_character->getPosition()*_scale);
+                _state = LASTBABY;
+            }
+            break;
+        case LASTBABY:
+            if (_map->getBabyCarrots().size() == 0) {
+                _input->pause();
+                _state = CARROTWIN;
+                _pausePhysics = true;
+                _time = 0;
+                
+                pauseNonEssentialAudio();
+                std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+                AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
+                _ui.setWinVisible(true);
             }
             break;
         case ROCK:
+            break;
+        case CARROTWIN:
+            if (_time > 1.5){
+                _state = SWITCH;
+                _time = 0;
+            }
             break;
         case SWITCH:
             break;
         case CATCHCARROT:
             break;
         case ROOT:
+            break;
+        case FARMERWIN:
             break;
         case FREEPLAY:
             break;

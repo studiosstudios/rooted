@@ -85,10 +85,15 @@ protected:
         SHOWFARMER,     //farmer appears cutscene - fade to black to farmer catching carrot
         ESCAPEFARMER,   //teach shaking to escape farmer
         UNROOT,         //teach unrooting
-        ROCK,           //ignore for now?
+        CARROTLEAVES,   //unrooted carrot leaves
+        ROCK,           //ignore for now - farmer leaves?
+        BABYENTERS,     //one more baby enters
+        LASTBABY,       //catch last baby
+        CARROTWIN,      //win screen for catching last baby
         SWITCH,         //fade to black and player is now farmer
         CATCHCARROT,    //teach dash to catch carrot
         ROOT,           //teach planting spots and rooting
+        FARMERWIN,      //wins screen for planting carrots
         FREEPLAY        //freeplay - potentially allow players to switch between playing as farmer and one of two carrots?
                         //  quit button should appear
     };

@@ -452,7 +452,7 @@ void TutorialScene::preUpdate(float dt) {
                     
                 if (_step == 5) {
                     _input->pause();
-                    _ui.setDialogBoxText("Unroot the other carrot by going near it and swiping down!");
+                    _ui.setDialogBoxText("Unroot the other carrot by going near it and swiping in a circle!");
                     _ui.setDialogBoxVisible(true);
                     _step = 6;
                 }
@@ -579,7 +579,7 @@ void TutorialScene::preUpdate(float dt) {
             _action.preUpdate(dt);
             _cam.setTarget(_character->getPosition()*_scale);
             if (_step == 11) {
-                _ui.setDialogBoxText("Got one. Swipe down at a rooting spot to root them!");
+                _ui.setDialogBoxText("Got one. Swipe in a circle at a rooting spot to root them!");
                 _ui.setDialogBoxVisible(true);
                 _step = 12;
             }

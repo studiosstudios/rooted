@@ -75,9 +75,16 @@ private:
     
     /** The scenes for game over */
     std::shared_ptr<cugl::scene2::SceneNode> _postroundscene;
+    std::shared_ptr<cugl::scene2::Label> _roundNumber;
+    std::shared_ptr<cugl::scene2::Label> _time;
+    std::shared_ptr<cugl::scene2::Label> _babyCarrots;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _carrotsRooted;
+    
     std::shared_ptr<cugl::scene2::Button> _nextbutton;
     std::shared_ptr<cugl::scene2::SceneNode> _playerpointinfo;
+    std::shared_ptr<cugl::scene2::Button> _exitbutton;
     std::shared_ptr<cugl::scene2::Button> _nextroundbutton;
+    std::map<std::shared_ptr<cugl::scene2::SceneNode>, std::vector<std::shared_ptr<cugl::scene2::SceneNode>>> _points;
     
 public:
 #pragma mark Constructor/Destructor/Dispose

@@ -115,6 +115,16 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _postroundscene->setVisible(false);
     _uinode->addChild(_postroundscene);
     
+    _roundNumber = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_roundnum"));
+    _time = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_gamelength_gametime"));
+    _babyCarrots = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_babycarrotscount_numbabycarrots"));
+    _carrotsRooted = {
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_1"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_2"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_3"),
+    };
+    
     _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
     _nextbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
@@ -130,7 +140,18 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _playerpointinfo->setVisible(false);
     _uinode->addChild(_playerpointinfo);
     
+    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
+    _exitbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // idk what this button does
+        }
+    });
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
+    _nextroundbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // set a flag so that you can send an event from GameScene
+        }
+    });
     
     return true;
 }

@@ -27,6 +27,12 @@ void UIController::setLoseVisible(bool visible) {
 
 void UIController::setEndVisible(bool visible) {
     _postroundscene->setVisible(visible);
+    if (visible) {
+        _nextbutton->activate();
+    } else {
+        _nextbutton->deactivate();
+        _nextbutton->setDown(false);
+    }
 }
 
 void UIController::initJoystickNodes() {
@@ -109,11 +115,22 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _postroundscene->setVisible(false);
     _uinode->addChild(_postroundscene);
     
+    _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
+    _nextbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _postroundscene->setVisible(false);
+            _playerpointinfo->setVisible(true);
+            _nextroundbutton->activate();
+        }
+    });
+    
     _playerpointinfo = _assets->get<scene2::SceneNode>("playerpoints");
     _playerpointinfo->setScale(1 / _cameraZoom);
     _playerpointinfo->doLayout(); // Repositions the HUD
     _playerpointinfo->setVisible(false);
     _uinode->addChild(_playerpointinfo);
+    
+    _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     
     return true;
 }

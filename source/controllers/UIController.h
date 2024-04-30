@@ -75,7 +75,9 @@ private:
     
     /** The scenes for game over */
     std::shared_ptr<cugl::scene2::SceneNode> _postroundscene;
+    std::shared_ptr<cugl::scene2::Button> _nextbutton;
     std::shared_ptr<cugl::scene2::SceneNode> _playerpointinfo;
+    std::shared_ptr<cugl::scene2::Button> _nextroundbutton;
     
 public:
 #pragma mark Constructor/Destructor/Dispose

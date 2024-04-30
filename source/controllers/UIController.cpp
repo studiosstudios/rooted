@@ -102,11 +102,18 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _swipeNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _uinode->addChild(_swipeNode);
     
+    // post round scene info
     _postroundscene = _assets->get<scene2::SceneNode>("postround");
     _postroundscene->setScale(1 / _cameraZoom);
     _postroundscene->doLayout(); // Repositions the HUD
     _postroundscene->setVisible(false);
     _uinode->addChild(_postroundscene);
+    
+    _playerpointinfo = _assets->get<scene2::SceneNode>("playerpoints");
+    _playerpointinfo->setScale(1 / _cameraZoom);
+    _playerpointinfo->doLayout(); // Repositions the HUD
+    _playerpointinfo->setVisible(false);
+    _uinode->addChild(_playerpointinfo);
     
     return true;
 }

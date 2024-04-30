@@ -231,6 +231,15 @@
         },
         "bluearrowbutton": {
             "file": "textures/bluearrow.png"
+        },
+        "playericon" : {
+            "file" : "textures/playericon.png"
+        },
+        "emptypoint" : {
+            "file" : "textures/emptypoint.png"
+        },
+        "filledpoint" : {
+            "file" : "textures/filledpoint.png"
         }
     },
     "jsons": {
@@ -379,7 +388,9 @@
         "backbuttonwidget" : "widgets/backbuttonwidget.json",
         "lobbyidwidget" : "widgets/lobbyidwidget.json",
         "playercountwidget" : "widgets/playercountwidget.json",
-        "postround": "widgets/postround.json"
+        "postround": "widgets/postround.json",
+        "playerpoints" : "widgets/playerpoints.json",
+        "playerpointinfo" : "widgets/playerpointinfowidget.json"
     },
     "scene2s" : {
         "host": {
@@ -410,6 +421,12 @@
             "type": "Widget",
             "data": {
                 "key": "postround"
+            }
+        },
+        "playerpoints": {
+            "type": "Widget",
+            "data": {
+                "key": "playerpoints"
             }
         },
         "loadingscreen": {

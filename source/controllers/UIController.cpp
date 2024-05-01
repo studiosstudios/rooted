@@ -131,6 +131,7 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
             _postroundscene->setVisible(false);
             _playerpointinfo->setVisible(true);
             _nextroundbutton->activate();
+            _exitbutton->activate();
         }
     });
     
@@ -140,16 +141,29 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _playerpointinfo->setVisible(false);
     _uinode->addChild(_playerpointinfo);
     
+    // there are 5 (1-5) rows with 9 (0-8)
+    // playerpoints_playerpoints_playerpointinfo_x
+    // playerpoints_playerpoints_playerpointinfo_x_points_pointx
+    for (int ii = 1; ii <= 5; ii++) {
+        std::shared_ptr<scene2::SceneNode> wholenode = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii));
+        std::vector<std::shared_ptr<scene2::SceneNode>> elements;
+        for (int jj = 0; jj < 9; jj++) {
+            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_points_point" + std::to_string(jj));
+            elements.push_back(temp);
+        }
+        _points.insert({wholenode, elements});
+    }
+    
     _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
     _exitbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            // idk what this button does
+            // TODO: disconnect to the main menu
         }
     });
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            // set a flag so that you can send an event from GameScene
+            // TODO: set a flag so that you can send an event that you are ready from GameScene
         }
     });
     

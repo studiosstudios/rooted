@@ -349,73 +349,77 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
-    while(_network->isInAvailable()){
-        auto e = _network->popInEvent();
-        if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
-            //            CULog("Received dash event");
-            _action.processCaptureEvent(captureEvent);
-        }
-        if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
-            //            std::cout<<"got a root event\n";
-            _action.processRootEvent(rootEvent);
-        }
-        if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
-            _action.processUnrootEvent(unrootEvent);
-        }
-        if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
-            _action.processBarrotEvent(captureBarrotEvent);
-        }
-        if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
-            processResetEvent(resetEvent);
-        }
-        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
-            _action.processMoveEvent(moveEvent);
-        }
-        if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
-            _action.processFreeEvent(freeEvent);
-        }
-    }
-    if (_countdown >= 0 && _network->getNumPlayers() > 1){
-        return;
-    }
     
-    _map->getWorld()->update(step);
-    _cam.update(step);
-    
-    _map->updateShaders(step, _cam.getCamera()->getCombined());
-
-    
-    //check if entities are in wheat
-    //TODO: make entities vector in map for convenience?
-    //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
-    
-    //create queries
-    for (auto baby : _map->getBabyCarrots()) {
-        baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
+    // only update everything if we are not in the end game scene
+    if (!_isGameOverScreen) {
+        while(_network->isInAvailable()){
+            auto e = _network->popInEvent();
+            if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
+                //            CULog("Received dash event");
+                _action.processCaptureEvent(captureEvent);
+            }
+            if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
+                //            std::cout<<"got a root event\n";
+                _action.processRootEvent(rootEvent);
+            }
+            if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
+                _action.processUnrootEvent(unrootEvent);
+            }
+            if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
+                _action.processBarrotEvent(captureBarrotEvent);
+            }
+            if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
+                processResetEvent(resetEvent);
+            }
+            if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
+                _action.processMoveEvent(moveEvent);
+            }
+            if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
+                _action.processFreeEvent(freeEvent);
+            }
+        }
+        if (_countdown >= 0 && _network->getNumPlayers() > 1){
+            return;
+        }
+        
+        _map->getWorld()->update(step);
+        _cam.update(step);
+        
+        _map->updateShaders(step, _cam.getCamera()->getCombined());
+        
+        
+        //check if entities are in wheat
+        //TODO: make entities vector in map for convenience?
+        //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
+        
+        //create queries
+        for (auto baby : _map->getBabyCarrots()) {
+            baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
+        }
+        for (auto farmer : _map->getFarmers()) {
+            farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
+            //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
+        }
+        for (auto carrot : _map->getCarrots()) {
+            carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
+        }
+        
+        //resolve queries
+        _map->getWheatScene()->doQueries();
+        
+        //fetch results
+        for (auto farmer : _map->getFarmers()) {
+            farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
+        }
+        for (auto carrot : _map->getCarrots()) {
+            carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
+        }
+        for (auto baby : _map->getBabyCarrots()) {
+            baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
+            //        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
+        }
+        _map->getWheatScene()->clearQueries();
     }
-    for (auto farmer : _map->getFarmers()) {
-        farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
-        //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
-    }
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
-    }
-
-    //resolve queries
-    _map->getWheatScene()->doQueries();
-    
-    //fetch results
-    for (auto farmer : _map->getFarmers()) {
-        farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
-    }
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
-    }
-    for (auto baby : _map->getBabyCarrots()) {
-        baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
-//        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
-    }
-    _map->getWheatScene()->clearQueries();
 }
 
 /**
@@ -456,11 +460,15 @@ void GameScene::postUpdate(float remain) {
     
     if (_countdown > 0) {
         _countdown--;
-    } else if (_countdown == 0 && _network->getNumPlayers() > 1 && !_isGameOverScreen) {
-        // display the end game screen
-        _isGameOverScreen = true;
+    } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
+        // are we displaying the end game screen
+        if (!_isGameOverScreen) {
+            _isGameOverScreen = true;
+            
+            // display end scene
+            _ui.setEndVisible(true);
+        }
         
-        _ui.setEndVisible(true);
 //        if(_network->isHost()){
 //            _network->pushOutEvent(ResetEvent::allocResetEvent());
 //        }

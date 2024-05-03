@@ -818,7 +818,7 @@ public:
      * @return true if the gesture was added to this recognizer
      */
     bool addGesture(const std::string name, const Path2& path, bool unique=false) {
-        return addGesture(name, path.vertices.data(), path.vertices.size(), unique);
+        return addGesture(name, std::vector<Vec2>(path.vertices.begin(), path.vertices.end()).data(), path.vertices.size(), unique);
     }
     
     /**

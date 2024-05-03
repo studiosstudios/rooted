@@ -100,6 +100,12 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     });
     
     // TODO: SET UP OPTIONS SCENE HERE
+    // only temp until we have another way to access the tutorial again
+    _optionsbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _choice = Choice::TUTORIAL;
+        }
+    });
     
     // TODO: SET UP STATS SCENE HERE
     
@@ -150,7 +156,8 @@ void MenuScene::setActive(bool value) {
 }
 
 void MenuScene::update(float timestep) {
-    if (_choice != HOST && _choice != JOIN && _choice != NONE) {
+    // check if a real scene switching choice
+    if (_choice != HOST && _choice != JOIN && _choice != TUTORIAL &&  _choice != NONE) {
         switchScene(_choice);
         _choice = NONE;
     }

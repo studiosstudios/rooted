@@ -34,7 +34,8 @@ void RootedApp::onStartup() {
 #else
     Input::activate<Mouse>();
 #endif
-    
+
+    Haptics::start();
     Input::activate<Keyboard>();
     Input::activate<TextInput>();
     
@@ -74,6 +75,7 @@ void RootedApp::onStartup() {
 void RootedApp::onShutdown() {
     _loading.dispose();
     _gameplay.dispose();
+    _tutorial.dispose();
     _mainmenu.dispose();
     _hostgame.dispose();
     _joingame.dispose();
@@ -170,11 +172,9 @@ void RootedApp::update(float dt) {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void RootedApp::preUpdate(float dt) {
-//    std::cout<<_status<<"\n";
     if (!_loaded && _loading.isActive()) {
         _loading.update(0.01f);
     } else if (_status == LOAD) {
-        // I don't think this is how I should do it but if it works for now it works.
         _network = NetworkController::alloc(_assets);
         _loading.dispose(); // Disables the input listeners in this mode
         _mainmenu.init(_assets);
@@ -208,6 +208,15 @@ void RootedApp::preUpdate(float dt) {
 //            AudioEngine::get()->play("game", source);
 //        }
     }
+    else if (_status == TUTORIAL){
+        _tutorial.preUpdate(dt);
+        if (_tutorial.returnToMenu()){
+            _tutorial.setActive(false);
+            _mainmenu.setActive(true);
+            _status = MENU;
+        }
+        AudioEngine::get()->pause("menu");
+    }
     if(_network){
         _network->updateNet();
     }
@@ -240,6 +249,8 @@ void RootedApp::fixedUpdate() {
 //    _gameplay.fixedUpdate(time);
     if (_status == GAME) {
         _gameplay.fixedUpdate(time);
+    } else if (_status == TUTORIAL) {
+        _tutorial.fixedUpdate(time);
     }
 }
 
@@ -272,6 +283,8 @@ void RootedApp::postUpdate(float dt) {
 //    _gameplay.postUpdate(time);
     if (_status == GAME) {
         _gameplay.postUpdate(time);
+    } else if (_status == TUTORIAL) {
+        _tutorial.postUpdate(time);
     }
 }
 
@@ -296,6 +309,11 @@ void RootedApp::updateMenuScene(float timestep) {
             _joingame.setActive(true);
             _status = CLIENT;
             break;
+        case MenuScene::Choice::TUTORIAL:
+            _mainmenu.setActive(false);
+            _tutorial.setActive(true);
+            _tutorial.init(_assets);
+            _status = TUTORIAL;
         default:
             // DO NOTHING
             break;
@@ -414,6 +432,10 @@ void RootedApp::draw() {
             break;
         case GAME:
             _gameplay.render(_batch);
+            break;
+        case TUTORIAL:
+            _tutorial.render(_batch);
+            break;
         default:
             break;
     }

@@ -17,6 +17,8 @@
 #include "../events/MoveEvent.h"
 #include "../events/CaptureBarrotEvent.h"
 #include "../events/FreeEvent.h"
+#include "../events/SpawnRockEvent.h"
+#include "../events/CollectedRockEvent.h"
 
 class ActionController {
 private:
@@ -28,7 +30,7 @@ private:
     /** reference to the map */
     std::shared_ptr<Map> _map;
     /** ai controller for baby carrots, only for host */
-    AIController _ai;
+    std::shared_ptr<AIController> _ai;
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
     std::shared_ptr<cugl::AssetManager> _assets;
@@ -60,8 +62,10 @@ public:
      * Initializes an ActionController
      */
     bool init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-              std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets);
+              const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets);
 
+    void updateBabyCarrots();
+    
     /**
      * The method called to indicate the start of a deterministic loop.
      *
@@ -86,6 +90,8 @@ public:
      */
     void postUpdate(float remain);
     
+    std::shared_ptr<AIController> getAIController() { return _ai; }
+    
     void networkQueuePositions();
     
     /** Updates character states after capture event */
@@ -105,6 +111,12 @@ public:
     
     /** Updates character states after a carrot frees itself */
     void processFreeEvent(const std::shared_ptr<FreeEvent>& event);
+    
+    /** Spawns rock*/
+    void processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event);
+    
+    /** Someone has collected a rock*/
+    void processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event);
 };
 
 

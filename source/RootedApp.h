@@ -11,6 +11,7 @@
 #include "scenes/MenuScene.h"
 #include "scenes/HostScene.h"
 #include "scenes/ClientScene.h"
+#include "scenes/TutorialScene.h"
 #include "controllers/NetworkController.h"
 
 using namespace cugl::physics2::net;
@@ -22,6 +23,7 @@ class RootedApp : public cugl::Application{
         MENU,
         HOST,
         CLIENT,
+        TUTORIAL,
         GAME
     };
     
@@ -40,6 +42,7 @@ protected:
     MenuScene _mainmenu;
     HostScene _hostgame;
     ClientScene _joingame;
+    TutorialScene _tutorial;
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;

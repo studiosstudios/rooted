@@ -82,7 +82,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
     _seed = hex2dec(_network->getRoomID());
-    _map = Map::alloc(_assets); // Obtains ownership of root.
+    _map = Map::alloc(_assets, false); // Obtains ownership of root.
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
@@ -109,9 +109,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     addChild(_rootnode);
     addChild(_uinode);
-    
-    _input = InputController::alloc(getBounds());
-    Haptics::start();
+
+    _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
     _active = true;
@@ -125,6 +124,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    
+    // TODO: Putting this set here for now, little weird that's it's separate from the rest of ui init -CJ
+    _ui.setCharacter(_character);
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -144,10 +146,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     setFailure(false);
     _isGameOverScreen = false;
     
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
-    float mapX = _map->getBounds().getMaxX()*_scale;
-    float mapY = _map->getBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
     
     _cam.setZoom(1);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
@@ -259,11 +261,11 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    float mapX = _map->getBounds().getMaxX()*_scale;
-    float mapY = _map->getBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -349,76 +351,56 @@ void GameScene::preUpdate(float dt) {
  */
 void GameScene::fixedUpdate(float step) {
     // Turn the physics engine crank.
+    while(_network->isInAvailable()){
+        auto e = _network->popInEvent();
+        if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
+            //            CULog("Received dash event");
+            _action.processCaptureEvent(captureEvent);
+        }
+        if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
+            //            std::cout<<"got a root event\n";
+            _action.processRootEvent(rootEvent);
+        }
+        if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
+            _action.processUnrootEvent(unrootEvent);
+        }
+        if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
+            _action.processBarrotEvent(captureBarrotEvent);
+        }
+        if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
+            processResetEvent(resetEvent);
+        }
+        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
+            _action.processMoveEvent(moveEvent);
+        }
+        if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
+            _action.processFreeEvent(freeEvent);
+        }
+        if(auto spawnRockEvent = std::dynamic_pointer_cast<SpawnRockEvent>(e)){
+            _action.processSpawnRockEvent(spawnRockEvent);
+        }
+        if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
+            _action.processCollectedRockEvent(collectedRockEvent);
+        }
+    }
+    if (_countdown >= 0 && _network->getNumPlayers() > 1){
+        return;
+    }
     
-    // only update everything if we are not in the end game scene
-    if (!_isGameOverScreen) {
-        while(_network->isInAvailable()){
-            auto e = _network->popInEvent();
-            if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
-                //            CULog("Received dash event");
-                _action.processCaptureEvent(captureEvent);
-            }
-            if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
-                //            std::cout<<"got a root event\n";
-                _action.processRootEvent(rootEvent);
-            }
-            if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
-                _action.processUnrootEvent(unrootEvent);
-            }
-            if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
-                _action.processBarrotEvent(captureBarrotEvent);
-            }
-            if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
-                processResetEvent(resetEvent);
-            }
-            if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
-                _action.processMoveEvent(moveEvent);
-            }
-            if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
-                _action.processFreeEvent(freeEvent);
-            }
-        }
-        if (_countdown >= 0 && _network->getNumPlayers() > 1){
-            return;
-        }
-        
-        _map->getWorld()->update(step);
-        _cam.update(step);
-        
-        _map->updateShaders(step, _cam.getCamera()->getCombined());
-        
-        
-        //check if entities are in wheat
-        //TODO: make entities vector in map for convenience?
-        //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
-        
-        //create queries
-        for (auto baby : _map->getBabyCarrots()) {
-            baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
-        }
-        for (auto farmer : _map->getFarmers()) {
-            farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
-            //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
-        }
-        for (auto carrot : _map->getCarrots()) {
-            carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
-        }
-        
-        //resolve queries
-        _map->getWheatScene()->doQueries();
-        
-        //fetch results
-        for (auto farmer : _map->getFarmers()) {
-            farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
-        }
-        for (auto carrot : _map->getCarrots()) {
-            carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
-        }
-        for (auto baby : _map->getBabyCarrots()) {
-            baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
-            //        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
-        }
-        _map->getWheatScene()->clearQueries();
+    _map->getWorld()->update(step);
+    _cam.setTarget(_character->getPosition()*_scale);
+    _cam.update(step);
+    
+    _map->updateShaders(step, _cam.getCamera()->getCombined());
+
+    
+    //check if entities are in wheat
+    //TODO: make entities vector in map for convenience?
+    //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
+    
+    //create queries
+    for (auto baby : _map->getBabyCarrots()) {
+        baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
     }
 }
 
@@ -456,7 +438,7 @@ void GameScene::postUpdate(float remain) {
     }
     // TEMP CODE FOR OPEN BETA
     
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug, _character->canDash());
     
     if (_countdown > 0) {
         _countdown--;

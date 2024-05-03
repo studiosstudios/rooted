@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="116">
+ <editorsettings>
+  <export target="tutorialMid.json" format="json"/>
+ </editorsettings>
+ <properties>
+  <property name="map-type" propertytype="MapType" value="middle-middle"/>
+ </properties>
+ <tileset firstgid="1" source="entities.tsx"/>
+ <tileset firstgid="4" source="maps.tsx"/>
+ <tileset firstgid="14" source="environment.tsx"/>
+ <objectgroup id="9" name="wheat"/>
+ <objectgroup id="8" name="environment"/>
+ <objectgroup id="7" name="entities"/>
+</map>

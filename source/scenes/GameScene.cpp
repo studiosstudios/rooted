@@ -82,7 +82,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
     _seed = hex2dec(_network->getRoomID());
-    _map = Map::alloc(_assets); // Obtains ownership of root.
+    _map = Map::alloc(_assets, false); // Obtains ownership of root.
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
@@ -109,9 +109,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     addChild(_rootnode);
     addChild(_uinode);
-    
-    _input = InputController::alloc(getBounds());
-    Haptics::start();
+
+    _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
     _active = true;
@@ -125,6 +124,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         _babies = _map->loadBabyEntities();
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    
+    // TODO: Putting this set here for now, little weird that's it's separate from the rest of ui init -CJ
+    _ui.setCharacter(_character);
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -143,10 +145,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     setComplete(false);
     setFailure(false);
     
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
-    float mapX = _map->getBounds().getMaxX()*_scale;
-    float mapY = _map->getBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -259,11 +261,11 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    float mapX = _map->getBounds().getMaxX()*_scale;
-    float mapY = _map->getBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -374,12 +376,19 @@ void GameScene::fixedUpdate(float step) {
         if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
             _action.processFreeEvent(freeEvent);
         }
+        if(auto spawnRockEvent = std::dynamic_pointer_cast<SpawnRockEvent>(e)){
+            _action.processSpawnRockEvent(spawnRockEvent);
+        }
+        if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
+            _action.processCollectedRockEvent(collectedRockEvent);
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
     }
     
     _map->getWorld()->update(step);
+    _cam.setTarget(_character->getPosition()*_scale);
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
@@ -452,7 +461,7 @@ void GameScene::postUpdate(float remain) {
     }
     // TEMP CODE FOR OPEN BETA
     
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug, _character->canDash());
     
     if (_countdown > 0) {
         _countdown--;

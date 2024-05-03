@@ -20,8 +20,10 @@ using namespace cugl;
 */
 class CameraController {
 protected:
-    /* The pointer to current scene graph object that the camera is targeting */
-    std::shared_ptr<EntityModel> _target;
+    /* The scene position that this camera moves towards */
+    Vec2 _posTarget;
+    /* The zoom target that this camera interpolates towards */
+    float _zoomTarget;
     /* The pointer to root node of the scene */
     std::shared_ptr<scene2::SceneNode> _root;
     /* The UI layer that will move with the camera */
@@ -34,9 +36,11 @@ protected:
     float _maxZoom;
     /* Draw scale */
     float _scale;
+    /* The proportion of the scene that the camera should stay inside */
+    Vec2 _frac;
     /* Amount of time to hold camera in zoom out pos upon cam init */
     int _startTimer;
-
+    
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -64,7 +68,7 @@ public:
     *
     * @return true if the controller is initialized properly, false otherwise
     */
-    bool init(const std::shared_ptr<EntityModel> target, const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale);
+    bool init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Vec2 frac);
 #pragma mark -
 #pragma mark Camera Handling
 
@@ -92,16 +96,17 @@ public:
     void zoomIn(float zoom);
 
     /**
-    * This method sets the target of the camera.
-    *
-    * @param target The target to set the camera to
-    */
-    void setTarget(const std::shared_ptr<EntityModel> target);
-
-    /**
     * This method sets the position of the camera.
     */
     void setPosition(Vec3 pos);
+
+    void setFrac(Vec2 frac) { _frac = frac; }
+    
+    void setZoomTarget(float target) { _zoomTarget = target; }
+    
+    void setTarget(const Vec2 target) { _posTarget = target; }
+    
+    void setTarget(float x, float y) { _posTarget.set(x, y); }
     
     /**
     * Gets the camera
@@ -110,7 +115,7 @@ public:
     */
     std::shared_ptr<cugl::OrthographicCamera> getCamera() { return _camera; };
     
-    const Vec2 getScreenPosition();
+    const Vec2 boundPosition(Vec2 pos);
 };
 
 #endif

@@ -20,8 +20,9 @@ private:
     std::shared_ptr<cugl::scene2::SpriteNode> _captureNode;
     
     // Animation timers
-    float sneakAnimDuration = 5.0f;
-    float walkAnimDuration = 2.0f;
+    float sneakAnimDuration = 2.0f;
+    float walkAnimDuration = 1.0f;
+    float runAnimDuration = 0.5f;
 
 public:
     int captureTime;

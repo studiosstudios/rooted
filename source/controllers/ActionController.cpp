@@ -28,20 +28,21 @@ using namespace cugl;
  * Initializes an ActionController
  */
 bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-    std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets) {
+    const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets) {
     _map = map;
     _input = input;
     _world = _map->getWorld();
     _network = network;
     _assets = assets;
     if (_network->isHost()) {
-        _ai.init(map);
+        _ai = AIController::alloc(map);
     }
     _network->attachEventType<CaptureEvent>();
     _network->attachEventType<RootEvent>();
     _network->attachEventType<UnrootEvent>();
     _network->attachEventType<MoveEvent>();
     _network->attachEventType<FreeEvent>();
+    _network->attachEventType<SpawnRockEvent>();
     return true;
 }
 
@@ -56,7 +57,7 @@ void ActionController::preUpdate(float dt) {
     auto playerEntity = _map->getCharacter();
     playerEntity->setMovement(_input->getMovement());
     bool didDash = _input->didDash();
-    playerEntity->setDashInput(didDash);
+    playerEntity->setDashInput(didDash, _input->getDashVector());
     if(didDash){
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
         AudioEngine::get()->play("dash", source);
@@ -64,13 +65,27 @@ void ActionController::preUpdate(float dt) {
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     EntityModel::EntityState oldState = playerEntity->getEntityState();
-    playerEntity->updateState();
+    playerEntity->updateState(dt);
     if(playerEntity->getEntityState() != oldState){
         _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
     }
     playerEntity->applyForce();
-    playerEntity->stepAnimation(dt);
+    
     updateRustlingNoise();
+
+    for (auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++) {
+        (*it)->applyForce();
+    }
+    auto players = _map->getPlayers();
+    for (auto it = players.begin(); it != players.end(); ++it) {
+        if ((*it)->getUUID() != playerEntity->getUUID()) {
+            (*it)->updateSprite(dt, false);
+        }
+    }
+    auto barrots = _map->getBabyCarrots();
+    for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+        (*it)->updateSprite(dt, false);
+    }
     
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
@@ -82,22 +97,15 @@ void ActionController::preUpdate(float dt) {
         }
     }
     
+    // TODO: move this to carrot only option
+    if (_input->didThrowRock() && playerEntity->hasRock()) {
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2));
+        playerEntity->setHasRock(false);
+    }
+    
     if (_network->isHost()) { // Farmer (host) specific actions
         auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
-        
-        // Step baby carrot AI
-        for (auto babyCarrot : _map->getBabyCarrots()) {
-            // I'm slightly worried that this could get expensive but when I think about it
-            // it's really no different than just checking for collisions so idk
-            for (auto farmer : _map->getFarmers()) {
-                if (farmer->getPosition().distance(babyCarrot->getPosition()) <= EVADE_DIST) {
-                    babyCarrot->setState(State::EVADE);
-                    babyCarrot->setTarget(babyCarrot->getPosition().add(farmer->getPosition().subtract(babyCarrot->getPosition()).normalize().scale(-3)).clamp(Vec2(1, 1), Vec2(13, 13)));
-                }
-            }
-            _ai.updateBabyCarrot(babyCarrot);
-        }
-        
+        updateBabyCarrots();
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
             //        std::cout<<"farmer did the rooting\n";
             Haptics::get()->playContinuous(1.0, 0.3, 0.2);
@@ -110,6 +118,12 @@ void ActionController::preUpdate(float dt) {
                     _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
                 }
             }
+        }
+        
+        if (_map->shouldSpawnRock()) {
+            //optional spawn rock
+            auto spawn = _map->getRandomRockSpawn();
+            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO));
         }
     }
     else { // Carrot specific actions
@@ -128,13 +142,29 @@ void ActionController::preUpdate(float dt) {
             }
         }
     }
-    
+
     if(!_network->isHost()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
-        if(_input->didShakeDevice() && rand() % 20 < 1 && carrotEntity->isCaptured()){
+        if(_input->didShakeDevice() && rand() % 20 < 21 && carrotEntity->isCaptured()){
+            CULog("free event");
             _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
 //            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
         }
+    }
+}
+
+void ActionController::updateBabyCarrots() {
+    // Step baby carrot AI
+    for (auto babyCarrot : _map->getBabyCarrots()) {
+        // I'm slightly worried that this could get expensive but when I think about it
+        // it's really no different than just checking for collisions so idk
+        for (auto farmer : _map->getFarmers()) {
+            if (farmer->getPosition().distance(babyCarrot->getPosition()) <= EVADE_DIST) {
+                babyCarrot->setState(State::EVADE);
+                babyCarrot->setTarget(babyCarrot->getPosition().add(farmer->getPosition().subtract(babyCarrot->getPosition()).normalize().scale(-3)).clamp(Vec2(1, 1), Vec2(13, 13)));
+            }
+        }
+        _ai->updateBabyCarrot(babyCarrot);
     }
 }
 
@@ -171,6 +201,16 @@ void ActionController::postUpdate(float dt) {
             c->setSensor(false);
         }
     }
+    auto iit = _map->getRocks().begin();
+    while(iit != _map->getRocks().end()){
+        if ((*iit)->isFired() && (*iit)->getAge() > (*iit)->getMaxAge()) {
+            _map->destroyRock(*iit);
+        }
+        if ((*iit)->isRemoved()) {
+            _map->getRocks().erase(iit);
+        }
+        else ++iit;
+    }
 }
 
 /**
@@ -180,7 +220,8 @@ float calculateVolume(EntityModel::EntityState state, float distance){
     float stateToNum;
     switch(state){
         case EntityModel::EntityState::STANDING:
-        case EntityModel::EntityState::PLANTING:
+        case EntityModel::EntityState::ROOTING:
+        case EntityModel::EntityState::UNROOTING:
         case EntityModel::EntityState::CAUGHT:
         case EntityModel::EntityState::ROOTED:
             stateToNum = 0;
@@ -380,6 +421,36 @@ void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event)
         if(event->getUUID() == carrot->getUUID()){
             carrot->escaped();
             return;
+        }
+    }
+}
+
+void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event){
+    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity());
+}
+
+void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){
+    //this is terrible and should be redone later but i am tired
+    if (event->getUUID() == _map->getFarmers().at(0)->getUUID()) {
+        if (_map->getFarmers().at(0)->hasRock()) return;
+        _map->getFarmers().at(0)->setHasRock(true);
+        for (auto rock : _map->getRocks()) {
+            if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
+                _map->destroyRock(rock);
+            }
+        }
+    } else {
+        for(auto carrot : _map->getCarrots()){
+            if(event->getUUID() == carrot->getUUID()){
+                if (carrot->hasRock()) return;
+                for (auto rock : _map->getRocks()) {
+                    if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
+                        _map->destroyRock(rock);
+                    }
+                }
+                carrot->setHasRock(true);
+                return;
+            }
         }
     }
 }

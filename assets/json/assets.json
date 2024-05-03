@@ -313,6 +313,12 @@
             "stream":   true,
             "volume":   0.5
         },
+        "tutorial": {
+            "type":     "sample",
+            "file":     "sounds/tutorial.ogg",
+            "stream":   true,
+            "volume":   0.5
+        },
         "win": {
             "type":     "sample",
             "file":     "sounds/DD_Victory.ogg",

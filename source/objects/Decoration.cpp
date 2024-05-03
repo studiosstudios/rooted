@@ -5,26 +5,26 @@
 //  Created by Nicole Thean on 4/29/24.
 //
 
-#include "Obstacle.h"
+#include "Decoration.h"
 
-bool Obstacle::init(const cugl::Vec2 &pos, const cugl::Size &size, float scale) {
+bool Decoration::init(const cugl::Vec2 &pos, const cugl::Size &size, float scale) {
     _drawScale = scale;
     
     _size = size;
         
     if (BoxObstacle::init(pos, _size)) {
-        // set this so players can pass through
+        // pass through for now
         setSensor(true);
         return true;
     }
     return false;
 }
 
-void Obstacle::dispose() {
+void Decoration::dispose() {
     _node = nullptr;
 }
 
-void Obstacle::setSceneNode(const std::shared_ptr<cugl::AssetManager> &assets, float priority, std::string texkey) {
+void Decoration::setSceneNode(const std::shared_ptr<cugl::AssetManager> &assets, float priority, std::string texkey) {
     _node = scene2::SceneNode::allocWithBounds((Rect(Vec2::ZERO, _drawScale * _dimension)));
     _node->setAnchor(Vec2::ANCHOR_CENTER);
     _node->setPriority(priority);
@@ -32,7 +32,7 @@ void Obstacle::setSceneNode(const std::shared_ptr<cugl::AssetManager> &assets, f
     addTileNode(Vec2::ZERO, texscale, assets, texkey);
 }
 
-void Obstacle::addTileNode(Vec2 position, float texscale, const std::shared_ptr<cugl::AssetManager> &assets, std::string texkey) {
+void Decoration::addTileNode(Vec2 position, float texscale, const std::shared_ptr<cugl::AssetManager> &assets, std::string texkey) {
     auto child = scene2::PolygonNode::allocWithPoly(Rect(Vec2::ZERO, Size(_drawScale * texscale, _drawScale * texscale)));
     child->setTexture(assets->get<Texture>(texkey));
     child->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);

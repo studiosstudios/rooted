@@ -1,23 +1,33 @@
 //
-//  Obstacle.h
+//  Decoration.h
 //  Rooted
 //
 //  Created by Nicole Thean on 4/29/24.
 //
 
-#ifndef Obstacle_h
-#define Obstacle_h
+#ifndef Decoration_h
+#define Decoration_h
 
 #include <cugl/cugl.h>
 
+#pragma mark -
+#pragma mark Drawing Constants
+/** The texture for the character avatar */
+#define BARN_TEXTURE    "barn"
+#define TRACTOR_TEXTURE   "tractor"
+#define MILL_TEXTURE   "mill"
+
 using namespace cugl;
 
-class Obstacle : public cugl::physics2::BoxObstacle {
+class Decoration : public cugl::physics2::BoxObstacle {
 private:
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _drawScale;
+    
     Size _size;
     
+    bool _shouldAnimate;
+        
 protected:
     /** The scene graph node for the planting spot. */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
@@ -26,12 +36,12 @@ public:
     /**
      * Creates a degenerate obstacle object.
      */
-    Obstacle() : BoxObstacle() { }
+    Decoration() : BoxObstacle() { }
     
     /**
      * Destroys this PlantingSpot, releasing all resources.
      */
-    virtual ~Obstacle(void) { dispose(); }
+    virtual ~Decoration(void) { dispose(); }
     
     /**
      * Disposes all resources and assets of this planting spot
@@ -60,8 +70,8 @@ public:
      *
      * @return  A newly allocated planting spot at the given position, with the given radius
      */
-    static std::shared_ptr<Obstacle> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
-        std::shared_ptr<Obstacle> result = std::make_shared<Obstacle>();
+    static std::shared_ptr<Decoration> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+        std::shared_ptr<Decoration> result = std::make_shared<Decoration>();
         return (result->init(pos, size, scale) ? result : nullptr);
     }
     
@@ -90,4 +100,4 @@ private:
 };
 
 
-#endif /* Obstacle_h */
+#endif /* Decoration_h */

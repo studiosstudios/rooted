@@ -13,7 +13,7 @@
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
-#include "Obstacle.h"
+#include "Decoration.h"
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
 #include "../shaders/ShaderRenderer.h"
@@ -34,7 +34,7 @@ private:
     /** references to the planting spots */
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the obstacles */
-    std::vector<std::shared_ptr<Obstacle>> _obstacles;
+    std::vector<std::shared_ptr<Decoration>> _decorations;
     /** references to the walls */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
@@ -83,7 +83,7 @@ private:
     
     std::vector<Rect> _plantingSpawns;
     
-    std::vector<Rect> _obstacleSpawns;
+    std::vector<Rect> _decorationSpawns;
     
     /** Vector of key names for all map units in assets json */
     std::vector<std::string> _mapNames;
@@ -107,7 +107,7 @@ public:
         PLAYER,
         WHEAT,
         ENTITIESSHADER, //the entities drawn with the wheat cover shader
-        OBSTACLES,
+        DECORATIONS,
         CLOUDS
     };
 
@@ -274,7 +274,7 @@ public:
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
     
-    std::vector<std::shared_ptr<Obstacle>> &getObstacles() { return _obstacles; }
+    std::vector<std::shared_ptr<Decoration>> &getDecorations() { return _decorations; }
 
     std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
     
@@ -322,7 +322,7 @@ private:
     
     void spawnPlantingSpots();
     
-    void spawnObstacles();
+    void spawnDecorations();
     
     void spawnFarmers();
     

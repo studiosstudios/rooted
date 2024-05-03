@@ -201,6 +201,7 @@ void RootedApp::preUpdate(float dt) {
     else if (_status == GAME){
         _gameplay.preUpdate(dt);
         AudioEngine::get()->pause("menu");
+        AudioEngine::get()->pause("tutorial");
 //        std::shared_ptr<Sound> source = _assets->get<Sound>(GAME_MUSIC);
 //        if(AudioEngine::get()->getState("game") == AudioEngine::State::PAUSED){
 //            AudioEngine::get()->resume("game");

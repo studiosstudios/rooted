@@ -89,6 +89,12 @@ protected:
     int _seed;
     
     bool _isGameOverScreen;
+    
+    int _round;
+    
+    cugl::Timestamp _startTime;
+    
+//    std::map<std::shared_ptr<EntityModel>
 
 
 #pragma mark Internal Object Management

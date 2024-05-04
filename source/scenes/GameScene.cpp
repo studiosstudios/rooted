@@ -153,6 +153,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     _cam.setZoom(1);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
+    
+    // TODO: figure out a way to separate resetting for a round and for a game
+    _round = 1;
+    _startTime = Timestamp();
 
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
@@ -446,6 +450,9 @@ void GameScene::postUpdate(float remain) {
         // are we displaying the end game screen
         if (!_isGameOverScreen) {
             _isGameOverScreen = true;
+            
+            // set how the end screen should display
+            _ui.setEndVariables(_round, 100, _map->getBabyCarrots().size(), _map->getCarrots().size());
             
             // display end scene
             _ui.setEndVisible(true);

@@ -35,6 +35,15 @@ void UIController::setEndVisible(bool visible) {
     }
 }
 
+void UIController::setEndVariables(int roundNum, int length, int babies, int carrots) {
+    _roundNumber->setText("ROUND " + std::to_string(roundNum));
+    _time->setText(std::to_string(length));
+    _babyCarrots->setText(std::to_string(babies));
+    for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
+        _carrotsRooted.at(ii)->setVisible(ii < carrots);
+    }
+}
+
 void UIController::setSpeechBubbleVisible(bool visible) {
     _speechBubble->setVisible(visible);
 }

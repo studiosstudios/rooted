@@ -19,6 +19,7 @@ protected:
     Vec2 _pos;
     int _idx;
     Vec2 _vel;
+    std::string _uuid;
 
 public:
     /**
@@ -30,7 +31,7 @@ public:
     */
     std::shared_ptr<NetEvent> newEvent() override;
 
-    static std::shared_ptr<NetEvent> allocSpawnRockEvent(Vec2 pos, int idx, Vec2 vel);
+    static std::shared_ptr<NetEvent> allocSpawnRockEvent(Vec2 pos, int idx, Vec2 vel, std::string uuid);
 
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -52,6 +53,8 @@ public:
     Vec2 getVelocity() { return _vel; }
     
     int getIndex() { return _idx; }
+    
+    std::string getUUID() { return _uuid; }
 };
 
 

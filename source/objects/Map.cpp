@@ -485,7 +485,7 @@ std::vector<std::shared_ptr<EntityModel>> Map::loadBabyEntities() {
 }
 
 void Map::acquireMapOwnership() {
-    //REMINDER TO MYSELF: UNDO NETWORLD CHANGE
+    //REMINDER TO JEFF: UNDO NETWORLD CHANGE
     auto ownerMap = _world->getOwnedObstacles();
     std::cout << "owned obstacles size: " << ownerMap.size();
     for (auto it = _walls.begin(); it != _walls.end(); ++it) {
@@ -994,6 +994,20 @@ std::shared_ptr<EntityModel> &Map::changeCharacter(std::string UUID) {
 
     _character->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
     return _character;
+}
+
+const std::shared_ptr<EntityModel> Map::getCharacter(std::string UUID) {
+    if (_thisUUID == _hostUUID) {
+        return _farmers.at(0);
+    } else {
+        auto carrot = _carrots.begin();
+        for (std::string uuid: _playerUUIDs) {
+            if (uuid == _thisUUID) {
+                return (*carrot);
+            }
+        }
+    }
+    return nullptr;
 }
 
 void Map::destroyRock(std::shared_ptr<Collectible> rock) {

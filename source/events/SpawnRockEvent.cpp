@@ -15,13 +15,14 @@ std::shared_ptr<NetEvent> SpawnRockEvent::newEvent(){
     return std::make_shared<SpawnRockEvent>();
 }
 
-std::shared_ptr<NetEvent> SpawnRockEvent::allocSpawnRockEvent(Vec2 pos, int idx, Vec2 vel){
+std::shared_ptr<NetEvent> SpawnRockEvent::allocSpawnRockEvent(Vec2 pos, int idx, Vec2 vel, std::string uuid){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<SpawnRockEvent>();
     event->_pos = pos;
     event->_idx = idx;
     event->_vel = vel;
+    event->_uuid = uuid;
     return event;
 #pragma mark END SOLUTION
 }
@@ -38,6 +39,7 @@ std::vector<std::byte> SpawnRockEvent::serialize(){
     _serializer.writeFloat(_vel.x);
     _serializer.writeFloat(_vel.y);
     _serializer.writeSint32(_idx);
+    _serializer.writeString(_uuid);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -64,5 +66,6 @@ void SpawnRockEvent::deserialize(const std::vector<std::byte>& data){
     y = _deserializer.readFloat();
     _vel = Vec2(x, y);
     _idx = _deserializer.readSint32();
+    _uuid = _deserializer.readString();
 #pragma mark END SOLUTION
 }

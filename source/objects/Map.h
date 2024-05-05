@@ -297,6 +297,8 @@ public:
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
 
     std::vector<std::shared_ptr<Collectible>> &getRocks() { return _rocks; }
+    
+    const std::shared_ptr<EntityModel> getCharacter(std::string UUID);
 
     /** Changes the player to the one specified by the UUID. This should ONLY be used by the tutorial scene,
      behaviour with networking is undefined. */
@@ -308,6 +310,9 @@ public:
     
     void resetPlayers();
 
+#pragma mark -
+#pragma mark Rock
+    
     void destroyRock(std::shared_ptr<Collectible> rock);
     
     bool shouldSpawnRock();

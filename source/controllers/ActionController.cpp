@@ -99,7 +99,7 @@ void ActionController::preUpdate(float dt) {
     
     // TODO: move this to carrot only option
     if (_input->didThrowRock() && playerEntity->hasRock()) {
-        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2));
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2, playerEntity->getUUID()));
         playerEntity->setHasRock(false);
     }
     
@@ -123,7 +123,7 @@ void ActionController::preUpdate(float dt) {
         if (_map->shouldSpawnRock()) {
             //optional spawn rock
             auto spawn = _map->getRandomRockSpawn();
-            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO));
+            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO, ""));
         }
     }
     else { // Carrot specific actions
@@ -146,7 +146,6 @@ void ActionController::preUpdate(float dt) {
     if(!_network->isHost()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && rand() % 20 < 21 && carrotEntity->isCaptured()){
-            CULog("free event");
             _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
 //            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
         }
@@ -426,31 +425,18 @@ void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event)
 }
 
 void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEvent>& event){
+    if (event->getUUID() != "") {
+        _map->getCharacter(event->getUUID())->setHasRock(false);
+    }
     _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity());
 }
 
 void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){
-    //this is terrible and should be redone later but i am tired
-    if (event->getUUID() == _map->getFarmers().at(0)->getUUID()) {
-        if (_map->getFarmers().at(0)->hasRock()) return;
-        _map->getFarmers().at(0)->setHasRock(true);
-        for (auto rock : _map->getRocks()) {
-            if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
-                _map->destroyRock(rock);
-            }
-        }
-    } else {
-        for(auto carrot : _map->getCarrots()){
-            if(event->getUUID() == carrot->getUUID()){
-                if (carrot->hasRock()) return;
-                for (auto rock : _map->getRocks()) {
-                    if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
-                        _map->destroyRock(rock);
-                    }
-                }
-                carrot->setHasRock(true);
-                return;
-            }
+    auto entity = _map->getCharacter(event->getUUID());
+    entity->setHasRock(true);
+    for (auto rock : _map->getRocks()) {
+        if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
+            _map->destroyRock(rock);
         }
     }
 }

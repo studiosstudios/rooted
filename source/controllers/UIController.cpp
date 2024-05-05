@@ -25,6 +25,28 @@ void UIController::setLoseVisible(bool visible) {
     _loseNode->setVisible(visible);
 }
 
+void UIController::setEndVisible(bool visible) {
+    _postroundscene->setVisible(visible);
+    if (visible) {
+        _nextbutton->activate();
+    } else {
+        _nextbutton->deactivate();
+        _nextbutton->setDown(false);
+    }
+}
+
+void UIController::setEndVariables(int roundNum, int length, int babies, int carrots) {
+    _roundNumber->setText("ROUND " + std::to_string(roundNum));
+    int seconds = length / 1000;
+    int minutes = seconds / 60;
+    seconds %= 60;
+    _time->setText(std::to_string(minutes) + ":" + std::to_string(seconds));
+    _babyCarrots->setText(std::to_string(babies));
+    for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
+        _carrotsRooted.at(ii)->setVisible(ii < carrots);
+    }
+}
+
 void UIController::setSpeechBubbleVisible(bool visible) {
     _speechBubble->setVisible(visible);
 }
@@ -151,6 +173,69 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _swipeNode = scene2::PolygonNode::alloc();
     _swipeNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _uinode->addChild(_swipeNode);
+    
+    // post round scene info
+    _postroundscene = _assets->get<scene2::SceneNode>("postround");
+    _postroundscene->setScale(1 / _cameraZoom);
+    _postroundscene->doLayout(); // Repositions the HUD
+    _postroundscene->setVisible(false);
+    _uinode->addChild(_postroundscene);
+    
+    _roundNumber = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_roundnum"));
+    _time = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_gamelength_gametime"));
+    _babyCarrots = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_babycarrotscount_numbabycarrots"));
+    _carrotsRooted = {
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_1"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_2"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_3"),
+    };
+    
+    _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
+    _nextbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _postroundscene->setVisible(false);
+            _playerpointinfo->setVisible(true);
+            _nextroundbutton->activate();
+            _exitbutton->activate();
+        }
+    });
+    
+    _playerpointinfo = _assets->get<scene2::SceneNode>("playerpoints");
+    _playerpointinfo->setScale(1 / _cameraZoom);
+    _playerpointinfo->doLayout(); // Repositions the HUD
+    _playerpointinfo->setVisible(false);
+    _uinode->addChild(_playerpointinfo);
+    
+    // there are 5 (1-5) rows with 9 (0-8)
+    // playerpoints_playerpoints_playerpointinfo_x
+    // playerpoints_playerpoints_playerpointinfo_x_points_pointx
+    for (int ii = 1; ii <= 5; ii++) {
+        std::shared_ptr<scene2::SceneNode> wholenode = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii));
+        std::vector<std::shared_ptr<scene2::SceneNode>> elements;
+        for (int jj = 0; jj < 9; jj++) {
+            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_points_point" + std::to_string(jj));
+            elements.push_back(temp);
+        }
+        _points.insert({wholenode, elements});
+    }
+    
+    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
+    _exitbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // TODO: disconnect to the main menu
+        }
+    });
+    _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
+    _nextroundbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // TODO: set a flag so that you can send an event that you are ready from GameScene
+            _nextRound = true;
+        }
+    });
+    
+    _nextRound = false;
+    
     return true;
 }
 

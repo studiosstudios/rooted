@@ -281,6 +281,10 @@ void GameScene::reset() {
     setDebug(false);
     setComplete(false);
     setFailure(false);
+    
+    _isGameOverScreen = false;
+    _round += 1;
+    _startTime = Timestamp();
 }
 
 #pragma mark -
@@ -458,7 +462,7 @@ void GameScene::postUpdate(float remain) {
             _ui.setEndVisible(true);
         }
         
-        if(_network->isHost() && _ui.isNextRound()){
+        if(_ui.isNextRound()){
             _network->pushOutEvent(ResetEvent::allocResetEvent());
         }
         else{

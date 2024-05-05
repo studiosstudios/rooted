@@ -37,7 +37,10 @@ void UIController::setEndVisible(bool visible) {
 
 void UIController::setEndVariables(int roundNum, int length, int babies, int carrots) {
     _roundNumber->setText("ROUND " + std::to_string(roundNum));
-    _time->setText(std::to_string(length));
+    int seconds = length / 1000;
+    int minutes = seconds / 60;
+    seconds %= 60;
+    _time->setText(std::to_string(minutes) + ":" + std::to_string(seconds));
     _babyCarrots->setText(std::to_string(babies));
     for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
         _carrotsRooted.at(ii)->setVisible(ii < carrots);

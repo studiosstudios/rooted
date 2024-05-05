@@ -218,7 +218,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
         
     } else {
         _rand32.seed(randSeed);
-        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 1);
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
         _mapbounds.set(_worldbounds);
         
         _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));

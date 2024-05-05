@@ -88,7 +88,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //        return false;
 //    }
     
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->generate(_seed, 1, _network->getNumPlayers() - 1, (_network->getNumPlayers() - 1) * 15, 8);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -228,7 +228,7 @@ void GameScene::reset() {
     _seed++;
     _map->clearRootNode();
     _map->dispose();
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->generate(_seed, 1, _network->getNumPlayers() - 1, (_network->getNumPlayers() - 1) * 15, 8);
     _map->setRootNode(_rootnode);
     _map->populate();
 

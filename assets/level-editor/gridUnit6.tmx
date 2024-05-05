@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="140">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="156">
  <editorsettings>
   <export target="gridUnit6.json" format="json"/>
  </editorsettings>
@@ -28,5 +28,15 @@
   <object id="132" gid="3" x="320" y="128" width="32" height="32"/>
   <object id="133" gid="3" x="160" y="160" width="32" height="32"/>
   <object id="134" gid="3" x="320" y="256" width="32" height="32"/>
+  <object id="145" gid="3" x="256" y="288" width="32" height="32"/>
+  <object id="147" gid="3" x="32" y="256" width="32" height="32"/>
+  <object id="148" gid="3" x="0" y="256" width="32" height="32"/>
+  <object id="149" gid="3" x="0" y="160" width="32" height="32"/>
+  <object id="150" gid="3" x="0" y="96" width="32" height="32"/>
+  <object id="151" gid="3" x="32" y="96" width="32" height="32"/>
+  <object id="152" gid="3" x="192" y="192" width="32" height="32"/>
+  <object id="153" gid="3" x="320" y="192" width="32" height="32"/>
+  <object id="154" gid="3" x="384" y="224" width="32" height="32"/>
+  <object id="155" gid="3" x="416" y="128" width="32" height="32"/>
  </objectgroup>
 </map>

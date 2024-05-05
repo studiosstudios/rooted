@@ -452,18 +452,18 @@ void GameScene::postUpdate(float remain) {
             _isGameOverScreen = true;
             
             // set how the end screen should display
-            _ui.setEndVariables(_round, 100, _map->getBabyCarrots().size(), _map->getCarrots().size());
+            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), _map->getCarrots().size());
             
             // display end scene
             _ui.setEndVisible(true);
         }
         
-//        if(_network->isHost()){
-//            _network->pushOutEvent(ResetEvent::allocResetEvent());
-//        }
-//        else{
-//            //do nothing and wait for host to reset
-//        }
+        if(_network->isHost() && _ui.isNextRound()){
+            _network->pushOutEvent(ResetEvent::allocResetEvent());
+        }
+        else{
+            //do nothing and wait for host to reset
+        }
     }
     else{
         _action.postUpdate(remain);

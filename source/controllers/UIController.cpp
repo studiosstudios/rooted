@@ -227,8 +227,11 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
             // TODO: set a flag so that you can send an event that you are ready from GameScene
+            _nextRound = true;
         }
     });
+    
+    _nextRound = false;
     
     return true;
 }

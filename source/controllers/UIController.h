@@ -98,6 +98,8 @@ private:
     // a map from the little icon of the player to an array of the number of points you have
     std::map<std::shared_ptr<cugl::scene2::SceneNode>, std::vector<std::shared_ptr<cugl::scene2::SceneNode>>> _points;
     
+    bool _nextRound;
+    
 public:
 #pragma mark Constructor/Destructor/Dispose
 #pragma mark -
@@ -150,6 +152,10 @@ public:
     void updateDashTimerNode(bool canDash);
     
     void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive, bool canDash);
+    
+    bool isNextRound() { return _nextRound; }
+    
+    void setNextRound(bool n) { _nextRound = n; }
 };
 
 #endif /* UIController_h */

@@ -23,6 +23,7 @@
 bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     _isCaptured = false;
     _isRooted = false;
+    target = nullptr;
     _numBabyCarrots = 0;
     return EntityModel::init(pos, size, scale);
 }

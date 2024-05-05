@@ -16,6 +16,7 @@
 #include "../controllers/CollisionController.h"
 #include "../controllers/ActionController.h"
 #include "../controllers/UIController.h"
+#include "../controllers/AIController.h"
 #include "../controllers/CameraController.h"
 #include "../controllers/MockNetworkController.h"
 #include "../objects/Map.h"
@@ -45,6 +46,8 @@ protected:
     UIController _ui;
     /** Controller for camera */
     CameraController _cam;
+    
+    AIController _ai;
 
     // VIEW
     /** Reference to the physics root of the scene graph */

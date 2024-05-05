@@ -103,7 +103,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _carrot2UUID = "carrot2";
     _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID, _carrot2UUID}, _farmerUUID, _carrotUUID);
     _ui.setCharacter(_character);
-    _network->attachEventType<ResetEvent>();
+//    _network->attachEventType<ResetEvent>();
 
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
@@ -126,6 +126,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _black->setColor(Color4::CLEAR);
     addChild(_black);
     _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
+    
+    _ai.init(_map);
     
     _pausePhysics = false;
     
@@ -602,19 +604,32 @@ void TutorialScene::preUpdate(float dt) {
                 _ui.setDialogBoxText("Time to play a real example game!");
                 _ui.setDialogBoxVisible(true);
                 _step = 14;
+                _map->acquireMapOwnership();
+                unload();
             }
             else if (_step == 14 && _input->didContinue()) {
                 _ui.setDialogBoxVisible(false);
                 _step = 14;
+                _map->acquireMapOwnership();
+                _babies = _map->loadBabyEntities();
             }
             if (_time > 2) {
-                _pausePhysics = false;
-                _input->unpause();
+                if (_pausePhysics) {
+                    _pausePhysics = false;
+                    _input->unpause();
+                }
+                
                 auto carrot = _map->getCarrots().at(0);
-                carrot->setMovement((_character->getPosition() - carrot->getPosition()).getNormalization() * 0.2);
+                _ai.updateCarrot(carrot);
                 carrot->updateState(dt);
                 carrot->applyForce();
                 carrot->stepAnimation(dt);
+//                
+                _action.updateBabyCarrots();
+                auto barrots = _map->getBabyCarrots();
+                for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+                    (*it)->updateSprite(dt, false);
+                }
             }
         }
             break;

@@ -90,6 +90,20 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
     }
 }
 
+void AIController::updateCarrot(const std::shared_ptr<Carrot> &carrot) {
+    std::shared_ptr<BabyCarrot> target = carrot->getTarget();
+    if (target == nullptr) {
+        target = _map->getBabyCarrots().at(rand() % (_map->getBabyCarrots().size()-1));
+    } else {
+        if (target->isCaptured()) {
+            target = _map->getBabyCarrots().at(rand() % (_map->getBabyCarrots().size()-1));
+        }
+    }
+    Vec2 movement = Vec2(carrot->getPosition(), target->getPosition()).normalize();
+    carrot->setLinearVelocity((carrot->getLinearVelocity() + movement * 0.25) * 0.93);
+    
+}
+
 bool AIController::nearTarget(const Vec2 vec1, const Vec2 vec2) {
     return abs(vec1.x - vec2.x) < RADIUS && abs(vec1.y - vec2.y) < RADIUS;
 }

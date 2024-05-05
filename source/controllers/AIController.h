@@ -7,6 +7,8 @@
 
 #include <cugl/cugl.h>
 #include "../objects/BabyCarrot.h"
+#include "../objects/Carrot.h"
+#include "../objects/Farmer.h"
 #include "../objects/Map.h"
 
 class AIController {
@@ -35,6 +37,10 @@ public:
     bool nearTarget(const Vec2 vec1, const Vec2 vec2);
 
     void setBabyBounds(Rect rect) { _babyBounds.set(rect); }
+    
+    void updateCarrot(const std::shared_ptr<Carrot> &carrot);
+    
+    void updateFarmer(const std::shared_ptr<Farmer> &farmer);
 
 };
 

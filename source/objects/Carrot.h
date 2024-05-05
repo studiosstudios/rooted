@@ -6,6 +6,7 @@
 #define ROOTED_CARROT_H
 
 #include "EntityModel.h"
+#include "BabyCarrot.h"
 
 using namespace cugl;
 
@@ -18,6 +19,8 @@ private:
     bool _isRooted;
     /** number of baby carrots this carrot has caught so far */
     int _numBabyCarrots;
+    
+    std::shared_ptr<BabyCarrot> target;
     
     // Animation
     float walkAnimDuration = 1.0f;
@@ -85,6 +88,10 @@ public:
     bool isCaptured() { return _isCaptured; };
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
+    
+    std::shared_ptr<BabyCarrot> getTarget() { return target; };
+    
+    void setTarget(std::shared_ptr<BabyCarrot> barrot) { target = barrot; };
     
     void resetCarrot();
     

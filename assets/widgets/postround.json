@@ -1,0 +1,645 @@
+{
+    "variables": {},
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                0
+            ],
+            "size": [
+                1024,
+                576
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                0
+            ],
+            "visible": true
+        },
+        "children": {
+            "wheatbkg": {
+                "type": "Image",
+                "data": {
+                    "texture": "wheatbkg",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        1024,
+                        576
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "fill",
+                    "y_anchor": "fill",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "stats": {
+                "type": "Node",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        778,
+                        444
+                    ],
+                    "angle": 0,
+                    "position": [
+                        14,
+                        66
+                    ],
+                    "visible": true
+                },
+                "children": {
+                    "postroundstatbkg": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "postroundstatbkg",
+                            "anchor": [
+                                0,
+                                0.5
+                            ],
+                            "size": [
+                                777.6,
+                                444
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                0
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "fill",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": 0
+                        }
+                    },
+                    "rootedcarrots": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                319,
+                                110
+                            ],
+                            "angle": 0,
+                            "position": [
+                                250,
+                                45
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "carrot": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotsingle",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        49,
+                                        110
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "carrot_1": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotsingle",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        49,
+                                        110
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        90,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.28,
+                                    "y_offset": 0
+                                }
+                            },
+                            "carrot_2": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotsingle",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        49,
+                                        110
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        180,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.56,
+                                    "y_offset": 0
+                                }
+                            },
+                            "carrot_3": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotsingle",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        49,
+                                        110
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        270,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.85,
+                                    "y_offset": 0
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.32,
+                            "y_offset": -0.65
+                        }
+                    },
+                    "rootedcarrots_2": {
+                        "type": "Label",
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                532,
+                                60
+                            ],
+                            "position": [
+                                136,
+                                175
+                            ],
+                            "angle": 0,
+                            "visible": true,
+                            "font": "gaeguBold50",
+                            "text": "ROOTED CARROTS",
+                            "foreground": "#000000ff",
+                            "background": "#00000000",
+                            "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "valign": "top",
+                            "halign": "left"
+                        },
+                        "children": {},
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.17,
+                            "y_offset": -0.47
+                        }
+                    },
+                    "babycarrotscount": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                522,
+                                63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                136,
+                                239
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "numbabycarrots": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        29,
+                                        63
+                                    ],
+                                    "position": [
+                                        493,
+                                        0
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold50",
+                                    "text": "0",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "top",
+                                    "halign": "right"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.94,
+                                    "y_offset": 0
+                                }
+                            },
+                            "BABYCARROTS": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        314,
+                                        63
+                                    ],
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold50",
+                                    "text": "BABY CARROTS",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "top",
+                                    "halign": "left"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.17,
+                            "y_offset": -0.32
+                        }
+                    },
+                    "gamelength": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                532,
+                                63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                136,
+                                302
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "gametime": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        123,
+                                        54
+                                    ],
+                                    "position": [
+                                        399,
+                                        4
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold50",
+                                    "text": "0:00",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "top",
+                                    "halign": "right"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.75,
+                                    "y_offset": -0.08
+                                }
+                            },
+                            "GAMELENGTH": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        304,
+                                        63
+                                    ],
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold50",
+                                    "text": "GAME LENGTH",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "top",
+                                    "halign": "left"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.17,
+                            "y_offset": -0.18
+                        }
+                    },
+                    "roundnum": {
+                        "type": "Label",
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                334,
+                                79
+                            ],
+                            "position": [
+                                236,
+                                365
+                            ],
+                            "angle": 0,
+                            "visible": true,
+                            "font": "gaeguBold65",
+                            "text": "ROUND 1",
+                            "foreground": "#ffffffff",
+                            "background": "#00000000",
+                            "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "valign": "middle",
+                            "halign": "center"
+                        },
+                        "children": {},
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.3,
+                            "y_offset": 0
+                        }
+                    }
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.01,
+                    "y_offset": -0.11
+                }
+            },
+            "next": {
+                "type": "Button",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        197.4,
+                        117.6
+                    ],
+                    "angle": 0,
+                    "position": [
+                        815,
+                        7.4
+                    ],
+                    "visible": true,
+                    "upnode": "bluearrowbutton"
+                },
+                "children": {
+                    "bluearrowbutton": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "bluearrowbutton",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                197.4,
+                                117.6
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                0
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": 0
+                        }
+                    },
+                    "NEXT": {
+                        "type": "Label",
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                129,
+                                75
+                            ],
+                            "position": [
+                                23,
+                                21.599998474121094
+                            ],
+                            "angle": 0,
+                            "visible": true,
+                            "font": "gaeguBold60",
+                            "text": "NEXT",
+                            "foreground": "#ffffffff",
+                            "background": "#00000000",
+                            "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "valign": "top",
+                            "halign": "left"
+                        },
+                        "children": {},
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.12,
+                            "y_offset": -0.18
+                        }
+                    }
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.8,
+                    "y_offset": -0.78
+                }
+            }
+        }
+    }
+}

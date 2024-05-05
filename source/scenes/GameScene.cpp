@@ -144,15 +144,19 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
     setComplete(false);
     setFailure(false);
+    _isGameOverScreen = false;
     
     _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
     float mapX = _map->getMapBounds().getMaxX()*_scale;
     float mapY = _map->getMapBounds().getMaxY()*_scale;
     
-    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
-    _cam.setZoom(beginning_zoom);
+    _cam.setZoom(1);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
+    
+    // TODO: figure out a way to separate resetting for a round and for a game
+    _round = 1;
+    _startTime = Timestamp();
 
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
@@ -277,6 +281,10 @@ void GameScene::reset() {
     setDebug(false);
     setComplete(false);
     setFailure(false);
+    
+    _isGameOverScreen = false;
+    _round += 1;
+    _startTime = Timestamp();
 }
 
 #pragma mark -
@@ -412,7 +420,7 @@ void GameScene::fixedUpdate(float step) {
 
     //resolve queries
     _map->getWheatScene()->doQueries();
-    
+
     //fetch results
     for (auto farmer : _map->getFarmers()) {
         farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
@@ -466,7 +474,18 @@ void GameScene::postUpdate(float remain) {
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        if(_network->isHost()){
+        // are we displaying the end game screen
+        if (!_isGameOverScreen) {
+            _isGameOverScreen = true;
+            
+            // set how the end screen should display
+            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), _map->getCarrots().size());
+            
+            // display end scene
+            _ui.setEndVisible(true);
+        }
+        
+        if(_ui.isNextRound()){
             _network->pushOutEvent(ResetEvent::allocResetEvent());
         }
         else{

@@ -687,30 +687,30 @@ void Map::spawnBabyCarrots() {
         // TODO: Stagger baby carrot animation times with a random number generator -CJ
         
         auto babySouthWalkNode = scene2::SpriteNode::allocWithSheet(
-                _assets->get<Texture>(BARROT_SOUTH_WALK_SPRITE), 2, 5);
+                                                                    _assets->get<Texture>(BARROT_SOUTH_WALK_SPRITE), 2, 5);
         babySouthWalkNode->setPriority(float(DrawOrder::ENTITIES));
         babySouthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
         
         auto babyNorthWalkNode = scene2::SpriteNode::allocWithSheet(
-                _assets->get<Texture>(BARROT_NORTH_WALK_SPRITE), 2, 5);
+                                                                    _assets->get<Texture>(BARROT_NORTH_WALK_SPRITE), 2, 5);
         babyNorthWalkNode->setPriority(float(DrawOrder::ENTITIES));
         babyNorthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
         babyNorthWalkNode->setVisible(false);
         
         auto babyEastWalkNode = scene2::SpriteNode::allocWithSheet(
-                _assets->get<Texture>(BARROT_EAST_WALK_SPRITE), 2, 5);
+                                                                   _assets->get<Texture>(BARROT_EAST_WALK_SPRITE), 2, 5);
         babyEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
         babyEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
         babyEastWalkNode->setVisible(false);
         
         auto babyNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(
-                _assets->get<Texture>(BARROT_NORTHEAST_WALK_SPRITE), 2, 5);
+                                                                        _assets->get<Texture>(BARROT_NORTHEAST_WALK_SPRITE), 2, 5);
         babyNorthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
         babyNorthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
         babyNorthEastWalkNode->setVisible(false);
         
         auto babySouthEastWalkNode = scene2::SpriteNode::allocWithSheet(
-                _assets->get<Texture>(BARROT_SOUTHEAST_WALK_SPRITE), 2, 5);
+                                                                        _assets->get<Texture>(BARROT_SOUTHEAST_WALK_SPRITE), 2, 5);
         babySouthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
         babySouthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
         babySouthEastWalkNode->setVisible(false);

@@ -84,6 +84,22 @@ private:
     /** The draw scale */
     float _drawScale;
     
+    /** The scenes for game over */
+    std::shared_ptr<cugl::scene2::SceneNode> _postroundscene;
+    std::shared_ptr<cugl::scene2::Label> _roundNumber;
+    std::shared_ptr<cugl::scene2::Label> _time;
+    std::shared_ptr<cugl::scene2::Label> _babyCarrots;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _carrotsRooted;
+    
+    std::shared_ptr<cugl::scene2::Button> _nextbutton;
+    std::shared_ptr<cugl::scene2::SceneNode> _playerpointinfo;
+    std::shared_ptr<cugl::scene2::Button> _exitbutton;
+    std::shared_ptr<cugl::scene2::Button> _nextroundbutton;
+    // a map from the little icon of the player to an array of the number of points you have
+    std::map<std::shared_ptr<cugl::scene2::SceneNode>, std::vector<std::shared_ptr<cugl::scene2::SceneNode>>> _points;
+    
+    bool _nextRound;
+    
 public:
 #pragma mark Constructor/Destructor/Dispose
 #pragma mark -
@@ -97,12 +113,14 @@ public:
 #pragma mark -
     void setWinVisible(bool visible);
     void setLoseVisible(bool visible);
+    void setEndVisible(bool visible);
+    void setEndVariables(int roundNum, int length, int babies, int carrots);
+
     void setSpeechBubbleVisible(bool visible);
     bool getSpeechBubbleVisible() { return _speechBubble->isVisible(); };
     void setDialogBoxVisible(bool visible);
     bool getDialogBoxVisible() { return _dialogBox->isVisible(); };
     void setDialogBoxText(std::string text);
-
     
     void setCharacter(const std::shared_ptr<EntityModel>& character) {
         _character = character;
@@ -134,6 +152,10 @@ public:
     void updateDashTimerNode(bool canDash);
     
     void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive, bool canDash);
+    
+    bool isNextRound() { return _nextRound; }
+    
+    void setNextRound(bool n) { _nextRound = n; }
 };
 
 #endif /* UIController_h */

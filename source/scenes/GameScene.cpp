@@ -151,7 +151,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     float mapX = _map->getMapBounds().getMaxX()*_scale;
     float mapY = _map->getMapBounds().getMaxY()*_scale;
     
-    _cam.setZoom(1);
+    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
+    _cam.setZoom(beginning_zoom);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
     
     // TODO: figure out a way to separate resetting for a round and for a game

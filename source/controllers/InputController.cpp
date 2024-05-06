@@ -186,7 +186,7 @@ void InputController::update(float dt) {
     if(acc != nullptr && !_paused) {
         _deviceShaking = acc->getAcceleration().lengthSquared() > 10;
     }
-    _resetPressed = _keyReset;
+    _resetPressed = _keyReset && debug;
     _debugPressed = _keyDebug && debug;
     _exitPressed  = _keyExit;
     // for testing rustling

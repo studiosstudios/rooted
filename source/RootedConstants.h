@@ -171,6 +171,6 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define SPAWN_COOLDOWN 600
 #define PROGRESS 0.02f
 
-const bool debug = false;
+const bool debug = true;
 
 #endif //ROOTED_ROOTEDCONSTANTS_H

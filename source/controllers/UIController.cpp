@@ -36,6 +36,10 @@ void UIController::setEndVisible(bool visible) {
     } else {
         _nextbutton->deactivate();
         _nextbutton->setDown(false);
+        _exitbutton->deactivate();
+        _exitbutton->setDown(false);
+        _nextroundbutton->deactivate();
+        _nextroundbutton->setDown(false);
     }
 }
 
@@ -62,7 +66,14 @@ void UIController::setEndVariables(int roundNum, int length, int babies, int car
         temp->getChildByName("playerpointinfo_" + std::to_string(ii))->setVisible(false);
     }
     for (int ii = 0; ii < pointsVec.size(); ii++) {
-        temp->getChildByName("playerpointinfo_" + std::to_string(ii + 1))->setVisible(true);
+        auto temp2 = temp->getChildByName("playerpointinfo_" + std::to_string(ii + 1));
+        temp2->setVisible(true);
+        
+        for (int jj = 0; jj < pointsVec.at(ii); jj++) {
+            if (jj <= 9) {
+                std::dynamic_pointer_cast<scene2::PolygonNode>(temp2->getChildByName("points")->getChildByName("point" + std::to_string(jj)))->setTexture(_filledpoint);
+            }
+        }
     }
 }
 
@@ -248,10 +259,13 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            // TODO: set a flag so that you can send an event that you are ready from GameScene
+            CULog("activated");
             _nextRound = true;
         }
     });
+    
+    // get the filled in texture
+    _filledpoint = _assets->get<Texture>("filledpoint");
     
     _nextRound = false;
     

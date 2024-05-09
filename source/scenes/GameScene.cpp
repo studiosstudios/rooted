@@ -491,6 +491,7 @@ void GameScene::postUpdate(float remain) {
         }
         
         if(_ui.isNextRound()){
+            CULog("hellooooooo");
             _network->pushOutEvent(ResetEvent::allocResetEvent());
         }
         else{
@@ -510,6 +511,8 @@ void GameScene::postUpdate(float remain) {
             }
         }
         if(farmerWin){
+            // add points for farmer
+            _points[0] += 3;
             if(_isHost){
                 setComplete(true);
             }
@@ -524,6 +527,10 @@ void GameScene::postUpdate(float remain) {
             }
         }
         if(carrotWin){
+            // add points for carrot
+            for (int ii = 1; ii < _points.size(); ii++) {
+                _points[ii] += 1;
+            }
             if(_isHost){
                 setFailure(true);
             }

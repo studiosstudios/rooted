@@ -4,6 +4,10 @@
 //
 //  Created by Choong Jae Lee on 2/27/24.
 //
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "UIController.h"
 #include "../RootedConstants.h"
@@ -40,7 +44,11 @@ void UIController::setEndVariables(int roundNum, int length, int babies, int car
     int seconds = length / 1000;
     int minutes = seconds / 60;
     seconds %= 60;
-    _time->setText(std::to_string(minutes) + ":" + std::to_string(seconds));
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << minutes << ":" << std::setw(2) << std::setfill('0') << seconds;
+    std::string result = oss.str();
+    _time->setText(result);
+    
     _babyCarrots->setText(std::to_string(babies));
     for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
         _carrotsRooted.at(ii)->setVisible(ii < carrots);

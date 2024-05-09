@@ -87,15 +87,14 @@ protected:
     bool _isHost;
     
     int _seed;
-    
+    /** Whether we are displaying the game over screen or not */
     bool _isGameOverScreen;
-    
+    /** Which round is this game at */
     int _round;
-    
+    /** When the round started */
     cugl::Timestamp _startTime;
-    
-//    std::map<std::shared_ptr<EntityModel>
-
+    /** The number of points each player has */
+    std::map<std::shared_ptr<EntityModel>, int> _points;
 
 #pragma mark Internal Object Management
 
@@ -312,6 +311,17 @@ public:
      * @param remain    The amount of time (in seconds) last fixedUpdate
      */
     void postUpdate(float remain);
+    
+    /**
+     * Sets whether the scene is currently active
+     *
+     * This method should be used to toggle all the UI elements.  Buttons
+     * should be activated when it is made active and deactivated when
+     * it is not.
+     *
+     * @param value whether the scene is currently active
+     */
+    virtual void setActive(bool value) override;
 
     /**
      * Activates world collision callbacks on the given physics world and sets the collision callbacks
@@ -325,12 +335,18 @@ public:
      */
     void reset();
     
+    /**
+     * Resets all parameters of the game
+     */
+    void gameReset();
     
     void unload();
 
     void render(const std::shared_ptr<SpriteBatch> &batch);
     
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
+    
+    int getCarrotsLeft();
 };
 
 #endif /* RootedGameScene_h */

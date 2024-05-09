@@ -39,8 +39,9 @@ void UIController::setEndVisible(bool visible) {
     }
 }
 
-void UIController::setEndVariables(int roundNum, int length, int babies, int carrots) {
+void UIController::setEndVariables(int roundNum, int length, int babies, int carrots, std::vector<int> pointsVec) {
     _roundNumber->setText("ROUND " + std::to_string(roundNum));
+    
     int seconds = length / 1000;
     int minutes = seconds / 60;
     seconds %= 60;
@@ -50,8 +51,18 @@ void UIController::setEndVariables(int roundNum, int length, int babies, int car
     _time->setText(result);
     
     _babyCarrots->setText(std::to_string(babies));
+    
     for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
         _carrotsRooted.at(ii)->setVisible(ii < carrots);
+    }
+    
+    auto temp =_uinode->getChildByName("playerpoints")->getChildByName("playerpoints");
+    
+    for (int ii = 1; ii <= _points.size(); ii++) {
+        temp->getChildByName("playerpointinfo_" + std::to_string(ii))->setVisible(false);
+    }
+    for (int ii = 0; ii < pointsVec.size(); ii++) {
+        temp->getChildByName("playerpointinfo_" + std::to_string(ii + 1))->setVisible(true);
     }
 }
 

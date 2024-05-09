@@ -155,14 +155,19 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _cam.setZoom(beginning_zoom);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
     
-    // TODO: figure out a way to separate resetting for a round and for a game
     _round = 1;
     _startTime = Timestamp();
-
+    
+    // using a vector because the positions should be the same each time
+    // i.e. bunny, then each of the carrots
+    for (int i = 0; i < _map->getPlayers().size(); i++) {
+        _points.push_back(0);
+    }
+    
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
-
+        
     return true;
 }
 
@@ -292,6 +297,8 @@ void GameScene::gameReset() {
     reset();
     // reset round and points
     _round = 1;
+    // reset points
+    std::fill(_points.begin(), _points.end(), 0);
 }
 
 #pragma mark -
@@ -477,7 +484,7 @@ void GameScene::postUpdate(float remain) {
             _isGameOverScreen = true;
             
             // set how the end screen should display
-            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), _network->getNumPlayers() - 1 - getCarrotsLeft());
+            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), _network->getNumPlayers() - 1 - getCarrotsLeft(), _points);
             
             // display end scene
             _ui.setEndVisible(true);

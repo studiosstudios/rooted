@@ -94,7 +94,7 @@ protected:
     /** When the round started */
     cugl::Timestamp _startTime;
     /** The number of points each player has */
-    std::map<std::shared_ptr<EntityModel>, int> _points;
+    std::vector<int> _points;
 
 #pragma mark Internal Object Management
 

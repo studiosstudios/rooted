@@ -114,7 +114,7 @@ public:
     void setWinVisible(bool visible);
     void setLoseVisible(bool visible);
     void setEndVisible(bool visible);
-    void setEndVariables(int roundNum, int length, int babies, int carrots);
+    void setEndVariables(int roundNum, int length, int babies, int carrots, std::vector<int> pointsVec);
 
     void setSpeechBubbleVisible(bool visible);
     bool getSpeechBubbleVisible() { return _speechBubble->isVisible(); };

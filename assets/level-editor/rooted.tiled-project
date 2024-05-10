@@ -117,7 +117,7 @@
                     "value": ""
                 }
             ],
-            "name": "Obstacle",
+            "name": "Decoration",
             "type": "class",
             "useAs": [
                 "property",

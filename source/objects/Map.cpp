@@ -255,7 +255,7 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
-                } else if (type == "Obstacle") {
+                } else if (type == "Decoration") {
                     _decorationSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 }
                 else {
@@ -516,7 +516,7 @@ void Map::spawnDecorations() {
         barn->setSceneNode(_assets, float(Map::DrawOrder::DECORATIONS), "barn");
 //        barn->setSceneNode(barn);
         addObstacle(barn, barn->getSceneNode());
-//        _entitiesNode->addChild(barn->getSceneNode());
+        _entitiesNode->addChild(barn->getTileNode());
     }
 }
 

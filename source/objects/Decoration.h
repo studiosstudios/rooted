@@ -31,6 +31,7 @@ private:
 protected:
     /** The scene graph node for the planting spot. */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
+    std::shared_ptr<cugl::scene2::PolygonNode> _tilenode;
     
 public:
     /**
@@ -93,6 +94,9 @@ public:
      * @return the scene graph node representing this PlantingSpot.
      */
     const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+    
+    const std::shared_ptr<cugl::scene2::PolygonNode>& getTileNode() const { return _tilenode; }
+
     
 private:
     void addTileNode(Vec2 position, float texscale, const std::shared_ptr<cugl::AssetManager> &assets, std::string texkey);

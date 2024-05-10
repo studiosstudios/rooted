@@ -77,7 +77,7 @@
                          "value":"barn"
                         }],
                  "rotation":0,
-                 "type":"Obstacle",
+                 "type":"Decoration",
                  "visible":true,
                  "width":207,
                  "x":320,

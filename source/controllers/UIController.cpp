@@ -346,7 +346,6 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
         _joyback->setVisible(false);
     }
     _carrotsRemainingBoard->setVisible(debugActive);
-    _barrotsRemainingBoard->setVisible(debugActive);
     updateSwipeSpline();
     updateInfoNodes(numCarrots, numBarrots);
     updateDashTimerNode(canDash);

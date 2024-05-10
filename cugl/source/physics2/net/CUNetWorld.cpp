@@ -214,6 +214,7 @@ void NetWorld::activateObstacle(Uint64 oid, const std::shared_ptr<Obstacle>& obj
  */
 Uint64 NetWorld::initObstacle(const std::shared_ptr<Obstacle>& obj) {
     Uint64 oid = (((Uint64)0xffffffff) << 32) | _nextInitObj++;
+    CULog("oid: %llu", oid);
     obj->setShared(true);
     activateObstacle(oid, obj);
     return oid;

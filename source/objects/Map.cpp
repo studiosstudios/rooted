@@ -366,13 +366,6 @@ void Map::populate() {
 * references to other assets, then these should be disconnected earlier.
 */
 void Map::dispose() {
-    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-        if (_world != nullptr) {
-            _world->removeObstacle((*it));
-        }
-        (*it) = nullptr;
-    }
-    _walls.clear();
     for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
@@ -488,9 +481,6 @@ void Map::acquireMapOwnership() {
     //REMINDER TO JEFF: UNDO NETWORLD CHANGE
     auto ownerMap = _world->getOwnedObstacles();
     std::cout << "owned obstacles size: " << ownerMap.size();
-    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-        ownerMap.insert({*it, 0});
-    }
     for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
         ownerMap.insert({*it, 0});
     }

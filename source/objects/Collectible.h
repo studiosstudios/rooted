@@ -15,6 +15,7 @@
 #pragma mark -
 #pragma mark Physics Constants
 
+using namespace std;
 
 class Collectible : public cugl::physics2::BoxObstacle {
 private:
@@ -70,6 +71,8 @@ protected:
     bool _fired;
     
     int _spawnIndex;
+    
+    string _ownerUUID;
 
 public:
     
@@ -107,7 +110,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), 1.0f, true); }
+    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), 1.0f, true, ""); }
     
     /**
      * Initializes a new dude at the given position.
@@ -123,7 +126,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), 1.0f, true); }
+    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), 1.0f, true, ""); }
     
     /**
      * Initializes a new dude at the given position.
@@ -141,7 +144,7 @@ public:
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
     virtual bool init(const cugl::Vec2 pos, const cugl::Size size) override {
-        return init(pos, size, 1.0f, true);
+        return init(pos, size, 1.0f, true,"");
     }
     
     /**
@@ -160,7 +163,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired);
+    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired, string ownerUUID);
 
     
 #pragma mark -
@@ -237,9 +240,9 @@ public:
      *
      * @return  A newly allocated DudeModel at the given position with the given scale
      */
-    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired) {
+    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired, string uuid) {
         std::shared_ptr<Collectible> result = std::make_shared<Collectible>();
-        return (result->init(pos, size, scale, fired) ? result : nullptr);
+        return (result->init(pos, size, scale, fired, uuid) ? result : nullptr);
     }
     
 
@@ -356,6 +359,8 @@ public:
     float getMaxAge() { return MAX_COLLECTIBLE_AGE; }
         
     void setInitVelocity(cugl::Vec2 invel) { _initVelocity = invel; }
+    
+    string getOwnerUUID() { return _ownerUUID; }
     
 #pragma mark -
 #pragma mark Physics Methods

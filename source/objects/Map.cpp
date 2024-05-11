@@ -1048,10 +1048,10 @@ std::pair<Vec2, int> Map::getRandomRockSpawn() {
     return std::pair(rand.first.origin, valididxs.at(randidx));
 }
 
-void Map::spawnRock(Vec2 pos, int idx, Vec2 vel) {
+void Map::spawnRock(Vec2 pos, int idx, Vec2 vel, string uuid) {
     auto rockTexture = _assets->get<Texture>("rock");
 
-    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, !vel.isZero());
+    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, !vel.isZero(), uuid);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName(vel.isZero() ? "rock_spawn" : "rock");
     rock->setSpawnIndex(idx);
@@ -1064,7 +1064,7 @@ void Map::spawnRock(Vec2 pos, int idx, Vec2 vel) {
     // set slightly below entities
     rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
 
-    rockNode->setScale(0.05f * _scale/DEFAULT_DRAWSCALE);
+    rockNode->setScale(0.035f * _scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
     // 512 * scale
 //    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);

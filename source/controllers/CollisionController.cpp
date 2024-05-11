@@ -232,6 +232,10 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         if (name1 == "baby" && name2 == "baby") {
             return false;
         }
+
+        if (name1 == "rock") {
+
+        }
         
         if (name2 == "baby" && name1 == "carrot") {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
@@ -242,11 +246,13 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             return !carrot->isSensor();
         }
-        
-        // do not collide with yourself
-        //temp do not collide with players
-        if (name1 == "rock" && (name2 == "carrot" || name2 == "farmer")) {
-            return false;
+
+        // rock does not collide with yourself or baby carrots
+        if (name1 == "rock") {
+            auto rock = dynamic_cast<Collectible*>(bd1);
+            if (auto entity = dynamic_cast<EntityModel*>(bd2)) {
+                return  !(name2 == "baby" || entity->getUUID() ==  rock->getOwnerUUID());
+            }
         }
         
         // Swap everything

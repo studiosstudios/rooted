@@ -30,16 +30,16 @@ using namespace cugl;
  *
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
-bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired) {
+bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired, string ownerUUID) {
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
     _drawScale = scale;
     _fired = fired;
-    
+    _ownerUUID = ownerUUID;
     _age = 0;
     
     if (BoxObstacle::init(pos, nsize)) {
-        setSensor(true);
+        setSensor(!fired);
         setBullet(true);
         
         updateCurAnimDurationForState();

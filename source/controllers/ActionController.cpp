@@ -96,8 +96,7 @@ void ActionController::preUpdate(float dt) {
             break;
         }
     }
-    
-    // TODO: move this to carrot only option
+
     if (_input->didThrowRock() && playerEntity->hasRock()) {
         _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2, playerEntity->getUUID()));
         playerEntity->setHasRock(false);
@@ -428,7 +427,7 @@ void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEven
     if (event->getUUID() != "") {
         _map->getCharacter(event->getUUID())->setHasRock(false);
     }
-    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity());
+    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity(), event->getUUID());
 }
 
 void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){

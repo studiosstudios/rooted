@@ -319,7 +319,7 @@ public:
     
     std::pair<Vec2, int> getRandomRockSpawn();
     
-    void spawnRock(Vec2 pos, int idx, Vec2 vel);
+    void spawnRock(Vec2 pos, int idx, Vec2 ve, string uuid);
     
     
 #pragma mark -

@@ -74,6 +74,8 @@ protected:
     
     string _ownerUUID;
 
+    cugl::Vec2 _nodeScale;
+
 public:
     
 #pragma mark Hidden Constructors
@@ -361,6 +363,8 @@ public:
     void setInitVelocity(cugl::Vec2 invel) { _initVelocity = invel; }
     
     string getOwnerUUID() { return _ownerUUID; }
+
+    void setScale(cugl::Vec2 scale);
     
 #pragma mark -
 #pragma mark Physics Methods

@@ -8,6 +8,7 @@
 #include "Collectible.h"
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
+#include <cugl/math/CUEasingFunction.h>
 
 using namespace cugl;
 
@@ -76,7 +77,10 @@ void Collectible::stepAnimation(float dt) {
 
 #pragma mark -
 #pragma mark Attribute Properties
-
+void Collectible::setScale(Vec2 scale) {
+    _nodeScale = scale;
+    if (_fired) _node->setScale(_nodeScale);
+}
 
 #pragma mark -
 #pragma mark Physics Methods
@@ -147,8 +151,8 @@ void Collectible::update(float dt) {
         _node->setAngle(getAngle());
         
         if (!_fired) {
-            _node->setPositionY(_node->getPositionY() + (std::sin(_age*1.5) + 1.0) * _drawScale/4.0);
-            _node->setColor(Color4(255,255,255,std::min(255.0, _age * 255.0 / 1.5)));
+            _node->setScale(EasingFunction::elasticOut(std::min(_age, 1.0f),0.2) * _nodeScale);
+            _node->setPositionY(_node->getPositionY() + _drawScale/4.0 - (_age > 1.0) * EasingFunction::bounceOut(std::min(_age - 1.0f, 1.0f)) * _drawScale/4.0);
         }
     }
     

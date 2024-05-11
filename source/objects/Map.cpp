@@ -1063,8 +1063,6 @@ void Map::spawnRock(Vec2 pos, int idx, Vec2 vel, string uuid) {
     rock->setDrawScale(_scale.x);
     // set slightly below entities
     rockNode->setPriority(float(DrawOrder::ENTITIES) - 0.1);
-
-    rockNode->setScale(0.035f * _scale/DEFAULT_DRAWSCALE);
     // Create the polygon node (empty, as the model will initialize)
     // 512 * scale
 //    rockNode->setHeight(0.18f * _scale.y/DEFAULT_DRAWSCALE);
@@ -1072,6 +1070,7 @@ void Map::spawnRock(Vec2 pos, int idx, Vec2 vel, string uuid) {
     _entitiesNode->addChild(rockNode);
     rock->setDebugScene(_debugnode);
     
+    rock->setScale(0.035f * _scale/DEFAULT_DRAWSCALE);
     _rocks.push_back(rock);
     
     auto wheatnode = rock->allocWheatHeightNode(1);

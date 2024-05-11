@@ -131,12 +131,12 @@ public:
         WALKING,
         RUNNING,
         DASHING,
+        STUNNED,
         CARRYING,   // bunny only
         ROOTING,   // bunny only
         CAUGHT,     // carrot only
         ROOTED,      // carrot only
         UNROOTING   // carrot only
-        
     };
     
 private:
@@ -227,6 +227,8 @@ protected:
     cugl::Vec2 _dashVector;
     
     float _dashCooldown;
+    
+    float _stunTime;
     
     bool _plantInput;
     
@@ -693,6 +695,8 @@ public:
         }
         return RUNNING;
     }
+    
+    void stun();
     
     /** If useMovement is true, use the current EntityModel's \_movement argument. If false, use \_velocity. */
     void updateSprite(float dt, bool useMovement);

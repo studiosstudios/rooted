@@ -103,9 +103,11 @@ void CollisionController::beginContact(b2Contact* contact) {
         }
         
         if (name1 == "rock") {
-            if (name2 == "carrot" || name2 == "baby" || name2 == "farmer") {
+            if (name2 == "carrot" || name2 == "farmer") {
                 Collectible* rock = dynamic_cast<Collectible*>(bd1);
                 rock->setAge(rock->getMaxAge() + 1);
+                EntityModel* entity = dynamic_cast<EntityModel*>(bd2);
+                entity->stun();
             }
         }
         
@@ -231,10 +233,6 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         // Baby carrots don't collide with each other
         if (name1 == "baby" && name2 == "baby") {
             return false;
-        }
-
-        if (name1 == "rock") {
-
         }
         
         if (name2 == "baby" && name1 == "carrot") {

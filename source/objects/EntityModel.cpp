@@ -193,6 +193,8 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         
         auto sprite = _southWalkSprite;
         switch (_state) {
+            case STUNNED:
+                //TODO: stunned animation?
             case STANDING:
                 // TODO: Idle animations here
             case SNEAKING:
@@ -356,6 +358,15 @@ void EntityModel::updateState(float dt) {
     EntityState nextState = _state;
     
     switch (_state) {
+        case STUNNED: {
+            _stunTime += dt;
+            // Stunned -> Moving
+            if (_stunTime > STUN_SECS) {
+                _state = getMovementState();
+                stateChanged = true;
+            }
+            break;
+        }
         case STANDING: {
             // Standing -> Moving
             nextState = getMovementState();
@@ -401,6 +412,11 @@ void EntityModel::updateState(float dt) {
 //    std::cout << _state << "\n";
 }
 
+void EntityModel::stun() {
+    _state = STUNNED;
+    _stunTime = 0;
+}
+
 /**
  * Applies the force to the body of this dude
  *
@@ -415,6 +431,7 @@ void EntityModel::applyForce() {
     Vec2 normMovement = getMovement().getNormalization();
     
     switch (_state) {
+        case STUNNED:
         case STANDING: {
             setLinearVelocity(Vec2::ZERO);
             break;

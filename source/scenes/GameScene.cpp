@@ -87,7 +87,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
-    
+
     _numFarmers = 1;
     _numCarrots = _network->getNumPlayers() - 1;
     _numBabies = (_network->getNumPlayers() - 1) * 15 + 5;

@@ -337,17 +337,23 @@
             "stream":   true,
             "volume":   0.5
         },
-        "win": {
+        "game": {
             "type":     "sample",
-            "file":     "sounds/DD_Victory.ogg",
+            "file":     "sounds/level-music.ogg",
             "stream":   true,
             "volume":   0.5
         },
+        "win": {
+            "type":     "sample",
+            "file":     "sounds/victory.ogg",
+            "stream":   true,
+            "volume":   1
+        },
         "lose": {
             "type":     "sample",
-            "file":     "sounds/DD_Failure.ogg",
+            "file":     "sounds/lose.ogg",
             "stream":   true,
-            "volume":   0.5
+            "volume":   1
         },
         "rustle": {
             "type":     "sample",

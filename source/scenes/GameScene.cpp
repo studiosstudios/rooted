@@ -240,7 +240,7 @@ void GameScene::reset() {
     // Load a new level
     _seed++;
     _map->clearRootNode();
-    _map->dispose();
+    _map->clearWorld();
     _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);
     _map->setRootNode(_rootnode);
     _map->populate();

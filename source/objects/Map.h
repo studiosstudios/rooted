@@ -147,6 +147,9 @@ public:
     void generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots);
     
     void populate();
+
+    /** Clears the world but does not dispose it */
+    void clearWorld();
     
     /**
      * populate the map with Carrots

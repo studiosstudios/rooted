@@ -396,6 +396,7 @@ void GameScene::fixedUpdate(float step) {
     }
     
     _map->getWorld()->update(step);
+    _cam.setShake(_character->getStunTime() * STUN_SCREEN_SHAKE);
     _cam.setTarget(_character->getPosition()*_scale);
     _cam.update(step);
     

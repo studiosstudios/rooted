@@ -359,9 +359,10 @@ void EntityModel::updateState(float dt) {
     
     switch (_state) {
         case STUNNED: {
-            _stunTime += dt;
+            _stunTime -= dt;
             // Stunned -> Moving
-            if (_stunTime > STUN_SECS) {
+            if (_stunTime < 0) {
+                _stunTime = 0;
                 _state = getMovementState();
                 stateChanged = true;
             }
@@ -414,7 +415,7 @@ void EntityModel::updateState(float dt) {
 
 void EntityModel::stun() {
     _state = STUNNED;
-    _stunTime = 0;
+    _stunTime = STUN_SECS;
 }
 
 /**

@@ -575,6 +575,8 @@ public:
     void setUnrootInput(bool unrootInput);
     
     bool canDash() { return _dashCooldown == 0; }
+
+    float getStunTime() { return _stunTime; }
     
     /**
      * Returns how much force to apply to get the dude moving

@@ -49,8 +49,10 @@
 #pragma mark Game Logic Constants
 /** Time in seconds that must elapse before being able to perform another dash */
 #define DASH_COOLDOWN_SECS 3
-/** Time in seconds that being hit by a rock stuns a player*/
+/** Time in seconds that being hit by a rock stuns a player */
 #define STUN_SECS 1
+/** Max camera coordinate units that the camera can shake when player is stunned */
+#define STUN_SCREEN_SHAKE 5
 
 #pragma mark -
 #pragma mark Asset Constants

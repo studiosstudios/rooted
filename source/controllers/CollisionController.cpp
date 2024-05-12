@@ -102,14 +102,6 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
         }
         
-        if (name1 == "rock") {
-            if (name2 == "carrot" || name2 == "farmer") {
-                Collectible* rock = dynamic_cast<Collectible*>(bd1);
-                EntityModel* entity = dynamic_cast<EntityModel*>(bd2);
-                entity->stun();
-            }
-        }
-        
 
         // Swap everything
         b2Fixture* fixTemp = fix1;
@@ -244,11 +236,11 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             return !carrot->isSensor();
         }
 
-        // rock does not collide with yourself or baby carrots
+        // rock does not immediately collide with yourself
         if (name1 == "rock") {
             auto rock = dynamic_cast<Collectible*>(bd1);
             if (auto entity = dynamic_cast<EntityModel*>(bd2)) {
-                return entity->getUUID() !=  rock->getOwnerUUID();
+                return rock->getAge() > 0.1f || entity->getUUID() !=  rock->getOwnerUUID();
             }
             if (name2 == "boundary") {
                 return false;
@@ -273,4 +265,56 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         bd2 = bdTemp;
     }
     return true;
+}
+
+void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse* impulse) {
+    b2Fixture* fix1 = contact->GetFixtureA();
+    b2Fixture* fix2 = contact->GetFixtureB();
+
+    b2Body* body1 = fix1->GetBody();
+    b2Body* body2 = fix2->GetBody();
+
+    std::string* fd1 = reinterpret_cast<std::string*>(fix1->GetUserData().pointer);
+    std::string* fd2 = reinterpret_cast<std::string*>(fix2->GetUserData().pointer);
+
+    physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
+    physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
+    
+    // Twice to swap
+    for (int i = 0; i < 2; i++) {
+
+        std::string name1 = bd1->getName();
+        std::string name2 = bd2->getName();
+        
+        if (name1 == "rock") {
+            if (name2 == "carrot" || name2 == "farmer") {
+                Collectible* rock = dynamic_cast<Collectible*>(bd1);
+                EntityModel* entity = dynamic_cast<EntityModel*>(bd2);
+                float totalImpulse = 0;
+                for (int j = 0; j < impulse->count; j++ ) {
+                    totalImpulse += impulse->normalImpulses[j];
+                }
+                if (!entity->isStunned() && totalImpulse > MIN_STUN_IMPULSE) entity->stun();
+            }
+        }
+        
+
+        // Swap everything
+        b2Fixture* fixTemp = fix1;
+        fix1 = fix2;
+        fix2 = fixTemp;
+
+        b2Body* bodyTemp = body1;
+        body1 = body2;
+        body2 = bodyTemp;
+
+        std::string* fdTemp = fd1;
+        fd1 = fd2;
+        fd2 = fdTemp;
+
+        physics2::Obstacle* bdTemp = bd1;
+        bd1 = bd2;
+        bd2 = bdTemp;
+    }
+
 }

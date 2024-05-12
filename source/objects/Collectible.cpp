@@ -144,7 +144,7 @@ void Collectible::update(float dt) {
                 markRemoved(alpha == 0.0f);
             } else {
                 _node->setScale(EasingFunction::backOut(std::min(_age*4.0f, 1.0f)) * _nodeScale);
-                if (_age > MAX_COLLECTIBLE_AGE || getLinearVelocity().lengthSquared() < 0.0001f) {
+                if (_age > MAX_COLLECTIBLE_AGE || getLinearVelocity().lengthSquared() < 0.0005f) {
                     _disappearing = true;
                     _age = 0;
                 }

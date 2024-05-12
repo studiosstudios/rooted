@@ -553,6 +553,9 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::Obstacle
     world->shouldCollide = [this](b2Fixture *f1, b2Fixture *f2) {
         return _collision.shouldCollide(f1, f2);
     };
+    world->afterSolve = [this](b2Contact* contact, const b2ContactImpulse* impulse) {
+        return _collision.afterSolve(contact, impulse);
+    };
 }
 
 void GameScene::pauseNonEssentialAudio(){

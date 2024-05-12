@@ -174,6 +174,7 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define MAX_COLLECTIBLE_AGE 3
 #define SPAWN_COOLDOWN 600
 #define THROW_SPEED 10
+#define MIN_STUN_IMPULSE 3.0
 
 #define PROGRESS 0.02f
 

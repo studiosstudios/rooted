@@ -215,6 +215,7 @@ void ActionController::postUpdate(float dt) {
 float calculateVolume(EntityModel::EntityState state, float distance){
     float stateToNum;
     switch(state){
+        case EntityModel::EntityState::STUNNED:
         case EntityModel::EntityState::STANDING:
         case EntityModel::EntityState::ROOTING:
         case EntityModel::EntityState::UNROOTING:

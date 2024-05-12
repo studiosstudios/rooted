@@ -623,6 +623,8 @@ public:
     void setHasRock(bool hasRock) { _hasRock = hasRock; }
     
     bool hasRock() { return _hasRock; }
+    
+    bool isStunned() { return _state == STUNNED; }
 
     
 #pragma mark -

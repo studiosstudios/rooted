@@ -75,6 +75,8 @@ protected:
     string _ownerUUID;
 
     cugl::Vec2 _nodeScale;
+    
+    bool _collected;
 
 public:
     
@@ -421,6 +423,8 @@ public:
     int getSpawnIndex() { return _spawnIndex; }
     
     bool isFired() { return _fired; }
+    
+    void collected() { _collected = true; _age = 0; }
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

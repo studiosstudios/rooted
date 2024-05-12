@@ -98,7 +98,7 @@ void ActionController::preUpdate(float dt) {
     }
 
     if (_input->didThrowRock() && playerEntity->hasRock()) {
-        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2, playerEntity->getUUID()));
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
         playerEntity->setHasRock(false);
     }
     
@@ -201,10 +201,8 @@ void ActionController::postUpdate(float dt) {
     }
     auto iit = _map->getRocks().begin();
     while(iit != _map->getRocks().end()){
-        if ((*iit)->isFired() && (*iit)->getAge() > (*iit)->getMaxAge()) {
-            _map->destroyRock(*iit);
-        }
         if ((*iit)->isRemoved()) {
+            _map->destroyRock(*iit);
             _map->getRocks().erase(iit);
         }
         else ++iit;
@@ -435,7 +433,7 @@ void ActionController::processCollectedRockEvent(const std::shared_ptr<Collected
     entity->setHasRock(true);
     for (auto rock : _map->getRocks()) {
         if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
-            _map->destroyRock(rock);
+            rock->collected();
         }
     }
 }

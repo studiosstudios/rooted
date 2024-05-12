@@ -1010,11 +1010,10 @@ const std::shared_ptr<EntityModel> Map::getCharacter(std::string UUID) {
     return nullptr;
 }
 
+#pragma mark -
+#pragma mark Rock
+
 void Map::destroyRock(std::shared_ptr<Collectible> rock) {
-    // do not attempt to remove a rock that has already been removed
-    if (rock->isRemoved()) {
-        return;
-    }
     if (!rock->isFired()) {
         _rockSpawns.at(rock->getSpawnIndex()).second = true;
         _numRockSpawns--;
@@ -1023,7 +1022,7 @@ void Map::destroyRock(std::shared_ptr<Collectible> rock) {
     rock->getWheatHeightNode()->dispose();
     _entitiesNode->removeChild(rock->getSceneNode());
     rock->setDebugScene(nullptr);
-    rock->markRemoved(true);
+
 }
 
 bool Map::shouldSpawnRock() {

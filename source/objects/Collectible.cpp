@@ -37,42 +37,20 @@ bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     _drawScale = scale;
     _fired = fired;
     _ownerUUID = ownerUUID;
+    _collected = false;
     _age = 0;
     
     if (BoxObstacle::init(pos, nsize)) {
         setSensor(!fired);
         setBullet(true);
-        
+        setDensity(2.0);
+        setRestitution(0.9);
+        setFixedRotation(true);
+        setMass(2.0);
         updateCurAnimDurationForState();
         return true;
     }
     return false;
-}
-
-#pragma mark -
-#pragma mark Animation
-
-/**
-    Whether this EntityModel should step in its animation for this frame.
- 
-    For now, we step only when there is a directional input OR the state is DASHING/PLANTING.
- */
-bool Collectible::animationShouldStep() {
-    return false;
-}
-
-void Collectible::stepAnimation(float dt) {
-//    if (_node != nullptr) {
-//        if (animationShouldStep()) {
-//                curAnimTime += dt;
-//                if (curAnimTime > (curAnimDuration)) { curAnimTime = 0;}
-//                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
-//        }
-//        else if (_node->getFrame() != 0) {
-//            _node->setFrame(0);
-//            curAnimTime = 0;
-//        }
-//    }
 }
 
 #pragma mark -
@@ -129,10 +107,9 @@ void Collectible::applyForce() {
     if (!isEnabled()) {
         return;
     }
-    
-    // using a quadradic ease out like function
+
     if (_fired) {
-        setLinearVelocity(_initVelocity * (2 * (MAX_COLLECTIBLE_AGE - _age)));
+        setLinearVelocity(getLinearVelocity() * 0.97);
     }
 }
 
@@ -149,10 +126,19 @@ void Collectible::update(float dt) {
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
-        
+
         if (!_fired) {
-            _node->setScale(EasingFunction::elasticOut(std::min(_age, 1.0f),0.2) * _nodeScale);
-            _node->setPositionY(_node->getPositionY() + _drawScale/4.0 - (_age > 1.0) * EasingFunction::bounceOut(std::min(_age - 1.0f, 1.0f)) * _drawScale/4.0);
+            if (_collected) {
+                _node->setScale(std::max(0.0f, (1.0f-4.0f*EasingFunction::backIn(std::min(_age*4.0f, 1.0f)))) * _nodeScale);
+                markRemoved(_node->getScaleX() * _node->getScaleY() == 0.0f);
+            } else {
+                _node->setScale(EasingFunction::elasticOut(std::min(_age, 1.0f), 0.2) * _nodeScale);
+                _node->setPositionY(_node->getPositionY() + _drawScale / 2.0 - (_age > 0.5) *
+                        EasingFunction::bounceOut(std::min(_age - 0.5f, 1.0f)) * _drawScale / 2.0);
+            }
+        } else{
+            markRemoved(_age > 2*MAX_COLLECTIBLE_AGE);
+
         }
     }
     
@@ -160,7 +146,7 @@ void Collectible::update(float dt) {
         updateWheatHeightNode();
     }
     
-    _age += PROGRESS;
+    _age += dt;
 }
 
 

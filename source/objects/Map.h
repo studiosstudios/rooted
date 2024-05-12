@@ -149,16 +149,6 @@ public:
     void generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots);
     
     void populate();
-    
-    /**
-     * populate the map with Carrots
-     */
-    void populateWithCarrots(int numCarrots);
-    
-    /**
-     * Adds a carrot to the game (adds to the carrot vector)
-     */
-    void spawnCarrot(const Vec2 position, float width, float height);
 
 #pragma mark Physics Attributes
 
@@ -320,7 +310,7 @@ public:
     std::pair<Vec2, int> getRandomRockSpawn();
     
     void spawnRock(Vec2 pos, int idx, Vec2 ve, string uuid);
-    
+
     
 #pragma mark -
 #pragma mark Drawing

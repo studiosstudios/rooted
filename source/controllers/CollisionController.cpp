@@ -105,7 +105,6 @@ void CollisionController::beginContact(b2Contact* contact) {
         if (name1 == "rock") {
             if (name2 == "carrot" || name2 == "farmer") {
                 Collectible* rock = dynamic_cast<Collectible*>(bd1);
-                rock->setAge(rock->getMaxAge() + 1);
                 EntityModel* entity = dynamic_cast<EntityModel*>(bd2);
                 entity->stun();
             }
@@ -249,7 +248,7 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         if (name1 == "rock") {
             auto rock = dynamic_cast<Collectible*>(bd1);
             if (auto entity = dynamic_cast<EntityModel*>(bd2)) {
-                return  !(name2 == "baby" || entity->getUUID() ==  rock->getOwnerUUID());
+                return entity->getUUID() !=  rock->getOwnerUUID();
             }
         }
         

@@ -139,12 +139,14 @@ void Collectible::update(float dt) {
             }
         } else{
             if (_disappearing) {
-                float alpha = std::clamp(3.0f - _age, 0.0f, 1.0f);
-                _node->setColor(Color4(255,255,255,255 * alpha));
-                markRemoved(alpha == 0.0f);
+//                float alpha = std::clamp(3.0f - _age, 0.0f, 1.0f);
+//                _node->setColor(Color4(255,255,255,255 * alpha));
+//                markRemoved(alpha == 0.0f);
+                _node->setScale(std::max(0.0f, (1.0f-4.0f*EasingFunction::backIn(std::min(_age*4.0f, 1.0f)))) * _nodeScale);
+                markRemoved(_node->getScaleX() * _node->getScaleY() == 0.0f);
             } else {
                 _node->setScale(EasingFunction::backOut(std::min(_age*4.0f, 1.0f)) * _nodeScale);
-                if (_age > MAX_COLLECTIBLE_AGE || getLinearVelocity().lengthSquared() < 0.0005f) {
+                if (_age > MAX_COLLECTIBLE_AGE || getLinearVelocity().lengthSquared() < 0.005f) {
                     _disappearing = true;
                     _age = 0;
                 }

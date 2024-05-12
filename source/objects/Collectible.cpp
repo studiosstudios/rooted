@@ -37,6 +37,7 @@ bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     _drawScale = scale;
     _fired = fired;
     _ownerUUID = ownerUUID;
+    _disappearing = false;
     _collected = false;
     _age = 0;
     
@@ -137,8 +138,17 @@ void Collectible::update(float dt) {
                         EasingFunction::bounceOut(std::min(_age - 0.5f, 1.0f)) * _drawScale / 2.0);
             }
         } else{
-            markRemoved(_age > 2*MAX_COLLECTIBLE_AGE);
-
+            if (_disappearing) {
+                float alpha = std::clamp(3.0f - _age, 0.0f, 1.0f);
+                _node->setColor(Color4(255,255,255,255 * alpha));
+                markRemoved(alpha == 0.0f);
+            } else {
+                _node->setScale(EasingFunction::backOut(std::min(_age*4.0f, 1.0f)) * _nodeScale);
+                if (_age > MAX_COLLECTIBLE_AGE || getLinearVelocity().lengthSquared() < 0.0001f) {
+                    _disappearing = true;
+                    _age = 0;
+                }
+            }
         }
     }
     

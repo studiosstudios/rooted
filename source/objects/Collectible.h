@@ -78,6 +78,8 @@ protected:
     
     bool _collected;
 
+    bool _disappearing;
+
 public:
     
 #pragma mark Hidden Constructors

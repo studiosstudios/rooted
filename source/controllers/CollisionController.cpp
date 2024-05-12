@@ -250,6 +250,9 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             if (auto entity = dynamic_cast<EntityModel*>(bd2)) {
                 return entity->getUUID() !=  rock->getOwnerUUID();
             }
+            if (name2 == "boundary") {
+                return false;
+            }
         }
         
         // Swap everything

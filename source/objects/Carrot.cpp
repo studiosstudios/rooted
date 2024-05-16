@@ -81,5 +81,7 @@ void Carrot::resetCarrot(){
 }
 
 void Carrot::update(float dt) {
+    CULog("height: %f", getSceneNode()->TexturedNode::getHeight());
+    CULog("origin: %f", getSceneNode()->TexturedNode::getOrigin());
     EntityModel::update(dt);
 }

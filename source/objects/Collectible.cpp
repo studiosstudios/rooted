@@ -40,6 +40,7 @@ bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     _disappearing = false;
     _collected = false;
     _age = 0;
+    _feetheight = 0.1;
     
     if (BoxObstacle::init(pos, nsize)) {
         setSensor(!fired);
@@ -73,6 +74,15 @@ void Collectible::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
+    _feetshape.SetAsBox(getWidth(), _feetheight, b2Vec2(0, -(getHeight() + _feetheight)/2), 0);
+    
+    b2FixtureDef fixturedef;
+    fixturedef.shape = &_feetshape;
+    fixturedef.isSensor = !_fired;
+    fixturedef.density = 2.0;
+    fixturedef.restitution = 0.9;
+    _feetfixture = _body->CreateFixture(&fixturedef);
+//    _feetfixture->
 }
 
 /**
@@ -85,6 +95,10 @@ void Collectible::releaseFixtures() {
         return;
     }
     BoxObstacle::releaseFixtures();
+    if (_feetfixture != nullptr) {
+        _body->DestroyFixture(_feetfixture);
+        _feetfixture = nullptr;
+    }
 }
 
 /**

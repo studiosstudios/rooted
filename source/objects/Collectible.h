@@ -10,6 +10,8 @@
 
 #include <cugl/cugl.h>
 #include <cugl/physics2/CUBoxObstacle.h>
+#include <box2d/b2_polygon_shape.h>
+#include <box2d/b2_fixture.h>
 #include "../RootedConstants.h"
 
 #pragma mark -
@@ -79,6 +81,11 @@ protected:
     bool _collected;
 
     bool _disappearing;
+    
+    float _feetheight;
+    b2PolygonShape _feetshape;
+    b2Fixture* _feetfixture;
+    
 
 public:
     

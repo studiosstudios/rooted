@@ -286,6 +286,7 @@ void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse*
         std::string name1 = bd1->getName();
         std::string name2 = bd2->getName();
         
+        
         if (name1 == "rock") {
             if (name2 == "carrot" || name2 == "farmer") {
                 Collectible* rock = dynamic_cast<Collectible*>(bd1);

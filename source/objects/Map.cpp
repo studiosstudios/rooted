@@ -1050,7 +1050,7 @@ std::pair<Vec2, int> Map::getRandomRockSpawn() {
 void Map::spawnRock(Vec2 pos, int idx, Vec2 vel, string uuid) {
     auto rockTexture = _assets->get<Texture>("rock");
 
-    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.5), _scale.x, !vel.isZero(), uuid);
+    auto rock = Collectible::alloc(pos, Vec2(0.5, 0.2), _scale.x, !vel.isZero(), uuid);
     rock->setDebugColor(DEBUG_COLOR);
     rock->setName(vel.isZero() ? "rock_spawn" : "rock");
     rock->setSpawnIndex(idx);

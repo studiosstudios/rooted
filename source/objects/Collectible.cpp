@@ -31,7 +31,7 @@ using namespace cugl;
  *
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
-bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired, string ownerUUID) {
+bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, const cugl::Size& collidersize, float scale, bool fired, string ownerUUID) {
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
     _drawScale = scale;
@@ -40,7 +40,7 @@ bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     _disappearing = false;
     _collected = false;
     _age = 0;
-    _feetheight = 0.1;
+    _collidersize = collidersize;
     
     if (BoxObstacle::init(pos, nsize)) {
         setSensor(!fired);
@@ -74,15 +74,16 @@ void Collectible::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
-    _feetshape.SetAsBox(getWidth(), _feetheight, b2Vec2(0, -(getHeight() + _feetheight)/2), 0);
+    _collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
     
     b2FixtureDef fixturedef;
-    fixturedef.shape = &_feetshape;
+    fixturedef.shape = &_collidershape;
     fixturedef.isSensor = !_fired;
     fixturedef.density = 2.0;
-    fixturedef.restitution = 0.9;
-    _feetfixture = _body->CreateFixture(&fixturedef);
-//    _feetfixture->
+    _collidername = "collider";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
+    fixturedef.restitution = 0;
+    _colliderfixture = _body->CreateFixture(&fixturedef);
 }
 
 /**
@@ -95,9 +96,9 @@ void Collectible::releaseFixtures() {
         return;
     }
     BoxObstacle::releaseFixtures();
-    if (_feetfixture != nullptr) {
-        _body->DestroyFixture(_feetfixture);
-        _feetfixture = nullptr;
+    if (_colliderfixture != nullptr) {
+        _body->DestroyFixture(_colliderfixture);
+        _colliderfixture = nullptr;
     }
 }
 
@@ -187,6 +188,18 @@ void Collectible::update(float dt) {
  */
 void Collectible::resetDebug() {
     BoxObstacle::resetDebug();
+    if (_colliderdebug == nullptr) {
+        _colliderdebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_collidersize));
+        _colliderdebug->setRelativeColor(false);
+        _colliderdebug->setColor(Color4::RED);
+        if (_scene != nullptr) {
+            _debug->addChild(_colliderdebug);
+        }
+    } else {
+        _colliderdebug->setPath(Rect(Vec2::ZERO,_collidersize));
+    }
+    _colliderdebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _colliderdebug->setPosition(Vec2(getWidth()/2, 0));
 }
 
 std::shared_ptr<cugl::scene2::SceneNode> Collectible::allocWheatHeightNode(float initCharHeight) {

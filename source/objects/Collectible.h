@@ -82,9 +82,11 @@ protected:
 
     bool _disappearing;
     
-    float _feetheight;
-    b2PolygonShape _feetshape;
-    b2Fixture* _feetfixture;
+    cugl::Size _collidersize;
+    b2PolygonShape _collidershape;
+    b2Fixture* _colliderfixture;
+    std::shared_ptr<cugl::scene2::WireNode> _colliderdebug;
+    std::string _collidername;
     
 
 public:
@@ -123,7 +125,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), 1.0f, true, ""); }
+    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), cugl::Size(1,1), 1.0f, true, ""); }
     
     /**
      * Initializes a new dude at the given position.
@@ -139,7 +141,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), 1.0f, true, ""); }
+    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), cugl::Size(1,1), 1.0f, true, ""); }
     
     /**
      * Initializes a new dude at the given position.
@@ -157,7 +159,7 @@ public:
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
     virtual bool init(const cugl::Vec2 pos, const cugl::Size size) override {
-        return init(pos, size, 1.0f, true,"");
+        return init(pos, size, size, 1.0f, true,"");
     }
     
     /**
@@ -176,7 +178,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired, string ownerUUID);
+    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, const cugl::Size& collidersize, float scale, bool fired, string ownerUUID);
 
     
 #pragma mark -
@@ -253,9 +255,10 @@ public:
      *
      * @return  A newly allocated DudeModel at the given position with the given scale
      */
-    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired, string uuid) {
+    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, const cugl::Size& collidersize,
+                                              float scale, bool fired, string uuid) {
         std::shared_ptr<Collectible> result = std::make_shared<Collectible>();
-        return (result->init(pos, size, scale, fired, uuid) ? result : nullptr);
+        return (result->init(pos, size, collidersize, scale, fired, uuid) ? result : nullptr);
     }
     
 

@@ -128,7 +128,6 @@ void CollisionController::beginContact(b2Contact* contact) {
  * This method is called when two objects cease to touch.
  */
 void CollisionController::endContact(b2Contact* contact) {
-    
     if (_map == nullptr) {
         return;
     }
@@ -236,6 +235,10 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             return !carrot->isSensor();
         }
 
+        if (name1 == "rock_spawn") {
+            if (fd1 == nullptr || *fd1 != "collider") return false;
+        }   
+        
         // rock does not immediately collide with yourself
         if (name1 == "rock") {
             auto rock = dynamic_cast<Collectible*>(bd1);
@@ -285,7 +288,6 @@ void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse*
 
         std::string name1 = bd1->getName();
         std::string name2 = bd2->getName();
-        
         
         if (name1 == "rock") {
             if (name2 == "carrot" || name2 == "farmer") {

@@ -167,7 +167,6 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define MAX_WHEAT_HEIGHT 25.0
 #define STEP_SIZE 1.0
 
-
 #pragma mark COLLECTIBLE
 #define SPAWN_RATE 0.005
 #define MAX_NUM_COLLECTIBLES 8
@@ -175,7 +174,24 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define SPAWN_COOLDOWN 600
 #define THROW_SPEED 10
 #define MIN_STUN_IMPULSE 3.0
-
 #define PROGRESS 0.02f
+
+#pragma mark FARMER
+#define FARMER_WIDTH 0.7f
+#define FARMER_HEIGHT 1.2f
+#define FARMER_HITBOX_WIDTH 0.55f
+#define FARMER_HITBOX_HEIGHT 0.3f
+
+#pragma mark CARROT
+#define CARROT_WIDTH 0.5f
+#define CARROT_HEIGHT 1.5
+#define CARROT_HITBOX_WIDTH 0.4f
+#define CARROT_HITBOX_HEIGHT 0.3f
+
+#pragma mark BARROT
+#define BARROT_WIDTH 0.5f
+#define BARROT_HEIGHT 1.3
+#define BARROT_HITBOX_WIDTH 0.4f
+#define BARROT_HITBOX_HEIGHT 0.3f
 
 #endif //ROOTED_ROOTEDCONSTANTS_H

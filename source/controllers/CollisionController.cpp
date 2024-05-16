@@ -220,6 +220,9 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         std::string name1 = bd1->getName();
         std::string name2 = bd2->getName();
         
+        //for now only collide the hitboxes - can change in future
+        if (fd1 == nullptr || *fd1 != "collider" || fd2 == nullptr || *fd2 != "collider") return false;
+        
         // Baby carrots don't collide with each other
         if (name1 == "baby" && name2 == "baby") {
             return false;
@@ -234,10 +237,6 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             return !carrot->isSensor();
         }
-
-        if (name1 == "rock_spawn") {
-            if (fd1 == nullptr || *fd1 != "collider") return false;
-        }   
         
         // rock does not immediately collide with yourself
         if (name1 == "rock") {

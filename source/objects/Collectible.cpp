@@ -49,7 +49,6 @@ bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, const cugl
         setRestitution(0.9);
         setFixedRotation(true);
         setMass(2.0);
-        updateCurAnimDurationForState();
         return true;
     }
     return false;

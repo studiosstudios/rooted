@@ -254,6 +254,13 @@ protected:
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
     bool _hasRock;
+    
+    /** stuff to do with the actual collision hitbox */
+    cugl::Size _collidersize;
+    b2PolygonShape _collidershape;
+    b2Fixture* _colliderfixture;
+    std::shared_ptr<cugl::scene2::WireNode> _colliderdebug;
+    std::string _collidername;
 
 
 public:
@@ -625,6 +632,8 @@ public:
     bool hasRock() { return _hasRock; }
     
     bool isStunned() { return _state == STUNNED; }
+    
+    void setColliderSize(const cugl::Size& size) { _collidersize = size; }
 
     
 #pragma mark -

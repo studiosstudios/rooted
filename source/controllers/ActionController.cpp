@@ -74,19 +74,19 @@ void ActionController::preUpdate(float dt) {
     updateRustlingNoise();
     float mapheight = _map->getMapBounds().size.height;
     for (auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++) {
-        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (*it)->getY()/mapheight/2.0);
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         (*it)->applyForce();
     }
     auto players = _map->getPlayers();
     for (auto it = players.begin(); it != players.end(); ++it) {
-        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (*it)->getY()/mapheight/2.0);
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         if ((*it)->getUUID() != playerEntity->getUUID()) {
             (*it)->updateSprite(dt, false);
         }
     }
     auto barrots = _map->getBabyCarrots();
     for (auto it = barrots.begin(); it != barrots.end(); ++it) {
-        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (*it)->getY()/mapheight/2.0);
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         (*it)->updateSprite(dt, false);
     }
     

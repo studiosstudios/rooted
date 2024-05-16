@@ -55,17 +55,40 @@
 #define CARROT_TEXTURE   "carrot"
 #define FARMER_TEXTURE   "farmer"
 #define CARROTFARMER_TEXTURE "carrotfarmer"
+
 #define FARMER_SOUTH_WALK_SPRITE "farmer-south-walk"
 #define FARMER_NORTH_WALK_SPRITE "farmer-north-walk"
 #define FARMER_EAST_WALK_SPRITE "farmer-east-walk"
 #define FARMER_NORTHEAST_WALK_SPRITE "farmer-northeast-walk"
 #define FARMER_SOUTHEAST_WALK_SPRITE "farmer-southeast-walk"
 
+#define FARMER_SOUTH_RUN_SPRITE "farmer-south-run"
+#define FARMER_NORTH_RUN_SPRITE "farmer-north-run"
+#define FARMER_EAST_RUN_SPRITE "farmer-east-run"
+#define FARMER_NORTHEAST_RUN_SPRITE "farmer-northeast-run"
+#define FARMER_SOUTHEAST_RUN_SPRITE "farmer-southeast-run"
+
+#define FARMER_SOUTH_DASH_SPRITE "farmer-south-dash"
+#define FARMER_NORTH_DASH_SPRITE "farmer-north-dash"
+#define FARMER_EAST_DASH_SPRITE "farmer-east-dash"
+
 #define CARROT_SOUTH_WALK_SPRITE "carrot-south-walk"
 #define CARROT_NORTH_WALK_SPRITE "carrot-north-walk"
 #define CARROT_EAST_WALK_SPRITE "carrot-east-walk"
 #define CARROT_NORTHEAST_WALK_SPRITE "carrot-northeast-walk"
 #define CARROT_SOUTHEAST_WALK_SPRITE "carrot-southeast-walk"
+
+#define CARROT_SOUTH_DASH_SPRITE "carrot-south-dash"
+#define CARROT_NORTH_DASH_SPRITE "carrot-north-dash"
+#define CARROT_EAST_DASH_SPRITE "carrot-east-dash"
+#define CARROT_NORTHEAST_DASH_SPRITE "carrot-northeast-dash"
+#define CARROT_SOUTHEAST_DASH_SPRITE "carrot-southeast-dash"
+
+#define BARROT_SOUTH_WALK_SPRITE "barrot-south-walk"
+#define BARROT_NORTH_WALK_SPRITE "barrot-north-walk"
+#define BARROT_EAST_WALK_SPRITE "barrot-east-walk"
+#define BARROT_NORTHEAST_WALK_SPRITE "barrot-northeast-walk"
+#define BARROT_SOUTHEAST_WALK_SPRITE "barrot-southeast-walk"
 
 #define BABY_TEXTURE   "baby"
 
@@ -109,9 +132,11 @@ public:
         RUNNING,
         DASHING,
         CARRYING,   // bunny only
-        PLANTING,   // bunny only
+        ROOTING,   // bunny only
         CAUGHT,     // carrot only
-        ROOTED      // carrot only
+        ROOTED,      // carrot only
+        UNROOTING   // carrot only
+        
     };
     
 private:
@@ -153,6 +178,18 @@ protected:
     std::shared_ptr<cugl::scene2::SpriteNode> _northEastWalkSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _southEastWalkSprite;
     
+    std::shared_ptr<cugl::scene2::SpriteNode> _eastRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northEastRunSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southEastRunSprite;
+    
+    std::shared_ptr<cugl::scene2::SpriteNode> _eastDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _northEastDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _southEastDashSprite;
+    
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
@@ -165,7 +202,7 @@ protected:
     
     /** The amount of time that has elapsed in the current animation cycle
         For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
-    float curAnimTime;
+    float curAnimTime = 0.0f;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -179,10 +216,17 @@ protected:
     /** Current EntityState that this entity is in. */
     EntityState _state;
     
+    /** The state this EntityState was in from the previous frame */
+    EntityState _prevState;
+    
     /** The current movement (horizontal and vertical) of the character */
     cugl::Vec2 _movement;
     
     bool _dashInput;
+    
+    cugl::Vec2 _dashVector;
+    
+    float _dashCooldown;
     
     bool _plantInput;
     
@@ -207,6 +251,7 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
+    bool _hasRock;
 
 
 public:
@@ -455,16 +500,38 @@ public:
      * This currently only includes the 5-directional movement sprites, but
      * TODO: It should later include all action sprites.
      */
-    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southNode) {
-        _northWalkSprite = northNode;
-        _northEastWalkSprite = northEastNode;
-        _eastWalkSprite = eastNode;
-        _southEastWalkSprite = southEastNode;
-        _southWalkSprite = southNode;
+    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southWalkNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastDashNode,
+                        const std::shared_ptr<cugl::scene2::SpriteNode>& southDashNode) {
+        _northWalkSprite = northWalkNode;
+        _northEastWalkSprite = northEastWalkNode;
+        _eastWalkSprite = eastWalkNode;
+        _southEastWalkSprite = southEastWalkNode;
+        _southWalkSprite = southWalkNode;
+        
+        _northRunSprite = northRunNode;
+        _northEastRunSprite = northEastRunNode;
+        _eastRunSprite = eastRunNode;
+        _southEastRunSprite = southEastRunNode;
+        _southRunSprite = southRunNode;
+        
+        _northDashSprite = northDashNode;
+        _northEastDashSprite = northEastDashNode;
+        _eastDashSprite = eastDashNode;
+        _southEastDashSprite = southEastDashNode;
+        _southDashSprite = southDashNode;
     }
     
     /**
@@ -497,13 +564,15 @@ public:
      */
     virtual void setMovement(cugl::Vec2 value);
     
-    void setDashInput(bool dashInput);
+    void setDashInput(bool dashInput, cugl::Vec2 dashVector);
     
     void setPlantInput(bool plantInput);
     
     void setRootInput(bool rootInput);
     
     void setUnrootInput(bool unrootInput);
+    
+    bool canDash() { return _dashCooldown == 0; }
     
     /**
      * Returns how much force to apply to get the dude moving
@@ -535,7 +604,7 @@ public:
      *
      * @return true if this character is facing right
      */
-    bool getFacing() const { return _facing; }
+    cugl::Vec2 getFacing();
     
     std::string getUUID() const { return _uuid; }
     
@@ -544,6 +613,12 @@ public:
     bool isInWheat() const { return _wheatContacts > 0; }
 
     void changeWheatContacts(int dx) { _wheatContacts += dx; }
+    
+    void throwRock();
+    
+    void setHasRock(bool hasRock) { _hasRock = hasRock; }
+    
+    bool hasRock() { return _hasRock; }
 
     
 #pragma mark -
@@ -581,7 +656,7 @@ public:
      *
      *  This method should be called after all relevant input attributes are set.
      */
-    virtual void updateState();
+    virtual void updateState(float dt);
     
     /**
      * Applies the force to the body of this dude
@@ -601,19 +676,29 @@ public:
      */
     bool isMoving() { return _state == SNEAKING || _state == WALKING || _state == RUNNING; };
     
+    bool isRootingUnrooting() { return _state == ROOTING || _state == UNROOTING; }
+    
     /** Returns the appropriate movement-type state (STANDING, SNEAKING, WALKING, RUNNING) based on the current Vec2 stored in _movement */
     EntityState getMovementState() {
-        if (_movement.lengthSquared() <= 0.15 * 0.15) {
+        auto lengthSquared = _movement.lengthSquared();
+        if (lengthSquared <= 0.0225) { // 0.15^2
             // If joystick movement is too minor, we don't actually let it cause a movement
             return STANDING;
         }
-        else if (_movement.lengthSquared() <= 0.8 * 0.8) {
+        else if (lengthSquared <= 0.1225) { // 0.35^2
             return SNEAKING;
         }
-        else if (_movement.lengthSquared() <= 0.9 * 0.9) {
+        else if (lengthSquared < 0.95) { // ~0.975^2
             return WALKING;
         }
         return RUNNING;
+    }
+    
+    /** If useMovement is true, use the current EntityModel's \_movement argument. If false, use \_velocity. */
+    void updateSprite(float dt, bool useMovement);
+    
+    void updateSprite(float dt) {
+        updateSprite(dt, true);
     }
     
     EntityState getEntityState(){
@@ -621,6 +706,7 @@ public:
     }
     
     void setEntityState(EntityState state) {
+        _prevState = _state;
         _state = state;
     }
     

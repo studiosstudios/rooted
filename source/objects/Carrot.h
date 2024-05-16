@@ -100,6 +100,8 @@ public:
     
     void escaped();
     
+    void update(float dt) override;
+    
 #pragma mark -
 #pragma mark Animation
     void updateCurAnimDurationForState() override;

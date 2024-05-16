@@ -16,6 +16,7 @@
 #define __PF_INPUT_H__
 #include <cugl/cugl.h>
 #include <unordered_set>
+#include "../RootedConstants.h"
 
 /**
  * This class represents player input in the Platform demo.
@@ -55,15 +56,18 @@ private:
     bool _keyRoot;
     /** Whether the unroot key is down*/
     bool _keyUnroot;
-    
     /** Whether the dash key was pressed in previous frame */
     bool _keyDashPressed;
+    /** Whether the key for throwing a rock is down */
+    bool _keyThrowRock;
     
     // FOR TESTING RUSTLING
     bool _keyRustle;
     bool _keyShowPlayer;
     
     bool _keySwitch;
+    bool _keyContinue;
+    bool _keyContinuePressed;
   
 protected:
     // INPUT RESULTS
@@ -75,12 +79,18 @@ protected:
     bool _exitPressed;
     /** Whether the dash action was chosen. */
     bool _dashPressed;
+    /** Whether the dash action was chosen within the last swipe instance. Set to true when dash is true, and set to false on a new swipe instance.*/
+    bool _dashPressedThisSwipe;
     /** Whether the root action was chosen */
     bool _rootPressed;
     /** Whether the unroot action was chosen */
     bool _unrootPressed;
+    /** Whether the rock throwing action was chosen */
+    bool _throwRockPressed;
     /** Movement vector */
     cugl::Vec2 _movement;
+    /** Whether to continue tutorial */
+    bool _continuePressed;
     
     // CAN REMOVE THIS, THIS IS JUST FOR TESTING
     bool _rustlePressed;
@@ -89,15 +99,17 @@ protected:
     bool _switchPressed;
     
     bool _deviceShaking;
+    /** for pausing movement input during the tutorial **/
+    bool _paused;
 
 #pragma mark Internal Touch Management   
 	// The screen is divided into four zones: Left, Bottom, Right and Main/
 	// These are all shown in the diagram below.
 	//
 	//   |---------------|
-	//   |   |       |   |
-	//   | L |   M   | R |
-	//   |   |       |   |
+	//   |           |   |
+	//   |---|   M   | R |
+	//   | L |       |   |
 	//   -----------------
 	//
 	// The meaning of any touch depends on the zone it begins in.
@@ -158,10 +170,17 @@ protected:
     
     /** List holding points for swipe drawing */
     std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> _swipePoints;
-    /** Capacity for swipe drawing list */
-    int _swipePointsCapacity = 25;
-    std::optional<cugl::Vec2> _swipeFirstPoint;
+    std::vector<cugl::Vec2> _swipePointsVec;
     cugl::Color4 _currentSwipeColor;
+    std::deque<std::pair<cugl::Vec2, cugl::Timestamp>> _internalSwipePoints;
+    
+    cugl::Vec2 _dashVector;
+    
+    
+    
+    std::shared_ptr<cugl::GestureRecognizer> _lineGesturer;
+    std::shared_ptr<cugl::GestureRecognizer> _circleGesturer;
+
 
     /**
      * Defines the zone boundaries, so we can quickly categorize touches.
@@ -254,11 +273,11 @@ public:
      *
      * @return true if the controller was initialized successfully
      */
-    bool init(const cugl::Rect bounds);
+    bool init(const cugl::Rect bounds, const std::shared_ptr<cugl::JsonValue>& lineData, const std::shared_ptr<cugl::JsonValue>& circleData);
 
-    static std::shared_ptr<InputController> alloc(const cugl::Rect bounds) {
+    static std::shared_ptr<InputController> alloc(const cugl::Rect bounds, const std::shared_ptr<cugl::JsonValue>& lineData, const std::shared_ptr<cugl::JsonValue>& circleData) {
         std::shared_ptr<InputController> result = std::make_shared<InputController>();
-        return (result->init(bounds) ? result : nullptr);
+        return (result->init(bounds, lineData, circleData) ? result : nullptr);
     }
     
 #pragma mark -
@@ -326,6 +345,11 @@ public:
      * @return true if the virtual joystick is in use (touch only)
      */
     bool withJoystick() const { return _joystick; }
+    
+    /** This is to show the joystick without any inputs */
+    void showDisplayJoystick();
+    
+    void resetJoystick() { _joystick = false; }
 
     /**
      * Returns the scene graph position of the virtual joystick
@@ -341,35 +365,132 @@ public:
     
     bool didDash() const { return _dashPressed; }
     
+    bool didDashNow() const { return _keyDash; }
+    
+    bool didDashThisSwipe() const { return _dashPressedThisSwipe; }
+    
     bool didRoot() const { return _rootPressed; }
     
+    bool didRootNow() const { return _keyRoot; }
+    
     bool didUnroot() const { return _unrootPressed; }
+    
+    bool didUnrootNow() const { return _keyUnroot; }
 
     bool didSwitch() const { return _switchPressed; }
     
     bool didShakeDevice() const { return _deviceShaking; }
+    
+    cugl::Vec2 getDashVector() { return _dashVector; }
+
+    bool didContinue() const { return _continuePressed; }
+    
+    void pause() { _paused = true; }
+    
+    void unpause() { _paused = false; }
+
+    bool didThrowRock() const { return _throwRockPressed; }
 
 #pragma mark -
 #pragma mark Swipe Drawing Logic
-    void addSwipePoint(cugl::Vec2 point) {
-        if (_swipePoints->size() == _swipePointsCapacity) {
-            _swipePoints->pop_back();
-        }
-        _swipePoints->push_front(std::pair(point, cugl::Timestamp()));
-    }
     
     std::shared_ptr<std::list<std::pair<cugl::Vec2, cugl::Timestamp>>> getSwipePoints() {
         return _swipePoints;
     }
     
-    std::optional<cugl::Vec2> getSwipeFirstPoint() {
-        return _swipeFirstPoint;
+    std::vector<cugl::Vec2> getSwipePointsVector() {
+        std::vector<cugl::Vec2> res;
+        for (auto it = _swipePoints->begin(); it != _swipePoints->end(); it++) {
+            res.push_back(it->first);
+        }
+        return res;
+    }
+    
+    /**
+     * Returns whether this point is 'notable'
+     *
+     * A notable point is one that
+     * 1. is the first point added to an empty _internalSwipePoints_
+     * 2. is greater than x^2 distance away from the previously added point in _internalSwipePoints_
+     *
+     * @param point the point to be identified as notable
+     */
+    bool isNotablePoint(cugl::Vec2 point) {
+        if (_internalSwipePoints.empty()) {
+            return true;
+        }
+        return _internalSwipePoints.front().first.distanceSquared(point) > SWIPE_DISTANCE_THRESHOLD;
+    }
+    
+    void addSwipePoint(cugl::Vec2 point) {
+        if (_swipePoints->size() == SWIPE_POINTS_CAPACITY) {
+            _swipePoints->pop_back();
+        }
+        auto pointPair = std::pair(point, cugl::Timestamp());
+        _swipePoints->push_front(pointPair);
+        if (isNotablePoint(point)) {
+            if (_internalSwipePoints.size() == INTERNAL_SWIPE_POINTS_CAPACITY) {
+                _internalSwipePoints.pop_back();
+            }
+            _internalSwipePoints.push_front(pointPair);
+        }
+    }
+    
+    void clearSwipePoints() {
+        _swipePoints->clear();
+        _internalSwipePoints.clear();
+    }
+    
+    void cullSwipePointsByDuration() {
+        cugl::Timestamp curTime = cugl::Timestamp();
+        for (auto it = _swipePoints->begin(); it != _swipePoints->end();) {
+            if (it->second + SWIPE_DURATION_MILLIS < curTime) {
+                it = _swipePoints->erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+        for (auto it = _internalSwipePoints.begin(); it != _internalSwipePoints.end();) {
+            if (it->second + INTERNAL_SWIPE_DURATION_MILLIS < curTime) {
+                it = _internalSwipePoints.erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+        
+//        for (auto it = _swipePoints->rbegin(); it != _swipePoints->rend();) {
+//            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
+//                break;
+//            }
+//            std::advance(it, 1);
+//            _swipePoints->erase(it.base());
+//        }
+//        for (auto it = _internalSwipePoints.rbegin(); it != _internalSwipePoints.rend();) {
+//            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
+//                break;
+//            }
+//            std::advance(it, 1);
+//            _internalSwipePoints.erase(it.base());
+//        }
     }
     
     cugl::Color4 getCurrentSwipeColor() {
         return _currentSwipeColor;
     }
-
+    
+    std::vector<cugl::Vec2> getInternalSwipePointsVector() {
+        std::vector<cugl::Vec2> res;
+        for (auto it = _internalSwipePoints.begin(); it != _internalSwipePoints.end(); it++) {
+            res.push_back(it->first);
+        }
+        return res;
+    }
+    
+    void loadDashVector() {
+        cugl::Vec2::subtract(_internalSwipePoints.front().first, _internalSwipePoints.back().first, &_dashVector);
+    }
 
 #pragma mark -
 #pragma mark Touch and Mouse Callbacks

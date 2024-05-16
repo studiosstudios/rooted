@@ -67,21 +67,39 @@
                 }, 
                 {
                  "gid":15,
-                 "height":160,
-                 "id":115,
+                 "height":32,
+                 "id":116,
                  "name":"",
-                 "properties":[
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"barn"
-                        }],
                  "rotation":0,
-                 "type":"Decoration",
+                 "type":"Rock",
                  "visible":true,
-                 "width":207,
-                 "x":320,
+                 "width":32,
+                 "x":32,
+                 "y":64
+                }, 
+                {
+                 "gid":15,
+                 "height":32,
+                 "id":118,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
                  "y":288
+                }, 
+                {
+                 "gid":15,
+                 "height":32,
+                 "id":117,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":64
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -141,6 +159,187 @@
                  "width":32,
                  "x":416,
                  "y":64
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":119,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":448,
+                 "y":224
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":120,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":352,
+                 "y":288
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":121,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":256
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":122,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":160,
+                 "y":224
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":123,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":192
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":124,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":64,
+                 "y":128
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":125,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":192,
+                 "y":128
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":126,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":160
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":127,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":64
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":128,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":96
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":129,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":160
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":130,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":192
+                },
+            
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":131,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":352,
+                 "y":224
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":132,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
+                 "y":160
+                }, 
+                {
+                 "gid":3,
+                 "height":32,
+                 "id":133,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Baby",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
+                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -149,7 +348,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":116,
+ "nextobjectid":134,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -159,7 +358,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

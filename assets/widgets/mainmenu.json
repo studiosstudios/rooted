@@ -98,7 +98,7 @@
                                 "data": {
                                     "key" : "redbuttonsmallwidget",
                                     "variables" : {
-                                        "text" : "options",
+                                        "text" : "tutorial",
                                         "angle" : -5,
                                         "anchor": [
                                             1,

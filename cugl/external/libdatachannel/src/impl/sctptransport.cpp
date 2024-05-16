@@ -675,7 +675,7 @@ bool SctpTransport::trySendMessage(message_ptr message) {
 		}
 
 		PLOG_ERROR << "SCTP sending failed, errno=" << errno;
-		throw std::runtime_error("Sending failed, errno=" + std::to_string(errno));
+        throw std::runtime_error("Sending failed, errno=" + std::to_string(errno));
 	}
 
 	PLOG_VERBOSE << "SCTP sent size=" << message->size();

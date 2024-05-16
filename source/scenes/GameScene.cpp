@@ -82,13 +82,18 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
         
     _seed = hex2dec(_network->getRoomID());
-    _map = Map::alloc(_assets); // Obtains ownership of root.
+    _map = Map::alloc(_assets, false); // Obtains ownership of root.
 //    if (!_map->populate()) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
-    
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+
+    _numFarmers = 1;
+    _numCarrots = _network->getNumPlayers() - 1;
+    _numBabies = (_network->getNumPlayers() - 1) * 15 + 5;
+    _numPlanting = 8;
+
+    _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -109,9 +114,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     addChild(_rootnode);
     addChild(_uinode);
-    
-    _input = InputController::alloc(getBounds());
-    Haptics::start();
+
+    _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
     _action.init(_map, _input, _network, _assets);
     _active = true;
@@ -126,6 +130,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     }
     _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
     
+    // TODO: Putting this set here for now, little weird that's it's separate from the rest of ui init -CJ
+    _ui.setCharacter(_character);
+    
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
     if (!_network->isHost()) {
@@ -134,6 +141,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         for (auto baby : _babies) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
+        for (auto obs : _map->getPlantingSpots()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        for (auto obs : _map->getBoundaries()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        _network->getPhysController()->acquireObs(_character, 0);
     }
     
     _network->attachEventType<ResetEvent>();
@@ -142,15 +156,20 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
     setComplete(false);
     setFailure(false);
+    _isGameOverScreen = false;
     
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
-    float mapX = _map->getBounds().getMaxX()*_scale;
-    float mapY = _map->getBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
+    
+    // TODO: figure out a way to separate resetting for a round and for a game
+    _round = 1;
+    _startTime = Timestamp();
 
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
@@ -221,8 +240,8 @@ void GameScene::reset() {
     // Load a new level
     _seed++;
     _map->clearRootNode();
-    _map->dispose();
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, 20, 8);
+    _map->clearWorld();
+    _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -253,17 +272,24 @@ void GameScene::reset() {
         for (auto baby : _babies) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
+        for (auto obs : _map->getPlantingSpots()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        for (auto obs : _map->getBoundaries()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        _network->getPhysController()->acquireObs(_character, 0);
     }
     
     Size dimen = computeActiveSize();
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_map->getCharacter(), _rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
     
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    float mapX = _map->getBounds().getMaxX()*_scale;
-    float mapY = _map->getBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().getMaxX()*_scale;
+    float mapY = _map->getMapBounds().getMaxY()*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -275,6 +301,10 @@ void GameScene::reset() {
     setDebug(false);
     setComplete(false);
     setFailure(false);
+    
+    _isGameOverScreen = false;
+    _round += 1;
+    _startTime = Timestamp();
 }
 
 #pragma mark -
@@ -374,12 +404,19 @@ void GameScene::fixedUpdate(float step) {
         if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
             _action.processFreeEvent(freeEvent);
         }
+        if(auto spawnRockEvent = std::dynamic_pointer_cast<SpawnRockEvent>(e)){
+            _action.processSpawnRockEvent(spawnRockEvent);
+        }
+        if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
+            _action.processCollectedRockEvent(collectedRockEvent);
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
     }
     
     _map->getWorld()->update(step);
+    _cam.setTarget(_character->getPosition()*_scale);
     _cam.update(step);
     
     _map->updateShaders(step, _cam.getCamera()->getCombined());
@@ -403,7 +440,7 @@ void GameScene::fixedUpdate(float step) {
 
     //resolve queries
     _map->getWheatScene()->doQueries();
-    
+
     //fetch results
     for (auto farmer : _map->getFarmers()) {
         farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
@@ -452,12 +489,23 @@ void GameScene::postUpdate(float remain) {
     }
     // TEMP CODE FOR OPEN BETA
     
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug);
+    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug, _character->canDash());
     
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        if(_network->isHost()){
+        // are we displaying the end game screen
+        if (!_isGameOverScreen) {
+            _isGameOverScreen = true;
+            
+            // set how the end screen should display
+            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), _map->getCarrots().size());
+            
+            // display end scene
+            _ui.setEndVisible(true);
+        }
+        
+        if(_ui.isNextRound()){
             _network->pushOutEvent(ResetEvent::allocResetEvent());
         }
         else{

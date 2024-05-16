@@ -13,7 +13,7 @@
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
-#include "Decoration.h"
+#include "Collectible.h"
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
 #include "../shaders/ShaderRenderer.h"
@@ -29,20 +29,22 @@ private:
     std::vector<std::shared_ptr<Carrot>> _carrots;
     /** references to the farmer */
     std::vector<std::shared_ptr<Farmer>> _farmers;
+    /** references to all human player EntityModels*/
+    std::vector<std::shared_ptr<EntityModel>> _players;
     /** references to the boundaries around the world **/
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
-    /** references to the obstacles */
-    std::vector<std::shared_ptr<Decoration>> _decorations;
-    /** references to the walls */
-    std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
+    /** references to the rocks */
+    std::vector<std::shared_ptr<Collectible>> _rocks;
     /** reference to the box2d world */
     std::shared_ptr<cugl::physics2::net::NetWorld> _world;
     /** The root node of this level */
     std::shared_ptr<scene2::SceneNode> _root;
-    /** The bounds of this level in physics coordinates */
-    Rect _bounds;
+    /** The bounds of this world in physics coordinates - must be 16x9 for */
+    Rect _worldbounds;
+    /** The bounds of this map in physics coordinates */
+    Rect _mapbounds;
     /** The global gravity for this level */
     Vec2 _gravity;
     /** The scale between the physics world and the screen */
@@ -83,8 +85,11 @@ private:
     
     std::vector<Rect> _plantingSpawns;
     
-    std::vector<std::pair<Rect, std::string>> _decorationSpawns;
-//    std::vector<std::string> _decorationNames;
+    std::vector<std::pair<Rect, bool>> _rockSpawns;
+    
+    int _numRockSpawns;
+    
+    int _spawnCooldown;
     
     /** Vector of key names for all map units in assets json */
     std::vector<std::string> _mapNames;
@@ -94,6 +99,12 @@ private:
     
     /** 2D vector representing tiling of randomly generated map */
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
+
+    bool _tutorial;
+    
+    std::vector<std::string> _playerUUIDs;
+    std::string _hostUUID;
+    std::string _thisUUID;
 
     
 public:
@@ -127,16 +138,19 @@ public:
      *
      * @return  an autoreleased level file
      */
-    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets) {
+    static std::shared_ptr<Map> alloc(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
         std::shared_ptr<Map> result = std::make_shared<Map>();
-        return (result->init(assets) ? result : nullptr);
+        return (result->init(assets, tutorial) ? result : nullptr);
     }
 
-    bool init(const std::shared_ptr<AssetManager> &assets);
+    bool init(const std::shared_ptr<AssetManager> &assets, bool tutorial);
     
     void generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots);
     
     void populate();
+
+    /** Clears the world but does not dispose it */
+    void clearWorld();
     
     /**
      * populate the map with Carrots
@@ -151,11 +165,18 @@ public:
 #pragma mark Physics Attributes
 
     /**
-     * Returns the bounds of this level in physics coordinates
+     * Returns the bounds of this world in physics coordinates
      *
-     * @return the bounds of this level in physics coordinates
+     * @return the bounds of this world in physics coordinates
      */
-    const Rect &getBounds() const { return _bounds; }
+    const Rect &getWorldBounds() const { return _worldbounds; }
+    
+    /**
+     * Returns the bounds of this map in physics coordinates
+     *
+     * @return the bounds of this map in physics coordinates
+     */
+    const Rect &getMapBounds() const { return _mapbounds; }
 
 #pragma mark Drawing Methods
 
@@ -270,19 +291,41 @@ public:
     std::vector<std::shared_ptr<Carrot>> &getCarrots() { return _carrots; }
 
     std::vector<std::shared_ptr<Farmer>> &getFarmers() { return _farmers; }
+    
+    std::vector<std::shared_ptr<EntityModel>> &getPlayers() { return _players; }
 
     std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
     
-    std::vector<std::shared_ptr<Decoration>> &getDecorations() { return _decorations; }
+    std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> &getBoundaries() { return _boundaries; }
+
+    std::vector<std::shared_ptr<Collectible>> &getRocks() { return _rocks; }
+    
+    const std::shared_ptr<EntityModel> getCharacter(std::string UUID);
+
+    /** Changes the player to the one specified by the UUID. This should ONLY be used by the tutorial scene,
+     behaviour with networking is undefined. */
+    std::shared_ptr<EntityModel> &changeCharacter(std::string UUID);
 
     std::shared_ptr<cugl::physics2::net::NetWorld> getWorld() { return _world; }
-    
+
     void resetPlantingSpots();
     
     void resetPlayers();
 
+#pragma mark -
+#pragma mark Rock
+    
+    void destroyRock(std::shared_ptr<Collectible> rock);
+    
+    bool shouldSpawnRock();
+    
+    std::pair<Vec2, int> getRandomRockSpawn();
+    
+    void spawnRock(Vec2 pos, int idx, Vec2 vel);
+    
+    
 #pragma mark -
 #pragma mark Drawing
     void updateShaders(float step, Mat4 perspective);
@@ -330,7 +373,6 @@ private:
     void spawnCarrots();
     
     void spawnBabyCarrots();
-
 };
 
 #endif //ROOTED_MAP_H

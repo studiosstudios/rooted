@@ -51,17 +51,20 @@ bool WheatScene::init(const shared_ptr<AssetManager> &assets, vector<vector<pair
     //add wheat texture nodes based on data in mapInfo
     for (int i = 0; i < mapInfo.size(); i++) {
         for (int j = 0; j < mapInfo[i].size(); j++) {
-            auto wheattex = assets->get<Texture>(mapInfo[i][j].first);
-            float bladeColorScale = mapInfo[i][j].second;
-            auto wheatnode = scene2::PolygonNode::allocWithTexture(wheattex);
-            wheatnode->setScale(SCENE_WIDTH / wheattex->getWidth() / drawScale.x * MAP_UNIT_WIDTH / worldSize.width,
-                                SCENE_HEIGHT / wheattex->getHeight() / drawScale.y * MAP_UNIT_HEIGHT / worldSize.height);
-            wheatnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-            wheatnode->setColor(
-                    Color4(255 / bladeColorScale, 255 / bladeColorScale, 255 / bladeColorScale,
-                           255)); //not sure if this will work for all scales
-            wheatnode->setPosition(MAP_UNIT_WIDTH * i, MAP_UNIT_HEIGHT * j);
-            _rootnode->addChild(wheatnode);
+            std::string name = mapInfo[i][j].first;
+            if (name != "") {
+                auto wheattex = assets->get<Texture>(name);
+                float bladeColorScale = mapInfo[i][j].second;
+                auto wheatnode = scene2::PolygonNode::allocWithTexture(wheattex);
+                wheatnode->setScale(SCENE_WIDTH / wheattex->getWidth() / drawScale.x * MAP_UNIT_WIDTH / worldSize.width,
+                                    SCENE_HEIGHT / wheattex->getHeight() / drawScale.y * MAP_UNIT_HEIGHT / worldSize.height);
+                wheatnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+                wheatnode->setColor(
+                                    Color4(255 / bladeColorScale, 255 / bladeColorScale, 255 / bladeColorScale,
+                                           255)); //not sure if this will work for all scales
+                wheatnode->setPosition(MAP_UNIT_WIDTH * i, MAP_UNIT_HEIGHT * j);
+                _rootnode->addChild(wheatnode);
+            }
         }
     }
 

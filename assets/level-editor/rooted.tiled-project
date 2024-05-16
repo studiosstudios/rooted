@@ -85,7 +85,8 @@
             "type": "class",
             "useAs": [
                 "object",
-                "tile"
+                "tile",
+                "project"
             ]
         },
         {
@@ -109,30 +110,6 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
-            "id": 14,
-            "members": [
-                {
-                    "name": "name",
-                    "type": "string",
-                    "value": ""
-                }
-            ],
-            "name": "Decoration",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
             "id": 8,
             "members": [
             ],
@@ -146,7 +123,28 @@
                 "tile",
                 "tileset",
                 "wangcolor",
-                "wangset"
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 14,
+            "members": [
+            ],
+            "name": "Rock",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
             ]
         }
     ]

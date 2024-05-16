@@ -7,12 +7,12 @@
 
 #include <cugl/cugl.h>
 #include <any>
-
 #include "BabyCarrot.h"
 #include "Carrot.h"
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
+#include "Decoration.h"
 #include "Collectible.h"
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
@@ -35,6 +35,8 @@ private:
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
+    /** references to the decorations */
+    std::vector<std::shared_ptr<Decoration>> _decorations;
     /** references to the rocks */
     std::vector<std::shared_ptr<Collectible>> _rocks;
     /** reference to the box2d world */
@@ -67,11 +69,11 @@ private:
     std::shared_ptr<EntitiesNode> _shaderedEntitiesNode;
     
     std::shared_ptr<scene2::SceneNode> _entitiesNode;
-
+    
     std::unordered_map<std::string, std::any> _propertiesMap;
-
+    
     std::shared_ptr<ShaderRenderer> _shaderrenderer;
-
+    
     std::shared_ptr<WheatScene> _wheatscene;
     
     /** Possible init positions of carrots */
@@ -84,6 +86,8 @@ private:
     std::vector<Rect> _farmerSpawns;
     
     std::vector<Rect> _plantingSpawns;
+    
+    std::vector<std::pair<Rect, std::string>> _decorationSpawns;
     
     std::vector<std::pair<Rect, bool>> _rockSpawns;
     

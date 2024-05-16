@@ -281,6 +281,9 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
+                } else if (type == "Decoration") {
+                    std::string decName = std::any_cast<std::string>(_propertiesMap.at("name"));
+                    _decorationSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), decName));
                 } else if (type == "Rock") {
                     _rockSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), true));
                 } else {
@@ -414,6 +417,7 @@ void Map::clearWorld() {
         (*it) = nullptr;
     }
     _plantingSpot.clear();
+    _decorations.clear();
     for (auto it = _rocks.begin(); it != _rocks.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
@@ -444,6 +448,7 @@ void Map::clearWorld() {
     _farmerSpawns.clear();
     _babyCarrotSpawns.clear();
     _plantingSpawns.clear();
+    _decorationSpawns.clear();
     _rockSpawns.clear();
 }
 

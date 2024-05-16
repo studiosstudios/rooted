@@ -37,6 +37,8 @@ private:
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the decorations */
     std::vector<std::shared_ptr<Decoration>> _decorations;
+    /** references to the environmental collidables */
+    std::vector<std::shared_ptr<physics2::BoxObstacle>> _envCollidables;
     /** references to the rocks */
     std::vector<std::shared_ptr<Collectible>> _rocks;
     /** reference to the box2d world */
@@ -88,6 +90,8 @@ private:
     std::vector<Rect> _plantingSpawns;
     
     std::vector<std::pair<Rect, std::string>> _decorationSpawns;
+    
+    std::vector<Rect> _envCollidableSpawns;
     
     std::vector<std::pair<Rect, bool>> _rockSpawns;
     
@@ -371,6 +375,8 @@ private:
     void spawnPlantingSpots();
     
     void spawnDecorations();
+    
+    void spawnEnvCollidables();
         
     void spawnFarmers();
     

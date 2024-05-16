@@ -49,6 +49,30 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 14,
+            "members": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Decoration",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 9,
             "members": [
             ],
@@ -85,8 +109,7 @@
             "type": "class",
             "useAs": [
                 "object",
-                "tile",
-                "project"
+                "tile"
             ]
         },
         {
@@ -123,17 +146,16 @@
                 "tile",
                 "tileset",
                 "wangcolor",
-                "wangset",
-                "project"
+                "wangset"
             ]
         },
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
-            "id": 14,
+            "id": 16,
             "members": [
             ],
-            "name": "Rock",
+            "name": "EnvCollidable",
             "type": "class",
             "useAs": [
                 "property",
@@ -143,8 +165,7 @@
                 "tile",
                 "tileset",
                 "wangcolor",
-                "wangset",
-                "project"
+                "wangset"
             ]
         }
     ]

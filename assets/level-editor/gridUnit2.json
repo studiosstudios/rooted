@@ -118,6 +118,17 @@
                  "width":128,
                  "x":318,
                  "y":279
+                }, 
+                {
+                 "height":23.9081227813739,
+                 "id":135,
+                 "name":"",
+                 "rotation":0,
+                 "type":"EnvCollidable",
+                 "visible":true,
+                 "width":117.141783253289,
+                 "x":325.429108373356,
+                 "y":246.969304656505
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -354,7 +365,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":135,
+ "nextobjectid":137,
  "orientation":"orthogonal",
  "properties":[
         {

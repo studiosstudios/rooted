@@ -284,6 +284,8 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
                 } else if (type == "Decoration") {
                     std::string decName = std::any_cast<std::string>(_propertiesMap.at("name"));
                     _decorationSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), decName));
+                } else if (type == "EnvCollidable") {
+                    _envCollidableSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else if (type == "Rock") {
                     _rockSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), true));
                 } else {
@@ -339,6 +341,7 @@ void Map::populate() {
     
     spawnPlantingSpots();
     spawnDecorations();
+    spawnEnvCollidables();
     spawnFarmers();
     spawnCarrots();
     spawnBabyCarrots();
@@ -449,6 +452,7 @@ void Map::clearWorld() {
     _babyCarrotSpawns.clear();
     _plantingSpawns.clear();
     _decorationSpawns.clear();
+    _envCollidableSpawns.clear();
     _rockSpawns.clear();
 }
 
@@ -572,6 +576,15 @@ void Map::spawnDecorations() {
         dec->setDebugScene(_debugnode);
         
         _decorations.push_back(dec);
+    }
+}
+
+void Map::spawnEnvCollidables() {
+    for (Rect rect : _envCollidableSpawns) {
+        std::shared_ptr<physics2::BoxObstacle> obs = physics2::BoxObstacle::alloc(rect.origin, rect.size);
+        obs->setSensor(false);
+        _envCollidables.push_back(obs);
+        _world->initObstacle(obs);
     }
 }
 

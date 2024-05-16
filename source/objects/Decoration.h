@@ -31,7 +31,6 @@ private:
 protected:
     /** The scene graph node for the planting spot. */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
-    std::shared_ptr<cugl::scene2::PolygonNode> _tilenode;
     std::shared_ptr<cugl::scene2::SpriteNode> _decorationSprite;
     
 public:
@@ -76,14 +75,6 @@ public:
         std::shared_ptr<Decoration> result = std::make_shared<Decoration>();
         return (result->init(pos, size, scale) ? result : nullptr);
     }
-    
-    /**
-     * Sets the scene graph node representing this planting spot.
-     *
-     * @param node  The scene graph node representing this planting spot, which has
-     *              been added to the world node already.
-     */
-    void setSceneNode(const std::shared_ptr<cugl::AssetManager>& assets, float priority, std::string texkey);
     
     /**
      * Sets the scene graph node representing this DudeModel.
@@ -145,12 +136,6 @@ public:
      */
     const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
     
-    const std::shared_ptr<cugl::scene2::PolygonNode>& getTileNode() const { return _tilenode; }
-
-    
-private:
-    void addTileNode(Vec2 position, float texscale, const std::shared_ptr<cugl::AssetManager> &assets, std::string texkey);
-
 };
 
 

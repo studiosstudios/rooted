@@ -509,14 +509,24 @@ void Map::spawnPlantingSpots() {
 
 void Map::spawnDecorations() {
     for (Rect rect : _decorationSpawns) {
-        std::shared_ptr<Decoration> barn = Decoration::alloc(rect.origin, rect.size, _scale.x);
-        barn->setDebugColor(DEBUG_COLOR);
-        barn->setName("barn");
-        _decorations.push_back(barn);
-        barn->setSceneNode(_assets, float(Map::DrawOrder::DECORATIONS), "barn");
+        std::shared_ptr<Decoration> dec = Decoration::alloc(rect.origin, rect.size, _scale.x);
+        
+        dec->setDebugColor(DEBUG_COLOR);
+        dec->setName("decoration");
+        
+        auto decSprite = _assets->get<Texture>("barn");
+        auto decNode = scene2::SpriteNode::allocWithSheet(decSprite, 1, 1);
+        decNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
+        decNode->setPriority(float(Map::DrawOrder::DECORATIONS));
+        _entitiesNode->addChild(decNode);
+        
+//        barn->setDebugColor(DEBUG_COLOR);
+//        barn->setName("barn");
+//        _decorations.push_back(barn);
+//        barn->setSceneNode(_assets, float(Map::DrawOrder::DECORATIONS), "barn");
 //        barn->setSceneNode(barn);
-        addObstacle(barn, barn->getSceneNode());
-        _entitiesNode->addChild(barn->getTileNode());
+//        addObstacle(barn, barn->getSceneNode());
+//        _entitiesNode->addChild(barn->getTileNode());
     }
 }
 

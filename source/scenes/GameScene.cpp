@@ -139,6 +139,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     }
     
     _network->attachEventType<ResetEvent>();
+    _network->attachEventType<ReadyEvent>();
     
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
@@ -163,6 +164,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     for (int i = 0; i < _map->getPlayers().size(); i++) {
         _points.push_back(0);
     }
+    
+    _ready = 0;
     
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
@@ -289,8 +292,11 @@ void GameScene::reset() {
     setFailure(false);
     
     _isGameOverScreen = false;
+    
     _round += 1;
     _startTime = Timestamp();
+    
+    _ready = 0;
 }
 
 void GameScene::gameReset() {
@@ -404,6 +410,9 @@ void GameScene::fixedUpdate(float step) {
         if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
             _action.processCollectedRockEvent(collectedRockEvent);
         }
+        if(auto readyEvent = std::dynamic_pointer_cast<ReadyEvent>(e)) {
+            _ready += 1;
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
@@ -489,10 +498,15 @@ void GameScene::postUpdate(float remain) {
             // display end scene
             _ui.setEndVisible(true);
         }
-        
-        if(_ui.isNextRound()){
-            CULog("hellooooooo");
+                
+        if (_ready == _network->getNumPlayers() && _network->isHost()) {
             _network->pushOutEvent(ResetEvent::allocResetEvent());
+            _ready = 0; // need this otherwise it will send out two of these events
+        }
+        
+        if (_ui.isNextRound()){
+            _network->pushOutEvent(ReadyEvent::alloc());
+            _ui.setNextRound(false);
         }
         else{
             //do nothing and wait for host to reset

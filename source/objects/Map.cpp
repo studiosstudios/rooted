@@ -677,77 +677,80 @@ void Map::spawnFarmers() {
 
 void Map::spawnBabyCarrots() {
     for (Rect rect : _babyCarrotSpawns) {
-        std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, rect.size, _scale.x);
-        baby->setEntityState(EntityModel::EntityState::WALKING);
-        baby->setDebugColor(DEBUG_COLOR);
-        baby->setName("baby");
-        baby->setID((unsigned)_babies.size());
-        _babies.push_back(baby);
-        
-        // TODO: Stagger baby carrot animation times with a random number generator -CJ
-        
-        auto babySouthWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                    _assets->get<Texture>(BARROT_SOUTH_WALK_SPRITE), 2, 5);
-        babySouthWalkNode->setPriority(float(DrawOrder::ENTITIES));
-        babySouthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        
-        auto babyNorthWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                    _assets->get<Texture>(BARROT_NORTH_WALK_SPRITE), 2, 5);
-        babyNorthWalkNode->setPriority(float(DrawOrder::ENTITIES));
-        babyNorthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        babyNorthWalkNode->setVisible(false);
-        
-        auto babyEastWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                   _assets->get<Texture>(BARROT_EAST_WALK_SPRITE), 2, 5);
-        babyEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
-        babyEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        babyEastWalkNode->setVisible(false);
-        
-        auto babyNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                        _assets->get<Texture>(BARROT_NORTHEAST_WALK_SPRITE), 2, 5);
-        babyNorthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
-        babyNorthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        babyNorthEastWalkNode->setVisible(false);
-        
-        auto babySouthEastWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                        _assets->get<Texture>(BARROT_SOUTHEAST_WALK_SPRITE), 2, 5);
-        babySouthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
-        babySouthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        babySouthEastWalkNode->setVisible(false);
-        
-        _entitiesNode->addChild(babySouthWalkNode);
-        _entitiesNode->addChild(babyNorthWalkNode);
-        _entitiesNode->addChild(babyEastWalkNode);
-        _entitiesNode->addChild(babyNorthEastWalkNode);
-        _entitiesNode->addChild(babySouthEastWalkNode);
-        
-        baby->setSpriteNodes(babyNorthWalkNode, // lol
-                             babyNorthEastWalkNode,
-                             babyEastWalkNode,
-                             babySouthEastWalkNode,
-                             babySouthWalkNode,
-                             babyNorthWalkNode, // lol
-                             babyNorthEastWalkNode,
-                             babyEastWalkNode,
-                             babySouthEastWalkNode,
-                             babySouthWalkNode,
-                             babyNorthWalkNode, // lol
-                             babyNorthEastWalkNode,
-                             babyEastWalkNode,
-                             babySouthEastWalkNode,
-                             babySouthWalkNode);
-        
-        baby->setSceneNode(babySouthWalkNode);
-        baby->setDrawScale(
-                           _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-        
-        
-        baby->setDebugScene(_debugnode);
-        
-        auto wheatnode = baby->allocWheatHeightNode();
-        _wheatscene->getRoot()->addChild(wheatnode);
-        
-        _world->initObstacle(baby);
+        // TEMP CODE, DO NOT COMMIT THIS PLEASE
+        if (_babies.size() == 0) {
+            std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, rect.size, _scale.x);
+            baby->setEntityState(EntityModel::EntityState::WALKING);
+            baby->setDebugColor(DEBUG_COLOR);
+            baby->setName("baby");
+            baby->setID((unsigned)_babies.size());
+            _babies.push_back(baby);
+            
+            // TODO: Stagger baby carrot animation times with a random number generator -CJ
+            
+            auto babySouthWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                        _assets->get<Texture>(BARROT_SOUTH_WALK_SPRITE), 2, 5);
+            babySouthWalkNode->setPriority(float(DrawOrder::ENTITIES));
+            babySouthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+            
+            auto babyNorthWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                        _assets->get<Texture>(BARROT_NORTH_WALK_SPRITE), 2, 5);
+            babyNorthWalkNode->setPriority(float(DrawOrder::ENTITIES));
+            babyNorthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+            babyNorthWalkNode->setVisible(false);
+            
+            auto babyEastWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                       _assets->get<Texture>(BARROT_EAST_WALK_SPRITE), 2, 5);
+            babyEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
+            babyEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+            babyEastWalkNode->setVisible(false);
+            
+            auto babyNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                            _assets->get<Texture>(BARROT_NORTHEAST_WALK_SPRITE), 2, 5);
+            babyNorthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
+            babyNorthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+            babyNorthEastWalkNode->setVisible(false);
+            
+            auto babySouthEastWalkNode = scene2::SpriteNode::allocWithSheet(
+                                                                            _assets->get<Texture>(BARROT_SOUTHEAST_WALK_SPRITE), 2, 5);
+            babySouthEastWalkNode->setPriority(float(DrawOrder::ENTITIES));
+            babySouthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+            babySouthEastWalkNode->setVisible(false);
+            
+            _entitiesNode->addChild(babySouthWalkNode);
+            _entitiesNode->addChild(babyNorthWalkNode);
+            _entitiesNode->addChild(babyEastWalkNode);
+            _entitiesNode->addChild(babyNorthEastWalkNode);
+            _entitiesNode->addChild(babySouthEastWalkNode);
+            
+            baby->setSpriteNodes(babyNorthWalkNode, // lol
+                                 babyNorthEastWalkNode,
+                                 babyEastWalkNode,
+                                 babySouthEastWalkNode,
+                                 babySouthWalkNode,
+                                 babyNorthWalkNode, // lol
+                                 babyNorthEastWalkNode,
+                                 babyEastWalkNode,
+                                 babySouthEastWalkNode,
+                                 babySouthWalkNode,
+                                 babyNorthWalkNode, // lol
+                                 babyNorthEastWalkNode,
+                                 babyEastWalkNode,
+                                 babySouthEastWalkNode,
+                                 babySouthWalkNode);
+            
+            baby->setSceneNode(babySouthWalkNode);
+            baby->setDrawScale(
+                               _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+            
+            
+            baby->setDebugScene(_debugnode);
+            
+            auto wheatnode = baby->allocWheatHeightNode();
+            _wheatscene->getRoot()->addChild(wheatnode);
+            
+            _world->initObstacle(baby);
+        }
     }
 }
 

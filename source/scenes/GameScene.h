@@ -95,6 +95,8 @@ protected:
     cugl::Timestamp _startTime;
     /** The number of points each player has */
     std::vector<int> _points;
+    
+    int _ready;
 
 #pragma mark Internal Object Management
 
@@ -347,6 +349,21 @@ public:
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
     
     int getCarrotsLeft();
+    
+// READY EVENT AS AN INNER CLASS BECAUSE WE DON'T NEED THIS EVENT OTHERWISE
+    class ReadyEvent : public NetEvent {
+    public:
+        std::shared_ptr<NetEvent> newEvent() override {
+            return std::make_shared<ReadyEvent>();
+        }
+        static std::shared_ptr<NetEvent> alloc() {
+            return std::make_shared<ReadyEvent>();
+        }
+        std::vector<std::byte> serialize() override {
+            return std::vector<std::byte>();
+        }
+        void deserialize(const std::vector<std::byte>& data) override { }
+    };
 };
 
 #endif /* RootedGameScene_h */

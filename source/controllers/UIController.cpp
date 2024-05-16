@@ -33,6 +33,7 @@ void UIController::setEndVisible(bool visible) {
     _postroundscene->setVisible(visible);
     if (visible) {
         _nextbutton->activate();
+        _nextRound = false;
     } else {
         _nextbutton->deactivate();
         _nextbutton->setDown(false);

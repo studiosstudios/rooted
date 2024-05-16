@@ -32,6 +32,7 @@ protected:
     /** The scene graph node for the planting spot. */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     std::shared_ptr<cugl::scene2::PolygonNode> _tilenode;
+    std::shared_ptr<cugl::scene2::SpriteNode> _decorationSprite;
     
 public:
     /**
@@ -83,6 +84,55 @@ public:
      *              been added to the world node already.
      */
     void setSceneNode(const std::shared_ptr<cugl::AssetManager>& assets, float priority, std::string texkey);
+    
+    /**
+     * Sets the scene graph node representing this DudeModel.
+     *
+     * Note that this method also handles creating the nodes for the body parts
+     * of this DudeModel. Since the obstacles are decoupled from the scene graph,
+     * initialization (which creates the obstacles) occurs prior to the call to
+     * this method. Therefore, to be drawn to the screen, the nodes of the attached
+     * bodies must be added here.
+     *
+     * The bubbler also uses the world node when adding bubbles to the scene, so
+     * the input node must be added to the world BEFORE this method is called.
+     *
+     * By storing a reference to the scene graph node, the model can update
+     * the node to be in sync with the physics info. It does this via the
+     * {@link Obstacle#update(float)} method.
+     *
+     * @param node  The scene graph node representing this DudeModel, which has been added to the world node already.
+     */
+    void setSceneNode(const std::shared_ptr<cugl::scene2::SpriteNode>& node) {
+        if (_node != nullptr) {
+            _node->setVisible(false);
+        }
+        _node = node;
+        _node->setVisible(true);
+        _node->setPosition(getPosition() * _drawScale);
+    }
+    
+    /**
+     * Sets all of the sprite nodes associated with this decoration
+     *
+     */
+    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& decSprite) {
+        _decorationSprite = decSprite;
+    }
+    
+    /**
+     * Sets the ratio of the Dude sprite to the physics body
+     *
+     * The Dude needs this value to convert correctly between the physics
+     * coordinates and the drawing screen coordinates.  Otherwise it will
+     * interpret one Box2D unit as one pixel.
+     *
+     * All physics scaling must be uniform.  Rotation does weird things when
+     * attempting to scale physics by a non-uniform factor.
+     *
+     * @param scale The ratio of the Dude sprite to the physics body
+     */
+    void setDrawScale(float scale) { _drawScale = scale; };
     
     /**
      * Returns the scene graph node representing this PlantingSpot.

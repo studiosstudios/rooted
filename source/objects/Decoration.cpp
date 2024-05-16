@@ -28,8 +28,12 @@ void Decoration::setSceneNode(const std::shared_ptr<cugl::AssetManager> &assets,
     _node = scene2::SceneNode::allocWithBounds((Rect(Vec2::ZERO, _drawScale * _dimension)));
     _node->setAnchor(Vec2::ANCHOR_CENTER);
     _node->setPriority(priority);
-    float texscale = assets->get<Texture>(texkey)->getWidth()/_drawScale;
-    addTileNode(Vec2::ZERO, texscale, assets, texkey);
+    
+    
+
+    
+//    float texscale = assets->get<Texture>(texkey)->getWidth()/_drawScale;
+//    addTileNode(Vec2::ZERO, texscale, assets, texkey);
     
 //    Vec2 position = Vec2::ZERO;
 //    _node = scene2::SpriteNode

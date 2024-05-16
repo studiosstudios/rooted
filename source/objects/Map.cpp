@@ -256,7 +256,8 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
                 if (type == "PlantingSpot") {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else if (type == "Decoration") {
-                    _decorationSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
+                    std::string decName = std::any_cast<std::string>(_propertiesMap.at("name"));
+                    _decorationSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), decName));
                 }
                 else {
                     CUWarn("TILED JSON: Unrecognized environmental object: %s. Are you sure you have placed the object in the correct layer?", type.c_str());
@@ -384,6 +385,7 @@ void Map::dispose() {
         (*it) = nullptr;
     }
     _plantingSpot.clear();
+    _decorations.clear();
     if (_world != nullptr) {
         _world->clear();
         _world->dispose();
@@ -408,6 +410,7 @@ void Map::dispose() {
     _farmerSpawns.clear();
     _babyCarrotSpawns.clear();
     _plantingSpawns.clear();
+    _decorationSpawns.clear();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
@@ -508,25 +511,28 @@ void Map::spawnPlantingSpots() {
 }
 
 void Map::spawnDecorations() {
-    for (Rect rect : _decorationSpawns) {
+    for (std::pair decInfo : _decorationSpawns) {
+        Rect rect = decInfo.first;
+        std::string decName = decInfo.second;
         std::shared_ptr<Decoration> dec = Decoration::alloc(rect.origin, rect.size, _scale.x);
-        
         dec->setDebugColor(DEBUG_COLOR);
         dec->setName("decoration");
         
-        auto decSprite = _assets->get<Texture>("barn");
+        auto decSprite = _assets->get<Texture>(decName);
         auto decNode = scene2::SpriteNode::allocWithSheet(decSprite, 1, 1);
-        decNode->setScale(0.18f * _scale/DEFAULT_DRAWSCALE);
+        float texscale = decSprite->getWidth()/_scale.x;
+        decNode->setScale((rect.size.width > rect.size.height) ? 1.0 / texscale * rect.size.width : 1.0 / texscale * rect.size.height);
         decNode->setPriority(float(Map::DrawOrder::DECORATIONS));
         _entitiesNode->addChild(decNode);
         
-//        barn->setDebugColor(DEBUG_COLOR);
-//        barn->setName("barn");
-//        _decorations.push_back(barn);
-//        barn->setSceneNode(_assets, float(Map::DrawOrder::DECORATIONS), "barn");
-//        barn->setSceneNode(barn);
-//        addObstacle(barn, barn->getSceneNode());
-//        _entitiesNode->addChild(barn->getTileNode());
+        dec->setSpriteNodes(decNode);
+    
+        dec->setSceneNode(decNode);
+        dec->setDrawScale(_scale.x); 
+
+        dec->setDebugScene(_debugnode);
+        
+        _decorations.push_back(dec);
     }
 }
 

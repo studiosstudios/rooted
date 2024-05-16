@@ -83,7 +83,8 @@ private:
     
     std::vector<Rect> _plantingSpawns;
     
-    std::vector<Rect> _decorationSpawns;
+    std::vector<std::pair<Rect, std::string>> _decorationSpawns;
+//    std::vector<std::string> _decorationNames;
     
     /** Vector of key names for all map units in assets json */
     std::vector<std::string> _mapNames;
@@ -323,7 +324,7 @@ private:
     void spawnPlantingSpots();
     
     void spawnDecorations();
-    
+        
     void spawnFarmers();
     
     void spawnCarrots();

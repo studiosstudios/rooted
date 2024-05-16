@@ -208,7 +208,7 @@ void RootedApp::preUpdate(float dt) {
             AudioEngine::get()->resume("game");
         }
         else if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
-            AudioEngine::get()->play("game", source);
+            AudioEngine::get()->play("game", source, true);
         }
     }
     else if (_status == TUTORIAL){

@@ -128,7 +128,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         _map->acquireMapOwnership();
         _babies = _map->loadBabyEntities();
     }
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _farmerUUID = _network->getOrderedPlayers().at(_seed % _network->getNumPlayers());
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _farmerUUID, _network->getNetcode()->getUUID());
     
     // TODO: Putting this set here for now, little weird that's it's separate from the rest of ui init -CJ
     _ui.setCharacter(_character);
@@ -262,7 +263,8 @@ void GameScene::reset() {
         _map->acquireMapOwnership();
         _babies = _map->loadBabyEntities();
     }
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _farmerUUID = _network->getOrderedPlayers().at(_seed % _network->getNumPlayers());
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _farmerUUID, _network->getNetcode()->getUUID());
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -525,7 +527,7 @@ void GameScene::postUpdate(float remain) {
             }
         }
         if(farmerWin){
-            if(_isHost){
+            if(_character->getUUID() == _farmerUUID){
                 setComplete(true);
             }
             else{
@@ -539,7 +541,7 @@ void GameScene::postUpdate(float remain) {
             }
         }
         if(carrotWin){
-            if(_isHost){
+            if(_character->getUUID() == _farmerUUID){
                 setFailure(true);
             }
             else{

@@ -103,7 +103,7 @@ private:
     bool _tutorial;
     
     std::vector<std::string> _playerUUIDs;
-    std::string _hostUUID;
+    std::string _farmerUUID;
     std::string _thisUUID;
 
     
@@ -312,6 +312,8 @@ public:
     void resetPlantingSpots();
     
     void resetPlayers();
+    
+    bool isFarmer() { return _character->getUUID() == _farmerUUID; }
 
 #pragma mark -
 #pragma mark Rock

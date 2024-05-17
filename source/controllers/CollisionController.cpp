@@ -9,6 +9,7 @@
 
 using namespace cugl;
 
+
 bool CollisionController::init(std::shared_ptr<Map> &map,  const std::shared_ptr<NetworkController> &network) {
     _map = map;
     _network = network;
@@ -19,6 +20,12 @@ bool CollisionController::init(std::shared_ptr<Map> &map,  const std::shared_ptr
 
 #pragma mark -
 #pragma mark Collision Handling
+
+/** useful utility function */
+bool nameIsEntity(std::string name) {
+    return name == "baby" || name == "carrot" || name == "farmer";
+}
+
 /**
  * Processes the start of a collision
  *
@@ -220,8 +227,9 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         std::string name1 = bd1->getName();
         std::string name2 = bd2->getName();
         
-        //for now only collide the hitboxes - can change in future
-        if (fd1 == nullptr || *fd1 != "collider" || fd2 == nullptr || *fd2 != "collider") return false;
+        //for now only entities only collide the hitboxes - can change in future
+        if ((nameIsEntity(name1) && (fd1 == nullptr || *fd1 != "collider")) || 
+            (nameIsEntity(name2) && (fd2 == nullptr || *fd2 != "collider"))) return false;
         
         // Baby carrots don't collide with each other
         if (name1 == "baby" && name2 == "baby") {

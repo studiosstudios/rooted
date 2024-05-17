@@ -49,6 +49,8 @@ private:
     Rect _worldbounds;
     /** The bounds of this map in physics coordinates */
     Rect _mapbounds;
+    /** The bounds of the inner map in physics coordinates */
+    Rect _innermapbounds;
     /** The global gravity for this level */
     Vec2 _gravity;
     /** The scale between the physics world and the screen */
@@ -197,6 +199,13 @@ public:
      * @return the bounds of this map in physics coordinates
      */
     const Rect &getMapBounds() const { return _mapbounds; }
+    
+    /**
+     * Returns the bounds of the inner map in physics coordinates
+     *
+     * @return the bounds of the inner map in physics coordinates
+     */
+    const Rect &getInnerMapBounds() const { return _innermapbounds; }
 
 #pragma mark Drawing Methods
 

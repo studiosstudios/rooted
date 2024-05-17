@@ -225,11 +225,12 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
         json = _assets->get<JsonValue>("tutorialTop");
         loadTiledJson(json, 0, 2);
         
-        
     } else {
         _rand32.seed(randSeed);
         _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * NUMBER_MAP_UNITS);
         _mapbounds.set(_worldbounds);
+        _innermapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * (NUMBER_MAP_UNITS-2));
+        _innermapbounds.origin.set(_mapbounds.origin);
         
         _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
         

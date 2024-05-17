@@ -5,12 +5,11 @@
 Movement | Desktop | Mobile
 | ---- | ---- | ----
 Move  | ↑,↓,←,→ | Joystick
-Dash  | X | Swipe up
-Root held carrot (farmer only) | Z | Swipe down
-Unroot nearby carrot (carrot only) | Z | Swipe down
+Dash  | X | Swipe in direction of dash
+Root held carrot (farmer only) | Z | Circle dollar gesture
+Unroot nearby carrot (carrot only) | Z | Circle dollar gesture
 Escape from farmer's clutches (carrot only) | - | Shake phone
 Reset | R | Multitouch swipe
-Toggle debug | D | Double tap
+Throw rock | D | Double tap
 
-
-This open beta release has new assets for the wheat, grass, farmer, carrots and planting spots, larger maps with map randomization, accelerometer integration for escaping from the farmer when caught, a new wheat rustling effect, refined baby carrot AI and new menu UI and in-game UI. Because we do not have haptics support for Android, this our release is for **iOS only**.
+This open beta release has a new (unfinished) tutorial and a new (unfinished) post game scene. It also introduces a new mechanic, a collectable throwable rock that can be used to create distracting rustling.

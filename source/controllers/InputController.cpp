@@ -150,7 +150,7 @@ void InputController::update(float dt) {
 
     // Map "keyboard" events to the current frame boundary
     _keyReset  = keys->keyPressed(RESET_KEY);
-    _keyDebug  = keys->keyPressed(DEBUG_KEY);
+    _keyDebug  = keys->keyPressed(DEBUG_KEY) && debug;
     _keyExit   = keys->keyPressed(EXIT_KEY);
     _keyRustle = keys->keyPressed(KeyCode::M);
     _keyShowPlayer = keys->keyPressed(KeyCode::V);
@@ -184,10 +184,10 @@ void InputController::update(float dt) {
 #endif
     Accelerometer* acc = Input::get<Accelerometer>();
     if(acc != nullptr && !_paused) {
-        _deviceShaking = acc->getAcceleration().lengthSquared() > 2.9;
+        _deviceShaking = acc->getAcceleration().lengthSquared() > 10;
     }
-    _resetPressed = _keyReset;
-    _debugPressed = _keyDebug;
+    _resetPressed = _keyReset && debug;
+    _debugPressed = _keyDebug && debug;
     _exitPressed  = _keyExit;
     // for testing rustling
     _rustlePressed = _keyRustle;

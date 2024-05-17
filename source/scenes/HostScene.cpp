@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "HostScene.h"
+#include "../RootedConstants.h"
 
 using namespace cugl;
 using namespace cugl::net;
@@ -206,7 +207,9 @@ void HostScene::update(float timestep) {
 /**
  * This method prompts the network controller to start the game.
  */
-void HostScene::startGame(){
-    _network->startGame();
-    _startGameClicked = true;
+void HostScene::startGame() {
+    if (debug || _network->getNumPlayers() > 1) {
+        _network->startGame();
+        _startGameClicked = true;
+    }
 }

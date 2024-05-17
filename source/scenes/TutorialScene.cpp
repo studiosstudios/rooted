@@ -749,7 +749,7 @@ void TutorialScene::postUpdate(float remain) {
             break;
         case MOVEMENT:
             if (_character->getY() < 10) {
-                CULog("CATCH BABY CARROTS! SWIPE TO DASH");
+                CULog("CATCH BABY CARROTS! SWIPE TO DASH IN THAT DIRECTION");
                 _state = CATCHBABIES;
                 _time = 0;
             }
@@ -763,7 +763,7 @@ void TutorialScene::postUpdate(float remain) {
             break;
         case SHOWFARMER:
             if (_time > 4.5) {
-                CULog("ESCAPE FROM THE FARMER BY SHAKING DEVICE");
+                CULog("ESCAPE FROM THE FARMER BY SHAKING DEVICE!");
                 _input->unpause();
                 
                 //root the npc carrot

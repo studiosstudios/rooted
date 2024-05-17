@@ -202,7 +202,7 @@ protected:
     
     /** The amount of time that has elapsed in the current animation cycle
         For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
-    float curAnimTime;
+    float curAnimTime = 0.0f;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node

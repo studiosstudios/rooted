@@ -194,4 +194,6 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define BARROT_HITBOX_WIDTH 0.4f
 #define BARROT_HITBOX_HEIGHT 0.3f
 
+const bool debug = true;
+
 #endif //ROOTED_ROOTEDCONSTANTS_H

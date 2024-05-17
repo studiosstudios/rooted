@@ -618,22 +618,20 @@ void Map::spawnDecorations() {
         int decFrameRows = get<2>(decInfo);
         int decFrameCols = get<3>(decInfo);
         std::shared_ptr<Decoration> dec = Decoration::alloc(rect.origin, rect.size, _scale.x);
-        if (decFrameCols > 1) { dec->setShouldAnimate(true); }
+        if (decFrameCols > 1 || decFrameRows > 1) { dec->setShouldAnimate(true); }
         dec->setDebugColor(DEBUG_COLOR);
         dec->setName("decoration");
         
         auto decSprite = _assets->get<Texture>(decName);
         auto decNode = scene2::SpriteNode::allocWithSheet(decSprite, decFrameRows, decFrameCols);
-        float texscale = (decSprite->getWidth()/(decFrameRows+1))/_scale.x;
+        float texscale = (decSprite->getWidth()/decFrameRows)/_scale.x;
         decNode->setScale((rect.size.width > rect.size.height) ? 1.0 / texscale * rect.size.width : 1.0 / texscale * rect.size.height);
         decNode->setPriority(float(Map::DrawOrder::DECORATIONS));
         _entitiesNode->addChild(decNode);
         
         dec->setSpriteNodes(decNode);
-    
         dec->setSceneNode(decNode);
-        dec->setDrawScale(_scale.x); 
-
+        dec->setDrawScale(_scale.x);
         dec->setDebugScene(_debugnode);
         
         _decorations.push_back(dec);

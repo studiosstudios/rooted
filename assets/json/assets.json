@@ -96,6 +96,30 @@
         "farmer-east-dash": {
             "file":     "textures/farmer-east-dash.png"
         },
+        "fence0": {
+            "file":     "textures/fence0.png"
+        },
+        "fence1": {
+            "file":     "textures/fence1.png"
+        },
+        "fence2": {
+            "file":     "textures/fence2.png"
+        },
+        "fence3": {
+            "file":     "textures/fence3.png"
+        },
+        "fence5": {
+            "file":     "textures/fence5.png"
+        },
+        "fence6": {
+            "file":     "textures/fence6.png"
+        },
+        "fence7": {
+            "file":     "textures/fence7.png"
+        },
+        "fence8": {
+            "file":     "textures/fence8.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },

@@ -479,6 +479,7 @@ void Map::clearWorld() {
     }
     _plantingSpot.clear();
     _decorations.clear();
+    _envCollidables.clear();
     for (auto it = _rocks.begin(); it != _rocks.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));

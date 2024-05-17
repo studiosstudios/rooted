@@ -21,7 +21,7 @@
    <property name="frame_rows" type="int" value="4"/>
    <property name="name" value="tractor"/>
   </properties>
-  <image width="1921" height="1627" source="../textures/tractor.png"/>
+  <image width="1921" height="1627" source="../textures/tractor_single.png"/>
  </tile>
  <tile id="4" type="Decoration">
   <properties>

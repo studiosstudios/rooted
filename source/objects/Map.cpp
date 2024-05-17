@@ -245,7 +245,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     _farmerSpawns = std::vector(_farmerSpawns.begin(), _farmerSpawns.begin() + std::min(numFarmers, int(_farmerSpawns.size())));
     _babyCarrotSpawns = std::vector(_babyCarrotSpawns.begin(), _babyCarrotSpawns.begin() + std::min(numBabyCarrots, int(_babyCarrotSpawns.size())));
     _plantingSpawns = std::vector(_plantingSpawns.begin(), _plantingSpawns.begin() + std::min(numPlantingSpots, int(_plantingSpawns.size())));
-    _decorationSpawns = std::vector(_decorationSpawns.begin(), _decorationSpawns.begin() + std::min(1, int(_decorationSpawns.size())));
+//    _decorationSpawns = std::vector(_decorationSpawns.begin(), _decorationSpawns.begin() + std::min(1, int(_decorationSpawns.size())));
 }
  
 void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
@@ -568,7 +568,7 @@ void Map::spawnDecorations() {
         
         auto decSprite = _assets->get<Texture>(decName);
         auto decNode = scene2::SpriteNode::allocWithSheet(decSprite, decFrameRows, decFrameCols);
-        float texscale = (decSprite->getWidth()/decFrameRows)/_scale.x;
+        float texscale = (decSprite->getWidth()/(decFrameRows+1))/_scale.x;
         decNode->setScale((rect.size.width > rect.size.height) ? 1.0 / texscale * rect.size.width : 1.0 / texscale * rect.size.height);
         decNode->setPriority(float(Map::DrawOrder::DECORATIONS));
         _entitiesNode->addChild(decNode);

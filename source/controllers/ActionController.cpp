@@ -87,6 +87,12 @@ void ActionController::preUpdate(float dt) {
         (*it)->updateSprite(dt, false);
     }
     
+    // decoration animations
+    auto decs = _map->getDecorations();
+    for (auto it = decs.begin(); it != decs.end(); ++it) {
+        (*it)->stepAnimation(dt);
+    }
+    
     // Find current character's planting spot
     // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
     std::shared_ptr<PlantingSpot> plantingSpot = nullptr;

@@ -283,7 +283,9 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else if (type == "Decoration") {
                     std::string decName = std::any_cast<std::string>(_propertiesMap.at("name"));
-                    _decorationSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), decName));
+                    int decFrameRows = std::any_cast<int>(_propertiesMap.at("frame_rows"));
+                    int decFrameCols = std::any_cast<int>(_propertiesMap.at("frame_cols"));
+                    _decorationSpawns.push_back(std::tuple(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), decName, decFrameRows, decFrameCols));
                 } else if (type == "EnvCollidable") {
                     _envCollidableSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else if (type == "Rock") {
@@ -554,16 +556,19 @@ void Map::spawnPlantingSpots() {
 }
 
 void Map::spawnDecorations() {
-    for (std::pair decInfo : _decorationSpawns) {
-        Rect rect = decInfo.first;
-        std::string decName = decInfo.second;
+    for (std::tuple decInfo : _decorationSpawns) {
+        Rect rect = get<0>(decInfo);
+        std::string decName = get<1>(decInfo);
+        int decFrameRows = get<2>(decInfo);
+        int decFrameCols = get<3>(decInfo);
         std::shared_ptr<Decoration> dec = Decoration::alloc(rect.origin, rect.size, _scale.x);
+        if (decFrameCols > 1) { dec->setShouldAnimate(true); }
         dec->setDebugColor(DEBUG_COLOR);
         dec->setName("decoration");
         
         auto decSprite = _assets->get<Texture>(decName);
-        auto decNode = scene2::SpriteNode::allocWithSheet(decSprite, 1, 1);
-        float texscale = decSprite->getWidth()/_scale.x;
+        auto decNode = scene2::SpriteNode::allocWithSheet(decSprite, decFrameRows, decFrameCols);
+        float texscale = (decSprite->getWidth()/decFrameRows)/_scale.x;
         decNode->setScale((rect.size.width > rect.size.height) ? 1.0 / texscale * rect.size.width : 1.0 / texscale * rect.size.height);
         decNode->setPriority(float(Map::DrawOrder::DECORATIONS));
         _entitiesNode->addChild(decNode);

@@ -26,11 +26,17 @@ private:
     
     Size _size;
     
-    bool _shouldAnimate;
+    bool _shouldAnimate = false;
+    
+    /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
+    float curAnimDuration = 1.5f;
+    
+    /** The amount of time that has elapsed in the current animation cycle
+        For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
+    float curAnimTime = 0.0f;
         
 protected:
-    /** The scene graph node for the planting spot. */
-    std::shared_ptr<cugl::scene2::SceneNode> _node;
+    std::shared_ptr<cugl::scene2::SpriteNode> _node;
     std::shared_ptr<cugl::scene2::SpriteNode> _decorationSprite;
     
 public:
@@ -75,6 +81,8 @@ public:
         std::shared_ptr<Decoration> result = std::make_shared<Decoration>();
         return (result->init(pos, size, scale) ? result : nullptr);
     }
+    
+    void setShouldAnimate(bool anim) { _shouldAnimate = anim; }
     
     /**
      * Sets the scene graph node representing this DudeModel.
@@ -126,6 +134,13 @@ public:
     void setDrawScale(float scale) { _drawScale = scale; };
     
     /**
+     * Steps the current sprite's animation by dt.
+     *
+     * This steps the current sprite node associated with this EntityModel by incrementing curAnimTime by dt and comparing it with curAnimDuration
+     */
+    void stepAnimation(float dt);
+    
+    /**
      * Returns the scene graph node representing this PlantingSpot.
      *
      * By storing a reference to the scene graph node, the model can update
@@ -134,7 +149,7 @@ public:
      *
      * @return the scene graph node representing this PlantingSpot.
      */
-    const std::shared_ptr<cugl::scene2::SceneNode>& getSceneNode() const { return _node; }
+    const std::shared_ptr<cugl::scene2::SpriteNode>& getSceneNode() const { return _node; }
     
 };
 

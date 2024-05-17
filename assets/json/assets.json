@@ -39,6 +39,12 @@
         "tractor": {
             "file":     "textures/tractor.png"
         },
+        "scarecrow": {
+            "file":     "textures/scarecrow.png"
+        },
+        "mill": {
+            "file":     "textures/mill.png"
+        },
         "dude": {
             "file":     "textures/dude.png"
         },

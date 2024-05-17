@@ -52,12 +52,41 @@
             "id": 14,
             "members": [
                 {
+                    "name": "frame_cols",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "frame_rows",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "name",
                     "type": "string",
                     "value": ""
                 }
             ],
             "name": "Decoration",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 16,
+            "members": [
+            ],
+            "name": "EnvCollidable",
             "type": "class",
             "useAs": [
                 "property",
@@ -137,25 +166,6 @@
             "members": [
             ],
             "name": "PlantingSpot",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
-            "id": 16,
-            "members": [
-            ],
-            "name": "EnvCollidable",
             "type": "class",
             "useAs": [
                 "property",

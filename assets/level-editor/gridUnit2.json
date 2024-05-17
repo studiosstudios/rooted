@@ -102,33 +102,32 @@
                  "y":64
                 }, 
                 {
-                 "gid":37,
-                 "height":96,
-                 "id":134,
+                 "gid":40,
+                 "height":411.458198314971,
+                 "id":138,
                  "name":"",
                  "properties":[
                         {
+                         "name":"frame_cols",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"frame_rows",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
                          "name":"name",
                          "type":"string",
-                         "value":"barn"
+                         "value":"mill"
                         }],
                  "rotation":0,
                  "type":"Decoration",
                  "visible":true,
-                 "width":128,
-                 "x":318,
-                 "y":279
-                }, 
-                {
-                 "height":23.9081227813739,
-                 "id":135,
-                 "name":"",
-                 "rotation":0,
-                 "type":"EnvCollidable",
-                 "visible":true,
-                 "width":117.141783253289,
-                 "x":325.429108373356,
-                 "y":246.969304656505
+                 "width":268.088139987038,
+                 "x":247.679844458846,
+                 "y":315.255994815295
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -365,7 +364,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":137,
+ "nextobjectid":139,
  "orientation":"orthogonal",
  "properties":[
         {

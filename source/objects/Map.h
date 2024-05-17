@@ -89,7 +89,7 @@ private:
     
     std::vector<Rect> _plantingSpawns;
     
-    std::vector<std::pair<Rect, std::string>> _decorationSpawns;
+    std::vector<std::tuple<Rect, std::string, int, int>> _decorationSpawns;
     
     std::vector<Rect> _envCollidableSpawns;
     
@@ -305,6 +305,8 @@ public:
     std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
+    
+    std::vector<std::shared_ptr<Decoration>> &getDecorations() { return _decorations; }
     
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> &getBoundaries() { return _boundaries; }
 

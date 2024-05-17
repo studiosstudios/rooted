@@ -16,7 +16,7 @@
                         {
                          "name":"blade_color_scale",
                          "type":"float",
-                         "value":25
+                         "value":10
                         }, 
                         {
                          "name":"name",
@@ -300,7 +300,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":153,
+ "nextobjectid":154,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -100,6 +100,7 @@
  </tile>
  <tile id="15" type="Map">
   <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
    <property name="name" value="unit_r_1"/>
   </properties>
   <image width="640" height="360" source="../textures/maps/unit_r_1.png"/>

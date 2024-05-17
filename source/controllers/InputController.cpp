@@ -244,8 +244,7 @@ void InputController::clear() {
 void InputController::createZones() {
 	_jzone = _tbounds;
 	_jzone.size.width *= JOY_ZONE_WIDTH;
-    _jzone.size.height *= JOY_ZONE_HEIGHT;
-    _jzone.origin.y += _jzone.size.height; // We add to the origin because this is when coordinates still have y-origin in top-left
+//    _jzone.origin.y += _jzone.size.height; // We add to the origin because this is when coordinates still have y-origin in top-left
 	_rzone = _tbounds;
 	_rzone.size.width *= RIGHT_ZONE;
 	_rzone.origin.x = _tbounds.origin.x+_tbounds.size.width-_rzone.size.width;

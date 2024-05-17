@@ -103,7 +103,14 @@ void ActionController::preUpdate(float dt) {
         playerEntity->setHasRock(false);
     }
     
-    if (_network->isHost()) updateBabyCarrots();
+    if (_network->isHost()) {
+        updateBabyCarrots();
+        if (_map->shouldSpawnRock()) {
+            //optional spawn rock
+            auto spawn = _map->getRandomRockSpawn();
+            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO, ""));
+        }
+    }
     
     if (_map->isFarmer()) { // Farmer (host) specific actions
         auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
@@ -121,11 +128,6 @@ void ActionController::preUpdate(float dt) {
             }
         }
         
-        if (_map->shouldSpawnRock()) {
-            //optional spawn rock
-            auto spawn = _map->getRandomRockSpawn();
-            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO, ""));
-        }
     }
     else { // Carrot specific actions
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(playerEntity);

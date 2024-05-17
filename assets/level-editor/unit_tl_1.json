@@ -336,7 +336,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -364,7 +364,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -392,7 +392,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -420,7 +420,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -448,7 +448,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -477,7 +477,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -505,7 +505,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -533,7 +533,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -561,7 +561,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -589,7 +589,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -617,7 +617,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -645,7 +645,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -673,7 +673,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -701,7 +701,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -729,7 +729,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"fence1"
+                         "value":"fence7"
                         }],
                  "rotation":0,
                  "type":"Decoration",
@@ -737,6 +737,28 @@
                  "width":32,
                  "x":480,
                  "y":32
+                }, 
+                {
+                 "height":288,
+                 "id":170,
+                 "name":"",
+                 "rotation":0,
+                 "type":"EnvCollidable",
+                 "visible":true,
+                 "width":20.6600577971248,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "height":15.6439333862014,
+                 "id":171,
+                 "name":"",
+                 "rotation":0,
+                 "type":"EnvCollidable",
+                 "visible":true,
+                 "width":512,
+                 "x":0,
+                 "y":0
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -985,7 +1007,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":163,
+ "nextobjectid":172,
  "orientation":"orthogonal",
  "properties":[
         {

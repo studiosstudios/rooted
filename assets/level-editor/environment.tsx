@@ -47,13 +47,13 @@
   </properties>
   <image width="2048" height="2048" source="../../../../Downloads/ezgif-2-033c57843d-png-2048x2048-sprite-png/fence0.png"/>
  </tile>
- <tile id="8" type="Decoration">
+ <tile id="13" type="Decoration">
   <properties>
    <property name="frame_cols" type="int" value="1"/>
    <property name="frame_rows" type="int" value="1"/>
    <property name="name" value="fence1"/>
   </properties>
-  <image width="2048" height="2048" source="../../../../Downloads/ezgif-2-033c57843d-png-2048x2048-sprite-png/fence7.png"/>
+  <image width="2048" height="2048" source="../../../../Downloads/ezgif-2-033c57843d-png-2048x2048-sprite-png/fence1.png"/>
  </tile>
  <tile id="12" type="Decoration">
   <properties>
@@ -87,13 +87,13 @@
   </properties>
   <image width="2048" height="2048" source="../../../../Downloads/ezgif-2-033c57843d-png-2048x2048-sprite-png/fence6.png"/>
  </tile>
- <tile id="13" type="Decoration">
+ <tile id="8" type="Decoration">
   <properties>
    <property name="frame_cols" type="int" value="1"/>
    <property name="frame_rows" type="int" value="1"/>
    <property name="name" value="fence7"/>
   </properties>
-  <image width="2048" height="2048" source="../../../../Downloads/ezgif-2-033c57843d-png-2048x2048-sprite-png/fence1.png"/>
+  <image width="2048" height="2048" source="../../../../Downloads/ezgif-2-033c57843d-png-2048x2048-sprite-png/fence7.png"/>
  </tile>
  <tile id="7" type="Decoration">
   <properties>

@@ -640,8 +640,10 @@ void Map::spawnDecorations() {
 
 void Map::spawnEnvCollidables() {
     for (Rect rect : _envCollidableSpawns) {
-        std::shared_ptr<physics2::BoxObstacle> obs = physics2::BoxObstacle::alloc(rect.origin, rect.size);
+        std::shared_ptr<physics2::BoxObstacle> obs = physics2::BoxObstacle::alloc(rect.origin-Vec2(0, rect.size.height), rect.size);
         obs->setSensor(false);
+        obs->setDebugColor(Color4::RED);
+        obs->setDebugScene(_debugnode);
         _envCollidables.push_back(obs);
         _world->initObstacle(obs);
     }

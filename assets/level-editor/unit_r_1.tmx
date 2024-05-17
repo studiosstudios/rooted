@@ -15,7 +15,6 @@
  <objectgroup id="8" name="environment">
   <object id="141" gid="35" x="32" y="269" width="96" height="64"/>
   <object id="152" gid="35" x="36" y="105" width="96" height="96"/>
-  <object id="153" gid="41" x="128" y="192" width="224" height="288"/>
  </objectgroup>
  <objectgroup id="7" name="entities">
   <object id="106" gid="2" x="160" y="288" width="32" height="32"/>

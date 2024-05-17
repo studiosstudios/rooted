@@ -86,6 +86,8 @@ protected:
     /** Host is by default a farmer (will need to change this later) */
     bool _isHost;
     
+    string _farmerUUID;
+    
     int _seed;
     
     bool _isGameOverScreen;

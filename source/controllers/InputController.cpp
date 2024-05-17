@@ -179,6 +179,9 @@ void InputController::update(float dt) {
     } else {
         _movement.y = 0;
     }
+    
+    if (_keyDash) _dashVector = Vec2(_movement);
+    
     _movement *= (1 - _paused);
     _movement.normalize();
 #endif

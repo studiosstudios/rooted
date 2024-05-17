@@ -218,8 +218,8 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
         
     } else {
         _rand32.seed(randSeed);
-        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
-        _mapbounds.set(_worldbounds);
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 2);
+        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * 2));
         
         _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
         
@@ -443,16 +443,16 @@ void Map::dispose() {
     _rockSpawns.clear();
 }
 
-std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string hostUUID, std::string thisUUID) {
+std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string farmerUUID, std::string thisUUID) {
     std::shared_ptr<EntityModel> ret;
     _playerUUIDs = players;
-    _hostUUID = hostUUID;
+    _farmerUUID = farmerUUID;
     _thisUUID = thisUUID;
-    bool isHost = hostUUID == thisUUID;
+    bool isHost = farmerUUID == thisUUID;
 
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
-        if (uuid != hostUUID) {
+        if (uuid != farmerUUID) {
             (*carrot)->setUUID(uuid);
             if (uuid == thisUUID) {
                 ret = (*carrot);
@@ -462,7 +462,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
         }
     }
     
-    _farmers.at(0)->setUUID(hostUUID);
+    _farmers.at(0)->setUUID(farmerUUID);
     ret = ret == nullptr ? _farmers.at(0) : ret;
     if (isHost) {
         getWorld()->getOwnedObstacles().insert({_farmers.at(0), 0});
@@ -979,7 +979,7 @@ void Map::resetPlayers() {
 std::shared_ptr<EntityModel> &Map::changeCharacter(std::string UUID) {
     _character->setLinearVelocity(Vec2::ZERO);
     _thisUUID = UUID;
-    if (_thisUUID == _hostUUID) {
+    if (_thisUUID == _farmerUUID) {
         _character = _farmers.at(0);
     } else {
         auto carrot = _carrots.begin();
@@ -988,7 +988,7 @@ std::shared_ptr<EntityModel> &Map::changeCharacter(std::string UUID) {
                 _character = (*carrot);
                 break;
             }
-            carrot += uuid != _hostUUID;
+            carrot += uuid != _farmerUUID;
         }
     }
 
@@ -997,7 +997,7 @@ std::shared_ptr<EntityModel> &Map::changeCharacter(std::string UUID) {
 }
 
 const std::shared_ptr<EntityModel> Map::getCharacter(std::string UUID) {
-    if (_thisUUID == _hostUUID) {
+    if (_thisUUID == _farmerUUID) {
         return _farmers.at(0);
     } else {
         auto carrot = _carrots.begin();

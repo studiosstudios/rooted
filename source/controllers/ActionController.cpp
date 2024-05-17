@@ -103,9 +103,10 @@ void ActionController::preUpdate(float dt) {
         playerEntity->setHasRock(false);
     }
     
-    if (_network->isHost()) { // Farmer (host) specific actions
+    if (_network->isHost()) updateBabyCarrots();
+    
+    if (_map->isFarmer()) { // Farmer (host) specific actions
         auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
-        updateBabyCarrots();
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
             //        std::cout<<"farmer did the rooting\n";
             Haptics::get()->playContinuous(1.0, 0.3, 0.2);
@@ -143,7 +144,7 @@ void ActionController::preUpdate(float dt) {
         }
     }
 
-    if(!_network->isHost()){
+    if(!_map->isFarmer()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && rand() % 20 < 21 && carrotEntity->isCaptured()){
             _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
@@ -410,7 +411,7 @@ void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event)
 
 void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event){
     _map->getFarmers().at(0)->carrotEscaped();
-    if(_network->isHost()){
+    if(_map->isFarmer()){
         Haptics::get()->playContinuous(1.0, 0.8, 0.3);
     }
     else if(_map->getCharacter()->getUUID() == event->getUUID()){

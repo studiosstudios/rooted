@@ -194,6 +194,15 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
         CUAssertLog(false, "Failed to load map names");
     }
     _mapNames = json->get("names")->asStringArray();
+    _mapNamesTL = json->get("top_left")->asStringArray();
+    _mapNamesT = json->get("top")->asStringArray();
+    _mapNamesTR = json->get("top_right")->asStringArray();
+    _mapNamesL = json->get("left")->asStringArray();
+    _mapNamesM = json->get("middle")->asStringArray();
+    _mapNamesR = json->get("right")->asStringArray();
+    _mapNamesBL = json->get("bottom_left")->asStringArray();
+    _mapNamesB = json->get("bottom")->asStringArray();
+    _mapNamesBR = json->get("bottom_right")->asStringArray();
     
     _tutorial = tutorial;
 
@@ -224,9 +233,56 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
         _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
         
         //randomly select a map for each location and object info lists
+//        for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
+//            for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
+//                std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
+//                std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
+//                loadTiledJson(json, i, j);
+//            }
+//        }
+        
+        //randomly select a map for each position
         for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
             for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
-                std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
+                std::string mapName;
+                //bottom left
+                if (i == 0 && j == 0) {
+                    mapName = _mapNamesBL[floor(float(_rand32()) / _rand32.max() * _mapNamesBL.size())];
+                }
+                //top left
+                else if (i == 0 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                    mapName = _mapNamesTL[floor(float(_rand32()) / _rand32.max() * _mapNamesTL.size())];
+                }
+                //bottom right
+                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == 0) {
+                    mapName = _mapNamesBR[floor(float(_rand32()) / _rand32.max() * _mapNamesBR.size())];
+                }
+                //top right
+                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                    mapName = _mapNamesTR[floor(float(_rand32()) / _rand32.max() * _mapNamesTR.size())];
+                }
+                //bottom
+                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                    mapName = _mapNamesB[floor(float(_rand32()) / _rand32.max() * _mapNamesB.size())];
+                }
+                //top
+                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == 0) {
+                    mapName = _mapNamesT[floor(float(_rand32()) / _rand32.max() * _mapNamesT.size())];
+                }
+                //left
+                else if (i == 0 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                    mapName = _mapNamesL[floor(float(_rand32()) / _rand32.max() * _mapNamesL.size())];
+                }
+                //right
+                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                    mapName = _mapNamesR[floor(float(_rand32()) / _rand32.max() * _mapNamesR.size())];
+                }
+                
+                
+                //else its middle
+                else {
+                    mapName = _mapNamesM[floor(float(_rand32()) / _rand32.max() * _mapNamesM.size())];
+                }
                 std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
                 loadTiledJson(json, i, j);
             }

@@ -102,6 +102,16 @@ private:
     /** Vector of key names for all map units in assets json */
     std::vector<std::string> _mapNames;
     
+    std::vector<std::string> _mapNamesTL;
+    std::vector<std::string> _mapNamesT;
+    std::vector<std::string> _mapNamesTR;
+    std::vector<std::string> _mapNamesL;
+    std::vector<std::string> _mapNamesM;
+    std::vector<std::string> _mapNamesR;
+    std::vector<std::string> _mapNamesBL;
+    std::vector<std::string> _mapNamesB;
+    std::vector<std::string> _mapNamesBR;
+    
     /** Mersenne Twister random number generator to ensure randomness is consistent without broadcasting across network (hopefully) */
     std::mt19937 _rand32;
     

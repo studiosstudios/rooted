@@ -8,6 +8,7 @@
 #include "Collectible.h"
 #include <cugl/scene2/graph/CUTexturedNode.h>
 #include <cugl/assets/CUAssetManager.h>
+#include <cugl/math/CUEasingFunction.h>
 
 using namespace cugl;
 
@@ -30,53 +31,35 @@ using namespace cugl;
  *
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
-bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired) {
+bool Collectible::init(const cugl::Vec2& pos, const cugl::Size& size, const cugl::Size& collidersize, float scale, bool fired, string ownerUUID) {
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
     _drawScale = scale;
     _fired = fired;
-    
+    _ownerUUID = ownerUUID;
+    _disappearing = false;
+    _collected = false;
     _age = 0;
+    _collidersize = collidersize;
     
     if (BoxObstacle::init(pos, nsize)) {
-        setSensor(true);
+        setSensor(!fired);
         setBullet(true);
-        
-        updateCurAnimDurationForState();
+        setDensity(2.0);
+        setRestitution(0.9);
+        setFixedRotation(true);
+        setMass(2.0);
         return true;
     }
     return false;
 }
 
 #pragma mark -
-#pragma mark Animation
-
-/**
-    Whether this EntityModel should step in its animation for this frame.
- 
-    For now, we step only when there is a directional input OR the state is DASHING/PLANTING.
- */
-bool Collectible::animationShouldStep() {
-    return false;
-}
-
-void Collectible::stepAnimation(float dt) {
-//    if (_node != nullptr) {
-//        if (animationShouldStep()) {
-//                curAnimTime += dt;
-//                if (curAnimTime > (curAnimDuration)) { curAnimTime = 0;}
-//                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
-//        }
-//        else if (_node->getFrame() != 0) {
-//            _node->setFrame(0);
-//            curAnimTime = 0;
-//        }
-//    }
-}
-
-#pragma mark -
 #pragma mark Attribute Properties
-
+void Collectible::setScale(Vec2 scale) {
+    _nodeScale = scale;
+    if (_fired) _node->setScale(_nodeScale);
+}
 
 #pragma mark -
 #pragma mark Physics Methods
@@ -90,6 +73,16 @@ void Collectible::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
+    _collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
+    
+    b2FixtureDef fixturedef;
+    fixturedef.shape = &_collidershape;
+    fixturedef.isSensor = !_fired;
+    fixturedef.density = 2.0;
+    _collidername = "collider";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
+    fixturedef.restitution = 0;
+    _colliderfixture = _body->CreateFixture(&fixturedef);
 }
 
 /**
@@ -102,6 +95,10 @@ void Collectible::releaseFixtures() {
         return;
     }
     BoxObstacle::releaseFixtures();
+    if (_colliderfixture != nullptr) {
+        _body->DestroyFixture(_colliderfixture);
+        _colliderfixture = nullptr;
+    }
 }
 
 /**
@@ -125,10 +122,9 @@ void Collectible::applyForce() {
     if (!isEnabled()) {
         return;
     }
-    
-    // using a quadradic ease out like function
+
     if (_fired) {
-        setLinearVelocity(_initVelocity * (2 * (MAX_COLLECTIBLE_AGE - _age)));
+        setLinearVelocity(getLinearVelocity() * 0.97);
     }
 }
 
@@ -145,10 +141,30 @@ void Collectible::update(float dt) {
     if (_node != nullptr) {
         _node->setPosition(getPosition()*_drawScale);
         _node->setAngle(getAngle());
-        
+
         if (!_fired) {
-            _node->setPositionY(_node->getPositionY() + (std::sin(_age*1.5) + 1.0) * _drawScale/4.0);
-            _node->setColor(Color4(255,255,255,std::min(255.0, _age * 255.0 / 1.5)));
+            if (_collected) {
+                _node->setScale(std::max(0.0f, (1.0f-4.0f*EasingFunction::backIn(std::min(_age*4.0f, 1.0f)))) * _nodeScale);
+                markRemoved(_node->getScaleX() * _node->getScaleY() == 0.0f);
+            } else {
+                _node->setScale(EasingFunction::elasticOut(std::min(_age, 1.0f), 0.2) * _nodeScale);
+                _node->setPositionY(_node->getPositionY() + _drawScale / 2.0 - (_age > 0.5) *
+                        EasingFunction::bounceOut(std::min(_age - 0.5f, 1.0f)) * _drawScale / 2.0);
+            }
+        } else{
+            if (_disappearing) {
+//                float alpha = std::clamp(3.0f - _age, 0.0f, 1.0f);
+//                _node->setColor(Color4(255,255,255,255 * alpha));
+//                markRemoved(alpha == 0.0f);
+                _node->setScale(std::max(0.0f, (1.0f-4.0f*EasingFunction::backIn(std::min(_age*4.0f, 1.0f)))) * _nodeScale);
+                markRemoved(_node->getScaleX() * _node->getScaleY() == 0.0f);
+            } else {
+                _node->setScale(EasingFunction::backOut(std::min(_age*4.0f, 1.0f)) * _nodeScale);
+                if (_age > MAX_COLLECTIBLE_AGE || getLinearVelocity().lengthSquared() < 0.005f) {
+                    _disappearing = true;
+                    _age = 0;
+                }
+            }
         }
     }
     
@@ -156,7 +172,7 @@ void Collectible::update(float dt) {
         updateWheatHeightNode();
     }
     
-    _age += PROGRESS;
+    _age += dt;
 }
 
 
@@ -171,6 +187,18 @@ void Collectible::update(float dt) {
  */
 void Collectible::resetDebug() {
     BoxObstacle::resetDebug();
+    if (_colliderdebug == nullptr) {
+        _colliderdebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_collidersize));
+        _colliderdebug->setRelativeColor(false);
+        _colliderdebug->setColor(Color4::RED);
+        if (_scene != nullptr) {
+            _debug->addChild(_colliderdebug);
+        }
+    } else {
+        _colliderdebug->setPath(Rect(Vec2::ZERO,_collidersize));
+    }
+    _colliderdebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _colliderdebug->setPosition(Vec2(getWidth()/2, 0));
 }
 
 std::shared_ptr<cugl::scene2::SceneNode> Collectible::allocWheatHeightNode(float initCharHeight) {

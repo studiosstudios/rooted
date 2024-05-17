@@ -418,6 +418,7 @@ void GameScene::fixedUpdate(float step) {
     }
     
     _map->getWorld()->update(step);
+    _cam.setShake(_character->getStunTime() * STUN_SCREEN_SHAKE);
     _cam.setTarget(_character->getPosition()*_scale);
     _cam.update(step);
     
@@ -573,6 +574,9 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::Obstacle
     };
     world->shouldCollide = [this](b2Fixture *f1, b2Fixture *f2) {
         return _collision.shouldCollide(f1, f2);
+    };
+    world->afterSolve = [this](b2Contact* contact, const b2ContactImpulse* impulse) {
+        return _collision.afterSolve(contact, impulse);
     };
 }
 

@@ -131,12 +131,12 @@ public:
         WALKING,
         RUNNING,
         DASHING,
+        STUNNED,
         CARRYING,   // bunny only
         ROOTING,   // bunny only
         CAUGHT,     // carrot only
         ROOTED,      // carrot only
         UNROOTING   // carrot only
-        
     };
     
 private:
@@ -228,6 +228,8 @@ protected:
     
     float _dashCooldown;
     
+    float _stunTime;
+    
     bool _plantInput;
     
     bool _rootInput;
@@ -252,6 +254,13 @@ protected:
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
     bool _hasRock;
+    
+    /** stuff to do with the actual collision hitbox */
+    cugl::Size _collidersize;
+    b2PolygonShape _collidershape;
+    b2Fixture* _colliderfixture;
+    std::shared_ptr<cugl::scene2::WireNode> _colliderdebug;
+    std::string _collidername;
 
 
 public:
@@ -573,6 +582,8 @@ public:
     void setUnrootInput(bool unrootInput);
     
     bool canDash() { return _dashCooldown == 0; }
+
+    float getStunTime() { return _stunTime; }
     
     /**
      * Returns how much force to apply to get the dude moving
@@ -619,6 +630,10 @@ public:
     void setHasRock(bool hasRock) { _hasRock = hasRock; }
     
     bool hasRock() { return _hasRock; }
+    
+    bool isStunned() { return _state == STUNNED; }
+    
+    void setColliderSize(const cugl::Size& size) { _collidersize = size; }
 
     
 #pragma mark -
@@ -693,6 +708,8 @@ public:
         }
         return RUNNING;
     }
+    
+    void stun();
     
     /** If useMovement is true, use the current EntityModel's \_movement argument. If false, use \_velocity. */
     void updateSprite(float dt, bool useMovement);

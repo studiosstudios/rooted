@@ -72,18 +72,21 @@ void ActionController::preUpdate(float dt) {
     playerEntity->applyForce();
     
     updateRustlingNoise();
-
+    float mapheight = _map->getMapBounds().size.height;
     for (auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++) {
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         (*it)->applyForce();
     }
     auto players = _map->getPlayers();
     for (auto it = players.begin(); it != players.end(); ++it) {
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         if ((*it)->getUUID() != playerEntity->getUUID()) {
             (*it)->updateSprite(dt, false);
         }
     }
     auto barrots = _map->getBabyCarrots();
     for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         (*it)->updateSprite(dt, false);
     }
     
@@ -96,10 +99,9 @@ void ActionController::preUpdate(float dt) {
             break;
         }
     }
-    
-    // TODO: move this to carrot only option
+
     if (_input->didThrowRock() && playerEntity->hasRock()) {
-        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2, playerEntity->getUUID()));
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
         playerEntity->setHasRock(false);
     }
     
@@ -205,10 +207,8 @@ void ActionController::postUpdate(float dt) {
     }
     auto iit = _map->getRocks().begin();
     while(iit != _map->getRocks().end()){
-        if ((*iit)->isFired() && (*iit)->getAge() > (*iit)->getMaxAge()) {
-            _map->destroyRock(*iit);
-        }
         if ((*iit)->isRemoved()) {
+            _map->destroyRock(*iit);
             _map->getRocks().erase(iit);
         }
         else ++iit;
@@ -221,6 +221,7 @@ void ActionController::postUpdate(float dt) {
 float calculateVolume(EntityModel::EntityState state, float distance){
     float stateToNum;
     switch(state){
+        case EntityModel::EntityState::STUNNED:
         case EntityModel::EntityState::STANDING:
         case EntityModel::EntityState::ROOTING:
         case EntityModel::EntityState::UNROOTING:
@@ -431,7 +432,7 @@ void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEven
     if (event->getUUID() != "") {
         _map->getCharacter(event->getUUID())->setHasRock(false);
     }
-    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity());
+    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity(), event->getUUID());
 }
 
 void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){
@@ -439,7 +440,7 @@ void ActionController::processCollectedRockEvent(const std::shared_ptr<Collected
     entity->setHasRock(true);
     for (auto rock : _map->getRocks()) {
         if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
-            _map->destroyRock(rock);
+            rock->collected();
         }
     }
 }

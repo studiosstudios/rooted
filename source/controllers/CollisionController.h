@@ -69,6 +69,11 @@ public:
      * Callback for determining if two obstacles in the world should collide.
      */
     bool shouldCollide(b2Fixture* f1, b2Fixture* f2);
+    
+    /**
+     * Callback for after solving collision.
+     */
+    void afterSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 
 };
 

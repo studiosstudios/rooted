@@ -10,11 +10,14 @@
 
 #include <cugl/cugl.h>
 #include <cugl/physics2/CUBoxObstacle.h>
+#include <box2d/b2_polygon_shape.h>
+#include <box2d/b2_fixture.h>
 #include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Physics Constants
 
+using namespace std;
 
 class Collectible : public cugl::physics2::BoxObstacle {
 private:
@@ -70,6 +73,21 @@ protected:
     bool _fired;
     
     int _spawnIndex;
+    
+    string _ownerUUID;
+
+    cugl::Vec2 _nodeScale;
+    
+    bool _collected;
+
+    bool _disappearing;
+    
+    cugl::Size _collidersize;
+    b2PolygonShape _collidershape;
+    b2Fixture* _colliderfixture;
+    std::shared_ptr<cugl::scene2::WireNode> _colliderdebug;
+    std::string _collidername;
+    
 
 public:
     
@@ -107,7 +125,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), 1.0f, true); }
+    virtual bool init() override { return init(cugl::Vec2::ZERO, cugl::Size(1,1), cugl::Size(1,1), 1.0f, true, ""); }
     
     /**
      * Initializes a new dude at the given position.
@@ -123,7 +141,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), 1.0f, true); }
+    virtual bool init(const cugl::Vec2 pos) override { return init(pos, cugl::Size(1,1), cugl::Size(1,1), 1.0f, true, ""); }
     
     /**
      * Initializes a new dude at the given position.
@@ -141,7 +159,7 @@ public:
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
     virtual bool init(const cugl::Vec2 pos, const cugl::Size size) override {
-        return init(pos, size, 1.0f, true);
+        return init(pos, size, size, 1.0f, true,"");
     }
     
     /**
@@ -160,7 +178,7 @@ public:
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
      */
-    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired);
+    virtual bool init(const cugl::Vec2& pos, const cugl::Size& size, const cugl::Size& collidersize, float scale, bool fired, string ownerUUID);
 
     
 #pragma mark -
@@ -237,9 +255,10 @@ public:
      *
      * @return  A newly allocated DudeModel at the given position with the given scale
      */
-    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, float scale, bool fired) {
+    static std::shared_ptr<Collectible> alloc(const cugl::Vec2& pos, const cugl::Size& size, const cugl::Size& collidersize,
+                                              float scale, bool fired, string uuid) {
         std::shared_ptr<Collectible> result = std::make_shared<Collectible>();
-        return (result->init(pos, size, scale, fired) ? result : nullptr);
+        return (result->init(pos, size, collidersize, scale, fired, uuid) ? result : nullptr);
     }
     
 
@@ -357,6 +376,10 @@ public:
         
     void setInitVelocity(cugl::Vec2 invel) { _initVelocity = invel; }
     
+    string getOwnerUUID() { return _ownerUUID; }
+
+    void setScale(cugl::Vec2 scale);
+    
 #pragma mark -
 #pragma mark Physics Methods
     /**
@@ -412,6 +435,8 @@ public:
     int getSpawnIndex() { return _spawnIndex; }
     
     bool isFired() { return _fired; }
+    
+    void collected() { _collected = true; _age = 0; }
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

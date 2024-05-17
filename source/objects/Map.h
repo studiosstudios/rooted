@@ -37,8 +37,6 @@ private:
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the rocks */
     std::vector<std::shared_ptr<Collectible>> _rocks;
-    /** references to the walls */
-    std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
     std::shared_ptr<cugl::physics2::net::NetWorld> _world;
     /** The root node of this level */
@@ -105,7 +103,7 @@ private:
     bool _tutorial;
     
     std::vector<std::string> _playerUUIDs;
-    std::string _hostUUID;
+    std::string _farmerUUID;
     std::string _thisUUID;
 
     
@@ -149,16 +147,8 @@ public:
     void generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots);
     
     void populate();
-    
-    /**
-     * populate the map with Carrots
-     */
-    void populateWithCarrots(int numCarrots);
-    
-    /**
-     * Adds a carrot to the game (adds to the carrot vector)
-     */
-    void spawnCarrot(const Vec2 position, float width, float height);
+    /** Clears the world but does not dispose it */
+    void clearWorld();
 
 #pragma mark Physics Attributes
 
@@ -295,6 +285,8 @@ public:
     std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
+    
+    std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> &getBoundaries() { return _boundaries; }
 
     std::vector<std::shared_ptr<Collectible>> &getRocks() { return _rocks; }
     
@@ -309,6 +301,8 @@ public:
     void resetPlantingSpots();
     
     void resetPlayers();
+    
+    bool isFarmer() { return _character->getUUID() == _farmerUUID; }
 
 #pragma mark -
 #pragma mark Rock
@@ -319,8 +313,8 @@ public:
     
     std::pair<Vec2, int> getRandomRockSpawn();
     
-    void spawnRock(Vec2 pos, int idx, Vec2 vel);
-    
+    void spawnRock(Vec2 pos, int idx, Vec2 ve, string uuid);
+
     
 #pragma mark -
 #pragma mark Drawing

@@ -60,7 +60,9 @@ int main(int argc, char * argv[]) {
     }
     
     app.onStartup();
-    while (app.step());
+    while (app.step()) {
+//        CULog("FPS: %f", app.getAverageFPS());
+    };
     app.onShutdown();
 
     exit(0);    // Necessary to quit on mobile devices

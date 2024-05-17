@@ -73,18 +73,21 @@ void ActionController::preUpdate(float dt) {
     playerEntity->applyForce();
     
     updateRustlingNoise();
-
+    float mapheight = _map->getMapBounds().size.height;
     for (auto it = _map->getRocks().begin(); it != _map->getRocks().end(); it++) {
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         (*it)->applyForce();
     }
     auto players = _map->getPlayers();
     for (auto it = players.begin(); it != players.end(); ++it) {
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         if ((*it)->getUUID() != playerEntity->getUUID()) {
             (*it)->updateSprite(dt, false);
         }
     }
     auto barrots = _map->getBabyCarrots();
     for (auto it = barrots.begin(); it != barrots.end(); ++it) {
+        (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         (*it)->updateSprite(dt, false);
     }
     
@@ -97,16 +100,23 @@ void ActionController::preUpdate(float dt) {
             break;
         }
     }
-    
-    // TODO: move this to carrot only option
+
     if (_input->didThrowRock() && playerEntity->hasRock()) {
-        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * RUN_SPEED * 1.2, playerEntity->getUUID()));
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
         playerEntity->setHasRock(false);
     }
     
-    if (_network->isHost()) { // Farmer (host) specific actions
-        auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
+    if (_network->isHost()) {
         updateBabyCarrots();
+        if (_map->shouldSpawnRock()) {
+            //optional spawn rock
+            auto spawn = _map->getRandomRockSpawn();
+            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO, ""));
+        }
+    }
+    
+    if (_map->isFarmer()) { // Farmer (host) specific actions
+        auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
             //        std::cout<<"farmer did the rooting\n";
             Haptics::get()->playContinuous(1.0, 0.3, 0.2);
@@ -121,11 +131,6 @@ void ActionController::preUpdate(float dt) {
             }
         }
         
-        if (_map->shouldSpawnRock()) {
-            //optional spawn rock
-            auto spawn = _map->getRandomRockSpawn();
-            _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO, ""));
-        }
     }
     else { // Carrot specific actions
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(playerEntity);
@@ -144,7 +149,7 @@ void ActionController::preUpdate(float dt) {
         }
     }
 
-    if(!_network->isHost()){
+    if(!_map->isFarmer()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && carrotEntity->isCaptured()){
             _freeMeter+=2;
@@ -211,10 +216,8 @@ void ActionController::postUpdate(float dt) {
     }
     auto iit = _map->getRocks().begin();
     while(iit != _map->getRocks().end()){
-        if ((*iit)->isFired() && (*iit)->getAge() > (*iit)->getMaxAge()) {
-            _map->destroyRock(*iit);
-        }
         if ((*iit)->isRemoved()) {
+            _map->destroyRock(*iit);
             _map->getRocks().erase(iit);
         }
         else ++iit;
@@ -227,6 +230,7 @@ void ActionController::postUpdate(float dt) {
 float calculateVolume(EntityModel::EntityState state, float distance){
     float stateToNum;
     switch(state){
+        case EntityModel::EntityState::STUNNED:
         case EntityModel::EntityState::STANDING:
         case EntityModel::EntityState::ROOTING:
         case EntityModel::EntityState::UNROOTING:
@@ -419,7 +423,7 @@ void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event)
 
 void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event){
     _map->getFarmers().at(0)->carrotEscaped();
-    if(_network->isHost()){
+    if(_map->isFarmer()){
         Haptics::get()->playContinuous(1.0, 0.8, 0.3);
     }
     else if(_map->getCharacter()->getUUID() == event->getUUID()){
@@ -437,7 +441,7 @@ void ActionController::processSpawnRockEvent(const std::shared_ptr<SpawnRockEven
     if (event->getUUID() != "") {
         _map->getCharacter(event->getUUID())->setHasRock(false);
     }
-    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity());
+    _map->spawnRock(event->getPosition(), event->getIndex(), event->getVelocity(), event->getUUID());
 }
 
 void ActionController::processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event){
@@ -445,7 +449,7 @@ void ActionController::processCollectedRockEvent(const std::shared_ptr<Collected
     entity->setHasRock(true);
     for (auto rock : _map->getRocks()) {
         if (!rock->isFired() && rock->getSpawnIndex() == event->getRockID()) {
-            _map->destroyRock(rock);
+            rock->collected();
         }
     }
 }

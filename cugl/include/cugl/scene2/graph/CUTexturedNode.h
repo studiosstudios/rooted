@@ -250,6 +250,8 @@ public:
     
 #pragma mark -
 #pragma mark Texture Attributes
+    float getOrigin() { return _origin; }
+    
     /**
      * Sets the node texture to a new one allocated from a filename.
      *

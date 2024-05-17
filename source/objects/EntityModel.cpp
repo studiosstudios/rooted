@@ -83,13 +83,16 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
-    nsize.width  *= DUDE_HSHRINK;
-    nsize.height *= DUDE_VSHRINK;
+    _collidersize = size;
+//    nsize.width  *= DUDE_HSHRINK;
+//    nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
     _hasRock = false;
     dashTimer = 0;
+    _stunTime = 0;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
+        setMass(1.0);
         setFriction(0.0f);
         setFixedRotation(true);
         
@@ -193,6 +196,8 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         
         auto sprite = _southWalkSprite;
         switch (_state) {
+            case STUNNED:
+                //TODO: stunned animation?
             case STANDING:
                 // TODO: Idle animations here
             case SNEAKING:
@@ -304,6 +309,13 @@ void EntityModel::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
+    _collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
+    
+    b2FixtureDef fixturedef;
+    fixturedef.shape = &_collidershape;
+    _collidername = "collider";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
+    _colliderfixture = _body->CreateFixture(&fixturedef);
 }
 
 /**
@@ -317,6 +329,10 @@ void EntityModel::releaseFixtures() {
     }
     
     BoxObstacle::releaseFixtures();
+    if (_colliderfixture != nullptr) {
+        _body->DestroyFixture(_colliderfixture);
+        _colliderfixture = nullptr;
+    }
 }
 
 /**
@@ -356,6 +372,16 @@ void EntityModel::updateState(float dt) {
     EntityState nextState = _state;
     
     switch (_state) {
+        case STUNNED: {
+            _stunTime -= dt;
+            // Stunned -> Moving
+            if (_stunTime < 0) {
+                _stunTime = 0;
+                _state = getMovementState();
+                stateChanged = true;
+            }
+            break;
+        }
         case STANDING: {
             // Standing -> Moving
             nextState = getMovementState();
@@ -401,6 +427,11 @@ void EntityModel::updateState(float dt) {
 //    std::cout << _state << "\n";
 }
 
+void EntityModel::stun() {
+    _state = STUNNED;
+    _stunTime = STUN_SECS;
+}
+
 /**
  * Applies the force to the body of this dude
  *
@@ -415,6 +446,7 @@ void EntityModel::applyForce() {
     Vec2 normMovement = getMovement().getNormalization();
     
     switch (_state) {
+        case STUNNED:
         case STANDING: {
             setLinearVelocity(Vec2::ZERO);
             break;
@@ -511,6 +543,18 @@ void EntityModel::update(float dt) {
  */
 void EntityModel::resetDebug() {
     BoxObstacle::resetDebug();
+    if (_colliderdebug == nullptr) {
+        _colliderdebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_collidersize));
+        _colliderdebug->setRelativeColor(false);
+        _colliderdebug->setColor(Color4::RED);
+        if (_scene != nullptr) {
+            _debug->addChild(_colliderdebug);
+        }
+    } else {
+        _colliderdebug->setPath(Rect(Vec2::ZERO,_collidersize));
+    }
+    _colliderdebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _colliderdebug->setPosition(Vec2(getWidth()/2, 0));
 }
 
 std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {

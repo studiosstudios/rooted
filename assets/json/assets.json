@@ -60,6 +60,30 @@
         "farmer-southeast-walk": {
             "file":     "textures/farmer-southeast-walk.png"
         },
+        "farmer-south-run": {
+            "file":     "textures/farmer-south-run.png"
+        },
+        "farmer-north-run": {
+            "file":     "textures/farmer-north-run.png"
+        },
+        "farmer-east-run": {
+            "file":     "textures/farmer-east-run.png"
+        },
+        "farmer-northeast-run": {
+            "file":     "textures/farmer-northeast-run.png"
+        },
+        "farmer-southeast-run": {
+            "file":     "textures/farmer-southeast-run.png"
+        },
+        "farmer-south-dash": {
+            "file":     "textures/farmer-south-dash.png"
+        },
+        "farmer-north-dash": {
+            "file":     "textures/farmer-north-dash.png"
+        },
+        "farmer-east-dash": {
+            "file":     "textures/farmer-east-dash.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },
@@ -74,6 +98,36 @@
         },
         "carrot-southeast-walk": {
             "file":     "textures/carrot-southeast-walk.png"
+        },
+        "carrot-south-dash": {
+            "file":     "textures/carrot-south-dash.png"
+        },
+        "carrot-north-dash": {
+            "file":     "textures/carrot-north-dash.png"
+        },
+        "carrot-east-dash": {
+            "file":     "textures/carrot-east-dash.png"
+        },
+        "carrot-northeast-dash": {
+            "file":     "textures/carrot-northeast-dash.png"
+        },
+        "carrot-southeast-dash": {
+            "file":     "textures/carrot-southeast-dash.png"
+        },
+        "barrot-south-walk": {
+            "file":     "textures/barrot-south-walk.png"
+        },
+        "barrot-north-walk": {
+            "file":     "textures/barrot-north-walk.png"
+        },
+        "barrot-east-walk": {
+            "file":     "textures/barrot-east-walk.png"
+        },
+        "barrot-northeast-walk": {
+            "file":     "textures/barrot-northeast-walk.png"
+        },
+        "barrot-southeast-walk": {
+            "file":     "textures/barrot-southeast-walk.png"
         },
         "baby": {
             "file":     "textures/baby.png"
@@ -217,11 +271,38 @@
         "carrot-count-board" : {
             "file": "textures/carrot-count-board.png"
         },
+        "rock": {
+            "file": "textures/rock.png"
+        },
         "backbutton": {
             "file": "textures/back.png"
         },
         "playercountasset" : {
             "file" : "textures/temp_player_count.png"
+        },
+        "postroundstatbkg": {
+            "file": "textures/postroundstatbkg.png"
+        },
+        "carrotsingle": {
+            "file": "textures/carrotsingle.png"
+        },
+        "bluearrowbutton": {
+            "file": "textures/bluearrow.png"
+        },
+        "playericon" : {
+            "file" : "textures/playericon.png"
+        },
+        "emptypoint" : {
+            "file" : "textures/emptypoint.png"
+        },
+        "filledpoint" : {
+            "file" : "textures/filledpoint.png"
+        },
+        "speechbubble": {
+            "file": "textures/speechbubble.png"
+        },
+        "dialoguebox": {
+            "file": "textures/dialoguebox.png"
         }
     },
     "jsons": {
@@ -236,7 +317,12 @@
         "gridUnit3": "level-editor/gridUnit3.json",
         "gridUnit4": "level-editor/gridUnit4.json",
         "gridUnit5": "level-editor/gridUnit5.json",
-        "gridUnit6": "level-editor/gridUnit6.json"
+        "gridUnit6": "level-editor/gridUnit6.json",
+        "tutorialTop": "level-editor/tutorialTop.json",
+        "tutorialMid": "level-editor/tutorialMid.json",
+        "tutorialBottom": "level-editor/tutorialBottom.json",
+        "line-gesture": "json/line-gesture.json",
+        "circle-gesture": "json/circle-gesture.json"
     },
     "sounds": {
         "menu": {
@@ -245,21 +331,33 @@
             "stream":   true,
             "volume":   0.5
         },
-        "win": {
+        "tutorial": {
             "type":     "sample",
-            "file":     "sounds/DD_Victory.ogg",
+            "file":     "sounds/tutorial.ogg",
             "stream":   true,
             "volume":   0.5
+        },
+        "game": {
+            "type":     "sample",
+            "file":     "sounds/level-music.ogg",
+            "stream":   true,
+            "volume":   0.5
+        },
+        "win": {
+            "type":     "sample",
+            "file":     "sounds/victory.ogg",
+            "stream":   true,
+            "volume":   1
         },
         "lose": {
             "type":     "sample",
-            "file":     "sounds/DD_Failure.ogg",
+            "file":     "sounds/lose.ogg",
             "stream":   true,
-            "volume":   0.5
+            "volume":   1
         },
         "rustle": {
             "type":     "sample",
-            "file":     "sounds/rustling.ogg",
+            "file":     "sounds/rustlingAlt.ogg",
             "stream":   true,
             "volume":   0.5
         },
@@ -324,6 +422,10 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 60
         },
+        "gaeguBold65": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 65
+        },
         "gaeguBold67": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 67
@@ -365,7 +467,10 @@
         "prelobby": "widgets/prelobby.json",
         "backbuttonwidget" : "widgets/backbuttonwidget.json",
         "lobbyidwidget" : "widgets/lobbyidwidget.json",
-        "playercountwidget" : "widgets/playercountwidget.json"
+        "playercountwidget" : "widgets/playercountwidget.json",
+        "postround": "widgets/postround.json",
+        "playerpoints" : "widgets/playerpoints.json",
+        "playerpointinfo" : "widgets/playerpointinfowidget.json"
     },
     "scene2s" : {
         "host": {
@@ -390,6 +495,18 @@
             "type": "Widget",
             "data": {
                 "key": "prelobby"
+            }
+        },
+        "postround": {
+            "type": "Widget",
+            "data": {
+                "key": "postround"
+            }
+        },
+        "playerpoints": {
+            "type": "Widget",
+            "data": {
+                "key": "playerpoints"
             }
         },
         "loadingscreen": {

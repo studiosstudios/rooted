@@ -86,9 +86,26 @@ protected:
     /** Host is by default a farmer (will need to change this later) */
     bool _isHost;
     
+    string _farmerUUID;
+    
     int _seed;
     
+    bool _isGameOverScreen;
     
+    int _round;
+    
+    cugl::Timestamp _startTime;
+
+    int _numFarmers;
+    
+    int _numCarrots;
+    
+    int _numBabies;
+    
+    int _numPlanting;
+
+    
+//    std::map<std::shared_ptr<EntityModel>
 
 
 #pragma mark Internal Object Management

@@ -59,6 +59,7 @@
 #include <cugl/util/CUDebug.h>
 #include <cugl/input/gestures/CUGestureRecognizer.h>
 #include <limits>
+#include <iostream>
 
 using namespace cugl;
 
@@ -184,8 +185,7 @@ static Size bound_dimensions(const std::vector<cugl::Vec2>& points) {
     float maxX = minX;
     float minY = points[0].y;
     float maxY = minY;
-
-    for(auto it = points.begin()+1; it != points.end(); ++it) {
+    for(auto it = points.begin()+1; it != points.end(); it++) {
         minX = std::min(minX, it->x);
         minY = std::min(minY, it->y);
         maxX = std::max(maxX, it->x);
@@ -290,6 +290,64 @@ static void scale_to(std::vector<cugl::Vec2>& points, const Size bounds) {
     for(auto it = points.begin(); it != points.end(); ++it) {
         it->x *= (bounds.width / box.width);
         it->y *= (bounds.height / box.height);
+    }
+}
+
+/**
+ * Scales the gesture to a specific size for normalization
+ *
+ * This version of the method takes in the points' bounding box rather than computing it within the method.
+ *
+ * @param points    a vector of points representing a gesture.
+ * @param bounds    the bounding box for the normalization space
+ * @param box           the bounding box for the gesture points
+ */
+static void scale_to(std::vector<cugl::Vec2>& points, const Size bounds, const Size box) {
+    for(auto it = points.begin(); it != points.end(); ++it) {
+        it->x *= (bounds.width / box.width);
+        it->y *= (bounds.height / box.height);
+    }
+}
+
+
+/**
+ *  Scales the gesture UNIFORMLY to a specific size for normalization
+ *
+ *  Similar to {@link #scale\_to}, but rather than non-uniformly scaling the points' bounding box to fit exactly to the desired bounds,
+ *  this method scales the points uniformly by simply multiplying the major axis to fit the passed in bounds' major axis.
+ *
+ *  For the purposes of this implementation, we assume that the passed in bounds is a square. Otherwise, we would want to find the major axis of bounds as well.
+ *
+ * @param points    a vector of points representing a gesture.
+ * @param bounds    the bounding box for the normalization space
+ */
+static void scale_to_uniform(std::vector<cugl::Vec2>& points, const Size bounds, const Size box) {
+    bool majorAxisIsX = box.width > box.height;
+    for(auto it = points.begin(); it != points.end(); ++it) {
+        if (majorAxisIsX) {
+            it->x *= (bounds.width / box.width);
+        }
+        else {
+            it->y *= (bounds.height / box.height);
+        }
+    }
+}
+
+/**
+ * General scale method that either calls {@link #scale\_to} or {@link #scale\_to\_uniform} based on whether the points have a bounding box whose minor axis is smaller than the threshold
+ *
+ * This threshold is specific to this implementation for rooted! and is specifically 100 (pixels). (Because it seems like that's what works best for single-line swipes.
+ *
+ * @param points    a vector of points representing a gesture.
+ * @param bounds    the bounding box for the normalization space
+ */
+static void scale_to_ROOTED(std::vector<cugl::Vec2>& points, const Size bounds) {
+    Size box = bound_dimensions(points);
+    if ((box.width < box.height && box.width < 100) || (box.height < box.width && box.height < 100)) {
+        scale_to_uniform(points, bounds, box);
+    }
+    else {
+        scale_to(points, bounds, box);
     }
 }
 
@@ -553,6 +611,7 @@ void GestureRecognizer::dispose() {
 const std::string GestureRecognizer::match(const Vec2* points,  size_t psize,
                                            float& similarity) {
     CUAssertLog(psize > 1, "A gesture must have at least two points");
+    std::cout << "TEMPLATE SIZE " << _templates.size() << "\n";
     if (_templates.empty()) {
         similarity = 0;
         return "";
@@ -577,6 +636,7 @@ const std::string GestureRecognizer::match(const Vec2* points,  size_t psize,
                 case Algorithm::ONEDOLLAR:
                     distance = distance_at_best_angle(normalized, it->second.getPoints(),
                                                       -M_PI_4,M_PI_4,DEG2RAD(2.0));
+//                    std::cout << "Compared with template " << it->first << " distance is: "<<distance <<"\n";
                     break;
                 case Algorithm::PROTRACTOR:
                     distance = optimal_cosine_distance(it->second.getVector(),vectorized);
@@ -593,10 +653,10 @@ const std::string GestureRecognizer::match(const Vec2* points,  size_t psize,
     if (_algorithm == Algorithm::ONEDOLLAR) {
         float halfdiag = 0.5f * ((Vec2)_normbounds).length();
         similarity = 1.0f - (bestdist / halfdiag);
+//        std::cout << "MATCH | HalfDiag: " << halfdiag << " | Distance: " << bestdist << "| Similarity: " << similarity << " | Accuracy: " << _accuracy << "\n";
     } else {
         similarity = std::atan2(1.0,bestdist)/M_PI_2;
     }
-    
     if (similarity < _accuracy) {
         return "";
     }
@@ -647,6 +707,7 @@ float GestureRecognizer::similarity(const std::string name, const Vec2* points,
                                               -DEG2RAD(45), DEG2RAD(45), DEG2RAD(2.0));
             halfdiag = 0.5f * ((Vec2)_normbounds).length();
             score = 1.0 - (distance / halfdiag);
+//            std::cout << "SIMILARITY | HalfDiag: " << halfdiag << " | Distance: " << distance << "| Similarity: " << score << "\n";
             break;
         case Algorithm::PROTRACTOR:
             distance = optimal_cosine_distance(it->second.getVector(),vectorize(points,psize));
@@ -710,6 +771,7 @@ bool GestureRecognizer::addGesture(const std::string name, const Vec2* points,
     gesture.setPoints(normalized);
     gesture.setVector(vectorized);
     _templates[name] = gesture;
+    std::cout << "ADDED GESTURE " <<_templates.size() << "\n";
     return true;
 }
 
@@ -796,8 +858,13 @@ std::vector<cugl::Vec2> GestureRecognizer::normalize(const Vec2* points, size_t 
     result = resample_points(points, psize, _normlength);
     float angleInRadians = indicative_angle(result);
     rotate_by(result, -angleInRadians);
-    scale_to(result, _normbounds);
+    scale_to_ROOTED(result, _normbounds);
     translate_to(result, Vec2(0,0));
+//    std::cout<<"========\n";
+//    for (auto it = result.begin(); it != result.end(); it++) {
+//        std::cout << "Vec2("<<lround(it->x)<<","<<lround(it->y)<<")\n";
+//    }
+//    std::cout<<"========\n";
     return result;
 }
 

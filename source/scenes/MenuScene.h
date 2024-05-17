@@ -25,7 +25,10 @@ public:
         HOST,
         /** User wants to join a game */
         JOIN,
+        /** User wants to play the tutorial */
+        TUTORIAL,
 
+        /** These are scenes within this scene */
         MAIN,
         LOBBY,
         STATS,

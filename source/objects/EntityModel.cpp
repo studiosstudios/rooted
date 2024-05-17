@@ -83,18 +83,23 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
-    nsize.width  *= DUDE_HSHRINK;
-    nsize.height *= DUDE_VSHRINK;
+    _collidersize = size;
+//    nsize.width  *= DUDE_HSHRINK;
+//    nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
+    _hasRock = false;
     dashTimer = 0;
+    _stunTime = 0;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
+        setMass(1.0);
         setFriction(0.0f);
         setFixedRotation(true);
         
         // Gameplay attributes
         _facing = SOUTH;
         _state = STANDING;
+        _prevState = STANDING;
         updateCurAnimDurationForState();
         
         return true;
@@ -112,7 +117,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == PLANTING;
+    return isMoving() || _state == DASHING || _state == ROOTING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -124,7 +129,7 @@ void EntityModel::stepAnimation(float dt) {
                 // https://www.desmos.com/calculator/kszulthvhz
 //                _node->setFrame(std::floor(_node->getSpan() * (-abs(curAnimTime - curAnimDuration) + curAnimDuration) / curAnimDuration));
                 // LOOPING style animation
-                 _node->setFrame(std::floor(_node->getSpan() * curAnimTime / curAnimDuration));
+                 _node->setFrame(lround(_node->getSpan() * curAnimTime / curAnimDuration) % _node->getSpan());
         }
         else if (_node->getFrame() != 0) {
             _node->setFrame(0);
@@ -177,38 +182,106 @@ EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
  */
 void EntityModel::setMovement(Vec2 movement) {
     _movement = movement;
-    EntityFacing face = calculateFacing(movement);
-    if (_facing == face) {
-        return;
-    }
-    // Grab the correct sprite
-    auto sprite = _southWalkSprite;
-    if (face == SOUTH) {
-        sprite = _southWalkSprite;
-    }
-    else if (face == NORTH) {
-        sprite = _northWalkSprite;
-    }
-    else if (face == EAST || face == WEST) {
-        sprite = _eastWalkSprite;
-    }
-    else if (face == NORTHEAST || face == NORTHWEST) {
-        sprite = _northEastWalkSprite;
-    }
-    else if (face == SOUTHEAST || face == SOUTHWEST) {
-        sprite = _southEastWalkSprite;
-    }
-    // Change facing for the sprite
-//    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(sprite.get());
-    if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-        sprite->flipHorizontal(!sprite->isFlipHorizontal());
-    }
-    setSceneNode(sprite);
-    _facing = face;
 }
 
-void EntityModel::setDashInput(bool dashInput) {
+void EntityModel::updateSprite(float dt, bool useMovement) {
+    EntityFacing face;
+    if (_state != DASHING) {
+        face = calculateFacing(useMovement ? _movement : getLinearVelocity());
+    }
+    else {
+        face = calculateFacing(_dashVector);
+    }
+    if (!((_prevState == _state) && (_facing == face))) {
+        
+        auto sprite = _southWalkSprite;
+        switch (_state) {
+            case STUNNED:
+                //TODO: stunned animation?
+            case STANDING:
+                // TODO: Idle animations here
+            case SNEAKING:
+            case WALKING:
+                if (face == SOUTH) {
+                    sprite = _southWalkSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northWalkSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastWalkSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastWalkSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastWalkSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case RUNNING:
+                if (face == SOUTH) {
+                    sprite = _southRunSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northRunSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastRunSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastRunSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastRunSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case DASHING:
+                if (face == SOUTH) {
+                    sprite = _southDashSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = _northDashSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = _eastDashSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = _northEastDashSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = _southEastDashSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            case CARRYING:
+            case CAUGHT:
+            case ROOTING:
+            case UNROOTING:
+            case ROOTED:
+                break;
+        }
+        setSceneNode(sprite);
+        _facing = face;
+    }
+    stepAnimation(dt);
+}
+
+void EntityModel::setDashInput(bool dashInput, cugl::Vec2 dashVector) {
     _dashInput = dashInput;
+    if (_state != DASHING) {
+        // For now, only update dashVector when we're not already DASHING
+        // So that if we are DASHING, we maintain the same dash vector for applying force -CJ
+        _dashVector = dashVector;
+    }
+    
 }
 
 void EntityModel::setPlantInput(bool plantInput) {
@@ -236,6 +309,13 @@ void EntityModel::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
+    _collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
+    
+    b2FixtureDef fixturedef;
+    fixturedef.shape = &_collidershape;
+    _collidername = "collider";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
+    _colliderfixture = _body->CreateFixture(&fixturedef);
 }
 
 /**
@@ -249,6 +329,10 @@ void EntityModel::releaseFixtures() {
     }
     
     BoxObstacle::releaseFixtures();
+    if (_colliderfixture != nullptr) {
+        _body->DestroyFixture(_colliderfixture);
+        _colliderfixture = nullptr;
+    }
 }
 
 /**
@@ -274,16 +358,30 @@ void EntityModel::dispose() {
  *
  *  This method should be called after all relevant input attributes are set.
  */
-void EntityModel::updateState() {
+void EntityModel::updateState(float dt) {
     if (!isEnabled()) {
         return;
     }
     
+    if (_dashCooldown > 0) {
+        _dashCooldown = std::max(0.0f, _dashCooldown - dt);
+    }
+    
+    _prevState = _state;
     bool stateChanged = false;
     EntityState nextState = _state;
     
-    
     switch (_state) {
+        case STUNNED: {
+            _stunTime -= dt;
+            // Stunned -> Moving
+            if (_stunTime < 0) {
+                _stunTime = 0;
+                _state = getMovementState();
+                stateChanged = true;
+            }
+            break;
+        }
         case STANDING: {
             // Standing -> Moving
             nextState = getMovementState();
@@ -295,9 +393,10 @@ void EntityModel::updateState() {
         case WALKING:
         case RUNNING: {
             // Moving -> Dashing
-            if (dashTimer == 0 && _dashInput) {
+            if (_dashCooldown == 0 && dashTimer == 0 && _dashInput) {
                 _state = DASHING;
                 dashTimer = 8;
+                _dashCooldown = DASH_COOLDOWN_SECS;
                 stateChanged = true;
                 _makeDashTrail = true;
 //                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
@@ -327,7 +426,13 @@ void EntityModel::updateState() {
     if (stateChanged) {
         updateCurAnimDurationForState();
     }
+    updateSprite(dt);
 //    std::cout << _state << "\n";
+}
+
+void EntityModel::stun() {
+    _state = STUNNED;
+    _stunTime = STUN_SECS;
 }
 
 /**
@@ -344,6 +449,7 @@ void EntityModel::applyForce() {
     Vec2 normMovement = getMovement().getNormalization();
     
     switch (_state) {
+        case STUNNED:
         case STANDING: {
             setLinearVelocity(Vec2::ZERO);
             break;
@@ -362,7 +468,7 @@ void EntityModel::applyForce() {
             break;
         }
         case DASHING: {
-            setLinearVelocity(Vec2::normalize(getMovement(), &speed)->scale(DUDE_DASH));
+            setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(DUDE_DASH));
             break;
         }
         default: {
@@ -376,6 +482,30 @@ void EntityModel::applyForce() {
 
 bool EntityModel::isDashing() {
     return _state == DASHING;
+}
+
+cugl::Vec2 EntityModel::getFacing() {
+    switch (_facing) {
+        case EAST:
+            return Vec2(1, 0);
+        case NORTHEAST:
+            return Vec2(1, 1);
+        case NORTH:
+            return Vec2(0, 1);
+        case NORTHWEST:
+            return Vec2(-1, 1);
+        case WEST:
+            return Vec2(-1, 0);
+        case SOUTHWEST:
+            return Vec2(-1, -1);
+        case SOUTH:
+            return Vec2(0, -1);
+        case SOUTHEAST:
+            return Vec2(1, -1);
+        default:
+            return Vec2();
+            break;
+    }
 }
 
 /**
@@ -417,6 +547,18 @@ void EntityModel::update(float dt) {
  */
 void EntityModel::resetDebug() {
     BoxObstacle::resetDebug();
+    if (_colliderdebug == nullptr) {
+        _colliderdebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_collidersize));
+        _colliderdebug->setRelativeColor(false);
+        _colliderdebug->setColor(Color4::RED);
+        if (_scene != nullptr) {
+            _debug->addChild(_colliderdebug);
+        }
+    } else {
+        _colliderdebug->setPath(Rect(Vec2::ZERO,_collidersize));
+    }
+    _colliderdebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _colliderdebug->setPosition(Vec2(getWidth()/2, 0));
 }
 
 std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {

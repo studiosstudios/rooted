@@ -47,9 +47,12 @@ void Farmer::updateCurAnimDurationForState() {
             // TODO: This needs to be split up into the correct animDurations for each type of movement states
         case SNEAKING:
             curAnimDuration = sneakAnimDuration;
+            break;
         case WALKING:
-        case RUNNING: {
             curAnimDuration = walkAnimDuration;
+            break;
+        case RUNNING: {
+            curAnimDuration = runAnimDuration;
             break;
         }
         default: {

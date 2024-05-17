@@ -18,6 +18,7 @@
 #include "../events/CaptureEvent.h"
 #include "../events/UnrootEvent.h"
 #include "../events/CaptureBarrotEvent.h"
+#include "../events/CollectedRockEvent.h"
 
 class CollisionController {
 protected:
@@ -49,7 +50,7 @@ public:
     /**
      * Initializes a Collision Controller
      */
-    bool init(std::shared_ptr<Map> &map,  std::shared_ptr<NetworkController> &network);
+    bool init(std::shared_ptr<Map> &map,  const std::shared_ptr<NetworkController> &network);
 
 
 //  MARK: - Callbacks
@@ -68,6 +69,11 @@ public:
      * Callback for determining if two obstacles in the world should collide.
      */
     bool shouldCollide(b2Fixture* f1, b2Fixture* f2);
+    
+    /**
+     * Callback for after solving collision.
+     */
+    void afterSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 
 };
 

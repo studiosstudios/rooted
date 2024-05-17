@@ -1,0 +1,397 @@
+{
+    "variables": {
+        "visible" : ["data", "visible"],
+        "playernum" : ["children", "playernum", "data", "text"]
+    },
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                0
+            ],
+            "size": [
+                578,
+                72
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                0
+            ],
+            "visible": true
+        },
+        "children": {
+            "points": {
+                "type": "Node",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        372.24,
+                        32.4
+                    ],
+                    "angle": 0,
+                    "position": [
+                        167,
+                        20.04
+                    ],
+                    "visible": true
+                },
+                "children": {
+                    "point0": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                -0.01
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": -0.01
+                        }
+                    },
+                    "point1": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                42.48,
+                                -0.01
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.11,
+                            "y_offset": -0.01
+                        }
+                    },
+                    "point2": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                84.96,
+                                -0.01
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.23,
+                            "y_offset": -0.01
+                        }
+                    },
+                    "point3": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                127.44,
+                                0.43
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.34,
+                            "y_offset": 0
+                        }
+                    },
+                    "point4": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                169.92,
+                                0.43
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.46,
+                            "y_offset": 0
+                        }
+                    },
+                    "point5": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                212.4,
+                                0.43
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.57,
+                            "y_offset": 0
+                        }
+                    },
+                    "point6": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                254.88,
+                                0.43
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.68,
+                            "y_offset": 0
+                        }
+                    },
+                    "point7": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                297.36,
+                                0.43
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.8,
+                            "y_offset": 0
+                        }
+                    },
+                    "point8": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                339.84,
+                                0.43
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.91,
+                            "y_offset": 0
+                        }
+                    },
+                    "point9": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "emptypoint",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                31.97,
+                                31.97
+                            ],
+                            "angle": 0,
+                            "position": [
+                                379,
+                                -0.01
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 1.02,
+                            "y_offset": -0.01
+                        }
+                    }
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.29,
+                    "y_offset": -0.27
+                }
+            },
+            "playericon": {
+                "type": "Image",
+                "data": {
+                    "texture": "playericon",
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        72,
+                        72
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "playernum": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        25,
+                        53
+                    ],
+                    "position": [
+                        23,
+                        10
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold60",
+                    "text": "5",
+                    "foreground": "#000000ff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "top",
+                    "halign": "left"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.04,
+                    "y_offset": -0.12
+                }
+            }
+        }
+    }
+}

@@ -296,7 +296,19 @@ void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse*
                 for (int j = 0; j < impulse->count; j++ ) {
                     totalImpulse += impulse->normalImpulses[j];
                 }
-                if (!entity->isStunned() && totalImpulse > MIN_STUN_IMPULSE) entity->stun();
+                if (!entity->isStunned() && totalImpulse > MIN_STUN_IMPULSE) {
+                    entity->stun();
+                    if (Carrot* carrot = dynamic_cast<Carrot*>(bd1)) {
+                        if (carrot->getUUID() == _map->getCharacter()->getUUID()) {
+                            Haptics::get()->playTransient(0.8, 0.1);
+                        }
+                    }
+                    if (Farmer* farmer = dynamic_cast<Farmer*>(bd1)) {
+                        if (farmer->getUUID() == _map->getCharacter()->getUUID()) {
+                            Haptics::get()->playTransient(0.8, 0.1);
+                        }
+                    }
+                }
             }
         }
         

@@ -203,6 +203,7 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
     _mapNamesBL = json->get("bottom_left")->asStringArray();
     _mapNamesB = json->get("bottom")->asStringArray();
     _mapNamesBR = json->get("bottom_right")->asStringArray();
+    _mapNamesOuter = json->get("outer")->asStringArray();
     
     _tutorial = tutorial;
 
@@ -212,9 +213,9 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
 void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots){
     
     if (_tutorial) {
-        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
-        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * 3));
-        _mapInfo.resize(1, std::vector<std::pair<std::string, float>>(3));
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * NUMBER_MAP_UNITS);
+        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * NUMBER_MAP_UNITS));
+        _mapInfo.resize(1, std::vector<std::pair<std::string, float>>(NUMBER_MAP_UNITS));
         
         //load in tutorial map
         std::shared_ptr<JsonValue> json = _assets->get<JsonValue>("tutorialBottom");
@@ -227,7 +228,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
         
     } else {
         _rand32.seed(randSeed);
-        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * NUMBER_MAP_UNITS);
         _mapbounds.set(_worldbounds);
         
         _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
@@ -245,39 +246,42 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
         for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
             for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
                 std::string mapName;
+                //outer
+                if (i == 0 || i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 || j == 0 || j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                    mapName = _mapNamesOuter[floor(float(_rand32()) / _rand32.max() * _mapNamesOuter.size())];
+                }
                 //bottom left
-                if (i == 0 && j == 0) {
+                else if (i == 1 && j == 1) {
                     mapName = _mapNamesBL[floor(float(_rand32()) / _rand32.max() * _mapNamesBL.size())];
                 }
                 //top left
-                else if (i == 0 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                else if (i == 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesTL[floor(float(_rand32()) / _rand32.max() * _mapNamesTL.size())];
                 }
                 //bottom right
-                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == 0) {
+                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
                     mapName = _mapNamesBR[floor(float(_rand32()) / _rand32.max() * _mapNamesBR.size())];
                 }
                 //top right
-                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesTR[floor(float(_rand32()) / _rand32.max() * _mapNamesTR.size())];
                 }
                 //bottom
-                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == 0) {
+                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
                     mapName = _mapNamesB[floor(float(_rand32()) / _rand32.max() * _mapNamesB.size())];
                 }
                 //top
-                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesT[floor(float(_rand32()) / _rand32.max() * _mapNamesT.size())];
                 }
                 //left
-                else if (i == 0 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                else if (i == 1 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesL[floor(float(_rand32()) / _rand32.max() * _mapNamesL.size())];
                 }
                 //right
-                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesR[floor(float(_rand32()) / _rand32.max() * _mapNamesR.size())];
                 }
-                
                 
                 //else its middle
                 else {

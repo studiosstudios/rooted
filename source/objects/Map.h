@@ -112,6 +112,8 @@ private:
     std::vector<std::string> _mapNamesB;
     std::vector<std::string> _mapNamesBR;
     
+    std::vector<std::string> _mapNamesOuter;
+    
     /** Mersenne Twister random number generator to ensure randomness is consistent without broadcasting across network (hopefully) */
     std::mt19937 _rand32;
     

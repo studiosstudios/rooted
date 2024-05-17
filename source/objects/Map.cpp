@@ -262,11 +262,11 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
                     mapName = _mapNamesTR[floor(float(_rand32()) / _rand32.max() * _mapNamesTR.size())];
                 }
                 //bottom
-                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == 0) {
                     mapName = _mapNamesB[floor(float(_rand32()) / _rand32.max() * _mapNamesB.size())];
                 }
                 //top
-                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == 0) {
+                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
                     mapName = _mapNamesT[floor(float(_rand32()) / _rand32.max() * _mapNamesT.size())];
                 }
                 //left

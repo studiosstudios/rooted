@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="140">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="166">
  <editorsettings>
-  <export target="gridUnit2.json" format="json"/>
+  <export target="unit_l_1.json" format="json"/>
  </editorsettings>
  <properties>
   <property name="map-type" propertytype="MapType" value="middle-middle"/>
@@ -15,6 +15,30 @@
  <objectgroup id="8" name="environment">
   <object id="138" gid="35" x="346" y="85" width="128" height="64"/>
   <object id="136" gid="36" x="480" y="288" width="32" height="32"/>
+  <object id="140" gid="46" x="0" y="64" width="32" height="32"/>
+  <object id="141" gid="46" x="0" y="96" width="32" height="32"/>
+  <object id="142" gid="46" x="0" y="128" width="32" height="32"/>
+  <object id="143" gid="46" x="0" y="160" width="32" height="32"/>
+  <object id="144" gid="46" x="0" y="192" width="32" height="32"/>
+  <object id="145" gid="46" x="0" y="224" width="32" height="32"/>
+  <object id="146" gid="46" x="0" y="256" width="32" height="32"/>
+  <object id="147" gid="46" x="0" y="288" width="32" height="32"/>
+  <object id="148" type="EnvCollidable" x="0" y="0" width="20.6601" height="288"/>
+  <object id="149" gid="46" x="0" y="32" width="32" height="32"/>
+  <object id="150" gid="43" x="97" y="250.226" width="32" height="32"/>
+  <object id="151" gid="43" x="129" y="250.226" width="32" height="32"/>
+  <object id="152" gid="43" x="161" y="250.226" width="32" height="32"/>
+  <object id="153" gid="43" x="193" y="250.226" width="32" height="32"/>
+  <object id="154" gid="43" x="225" y="250.226" width="32" height="32"/>
+  <object id="155" gid="43" x="257" y="250.226" width="32" height="32"/>
+  <object id="156" gid="43" x="289" y="250.226" width="32" height="32"/>
+  <object id="157" gid="43" x="321" y="250.226" width="32" height="32"/>
+  <object id="158" gid="43" x="353" y="250.226" width="32" height="32"/>
+  <object id="159" gid="47" x="385" y="250.226" width="32" height="32"/>
+  <object id="161" type="EnvCollidable" x="404.567" y="231" width="4.57925" height="47.9474"/>
+  <object id="163" gid="45" x="385" y="282" width="32" height="32"/>
+  <object id="164" gid="41" x="0" y="227" width="276" height="369.748"/>
+  <object id="165" type="EnvCollidable" x="85.9963" y="113.707" width="104.809" height="16.7629"/>
  </objectgroup>
  <objectgroup id="7" name="entities">
   <object id="106" gid="2" x="224" y="128" width="32" height="32"/>
@@ -25,7 +49,7 @@
   <object id="122" gid="3" x="192" y="64" width="32" height="32"/>
   <object id="123" gid="3" x="384" y="192" width="32" height="32"/>
   <object id="126" gid="3" x="288" y="160" width="32" height="32"/>
-  <object id="127" gid="3" x="192" y="192" width="32" height="32"/>
+  <object id="127" gid="3" x="256" y="192" width="32" height="32"/>
   <object id="128" gid="3" x="288" y="96" width="32" height="32"/>
   <object id="130" gid="3" x="320" y="192" width="32" height="32"/>
   <object id="132" gid="3" x="416" y="128" width="32" height="32"/>

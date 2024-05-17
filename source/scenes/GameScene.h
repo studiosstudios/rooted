@@ -95,6 +95,15 @@ protected:
     int _round;
     
     cugl::Timestamp _startTime;
+
+    int _numFarmers;
+    
+    int _numCarrots;
+    
+    int _numBabies;
+    
+    int _numPlanting;
+
     
 //    std::map<std::shared_ptr<EntityModel>
 

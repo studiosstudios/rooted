@@ -87,8 +87,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
-    
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, (_network->getNumPlayers() - 1) * 15 + 5, 8);
+
+    _numFarmers = 1;
+    _numCarrots = _network->getNumPlayers() - 1;
+    _numBabies = (_network->getNumPlayers() - 1) * 15 + 5;
+    _numPlanting = 8;
+
+    _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -137,6 +142,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         for (auto baby : _babies) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
+        for (auto obs : _map->getPlantingSpots()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        for (auto obs : _map->getBoundaries()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        _network->getPhysController()->acquireObs(_character, 0);
     }
     
     _network->attachEventType<ResetEvent>();
@@ -229,8 +241,8 @@ void GameScene::reset() {
     // Load a new level
     _seed++;
     _map->clearRootNode();
-    _map->dispose();
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, (_network->getNumPlayers() - 1) * 15 + 5, 8);
+    _map->clearWorld();
+    _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -262,6 +274,13 @@ void GameScene::reset() {
         for (auto baby : _babies) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
+        for (auto obs : _map->getPlantingSpots()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        for (auto obs : _map->getBoundaries()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        _network->getPhysController()->acquireObs(_character, 0);
     }
     
     Size dimen = computeActiveSize();

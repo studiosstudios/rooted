@@ -37,8 +37,6 @@ private:
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
     /** references to the rocks */
     std::vector<std::shared_ptr<Collectible>> _rocks;
-    /** references to the walls */
-    std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
     /** reference to the box2d world */
     std::shared_ptr<cugl::physics2::net::NetWorld> _world;
     /** The root node of this level */
@@ -149,6 +147,9 @@ public:
     void generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots);
     
     void populate();
+
+    /** Clears the world but does not dispose it */
+    void clearWorld();
     
     /**
      * populate the map with Carrots
@@ -295,6 +296,8 @@ public:
     std::shared_ptr<EntityModel> &getCharacter() { return _character; }
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
+    
+    std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> &getBoundaries() { return _boundaries; }
 
     std::vector<std::shared_ptr<Collectible>> &getRocks() { return _rocks; }
     

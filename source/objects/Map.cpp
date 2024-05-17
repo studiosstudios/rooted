@@ -306,7 +306,9 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
 void Map::populate() {
 
     /** Create the physics world */
-    _world = physics2::net::NetWorld::alloc(getWorldBounds(), Vec2(0, 0));
+    if (_world == nullptr) {
+        _world = physics2::net::NetWorld::alloc(getWorldBounds(), Vec2(0, 0));
+    }
 
     _wheatscene = WheatScene::alloc(_assets, _mapInfo, _scale, _worldbounds.size);
     _numRockSpawns = 0;
@@ -366,13 +368,14 @@ void Map::populate() {
 * references to other assets, then these should be disconnected earlier.
 */
 void Map::dispose() {
-    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-        if (_world != nullptr) {
-            _world->removeObstacle((*it));
-        }
-        (*it) = nullptr;
+    clearWorld();
+    if (_world != nullptr) {
+        _world->dispose();
+        _world = nullptr;
     }
-    _walls.clear();
+}
+
+void Map::clearWorld() {
     for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
@@ -418,8 +421,6 @@ void Map::dispose() {
     _players.clear();
     if (_world != nullptr) {
         _world->clear();
-        _world->dispose();
-        _world = nullptr;
     }
     _character = nullptr;
     if (_shaderedEntitiesNode != nullptr) {
@@ -488,9 +489,6 @@ void Map::acquireMapOwnership() {
     //REMINDER TO JEFF: UNDO NETWORLD CHANGE
     auto ownerMap = _world->getOwnedObstacles();
     std::cout << "owned obstacles size: " << ownerMap.size();
-    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-        ownerMap.insert({*it, 0});
-    }
     for (auto it = _carrots.begin(); it != _carrots.end(); ++it) {
         ownerMap.insert({*it, 0});
     }

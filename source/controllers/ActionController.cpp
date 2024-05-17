@@ -59,14 +59,14 @@ void ActionController::preUpdate(float dt) {
     playerEntity->setMovement(_input->getMovement());
     bool didDash = _input->didDash();
     playerEntity->setDashInput(didDash, _input->getDashVector());
-    if(didDash){
-        std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
-        AudioEngine::get()->play("dash", source);
-    }
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     EntityModel::EntityState oldState = playerEntity->getEntityState();
     playerEntity->updateState(dt);
+    if(didDash && playerEntity->getEntityState() == EntityModel::EntityState::DASHING){
+        std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
+        AudioEngine::get()->play("dash", source);
+    }
     if(playerEntity->getEntityState() != oldState){
         _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
     }
@@ -146,17 +146,17 @@ void ActionController::preUpdate(float dt) {
 
     if(!_network->isHost()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
-        if(_input->didShakeDevice() && rand() % 20 < 21 && carrotEntity->isCaptured()){
+        if(_input->didShakeDevice() && carrotEntity->isCaptured()){
             _freeMeter+=2;
-            std::cout<<"free meter" << _freeMeter << "\n";
-            if(_freeMeter >= 30){
+//            std::cout<<"free meter" << _freeMeter << "\n";
+            if(_freeMeter >= 50){
                 _freeMeter = 0;
                 _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
                 Haptics::get()->playContinuous(1.0, 0.3, 0.1);
             }
         }
         else{
-            _freeMeter = min(0, _freeMeter-1);
+            _freeMeter = max(0, _freeMeter-1);
         }
     }
 }

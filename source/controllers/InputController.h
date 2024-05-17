@@ -68,6 +68,9 @@ private:
     bool _keySwitch;
     bool _keyContinue;
     bool _keyContinuePressed;
+    
+    float _lastAcceleration;
+    float _acceleration;
   
 protected:
     // INPUT RESULTS

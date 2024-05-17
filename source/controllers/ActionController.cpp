@@ -34,6 +34,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _world = _map->getWorld();
     _network = network;
     _assets = assets;
+    _freeMeter = 0;
     if (_network->isHost()) {
         _ai = AIController::alloc(map);
     }
@@ -146,8 +147,16 @@ void ActionController::preUpdate(float dt) {
     if(!_network->isHost()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && rand() % 20 < 21 && carrotEntity->isCaptured()){
-            _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
-//            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+            _freeMeter+=2;
+            std::cout<<"free meter" << _freeMeter << "\n";
+            if(_freeMeter >= 30){
+                _freeMeter = 0;
+                _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
+                Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+            }
+        }
+        else{
+            _freeMeter = min(0, _freeMeter-1);
         }
     }
 }

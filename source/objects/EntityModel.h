@@ -139,6 +139,18 @@ public:
         UNROOTING   // carrot only
     };
     
+    /** Struct for directional sprites, currently in use in Farmer only but could extend */
+    struct DirectionalSprites {
+        std::shared_ptr<cugl::scene2::SpriteNode> eastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> southSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> northSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> northEastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> southEastSprite;
+        DirectionalSprites() {};
+        DirectionalSprites(const std::shared_ptr<cugl::scene2::SpriteNode>& es, const std::shared_ptr<cugl::scene2::SpriteNode>& ss, const std::shared_ptr<cugl::scene2::SpriteNode>& ns, const std::shared_ptr<cugl::scene2::SpriteNode>& nes, const std::shared_ptr<cugl::scene2::SpriteNode>& ses) :
+        eastSprite(es), southSprite(ss), northSprite(ns), northEastSprite(nes), southEastSprite(ses) {};
+    };
+    
 private:
 	/** This macro disables the copy constructor (not allowed on physics objects) */
 	CU_DISALLOW_COPY_AND_ASSIGN(EntityModel);
@@ -502,6 +514,8 @@ public:
      * Examples of states where this would return false is if the player is currently not moving or DASHING or ROOTED.
      */
     bool animationShouldStep();
+    
+    virtual DirectionalSprites getSpritesForState() {return DirectionalSprites();};
     
     /**
      * Sets all of the sprite nodes associated with this EntityModel

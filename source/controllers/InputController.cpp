@@ -153,8 +153,6 @@ void InputController::update(float dt) {
     _keyReset  = keys->keyPressed(RESET_KEY);
     _keyDebug  = keys->keyPressed(DEBUG_KEY) && debug;
     _keyExit   = keys->keyPressed(EXIT_KEY);
-    _keyRustle = keys->keyPressed(KeyCode::M);
-    _keyShowPlayer = keys->keyPressed(KeyCode::V);
     _keyDash   = keys->keyPressed(KeyCode::X) && !_paused;
     _keyRoot   = keys->keyPressed(KeyCode::Z) && !_paused;
     _keyUnroot = keys->keyPressed(KeyCode::Z) && !_paused;

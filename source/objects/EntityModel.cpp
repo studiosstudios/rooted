@@ -261,7 +261,28 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
                     sprite->flipHorizontal(!sprite->isFlipHorizontal());
                 }
                 break;
-            case CARRYING:
+            case CARRYING: {
+                DirectionalSprites ds = getSpritesForState();
+                if (face == SOUTH) {
+                    sprite = ds.southSprite;
+                }
+                else if (face == NORTH) {
+                    sprite = ds.northSprite;
+                }
+                else if (face == EAST || face == WEST) {
+                    sprite = ds.eastSprite;
+                }
+                else if (face == NORTHEAST || face == NORTHWEST) {
+                    sprite = ds.northEastSprite;
+                }
+                else if (face == SOUTHEAST || face == SOUTHWEST) {
+                    sprite = ds.southEastSprite;
+                }
+                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
+                }
+                break;
+            }
             case CAUGHT:
             case ROOTING:
             case UNROOTING:
@@ -430,6 +451,7 @@ void EntityModel::updateState(float dt) {
 void EntityModel::stun() {
     _state = STUNNED;
     _stunTime = STUN_SECS;
+    // TODO: updateSprite would need to be called here if we get a sprite
 }
 
 /**
@@ -455,6 +477,7 @@ void EntityModel::applyForce() {
             speed.set(normMovement).scale(SNEAK_SPEED);
             setLinearVelocity(speed);
             break;
+        case CARRYING:
         case WALKING:
             speed.set(normMovement).scale(WALK_SPEED);
             setLinearVelocity(speed);

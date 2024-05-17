@@ -624,6 +624,8 @@ void Map::spawnFarmers() {
         carrotfarmerNode->setVisible(false);
         carrotfarmerNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
         
+        
+        // Add all nodes as subnode to _entitesNode
         _entitiesNode->addChild(farmerSouthWalkNode);
         _entitiesNode->addChild(farmerNorthWalkNode);
         _entitiesNode->addChild(farmerEastWalkNode);
@@ -639,6 +641,7 @@ void Map::spawnFarmers() {
         _entitiesNode->addChild(farmerEastDashNode);
         _entitiesNode->addChild(carrotfarmerNode);
         
+        // Set farmer's walk/run/dash sprite nodes
         farmer->setSpriteNodes(farmerNorthWalkNode,
                                farmerNorthEastWalkNode,
                                farmerEastWalkNode,
@@ -657,6 +660,9 @@ void Map::spawnFarmers() {
         
         farmer->setNormalNode(farmerSouthWalkNode);
         farmer->setCaptureNode(carrotfarmerNode);
+        
+        EntityModel::DirectionalSprites farmerBaseCarry;
+        farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode));
         
         farmer->setSceneNode(farmerSouthWalkNode);
         farmer->setDrawScale(

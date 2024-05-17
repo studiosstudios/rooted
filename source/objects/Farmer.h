@@ -23,6 +23,8 @@ private:
     float sneakAnimDuration = 2.0f;
     float walkAnimDuration = 1.0f;
     float runAnimDuration = 0.5f;
+    
+    DirectionalSprites _baseCarrySprites;
 
 public:
     int captureTime;
@@ -42,6 +44,7 @@ public:
         return (result->init(pos, size, scale) ? result : nullptr);
     }
     
+    
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
     void grabCarrot();
@@ -53,9 +56,18 @@ public:
     void setCanPlant(bool plant) { _canPlant = plant; };
     
     void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
+    
     void setCaptureNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _captureNode = n; }
     
     void setMovement(cugl::Vec2 movement) override;
+    
+    void setBaseCarrySprites(DirectionalSprites sprites) {
+        _baseCarrySprites = sprites;
+    }
+    
+    DirectionalSprites getSpritesForState() override {
+        return _baseCarrySprites;
+    }
     
     void updateCurAnimDurationForState() override;
 

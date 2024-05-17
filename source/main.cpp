@@ -52,7 +52,7 @@ int main(int argc, char * argv[]) {
 
     //app.setFullscreen(true);
     app.setDisplaySize(1024, 576);
-    app.setFPS(120.0f);
+    app.setFPS(60.0f);
 
     /// DO NOT MODIFY ANYTHING BELOW THIS LINE
     if (!app.init()) {
@@ -61,7 +61,7 @@ int main(int argc, char * argv[]) {
     
     app.onStartup();
     while (app.step()) {
-        CULog("FPS: %f", app.getAverageFPS());
+//        CULog("FPS: %f", app.getAverageFPS());
     };
     app.onShutdown();
 

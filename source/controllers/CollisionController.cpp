@@ -90,12 +90,6 @@ void CollisionController::beginContact(b2Contact* contact) {
             if(_map->getCharacter()->getUUID() == farmer->getUUID() && (name2 == "baby" || name2 == "carrot")){
                 Haptics::get()->playTransient(0.8, 0.1);
             }
-            if(name2 == "carrot") {
-                Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
-                    _network->pushOutEvent(CaptureEvent::allocCaptureEvent(carrot->getUUID()));
-                }
-            }
             if(name2 == "planting spot" && _map->getCharacter()->getUUID() == farmer->getUUID()) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 farmer->setCanPlant(true);
@@ -306,20 +300,29 @@ void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse*
                 }
                 if (!entity->isStunned() && totalImpulse > MIN_STUN_IMPULSE) {
                     entity->stun();
-                    if (Carrot* carrot = dynamic_cast<Carrot*>(bd1)) {
+                    if (Carrot* carrot = dynamic_cast<Carrot*>(bd2)) {
                         if (carrot->getUUID() == _map->getCharacter()->getUUID()) {
-                            Haptics::get()->playTransient(0.8, 0.1);
+                            Haptics::get()->playContinuous(0.8, 0.1, STUN_SECS);
                         }
                     }
-                    if (Farmer* farmer = dynamic_cast<Farmer*>(bd1)) {
+                    if (Farmer* farmer = dynamic_cast<Farmer*>(bd2)) {
                         if (farmer->getUUID() == _map->getCharacter()->getUUID()) {
-                            Haptics::get()->playTransient(0.8, 0.1);
+                            Haptics::get()->playContinuous(0.8, 0.1, STUN_SECS);
                         }
                     }
                 }
             }
         }
         
+        if (name1 == "farmer") {
+            Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+            if(name2 == "carrot") {
+                Carrot* carrot = dynamic_cast<Carrot*>(bd2);
+                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
+                    _network->pushOutEvent(CaptureEvent::allocCaptureEvent(carrot->getUUID()));
+                }
+            }
+        }
 
         // Swap everything
         b2Fixture* fixTemp = fix1;

@@ -19,6 +19,7 @@ void UIController::dispose() {
     _assets = nullptr;
     _input = nullptr;
     _uinode = nullptr;
+    _filledpoint = nullptr;
 }
 
 void UIController::setWinVisible(bool visible) {
@@ -31,9 +32,9 @@ void UIController::setLoseVisible(bool visible) {
 
 void UIController::setEndVisible(bool visible) {
     _postroundscene->setVisible(visible);
+    _nextRound = false;
     if (visible) {
         _nextbutton->activate();
-        _nextRound = false;
     } else {
         _nextbutton->deactivate();
         _nextbutton->setDown(false);
@@ -241,6 +242,7 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // there are 5 (1-5) rows with 9 (0-8)
     // playerpoints_playerpoints_playerpointinfo_x
     // playerpoints_playerpoints_playerpointinfo_x_points_pointx
+    _points.clear();
     for (int ii = 1; ii <= 5; ii++) {
         std::shared_ptr<scene2::SceneNode> wholenode = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii));
         std::vector<std::shared_ptr<scene2::SceneNode>> elements;
@@ -260,10 +262,12 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            CULog("activated");
             _nextRound = true;
         }
     });
+    
+    auto label = std::dynamic_pointer_cast<scene2::Label>(_nextroundbutton->getChildByName("NEXT"));
+    label->setText("NEXT");
     
     // get the filled in texture
     _filledpoint = _assets->get<Texture>("filledpoint");
@@ -378,6 +382,10 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
     } else {
         _joymain->setVisible(false);
         _joyback->setVisible(false);
+    }
+    if (_nextRound) {
+        auto label = std::dynamic_pointer_cast<scene2::Label>(_nextroundbutton->getChildByName("NEXT"));
+        label->setText("...");
     }
     _carrotsRemainingBoard->setVisible(debugActive);
     _barrotsRemainingBoard->setVisible(debugActive);

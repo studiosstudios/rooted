@@ -524,7 +524,7 @@ void EntityModel::update(float dt) {
     }
     
     if (_wheatHeightNode != nullptr) {
-//        updateWheatHeightNode();
+        updateWheatHeightNode();
 //        updateWheatNodes(dt);
     }
 }

@@ -176,7 +176,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     // using a vector because the positions should be the same each time
     // i.e. bunny, then each of the carrots
-    for (int i = 0; i < _map->getPlayers().size() - 1; i++) {
+    for (int i = 0; i < _map->getPlayers().size(); i++) {
         _points.push_back(0);
     }
         

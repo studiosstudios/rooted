@@ -906,6 +906,7 @@ void Map::spawnCarrots() {
         auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
         dashEffectNode->setVisible(false);
         dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
+        dashEffectNode->setPriority(float(Map::DrawOrder::CLOUDS));
         
         _entitiesNode->addChild(carrotNorthWalkNode);
         _entitiesNode->addChild(carrotEastWalkNode);
@@ -918,7 +919,7 @@ void Map::spawnCarrots() {
         _entitiesNode->addChild(carrotNorthEastDashNode);
         _entitiesNode->addChild(carrotSouthEastDashNode);
         
-        _entitiesNode->addChild(dashEffectNode);
+        _worldnode->addChild(dashEffectNode);
 
         carrot->setSceneNode(carrotSouthWalkNode);
         carrot->setDrawScale(

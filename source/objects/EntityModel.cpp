@@ -242,6 +242,7 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
                 }
                 break;
             case DASHING:
+                makeDashEffect();
                 if (face == SOUTH) {
                     sprite = _southDashSprite;
                 }
@@ -400,7 +401,7 @@ void EntityModel::updateState(float dt) {
                 _dashCooldown = DASH_COOLDOWN_SECS;
                 stateChanged = true;
                 _makeDashTrail = true;
-                makeDashEffect();
+//                makeDashEffect();
 //                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
 //                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }

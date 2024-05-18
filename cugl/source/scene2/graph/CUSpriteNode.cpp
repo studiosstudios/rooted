@@ -314,6 +314,6 @@ void SpriteNode::updateTextureCoords() {
 }
 
 void SpriteNode::draw(const std::shared_ptr<SpriteBatch> &batch, const Affine2 &transform, Color4 tint) {
-    batch->setNumRows(_size/_cols);
+    batch->setNumRows(std::ceil(float(_size)/_cols));
     PolygonNode::draw(batch, transform, tint);
 }

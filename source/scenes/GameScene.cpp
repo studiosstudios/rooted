@@ -87,8 +87,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //        CULog("Failed to populate map");
 //        return false;
 //    }
-    
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, (_network->getNumPlayers() - 1) * 15, 8);
+
+    _numFarmers = 1;
+    _numCarrots = _network->getNumPlayers() - 1;
+    _numBabies = (_network->getNumPlayers() - 1) * 15 + 5;
+    _numPlanting = 8;
+
+    _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -123,7 +128,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         _map->acquireMapOwnership();
         _babies = _map->loadBabyEntities();
     }
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _farmerUUID = _network->getOrderedPlayers().at(_seed % _network->getNumPlayers());
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _farmerUUID, _network->getNetcode()->getUUID());
     
     // TODO: Putting this set here for now, little weird that's it's separate from the rest of ui init -CJ
     _ui.setCharacter(_character);
@@ -136,6 +142,13 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         for (auto baby : _babies) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
+        for (auto obs : _map->getPlantingSpots()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        for (auto obs : _map->getBoundaries()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        _network->getPhysController()->acquireObs(_character, 0);
     }
     
     _network->attachEventType<ResetEvent>();
@@ -236,8 +249,8 @@ void GameScene::reset() {
     // Load a new level
     _seed++;
     _map->clearRootNode();
-    _map->dispose();
-    _map->generate(_seed, 1, _network->getNumPlayers() - 1, (_network->getNumPlayers() - 1) * 15, 8);
+    _map->clearWorld();
+    _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -258,7 +271,8 @@ void GameScene::reset() {
         _map->acquireMapOwnership();
         _babies = _map->loadBabyEntities();
     }
-    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _network->getNetcode()->getHost(), _network->getNetcode()->getUUID());
+    _farmerUUID = _network->getOrderedPlayers().at(_seed % _network->getNumPlayers());
+    _character = _map->loadPlayerEntities(_network->getOrderedPlayers(), _farmerUUID, _network->getNetcode()->getUUID());
     
     std::shared_ptr<NetWorld> w = _map->getWorld();
     _network->enablePhysics(w);
@@ -268,6 +282,13 @@ void GameScene::reset() {
         for (auto baby : _babies) {
             _network->getPhysController()->acquireObs(baby, 0);
         }
+        for (auto obs : _map->getPlantingSpots()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        for (auto obs : _map->getBoundaries()) {
+            _network->getPhysController()->acquireObs(obs, 0);
+        }
+        _network->getPhysController()->acquireObs(_character, 0);
     }
     
     Size dimen = computeActiveSize();
@@ -419,6 +440,7 @@ void GameScene::fixedUpdate(float step) {
     }
     
     _map->getWorld()->update(step);
+    _cam.setShake(_character->getStunTime() * STUN_SCREEN_SHAKE);
     _cam.setTarget(_character->getPosition()*_scale);
     _cam.update(step);
     
@@ -527,7 +549,7 @@ void GameScene::postUpdate(float remain) {
         if(farmerWin){
             // add points for farmer
             _points[0] += 3;
-            if(_isHost){
+            if(_character->getUUID() == _farmerUUID){
                 setComplete(true);
             }
             else{
@@ -545,7 +567,7 @@ void GameScene::postUpdate(float remain) {
             for (int ii = 1; ii < _points.size(); ii++) {
                 _points[ii] += 1;
             }
-            if(_isHost){
+            if(_character->getUUID() == _farmerUUID){
                 setFailure(true);
             }
             else{
@@ -577,6 +599,9 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::Obstacle
     };
     world->shouldCollide = [this](b2Fixture *f1, b2Fixture *f2) {
         return _collision.shouldCollide(f1, f2);
+    };
+    world->afterSolve = [this](b2Contact* contact, const b2ContactImpulse* impulse) {
+        return _collision.afterSolve(contact, impulse);
     };
 }
 

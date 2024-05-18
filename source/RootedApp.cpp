@@ -13,6 +13,7 @@ using namespace cugl;
 /** The key the basic main menu music */
 #define MENU_MUSIC      "menu"
 #define TUTORIAL_MUSIC  "tutorial"
+#define LEVEL_MUSIC  "game"
 
 /**
  * The method called after OpenGL is initialized, but before running the application.
@@ -202,13 +203,13 @@ void RootedApp::preUpdate(float dt) {
         _gameplay.preUpdate(dt);
         AudioEngine::get()->pause("menu");
         AudioEngine::get()->pause("tutorial");
-//        std::shared_ptr<Sound> source = _assets->get<Sound>(GAME_MUSIC);
-//        if(AudioEngine::get()->getState("game") == AudioEngine::State::PAUSED){
-//            AudioEngine::get()->resume("game");
-//        }
-//        else if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
-//            AudioEngine::get()->play("game", source);
-//        }
+        std::shared_ptr<Sound> source = _assets->get<Sound>(LEVEL_MUSIC);
+        if(AudioEngine::get()->getState("game") == AudioEngine::State::PAUSED){
+            AudioEngine::get()->resume("game");
+        }
+        else if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
+            AudioEngine::get()->play("game", source, true);
+        }
     }
     else if (_status == TUTORIAL){
         _tutorial.preUpdate(dt);
@@ -404,13 +405,14 @@ void RootedApp::updateClientScene(float timestep) {
         _gameplay.setActive(true);
         _status = GAME;
     }
-//    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
-//        _network->disconnect();
-//        _joingame.setActive(false);
-//        _mainmenu.setActive(true);
-//        _gameplay.dispose();
-//        _status = MENU;
-//    }
+    // TODO: REMOVE THIS IF WE DON'T NEED IT ANYMORE
+    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
+        _network->disconnect();
+        _joingame.setActive(false);
+        _mainmenu.setActive(true);
+        _gameplay.dispose();
+        _status = MENU;
+    }
 }
 
 /**

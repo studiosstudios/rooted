@@ -86,6 +86,8 @@ protected:
     /** Host is by default a farmer (will need to change this later) */
     bool _isHost;
     
+    string _farmerUUID;
+    
     int _seed;
     /** Whether we are displaying the game over screen or not */
     bool _isGameOverScreen;
@@ -95,6 +97,14 @@ protected:
     cugl::Timestamp _startTime;
     /** The number of points each player has */
     std::vector<int> _points;
+
+    int _numFarmers;
+    
+    int _numCarrots;
+    
+    int _numBabies;
+    
+    int _numPlanting;
     
     int _ready;
 

@@ -61,13 +61,11 @@ private:
     /** Whether the key for throwing a rock is down */
     bool _keyThrowRock;
     
-    // FOR TESTING RUSTLING
-    bool _keyRustle;
-    bool _keyShowPlayer;
-    
-    bool _keySwitch;
     bool _keyContinue;
     bool _keyContinuePressed;
+    
+    float _lastAcceleration;
+    float _acceleration;
   
 protected:
     // INPUT RESULTS
@@ -91,12 +89,6 @@ protected:
     cugl::Vec2 _movement;
     /** Whether to continue tutorial */
     bool _continuePressed;
-    
-    // CAN REMOVE THIS, THIS IS JUST FOR TESTING
-    bool _rustlePressed;
-    bool _showPlayerPressed;
-    
-    bool _switchPressed;
     
     bool _deviceShaking;
     /** for pausing movement input during the tutorial **/
@@ -159,8 +151,6 @@ protected:
     cugl::Vec2 _joyAnchor;
     /** The position of the virtual joystick dynamic */
     cugl::Vec2 _joyCenter;
-    /** Whether or not we have processed a jump for this swipe yet */
-    bool _hasJumped;
     /** The timestamp for a double tap on the right */
     cugl::Timestamp _rtime;
 	/** The timestamp for a double tap in the middle */
@@ -358,11 +348,6 @@ public:
      */
     std::pair<cugl::Vec2, cugl::Vec2> getJoystick() const { return std::pair(_joyAnchor, _joyCenter); }
     
-    // CAN DELETE THIS
-    bool didRustle() const { return _rustlePressed; }
-    
-    bool didShowPlayer() const { return _showPlayerPressed; }
-    
     bool didDash() const { return _dashPressed; }
     
     bool didDashNow() const { return _keyDash; }
@@ -377,7 +362,6 @@ public:
     
     bool didUnrootNow() const { return _keyUnroot; }
 
-    bool didSwitch() const { return _switchPressed; }
     
     bool didShakeDevice() const { return _deviceShaking; }
     
@@ -459,26 +443,8 @@ public:
                 it++;
             }
         }
-        
-//        for (auto it = _swipePoints->rbegin(); it != _swipePoints->rend();) {
-//            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
-//                break;
-//            }
-//            std::advance(it, 1);
-//            _swipePoints->erase(it.base());
-//        }
-//        for (auto it = _internalSwipePoints.rbegin(); it != _internalSwipePoints.rend();) {
-//            if (!((it->second + swipeDurationMillis) < curTime)) { // need a not here because > is not implemented with Timestamps for some reason
-//                break;
-//            }
-//            std::advance(it, 1);
-//            _internalSwipePoints.erase(it.base());
-//        }
     }
     
-    cugl::Color4 getCurrentSwipeColor() {
-        return _currentSwipeColor;
-    }
     
     std::vector<cugl::Vec2> getInternalSwipePointsVector() {
         std::vector<cugl::Vec2> res;

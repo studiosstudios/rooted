@@ -9,6 +9,7 @@
 
 using namespace cugl;
 
+
 bool CollisionController::init(std::shared_ptr<Map> &map,  const std::shared_ptr<NetworkController> &network) {
     _map = map;
     _network = network;
@@ -19,6 +20,12 @@ bool CollisionController::init(std::shared_ptr<Map> &map,  const std::shared_ptr
 
 #pragma mark -
 #pragma mark Collision Handling
+
+/** useful utility function */
+bool nameIsEntity(std::string name) {
+    return name == "baby" || name == "carrot" || name == "farmer";
+}
+
 /**
  * Processes the start of a collision
  *
@@ -51,12 +58,6 @@ void CollisionController::beginContact(b2Contact* contact) {
             if(_map->getCharacter()->getUUID() == carrot->getUUID() && (name2 == "farmer" || name2 == "baby")){
                 Haptics::get()->playTransient(0.8, 0.1);
             }
-            if (name2 == "baby") {
-                BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
-                if(_map->getCharacter()->getUUID() == carrot->getUUID()){
-                    _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), b2babycarrot->getID()));
-                }
-            }
             if(name2 == "planting spot" && _map->getCharacter()->getUUID() == carrot->getUUID()) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 plantingSpot->setBelowAvatar(true);
@@ -83,12 +84,6 @@ void CollisionController::beginContact(b2Contact* contact) {
             if(_map->getCharacter()->getUUID() == farmer->getUUID() && (name2 == "baby" || name2 == "carrot")){
                 Haptics::get()->playTransient(0.8, 0.1);
             }
-            if(name2 == "carrot") {
-                Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
-                    _network->pushOutEvent(CaptureEvent::allocCaptureEvent(carrot->getUUID()));
-                }
-            }
             if(name2 == "planting spot" && _map->getCharacter()->getUUID() == farmer->getUUID()) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 farmer->setCanPlant(true);
@@ -99,13 +94,6 @@ void CollisionController::beginContact(b2Contact* contact) {
                 if (_map->getCharacter()->getUUID() == farmer->getUUID() && !farmer->hasRock()){
                     _network->pushOutEvent(CollectedRockEvent::allocCollectedRockEvent(farmer->getUUID(), collectible->getSpawnIndex()));
                 }
-            }
-        }
-        
-        if (name1 == "rock") {
-            if (name2 == "carrot" || name2 == "baby" || name2 == "farmer") {
-                Collectible* rock = dynamic_cast<Collectible*>(bd1);
-                rock->setAge(rock->getMaxAge() + 1);
             }
         }
         
@@ -135,7 +123,6 @@ void CollisionController::beginContact(b2Contact* contact) {
  * This method is called when two objects cease to touch.
  */
 void CollisionController::endContact(b2Contact* contact) {
-    
     if (_map == nullptr) {
         return;
     }
@@ -228,6 +215,10 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         std::string name1 = bd1->getName();
         std::string name2 = bd2->getName();
         
+        //for now only entities only collide the hitboxes - can change in future
+        if ((nameIsEntity(name1) && (fd1 == nullptr || *fd1 != "collider")) || 
+            (nameIsEntity(name2) && (fd2 == nullptr || *fd2 != "collider"))) return false;
+        
         // Baby carrots don't collide with each other
         if (name1 == "baby" && name2 == "baby") {
             return false;
@@ -243,10 +234,15 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
             return !carrot->isSensor();
         }
         
-        // do not collide with yourself
-        //temp do not collide with players
-        if (name1 == "rock" && (name2 == "carrot" || name2 == "farmer")) {
-            return false;
+        // rock does not immediately collide with yourself
+        if (name1 == "rock") {
+            auto rock = dynamic_cast<Collectible*>(bd1);
+            if (auto entity = dynamic_cast<EntityModel*>(bd2)) {
+                return rock->getAge() > 0.1f || entity->getUUID() !=  rock->getOwnerUUID();
+            }
+            if (name2 == "boundary") {
+                return false;
+            }
         }
         
         // Swap everything
@@ -267,4 +263,87 @@ bool CollisionController::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
         bd2 = bdTemp;
     }
     return true;
+}
+
+void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse* impulse) {
+    b2Fixture* fix1 = contact->GetFixtureA();
+    b2Fixture* fix2 = contact->GetFixtureB();
+
+    b2Body* body1 = fix1->GetBody();
+    b2Body* body2 = fix2->GetBody();
+
+    std::string* fd1 = reinterpret_cast<std::string*>(fix1->GetUserData().pointer);
+    std::string* fd2 = reinterpret_cast<std::string*>(fix2->GetUserData().pointer);
+
+    physics2::Obstacle* bd1 = reinterpret_cast<physics2::Obstacle*>(body1->GetUserData().pointer);
+    physics2::Obstacle* bd2 = reinterpret_cast<physics2::Obstacle*>(body2->GetUserData().pointer);
+    
+    // Twice to swap
+    for (int i = 0; i < 2; i++) {
+
+        std::string name1 = bd1->getName();
+        std::string name2 = bd2->getName();
+        
+        if (name1 == "rock") {
+            if (name2 == "carrot" || name2 == "farmer") {
+                Collectible* rock = dynamic_cast<Collectible*>(bd1);
+                EntityModel* entity = dynamic_cast<EntityModel*>(bd2);
+                float totalImpulse = 0;
+                for (int j = 0; j < impulse->count; j++ ) {
+                    totalImpulse += impulse->normalImpulses[j];
+                }
+                if (!entity->isStunned() && totalImpulse > MIN_STUN_IMPULSE) {
+                    entity->stun();
+                    if (Carrot* carrot = dynamic_cast<Carrot*>(bd2)) {
+                        if (carrot->getUUID() == _map->getCharacter()->getUUID()) {
+                            Haptics::get()->playContinuous(0.8, 0.1, STUN_SECS);
+                        }
+                    }
+                    if (Farmer* farmer = dynamic_cast<Farmer*>(bd2)) {
+                        if (farmer->getUUID() == _map->getCharacter()->getUUID()) {
+                            Haptics::get()->playContinuous(0.8, 0.1, STUN_SECS);
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (name1 == "farmer") {
+            Farmer* farmer = dynamic_cast<Farmer*>(bd1);
+            if(name2 == "carrot") {
+                Carrot* carrot = dynamic_cast<Carrot*>(bd2);
+                if(_map->getCharacter()->getUUID() == farmer->getUUID() && farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
+                    _network->pushOutEvent(CaptureEvent::allocCaptureEvent(carrot->getUUID()));
+                }
+            }
+        }
+        
+        if (name1 == "carrot") {
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+            if(name2 == "baby") {
+                BabyCarrot* babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+                if(_map->getCharacter()->getUUID() == carrot->getUUID() && carrot->isDashing()){
+                    _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), babycarrot->getID()));
+                }
+            }
+        }
+
+        // Swap everything
+        b2Fixture* fixTemp = fix1;
+        fix1 = fix2;
+        fix2 = fixTemp;
+
+        b2Body* bodyTemp = body1;
+        body1 = body2;
+        body2 = bodyTemp;
+
+        std::string* fdTemp = fd1;
+        fd1 = fd2;
+        fd2 = fdTemp;
+
+        physics2::Obstacle* bdTemp = bd1;
+        bd1 = bd2;
+        bd2 = bdTemp;
+    }
+
 }

@@ -34,6 +34,7 @@ private:
     /** NetworkController */
     std::shared_ptr<NetworkController> _network;
     std::shared_ptr<cugl::AssetManager> _assets;
+    int _freeMeter;
     
     /**
      * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character.

@@ -161,7 +161,7 @@ void ActionController::preUpdate(float dt) {
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && carrotEntity->isCaptured()){
             _freeMeter+=2;
-//            std::cout<<"free meter" << _freeMeter << "\n";
+            std::cout<<"free meter" << _freeMeter << "\n";
             if(_freeMeter >= 50){
                 _freeMeter = 0;
                 _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
@@ -356,7 +356,7 @@ void ActionController::updateRustlingNoise(){
 }
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
-    _map->getFarmers().at(0)->grabCarrot();
+    _map->getFarmers().at(0)->grabCarrot(_map->getCarrotTypeForUUID(event->getUUID()));
     if(_map->isFarmer()){
         std::shared_ptr<Sound> source = _assets->get<Sound>(CAPTURE_EFFECT);
         AudioEngine::get()->play("capture", source);

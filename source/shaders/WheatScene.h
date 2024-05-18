@@ -36,6 +36,12 @@ private:
     Size _worldSize;
 
     unsigned int _queryId;
+    
+    int _windCount = 2;
+    
+    std::vector<std::shared_ptr<scene2::PolygonNode>> _windNodes;
+    
+    Size _scale;
 
     class WheatQuery {
         public:
@@ -90,6 +96,8 @@ public:
     void doQueries();
     
     void clearQueries();
+    
+    void updateWindEffect();
 
 };
 

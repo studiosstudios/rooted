@@ -626,7 +626,7 @@
                  "y":160
                 }, 
                 {
-                 "height":209.0003,
+                 "height":209,
                  "id":193,
                  "name":"",
                  "rotation":0,
@@ -745,8 +745,8 @@
                  "type":"Decoration",
                  "visible":true,
                  "width":107.565,
-                 "x":192,
-                 "y":200.507
+                 "x":197,
+                 "y":206.507
                 }, 
                 {
                  "height":35.8482,
@@ -756,8 +756,8 @@
                  "type":"EnvCollidable",
                  "visible":true,
                  "width":81.2607,
-                 "x":209.739,
-                 "y":160
+                 "x":214.739,
+                 "y":166
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1016,7 +1016,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.10.1",
  "tileheight":32,
  "tilesets":[
         {

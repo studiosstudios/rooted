@@ -47,6 +47,7 @@
 #include <cugl/physics2/CUBoxObstacle.h>
 #include <cugl/physics2/CUCapsuleObstacle.h>
 #include <cugl/scene2/graph/CUWireNode.h>
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Drawing Constants
@@ -92,6 +93,8 @@
 
 #define BABY_TEXTURE   "baby"
 
+#define DASH_EFFECT_SPRITE "dash-effect-sheet"
+
 #pragma mark -
 #pragma mark Physics Constants
 /** The factor to multiply by the input */
@@ -122,9 +125,9 @@ public:
     /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
     
     /** State that a rooted! player entity can be in. Some of these states are specific
-        to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which staztes an entity can
-        be in. */
+     to only a certain type of character (ex. only a bunny can be PLANTING), so
+     we need to enforce the corresponding invariants for which staztes an entity can
+     be in. */
     enum EntityState {
         STANDING,
         SNEAKING,
@@ -137,6 +140,25 @@ public:
         CAUGHT,     // carrot only
         ROOTED,      // carrot only
         UNROOTING   // carrot only
+    };
+    
+    enum CarrotType {
+        CLOAK,
+        FLOWER,
+        HEADPHONES,
+        SCARF
+    };
+    
+    /** Struct for directional sprites, currently in use in Farmer only but could extend */
+    struct DirectionalSprites {
+        std::shared_ptr<cugl::scene2::SpriteNode> northSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> northEastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> eastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> southEastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> southSprite;
+        DirectionalSprites() {};
+        DirectionalSprites(const std::shared_ptr<cugl::scene2::SpriteNode>& ns, const std::shared_ptr<cugl::scene2::SpriteNode>& nes, const std::shared_ptr<cugl::scene2::SpriteNode>& es, const std::shared_ptr<cugl::scene2::SpriteNode>& ses, const std::shared_ptr<cugl::scene2::SpriteNode>& ss) :
+        northSprite(ns), northEastSprite(nes), eastSprite(es), southEastSprite(ses), southSprite(ss) {};
     };
     
 private:
@@ -172,23 +194,12 @@ protected:
 	/** The scene graph node for the Dude. */
 	std::shared_ptr<cugl::scene2::SpriteNode> _node;
     
-    std::shared_ptr<cugl::scene2::SpriteNode> _eastWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northEastWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southEastWalkSprite;
+    DirectionalSprites _walkSprites;
+    DirectionalSprites _runSprites;
+    DirectionalSprites _dashSprites;
     
-    std::shared_ptr<cugl::scene2::SpriteNode> _eastRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northEastRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southEastRunSprite;
-    
-    std::shared_ptr<cugl::scene2::SpriteNode> _eastDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northEastDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southEastDashSprite;
+    std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
+    bool _shouldAnimateDash = false;
     
 	/** The scale between the physics world and the screen */
 	float _drawScale;
@@ -203,6 +214,13 @@ protected:
     /** The amount of time that has elapsed in the current animation cycle
         For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
     float curAnimTime = 0.0f;
+    
+    /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
+    float curDashAnimDuration = 1.2f;
+    
+    /** The amount of time that has elapsed in the current animation cycle
+        For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
+    float curDashAnimTime = 0.0f;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -253,6 +271,23 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
+    
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashTrail;
+
+    int _maxTrailPoints = 15;
+    
+    float _trailSpawnInterval = 0.02f;
+    
+    float _trailVanishRate = 0.5f;
+    
+    float _timeSinceTrailSpawn = 0.0f;
+    
+    bool _makeDashTrail = false;
+    
+    float _trailVanishTime = DASH_TRAIL_HOLD;
+    
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashNodes;
+
     bool _hasRock;
     
     /** stuff to do with the actual collision hitbox */
@@ -514,44 +549,42 @@ public:
      */
     bool animationShouldStep();
     
+    virtual DirectionalSprites getSpritesForState() {return DirectionalSprites();};
+    
+    void setWalkSprites(DirectionalSprites ds) {_walkSprites = ds;}
+    
+    void setRunSprites(DirectionalSprites ds) {_runSprites = ds;}
+    
+    void setDashSprites(DirectionalSprites ds) {_dashSprites = ds;}
+    
+    static std::string getCarrotTypeSuffix(CarrotType ct) {
+        switch (ct) {
+            case CLOAK:
+                return "-cloak";
+            case FLOWER:
+                return "-flower";
+            case HEADPHONES:
+                return "-headphones";
+            case SCARF:
+                return "-scarf";
+        }
+    }
+    
+    void setAnimationFrame(int frame) {
+        if (_node != nullptr) {
+            frame = frame % _node->getSpan();
+            curAnimTime = (frame / _node->getSpan()) * curAnimDuration;
+            _node->setFrame(frame);
+        }
+    }
+        
     /**
-     * Sets all of the sprite nodes associated with this EntityModel
+     * Sets  the dash effect sprite nodes associated with this EntityModel
      *
-     * This currently only includes the 5-directional movement sprites, but
-     * TODO: It should later include all action sprites.
      */
-    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southDashNode) {
-        _northWalkSprite = northWalkNode;
-        _northEastWalkSprite = northEastWalkNode;
-        _eastWalkSprite = eastWalkNode;
-        _southEastWalkSprite = southEastWalkNode;
-        _southWalkSprite = southWalkNode;
-        
-        _northRunSprite = northRunNode;
-        _northEastRunSprite = northEastRunNode;
-        _eastRunSprite = eastRunNode;
-        _southEastRunSprite = southEastRunNode;
-        _southRunSprite = southRunNode;
-        
-        _northDashSprite = northDashNode;
-        _northEastDashSprite = northEastDashNode;
-        _eastDashSprite = eastDashNode;
-        _southEastDashSprite = southEastDashNode;
-        _southDashSprite = southDashNode;
+    void setDashEffectSpriteNode(const std::shared_ptr<cugl::scene2::SpriteNode>& dashEffectNode) {
+        _dashEffectSprite = dashEffectNode;
+//        _node->addChild(dashEffectNode);
     }
     
     /**
@@ -724,6 +757,8 @@ public:
     
     void stun();
     
+    virtual DirectionalSprites getDirectionalSpritesForState(EntityState state);
+    
     /** If useMovement is true, use the current EntityModel's \_movement argument. If false, use \_velocity. */
     void updateSprite(float dt, bool useMovement);
     
@@ -740,11 +775,17 @@ public:
         _state = state;
     }
     
+    void animateDashEffect(float dt);
+    
+    void makeDashEffect();
+    
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
     
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode(std::shared_ptr<cugl::Texture> &rustle);
 
     virtual void updateWheatHeightNode();
+    
+    virtual void updateWheatNodes(float dt);
 
     std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
 

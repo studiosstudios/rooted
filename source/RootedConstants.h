@@ -48,6 +48,8 @@
 #define DEFAULT_GRAVITY 0.0f
 /** The number of frame to wait before reinitializing the game */
 #define EXIT_COUNT      240
+/** The conversion from degrees to radians */
+#define DEGREE_TO_RADIAN  0.0174533
 
 #pragma mark -
 #pragma mark Game Logic Constants
@@ -168,6 +170,7 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define DEFAULT_WHEAT_TEX_HEIGHT 270
 #define MAX_WHEAT_HEIGHT 25.0
 #define STEP_SIZE 1.0
+#define DASH_TRAIL_HOLD 0.5f
 
 #pragma mark COLLECTIBLE
 #define SPAWN_RATE 0.005

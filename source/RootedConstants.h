@@ -26,7 +26,7 @@
 /** The number of map rows/cols to spawn (including outer maps) */
 #define NUMBER_MAP_UNITS  5
 /** How much of the world outside the map is shown */
-#define OUTER_MAP_BORDER 2.0f
+#define OUTER_MAP_BORDER 4.0f
 /** Default drawscale */
 #define DEFAULT_DRAWSCALE 32.0f
 /** Zoom of camera relative to scene */
@@ -166,6 +166,7 @@
 #pragma mark SHADERS
 #define WIND_SPEED 1.0
 const float WIND_DIRECTION[2] = {1.0, 1.0};
+#define WIND_COUNT 3
 #define CLOUD_SPEED 0.05
 #define DEFAULT_WHEAT_TEX_WIDTH 480
 #define DEFAULT_WHEAT_TEX_HEIGHT 270

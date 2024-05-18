@@ -291,6 +291,51 @@
         "barrot-southeast-walk": {
             "file":     "textures/barrot-southeast-walk.png"
         },
+        "barrot-south-blanket": {
+            "file":     "textures/barrot-south-blanket.png"
+        },
+        "barrot-north-blanket": {
+            "file":     "textures/barrot-north-blanket.png"
+        },
+        "barrot-east-blanket": {
+            "file":     "textures/barrot-east-blanket.png"
+        },
+        "barrot-northeast-blanket": {
+            "file":     "textures/barrot-northeast-blanket.png"
+        },
+        "barrot-southeast-blanket": {
+            "file":     "textures/barrot-southeast-blanket.png"
+        },
+        "barrot-south-bow": {
+            "file":     "textures/barrot-south-bow.png"
+        },
+        "barrot-north-bow": {
+            "file":     "textures/barrot-north-bow.png"
+        },
+        "barrot-east-bow": {
+            "file":     "textures/barrot-east-bow.png"
+        },
+        "barrot-northeast-bow": {
+            "file":     "textures/barrot-northeast-bow.png"
+        },
+        "barrot-southeast-bow": {
+            "file":     "textures/barrot-southeast-bow.png"
+        },
+        "barrot-south-diaper": {
+            "file":     "textures/barrot-south-diaper.png"
+        },
+        "barrot-north-diaper": {
+            "file":     "textures/barrot-north-diaper.png"
+        },
+        "barrot-east-diaper": {
+            "file":     "textures/barrot-east-diaper.png"
+        },
+        "barrot-northeast-diaper": {
+            "file":     "textures/barrot-northeast-diaper.png"
+        },
+        "barrot-southeast-diaper": {
+            "file":     "textures/barrot-southeast-diaper.png"
+        },
         "dash-effect-sheet": {
             "file":     "textures/dash-effect.png"
         },
@@ -418,6 +463,27 @@
         },
         "unit_br_2": {
             "file":     "textures/maps/unit_br_2.png"
+        },
+        "unit_o_1": {
+            "file":     "textures/maps/unit_o_1.png"
+        },
+        "unit_o_2": {
+            "file":     "textures/maps/unit_o_2.png"
+        },
+        "unit_o_3": {
+            "file":     "textures/maps/unit_o_3.png"
+        },
+        "unit_o_4": {
+            "file":     "textures/maps/unit_o_4.png"
+        },
+        "unit_o_5": {
+            "file":     "textures/maps/unit_o_5.png"
+        },
+        "unit_o_6": {
+            "file":     "textures/maps/unit_o_6.png"
+        },
+        "unit_o_7": {
+            "file":     "textures/maps/unit_o_7.png"
         },
         "tutorial_bottom": {
             "file":     "textures/maps/tutorial_bottom.png"
@@ -581,6 +647,9 @@
         "unit_outer_3": "level-editor/unit_outer_3.json",
         "unit_outer_4": "level-editor/unit_outer_4.json",
         "unit_outer_5": "level-editor/unit_outer_5.json",
+        "unit_outer_6": "level-editor/unit_outer_6.json",
+        "unit_outer_7": "level-editor/unit_outer_7.json",
+        "unit_outer_8": "level-editor/unit_outer_8.json",
         "tutorialTop": "level-editor/tutorialTop.json",
         "tutorialMid": "level-editor/tutorialMid.json",
         "tutorialBottom": "level-editor/tutorialBottom.json",

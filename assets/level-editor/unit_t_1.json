@@ -487,15 +487,15 @@
                  "y":32
                 }, 
                 {
-                 "height":15.6439,
+                 "height":15.64,
                  "id":154,
                  "name":"",
                  "rotation":0,
                  "type":"EnvCollidable",
                  "visible":true,
                  "width":512,
-                 "x":0,
-                 "y":0
+                 "x":-0.367769,
+                 "y":12
                 }, 
                 {
                  "gid":48,
@@ -638,7 +638,7 @@
                  "y":231
                 }, 
                 {
-                 "height":123.103,
+                 "height":113,
                  "id":161,
                  "name":"",
                  "rotation":0,
@@ -646,12 +646,12 @@
                  "visible":true,
                  "width":10.6123,
                  "x":98.2458,
-                 "y":104.103
+                 "y":118
                 }, 
                 {
                  "gid":38,
                  "height":91.1026,
-                 "id":165,
+                 "id":167,
                  "name":"",
                  "properties":[
                         {
@@ -673,19 +673,19 @@
                  "type":"Decoration",
                  "visible":true,
                  "width":107.565,
-                 "x":130.778565639544,
-                 "y":124.758370759108
+                 "x":129.722,
+                 "y":117.342
                 }, 
                 {
-                 "height":18.5072,
-                 "id":166,
+                 "height":35.8482,
+                 "id":168,
                  "name":"",
                  "rotation":0,
                  "type":"EnvCollidable",
                  "visible":true,
                  "width":81.2607,
-                 "x":148.517565639544,
-                 "y":84.2513707591077
+                 "x":147.461,
+                 "y":76.8351
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -934,7 +934,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":167,
+ "nextobjectid":169,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -944,7 +944,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="169">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="171">
  <editorsettings>
   <export target="unit_l_1.json" format="json"/>
  </editorsettings>
@@ -23,7 +23,6 @@
   <object id="145" gid="46" x="0" y="224" width="32" height="32"/>
   <object id="146" gid="46" x="0" y="256" width="32" height="32"/>
   <object id="147" gid="46" x="0" y="288" width="32" height="32"/>
-  <object id="148" type="EnvCollidable" x="0" y="0" width="20.6601" height="288"/>
   <object id="149" gid="46" x="0" y="32" width="32" height="32"/>
   <object id="150" gid="43" x="97" y="250.226" width="32" height="32"/>
   <object id="151" gid="43" x="129" y="250.226" width="32" height="32"/>
@@ -35,10 +34,12 @@
   <object id="157" gid="43" x="321" y="250.226" width="32" height="32"/>
   <object id="158" gid="43" x="353" y="250.226" width="32" height="32"/>
   <object id="159" gid="47" x="385" y="250.226" width="32" height="32"/>
-  <object id="161" type="EnvCollidable" x="404.567" y="231" width="4.57925" height="47.9474"/>
+  <object id="161" type="EnvCollidable" x="401.475" y="233" width="7.67162" height="45.9474"/>
   <object id="163" gid="45" x="385" y="282" width="32" height="32"/>
   <object id="166" gid="41" x="0.80597" y="194.817" width="311.226" height="385.574"/>
-  <object id="167" type="EnvCollidable" x="106.675" y="106.028" width="99.8615" height="17.317"/>
+  <object id="167" type="EnvCollidable" x="109" y="77" width="95" height="41"/>
+  <object id="169" type="EnvCollidable" x="99" y="233" width="306.71" height="14.1329"/>
+  <object id="170" type="EnvCollidable" x="0" y="0" width="20.6601" height="288"/>
  </objectgroup>
  <objectgroup id="7" name="entities">
   <object id="106" gid="2" x="250.181" y="128" width="32" height="32"/>

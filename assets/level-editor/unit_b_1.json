@@ -527,7 +527,7 @@
                 }, 
                 {
                  "gid":39,
-                 "height":45.9523305084745,
+                 "height":45.9523,
                  "id":188,
                  "name":"",
                  "properties":[
@@ -549,7 +549,7 @@
                  "rotation":0,
                  "type":"Decoration",
                  "visible":true,
-                 "width":22.9154780771262,
+                 "width":22.9155,
                  "x":414,
                  "y":196
                 }, 
@@ -833,7 +833,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

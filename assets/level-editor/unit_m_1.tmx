@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="174">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="174">
  <editorsettings>
   <export target="unit_m_1.json" format="json"/>
  </editorsettings>
@@ -22,7 +22,7 @@
   <object id="152" gid="45" x="224.565" y="173.351" width="32" height="32"/>
   <object id="153" gid="45" x="224.565" y="141.351" width="32" height="32"/>
   <object id="154" gid="45" x="224.565" y="205.351" width="32" height="32"/>
-  <object id="156" type="EnvCollidable" x="236.709" y="49.9366" width="11.8098" height="187.414"/>
+  <object id="156" type="EnvCollidable" x="236.709" y="49.9366" width="11.291" height="185.063"/>
   <object id="158" gid="42" x="224.565" y="237.351" width="32" height="32"/>
   <object id="159" gid="43" x="192.565" y="237.351" width="32" height="32"/>
   <object id="161" gid="49" x="236.565" y="45.3507" width="32" height="32"/>
@@ -35,9 +35,9 @@
   <object id="168" gid="48" x="428.565" y="45.3507" width="32" height="32"/>
   <object id="169" gid="48" x="460.565" y="45.3507" width="32" height="32"/>
   <object id="170" gid="48" x="492.565" y="45.3507" width="32" height="32"/>
-  <object id="171" type="EnvCollidable" x="192.481" y="218.905" width="55.4684" height="4.44684"/>
-  <object id="172" type="EnvCollidable" x="244.439" y="26.5212" width="3.97875" height="26.9151"/>
-  <object id="173" type="EnvCollidable" x="244.421" y="26.0967" width="275.97" height="5.13831"/>
+  <object id="171" type="EnvCollidable" x="194" y="220.476" width="54" height="14.4999"/>
+  <object id="172" type="EnvCollidable" x="244.439" y="28" width="3.561" height="25.4363"/>
+  <object id="173" type="EnvCollidable" x="244.421" y="28" width="278.579" height="13.6023"/>
  </objectgroup>
  <objectgroup id="7" name="entities">
   <object id="106" gid="2" x="64" y="128" width="32" height="32"/>

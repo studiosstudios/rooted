@@ -507,7 +507,7 @@
                  "visible":true,
                  "width":512,
                  "x":0,
-                 "y":0
+                 "y":12
                 }, 
                 {
                  "gid":48,
@@ -819,8 +819,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":175,
+ "nextlayerid":12,
+ "nextobjectid":192,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -830,7 +830,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

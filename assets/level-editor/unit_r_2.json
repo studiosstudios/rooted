@@ -66,45 +66,6 @@
                  "y":271
                 }, 
                 {
-                 "gid":38,
-                 "height":91.1026,
-                 "id":159,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"frame_cols",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"frame_rows",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"tractor"
-                        }],
-                 "rotation":0,
-                 "type":"Decoration",
-                 "visible":true,
-                 "width":107.565,
-                 "x":346,
-                 "y":91.507
-                }, 
-                {
-                 "height":18.5072,
-                 "id":160,
-                 "name":"",
-                 "rotation":0,
-                 "type":"EnvCollidable",
-                 "visible":true,
-                 "width":81.2607,
-                 "x":363.739,
-                 "y":51
-                }, 
-                {
                  "gid":45,
                  "height":32,
                  "id":161,
@@ -366,6 +327,45 @@
                  "width":32,
                  "x":480,
                  "y":32
+                }, 
+                {
+                 "gid":38,
+                 "height":91.1026,
+                 "id":175,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"frame_cols",
+                         "type":"int",
+                         "value":4
+                        }, 
+                        {
+                         "name":"frame_rows",
+                         "type":"int",
+                         "value":4
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"tractor"
+                        }],
+                 "rotation":0,
+                 "type":"Decoration",
+                 "visible":true,
+                 "width":107.565,
+                 "x":370.940456368526,
+                 "y":98.0387790327816
+                }, 
+                {
+                 "height":35.8482,
+                 "id":176,
+                 "name":"",
+                 "rotation":0,
+                 "type":"EnvCollidable",
+                 "visible":true,
+                 "width":81.2607,
+                 "x":388.679456368526,
+                 "y":57.5317790327816
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -650,7 +650,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":171,
+ "nextobjectid":177,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -660,7 +660,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="175">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="175">
  <editorsettings>
   <export target="unit_tr_1.json" format="json"/>
  </editorsettings>
@@ -30,7 +30,7 @@
   <object id="150" gid="48" x="384" y="32" width="32" height="32"/>
   <object id="151" gid="48" x="416" y="32" width="32" height="32"/>
   <object id="152" gid="48" x="448" y="32" width="32" height="32"/>
-  <object id="154" type="EnvCollidable" x="0" y="0" width="512" height="15.6439"/>
+  <object id="154" type="EnvCollidable" x="0" y="12" width="512" height="15.6439"/>
   <object id="155" gid="48" x="0" y="32" width="32" height="32"/>
   <object id="156" gid="47" x="480" y="32" width="32" height="32"/>
   <object id="157" gid="45" x="480" y="64" width="32" height="32"/>
@@ -46,7 +46,7 @@
   <object id="168" gid="43" x="255" y="221" width="32" height="32"/>
   <object id="169" gid="43" x="287" y="221" width="32" height="32"/>
   <object id="170" gid="43" x="319" y="221" width="32" height="32"/>
-  <object id="171" type="EnvCollidable" x="223" y="202" width="224" height="4.41112"/>
+  <object id="171" type="EnvCollidable" x="227.434" y="206.554" width="215.625" height="11.3622"/>
   <object id="172" gid="43" x="351" y="221" width="32" height="32"/>
   <object id="173" gid="43" x="383" y="221" width="32" height="32"/>
   <object id="174" gid="43" x="415" y="221" width="32" height="32"/>

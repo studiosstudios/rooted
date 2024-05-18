@@ -329,34 +329,6 @@
                  "y":32
                 }, 
                 {
-                 "gid":37,
-                 "height":160,
-                 "id":164,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"frame_cols",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"frame_rows",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"barn"
-                        }],
-                 "rotation":0,
-                 "type":"Decoration",
-                 "visible":true,
-                 "width":205.621,
-                 "x":224,
-                 "y":192
-                }, 
-                {
                  "gid":38,
                  "height":91.1026,
                  "id":165,
@@ -385,26 +357,54 @@
                  "y":182
                 }, 
                 {
-                 "height":24.0904,
-                 "id":166,
-                 "name":"",
-                 "rotation":0,
-                 "type":"EnvCollidable",
-                 "visible":true,
-                 "width":184.09,
-                 "x":236.097,
-                 "y":135.91
-                }, 
-                {
-                 "height":18.5072,
-                 "id":167,
+                 "height":35.8482,
+                 "id":170,
                  "name":"",
                  "rotation":0,
                  "type":"EnvCollidable",
                  "visible":true,
                  "width":81.2607,
-                 "x":110.739,
-                 "y":141.493
+                 "x":108.255,
+                 "y":141.972
+                }, 
+                {
+                 "gid":37,
+                 "height":174.301,
+                 "id":172,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"frame_cols",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"frame_rows",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"barn"
+                        }],
+                 "rotation":0,
+                 "type":"Decoration",
+                 "visible":true,
+                 "width":224,
+                 "x":221.616,
+                 "y":186.536
+                }, 
+                {
+                 "height":59.0496,
+                 "id":173,
+                 "name":"",
+                 "rotation":0,
+                 "type":"EnvCollidable",
+                 "visible":true,
+                 "width":200.056,
+                 "x":236.867,
+                 "y":111.644
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -641,7 +641,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":170,
+ "nextobjectid":174,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -651,7 +651,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

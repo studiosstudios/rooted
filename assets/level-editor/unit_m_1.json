@@ -214,13 +214,13 @@
                  "y":205.351
                 }, 
                 {
-                 "height":187.414,
+                 "height":185.0634,
                  "id":156,
                  "name":"",
                  "rotation":0,
                  "type":"EnvCollidable",
                  "visible":true,
-                 "width":11.8098,
+                 "width":11.291,
                  "x":236.709,
                  "y":49.9366
                 }, 
@@ -562,37 +562,37 @@
                  "y":45.3507
                 }, 
                 {
-                 "height":4.44684,
+                 "height":14.4999,
                  "id":171,
                  "name":"",
                  "rotation":0,
                  "type":"EnvCollidable",
                  "visible":true,
-                 "width":55.4684,
-                 "x":192.481,
-                 "y":218.905
+                 "width":54,
+                 "x":194,
+                 "y":220.476
                 }, 
                 {
-                 "height":26.9151,
+                 "height":25.4363,
                  "id":172,
                  "name":"",
                  "rotation":0,
                  "type":"EnvCollidable",
                  "visible":true,
-                 "width":3.97875,
+                 "width":3.56100000000001,
                  "x":244.439,
-                 "y":26.5212
+                 "y":28
                 }, 
                 {
-                 "height":5.13831,
+                 "height":13.6023,
                  "id":173,
                  "name":"",
                  "rotation":0,
                  "type":"EnvCollidable",
                  "visible":true,
-                 "width":275.97,
+                 "width":278.579,
                  "x":244.421,
-                 "y":26.0967
+                 "y":28
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -839,7 +839,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {

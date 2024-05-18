@@ -23,7 +23,7 @@
 /** Color to outline the physics nodes */
 #define DEBUG_COLOR     Color4::GREEN
 
-const bool FULL_WHEAT_HEIGHT = false; //change this to turn off wheat height and make shaders more efficient (hopefully)
+const bool FULL_WHEAT_HEIGHT = true; //change this to turn off wheat height and make shaders more efficient (hopefully)
 
 using namespace cugl;
 
@@ -645,7 +645,7 @@ void Map::spawnDecorations() {
             decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-1.6*dec->getHeight()/2)/_mapbounds.size.height/2.0);
         } else if (decName == "mill") {
             CULog("mill height: %f", dec->getHeight());
-            decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-0.66*dec->getHeight()/2)/_mapbounds.size.height/2.0);
+            decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-0.63*dec->getHeight()/2)/_mapbounds.size.height/2.0);
         } else {
             decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-dec->getHeight()/2)/_mapbounds.size.height/2.0);
         }

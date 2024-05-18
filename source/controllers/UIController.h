@@ -66,6 +66,11 @@ private:
     std::shared_ptr<cugl::scene2::Label> _speechBubbleText;
     std::shared_ptr<cugl::scene2::NinePatch> _dialogBox;
     std::shared_ptr<cugl::scene2::Label> _dialogBoxText;
+    bool _dialogBoxVisible;
+    
+    /** for easing functions */
+    float _easingtime;
+    float _dialogBoxFullScale;
 
     
     float swipeThickness = 8;

@@ -13,7 +13,7 @@ using namespace cugl;
 #pragma mark -
 #pragma mark Initializers
 
-bool CameraController::init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Rect frac) {
+bool CameraController::init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Rect frac, bool tutorial) {
     _root = root;
     _lerp = lerp;
     _camera = camera;
@@ -22,10 +22,11 @@ bool CameraController::init(const std::shared_ptr<cugl::scene2::SceneNode> root,
     _frac = frac;
     _scale = scale;
     _pos = _camera->getPosition();
-    _defaultZoom = DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale;
+    _defaultZoom = tutorial ? _camera->getZoom() : DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale;
     _zoomTarget = _defaultZoom;
     _shake = 0;
     _startTimer = HOLD_CAM; //DEAL WITH THIS IN ACTUAL CODE
+    _isTutorial = tutorial;
 
     return true;
 }

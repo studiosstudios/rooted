@@ -452,19 +452,22 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
         
         // If this swipe was already used for a dash, can't use it for any other gestures
         if (!_keyDash) {
-        
-            // Handle circle (root/unroot gesture)
-            bool validCircleGesture = (_swipePoints->size() > SWIPE_POINT_MINIMUM && _circleGesturer->match(getSwipePointsVector()).length() > 0);
-            _keyRoot = validCircleGesture;
-            _keyUnroot = validCircleGesture;
-        
-            // Handle dash
-            if (_internalSwipePoints.size() > SWIPE_POINT_MINIMUM &&
-                _lineGesturer->similarity("line", getInternalSwipePointsVector(), true) > LINE_GESTURE_SIMILARITY &&
-                _internalSwipePoints.front().first.distanceSquared(_internalSwipePoints.back().first) > SWIPE_LENGTH * SWIPE_LENGTH){
-                _keyDash = !_paused;
-                _dashPressedThisSwipe = true;
-                loadDashVector();
+            try {
+                // Handle circle (root/unroot gesture)
+                bool validCircleGesture = (_swipePoints->size() > SWIPE_POINT_MINIMUM && _circleGesturer->match(getSwipePointsVector()).length() > 0);
+                _keyRoot = validCircleGesture;
+                _keyUnroot = validCircleGesture;
+                
+                // Handle dash
+                if (_internalSwipePoints.size() > SWIPE_POINT_MINIMUM &&
+                    _lineGesturer->similarity("line", getInternalSwipePointsVector(), true) > LINE_GESTURE_SIMILARITY &&
+                    _internalSwipePoints.front().first.distanceSquared(_internalSwipePoints.back().first) > SWIPE_LENGTH * SWIPE_LENGTH){
+                    _keyDash = !_paused;
+                    _dashPressedThisSwipe = true;
+                    loadDashVector();
+                }
+            } catch (...) {
+                CULog("that annoying dollar gesture error happened again");
             }
         }
     }

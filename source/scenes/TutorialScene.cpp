@@ -68,7 +68,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _map = Map::alloc(_assets, true); // Obtains ownership of root.
 
-    _map->generate(0, 1, 2, 10, 2);
+    _map->generate(0, 1, 2, 2, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -110,8 +110,9 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
-    _cam.setZoom(zoom);
+    _camera->setZoom(zoom);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale,
+              Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size), true);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
@@ -127,7 +128,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
     addChild(_black);
-    _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
+    _map->getBabyCarrots().at(_map->getBabyCarrots().size()-1)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
     
@@ -175,7 +176,7 @@ void TutorialScene::reset() {
     // Load a new level
     _map->clearRootNode();
     _map->dispose();
-    _map->generate(0, 1, 2, 10, 2);
+    _map->generate(0, 1, 2, 2, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -208,8 +209,9 @@ void TutorialScene::reset() {
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale * std::max(dimen.width/SCENE_WIDTH, dimen.height/SCENE_HEIGHT);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
-    _cam.setZoom(zoom);
+    _camera->setZoom(zoom);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale,
+              Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size), true);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
@@ -230,7 +232,7 @@ void TutorialScene::reset() {
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
     addChild(_black);
-    _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
+    _map->getBabyCarrots().at(_map->getBabyCarrots().size()-1)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
     
@@ -321,11 +323,9 @@ void TutorialScene::preUpdate(float dt) {
             // show dialog boxes one by one
             if (_step == 0) {
                 _input->pause();
-                _ui.setSpeechBubbleVisible(true);
                 _step = 1;
             }
-            if (_step == 1 && _input->didContinue()) {
-                _ui.setSpeechBubbleVisible(false);
+            if (_step == 1) {
                 _ui.setDialogBoxVisible(true);
                 _step = 2;
                 _input->showDisplayJoystick();
@@ -940,6 +940,12 @@ void TutorialScene::activateWorldCollisions(const std::shared_ptr<physics2::Obst
     };
     world->shouldCollide = [this](b2Fixture *f1, b2Fixture *f2) {
         return _collision.shouldCollide(f1, f2);
+    };
+    world->beforeSolve = [this](b2Contact* contact, const b2Manifold* manifold) {
+        _collision.beforeSolve(contact, manifold);
+    };
+    world->afterSolve = [this](b2Contact* contact, const b2ContactImpulse* impulse) {
+        _collision.afterSolve(contact, impulse);
     };
 }
 

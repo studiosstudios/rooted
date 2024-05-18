@@ -68,7 +68,7 @@ void ActionController::preUpdate(float dt) {
     EntityModel::EntityState oldState = playerEntity->getEntityState();
     playerEntity->updateState(dt);
     if(didDash && playerEntity->getEntityState() == EntityModel::EntityState::DASHING){
-        std::cout<<"getting player swipe status: "<<playerEntity->getSwipe()<<"\n";
+//        std::cout<<"getting player swipe status: "<<playerEntity->getSwipe()<<"\n";
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
         AudioEngine::get()->play("dash", source, false, _soundScale);
     }

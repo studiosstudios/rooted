@@ -9,6 +9,7 @@
 #define __MENU_SCENE_H__
 #include <cugl/cugl.h>
 #include <vector>
+#include "../RootedConstants.h"
 
 class MenuScene : public cugl::Scene2 {
 public:

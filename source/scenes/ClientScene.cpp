@@ -105,14 +105,22 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     });
     
     _backoutclient->addListener([this](const std::string& name, bool down) {
-        if (!down) {
+        if(down){
+            std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
+            AudioEngine::get()->play("button", source, false, 0.5*_soundScale);
+        }
+        else {
             _backClicked = true;
             _network->disconnect();
         }
     });
 
     _startgame->addListener([=](const std::string& name, bool down) {
-        if (!down) {
+        if(down){
+            std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
+            AudioEngine::get()->play("button", source, false, 0.5*_soundScale);
+        }
+        else{
             if (!_gameid->getText().empty()) {
 //                switchScene();
                 _network->connectAsClient(dec2hex(_gameid->getText()));

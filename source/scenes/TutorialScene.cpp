@@ -215,7 +215,7 @@ void TutorialScene::reset() {
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
-//    Application::get()->setClearColor(Color4(142,114,78,255));
+//    Application::get()->setClearColor(C   olor4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
     _cam.setFrac(Rect(Vec2::ZERO, Vec2(1.0/3.0, 2.0/3.0)));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));

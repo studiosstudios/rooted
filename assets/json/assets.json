@@ -330,6 +330,9 @@
         },
         "Big_Icon_4" : {
             "file" : "textures/Big_Icon_4.png"
+        },
+        "statsboard": {
+            "file": "textures/statsboard.png"
         }
     },
     "jsons": {
@@ -452,6 +455,10 @@
         "gaeguBold45": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 45
+        },
+        "gaeguBold48": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 48
         },
         "gaeguBold50": {
             "file": "fonts/Gaegu-Bold.ttf",

@@ -90,6 +90,8 @@ private:
     std::shared_ptr<cugl::scene2::Label> _time;
     std::shared_ptr<cugl::scene2::Label> _babyCarrots;
     std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _carrotsRooted;
+    std::shared_ptr<cugl::scene2::Label> _rootedLabel;
+    std::shared_ptr<cugl::scene2::Label> _notRootedLabel;
     
     std::shared_ptr<cugl::scene2::Button> _nextbutton;
     std::shared_ptr<cugl::scene2::SceneNode> _playerpointinfo;
@@ -98,7 +100,6 @@ private:
     // a map from the little icon of the player to an array of the number of points you have
     std::map<std::shared_ptr<cugl::scene2::SceneNode>, std::vector<std::shared_ptr<cugl::scene2::SceneNode>>> _points;
     
-    std::shared_ptr<cugl::Texture> _filledpoint;
     // 0 = not pressed, 1 = pressed, 2 = waiting
     int _nextRound;
     

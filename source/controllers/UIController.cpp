@@ -57,6 +57,13 @@ void UIController::setEndVariables(int roundNum, int length, int babies, int car
     
     _babyCarrots->setText(std::to_string(babies));
     
+    if (_carrotsRooted.size() == 0) {
+        _notRootedLabel->setVisible(true);
+    } else {
+        _notRootedLabel->setVisible(false);
+    }
+    
+    // TODO: add map here that shows who got rooted
     for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
         _carrotsRooted.at(ii)->setVisible(ii < carrots);
     }
@@ -214,15 +221,17 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _postroundscene->setVisible(false);
     _uinode->addChild(_postroundscene);
     
-    _roundNumber = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_roundnum"));
+    _roundNumber = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_ROUNDNUM"));
     _time = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_gamelength_gametime"));
     _babyCarrots = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_babycarrotscount_numbabycarrots"));
     _carrotsRooted = {
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot"),
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_1"),
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_2"),
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_3"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_1"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_2"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_3"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_4"),
     };
+    _rootedLabel = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_rootedcarrots"));
+    _notRootedLabel = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_nonerooted"));
     
     _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
     _nextbutton->addListener([this](const std::string& name, bool down) {
@@ -243,7 +252,7 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // there are 4 (0-3) rows with 10 (0-9)
     // playerpoints_playerpoints_playerpointinfo_x
-    // playerpoints_playerpoints_playerpointinfo_x_points_emptypoint_x
+    // playerpoints_playerpoints_playerpointinfo_x_emptypoints_emptypoint_x
     // playerpoints_playerpoints_playerpointinfo_x_fullpoints_fullpoint_x
     _points.clear();
     for (int ii = 0; ii < 4; ii++) {
@@ -271,9 +280,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
             _nextRound = 1;
         }
     });
-        
-    // get the filled in texture
-//    _filledpoint = _assets->get<Texture>("filledpoint");
     
     _nextRound = 0;
     

@@ -129,6 +129,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _black->setColor(Color4::CLEAR);
     addChild(_black);
     _map->getBabyCarrots().at(_map->getBabyCarrots().size()-1)->setBodyType(b2BodyType::b2_staticBody);
+    _map->getBabyCarrots().at(_map->getBabyCarrots().size()-1)->setSensor(true);
     
     _pausePhysics = false;
     
@@ -158,6 +159,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
  */
 void TutorialScene::dispose() {
     if (_active) {
+        _input->dispose();
         _input = nullptr;
         _rootnode = nullptr;
         _uinode = nullptr;
@@ -989,6 +991,7 @@ void TutorialScene::postUpdate(float remain) {
         case ROCK:
             if (_map->getFarmers().at(0)->isStunned()) {
                 _time = 0;
+                _character->setSensor(true);
                 _state = FARMERRUNS;
                 _input->pause();
             }
@@ -999,7 +1002,9 @@ void TutorialScene::postUpdate(float remain) {
                 _state = LASTBABY;
                 _time = 0;
                 _character = _map->changeCharacter(_carrotUUID);
+                _character->setSensor(false);
                 _map->getBabyCarrots().at(0)->setBodyType(b2BodyType::b2_dynamicBody);
+                _map->getBabyCarrots().at(0)->setSensor(false);
             }
             break;
         case CARROTWIN:
@@ -1062,6 +1067,7 @@ void TutorialScene::postUpdate(float remain) {
                 carrot1->resetCarrot();
                 carrot2->resetCarrot();
                 carrot1->setPosition(x*1.2, y*0.5);
+                _returnToMenu = true;
 //                carrot2->setPosition(x*0.8, y*0.5);
                 
             }

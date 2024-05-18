@@ -59,6 +59,7 @@ public:
         _map = nullptr;
         _world = nullptr;
         _network = nullptr;
+        _ai = nullptr;
     }
 
     /**

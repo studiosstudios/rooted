@@ -582,6 +582,10 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 16
         },
+        "gaeguBold20": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 20
+        },
         "gaeguBold30": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 30

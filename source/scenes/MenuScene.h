@@ -67,6 +67,10 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _swipedirbutton;
     std::shared_ptr<cugl::scene2::Button> _dashinfobutton;
     std::shared_ptr<cugl::scene2::Button> _hapticsbutton;
+    std::shared_ptr<cugl::scene2::Slider> _soundslider;
+    std::shared_ptr<cugl::scene2::Slider> _musicslider;
+    std::shared_ptr<cugl::scene2::SceneNode> _popup;
+    std::shared_ptr<cugl::scene2::Button> _popupclose;
     
     /** The player menu choice (for the external scene manager, i.e. the main app) */
     Choice _choice;
@@ -138,6 +142,8 @@ public:
     Choice getChoice() const { return _choice; }
     
     void switchScene(MenuScene::Choice sceneType);
+    
+    void togglePopup(bool active);
     
 };
 

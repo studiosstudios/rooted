@@ -124,6 +124,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _dashinfobutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_dashinfo"));
     _dashinfobutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
+            togglePopup(true);
         }
     });
     _hapticsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_hapticsoption_boxselect"));
@@ -131,6 +132,28 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
         if (!down) {
         }
     });
+    _soundslider = std::dynamic_pointer_cast<scene2::Slider>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_soundoption_slider"));
+    _soundslider->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            CULog("sound");
+        }
+    });
+    _musicslider = std::dynamic_pointer_cast<scene2::Slider>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_musicoption_slider"));
+    _musicslider->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            CULog("music");
+        }
+    });
+    // do not add these to the map
+    _popup = _assets->get<scene2::SceneNode>("optionsmenu_popup");
+    _popupclose = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_popup_exitpopup"));
+    _popupclose->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            togglePopup(false);
+        }
+    });
+    
+    Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
     
     std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _joystickdirbutton, _swipedirbutton, _dashinfobutton, _hapticsbutton};
     _screenButtonMap.insert({Choice::SETTINGS, optionsbuttons});
@@ -218,16 +241,33 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
         }
         switch (sceneType) {
             case MAIN:
+                _soundslider->deactivate();
+                _musicslider->deactivate();
                 addChild(_menuscene);
                 break;
             case LOBBY:
+                _soundslider->deactivate();
+                _musicslider->deactivate();
                 addChild(_lobbyscene);
                 break;
             case SETTINGS:
+                // activate stuff for settings specific things
+                _soundslider->activate();
+                _musicslider->activate();
                 addChild(_optionsscene);
                 break;
             default:
                 break;
         }
+    }
+}
+
+void MenuScene::togglePopup(bool active) {
+    _popup->setVisible(active);
+    if (active) {
+        _popupclose->activate();
+    } else {
+        _popupclose->deactivate();
+        _popupclose->setDown(false);
     }
 }

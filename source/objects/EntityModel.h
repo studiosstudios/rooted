@@ -570,46 +570,14 @@ public:
         }
     }
     
-//    /**
-//     * Sets all of the sprite nodes associated with this EntityModel
-//     *
-//     * This currently only includes the 5-directional movement sprites, but
-//     * TODO: It should later include all action sprites.
-//     */
-//    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northWalkNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastWalkNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastWalkNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastWalkNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southWalkNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northRunNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastRunNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastRunNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastRunNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northDashNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastDashNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastDashNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastDashNode,
-//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southDashNode) {
-//        _northWalkSprite = northWalkNode;
-//        _northEastWalkSprite = northEastWalkNode;
-//        _eastWalkSprite = eastWalkNode;
-//        _southEastWalkSprite = southEastWalkNode;
-//        _southWalkSprite = southWalkNode;
-//        
-//        _northRunSprite = northRunNode;
-//        _northEastRunSprite = northEastRunNode;
-//        _eastRunSprite = eastRunNode;
-//        _southEastRunSprite = southEastRunNode;
-//        _southRunSprite = southRunNode;
-//        
-//        _northDashSprite = northDashNode;
-//        _northEastDashSprite = northEastDashNode;
-//        _eastDashSprite = eastDashNode;
-//        _southEastDashSprite = southEastDashNode;
-//        _southDashSprite = southDashNode;
-//    }
-    
+    void setAnimationFrame(int frame) {
+        if (_node != nullptr) {
+            frame = frame % _node->getSpan();
+            curAnimTime = (frame / _node->getSpan()) * curAnimDuration;
+            _node->setFrame(frame);
+        }
+    }
+        
     /**
      * Sets  the dash effect sprite nodes associated with this EntityModel
      *

@@ -622,6 +622,7 @@ EntityModel::DirectionalSprites Map::initEntityDirectionalSprites(std::string pr
         node->setScale(scale * _scale/DEFAULT_DRAWSCALE);
         node->setPriority(float(Map::DrawOrder::ENTITIES));
         node->setVisible(false);
+        node->setFrame(0);
         _entitiesNode->addChild(node);
         nodes.push_back(node);
     }
@@ -760,6 +761,9 @@ void Map::spawnFarmers() {
 }
 
 void Map::spawnBabyCarrots() {
+    int barrotModifierCount = 0;
+    int barrotModifierThreshold = (int) _babyCarrotSpawns.size() / 4;
+    std::vector<std::string> barrotModifiers {"-walk", "-blanket", "-bow", "-diaper"};
     for (Rect rect : _babyCarrotSpawns) {
         std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, Size(BARROT_WIDTH, BARROT_HEIGHT), _scale.x);
         baby->setEntityState(EntityModel::EntityState::WALKING);
@@ -771,9 +775,10 @@ void Map::spawnBabyCarrots() {
         baby->setRockColliderSize(Size(BARROT_ROCK_HITBOX_WIDTH, BARROT_ROCK_HITBOX_HEIGHT));
         _babies.push_back(baby);
         
-        // TODO: Stagger baby carrot animation times with a random number generator -CJ
-        auto walkDS = initEntityDirectionalSprites("barrot-", "-walk", 0.125f);
+        int barrotModifierSelector = std::min((barrotModifierCount++ % barrotModifierThreshold), ((int) barrotModifiers.size()) - 1);
+        auto walkDS = initEntityDirectionalSprites("barrot-", barrotModifiers.at(barrotModifierSelector), 0.125f);
         baby->setWalkSprites(walkDS);
+        baby->setAnimationFrame(barrotModifierCount); //reusing the modifier count to be set as the frame for this barrot
         
         baby->setSceneNode(walkDS.southSprite);
         baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM

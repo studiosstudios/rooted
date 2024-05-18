@@ -90,8 +90,10 @@ void UIController::setSpeechBubbleVisible(bool visible) {
 }
 
 void UIController::setDialogBoxVisible(bool visible) {
-    _easingtime = 0;
-    _dialogBoxVisible = visible;
+    if (visible != _dialogBoxVisible) {
+        _easingtime = 0;
+        _dialogBoxVisible = visible;
+    }
 }
 
 void UIController::setDialogBoxText(std::string text) {

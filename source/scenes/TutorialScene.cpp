@@ -352,7 +352,7 @@ void TutorialScene::preUpdate(float dt) {
                     _step = 2;
                     _input->unpause();
                 } else {
-                    _lefthandNode->setPosition(Vec2(SCENE_WIDTH*(0.165 + std::sin(_time * 1.3) * 0.06), SCENE_HEIGHT/2)/_cam.getCamera()->getZoom());
+                    _lefthandNode->setPosition(Vec2(SCENE_WIDTH*(0.155 + std::sin(_time * 1.3) * 0.06), SCENE_HEIGHT/2)/_cam.getCamera()->getZoom());
                     _lefthandNode->setColor(Color4(255, 255, 255, 255 * std::clamp(_time - 1.0f, 0.0f, 1.0f)));
                     _fakejoyBack->setColor(Color4(255, 255, 255, 255 * std::clamp(_time - 1.0f, 0.0f, 1.0f)));
                 }
@@ -476,8 +476,6 @@ void TutorialScene::preUpdate(float dt) {
 
             break;
         }
-        case ROCK:
-            break;
         case UNROOT: {
             if (_time > 0.25 && _step < 7) {
                 _character = _map->changeCharacter(_carrot2UUID);
@@ -505,7 +503,7 @@ void TutorialScene::preUpdate(float dt) {
                     
                     //move farmer
                     auto farmer = _map->getFarmers().at(0);
-                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
+                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.15);
                     farmer->updateState(dt);
                     farmer->applyForce();
                     farmer->stepAnimation(dt);
@@ -546,7 +544,7 @@ void TutorialScene::preUpdate(float dt) {
             
             //move farmer
             auto farmer = _map->getFarmers().at(0);
-            farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
+            farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.15);
             farmer->updateState(dt);
             farmer->applyForce();
             farmer->stepAnimation(dt);
@@ -559,6 +557,74 @@ void TutorialScene::preUpdate(float dt) {
             carrot->applyForce();
             carrot->stepAnimation(dt);
         }
+            break;
+        case ROCK: {
+            if (_map->getRocks().size() > 0 && _step == 7) {
+                _step = 0;
+                _time = 0;
+                _ui.setDialogBoxVisible(true);
+                _ui.setDialogBoxText("A rock has spawned! Pick it up and double tap to throw it at the farmer to stun them!");
+                _righthandNode->setVisible(true);
+                _righthandNode->setColor(Color4::CLEAR);
+                _input->pause();
+            }
+            
+            if (_step <= 7 && _map->getRocks().size() == 0 && !_character->hasRock()) {
+                _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(Vec2(7.5, 12.5), 0, Vec2::ZERO, ""));
+            }
+            
+            if (_step == 0) {
+                _cam.setTarget(_map->getRocks().at(0)->getPosition()*_scale);
+                if (_input->didContinue()) {
+                    _step = 1;
+                    _ui.setDialogBoxVisible(false);
+                    _input->unpause();
+                } else {
+                    _righthandNode->setColor(Color4(255,255,255, 255 * std::min(1.0f, _time * 2.0f)));
+                    
+                    float mtime = fmod(_time, 1.5);
+                    if (mtime < 0.2 || (mtime > 0.3 && mtime < 0.4) || (mtime > 0.5)) {
+                        _righthandNode->setPosition(Vec2(SCENE_WIDTH*0.85, SCENE_HEIGHT*0.55)/_cam.getCamera()->getZoom());
+                    } else {
+                        _righthandNode->setPosition(Vec2(SCENE_WIDTH*0.85, SCENE_HEIGHT*0.5)/_cam.getCamera()->getZoom());
+                    }
+                    
+                }
+            } else {
+                _righthandNode->setColor(Color4(255,255,255, _righthandNode->getColor().a * 0.7));
+                
+                _action.preUpdate(dt);
+                _cam.setTarget(_character->getPosition()*_scale);
+                
+                auto farmer = _map->getFarmers().at(0);
+                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.15);
+                farmer->updateState(dt);
+                farmer->applyForce();
+                farmer->stepAnimation(dt);
+            }
+            
+            break;
+        }
+        case FARMERRUNS:
+            {
+            if (_character->getName() == "carrot") { //wait until carrot animation finishes
+                _action.preUpdate(dt);
+                if (_character->getEntityState() == EntityModel::EntityState::STANDING) {
+                    changeCharacter(_farmerUUID);
+                    _time = 0;
+                    _step = 7;
+                }
+            } else {
+                //move farmer
+                if (_time > 1.2) {
+                    _character->setMovement(Vec2(0, 1));
+                }
+                _character->updateState(dt);
+                _character->applyForce();
+                
+            }
+                _cam.setTarget(_character->getPosition()*_scale);
+            }
             break;
         case BABYENTERS: {
             if (_map->getBabyCarrots().at(0)->getY() < 17) {
@@ -579,7 +645,7 @@ void TutorialScene::preUpdate(float dt) {
                 
                 //move farmer
                 auto farmer = _map->getFarmers().at(0);
-                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
+                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.15);
                 farmer->updateState(dt);
                 farmer->applyForce();
                 farmer->stepAnimation(dt);
@@ -599,7 +665,7 @@ void TutorialScene::preUpdate(float dt) {
                     }
                     //move farmer
                     auto farmer = _map->getFarmers().at(0);
-                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
+                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.15);
                     farmer->updateState(dt);
                     farmer->applyForce();
                     farmer->stepAnimation(dt);
@@ -748,6 +814,16 @@ void TutorialScene::fixedUpdate(float step) {
         if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
             _action.processFreeEvent(freeEvent);
         }
+        if (_state == ROCK) {
+            if(auto spawnRockEvent = std::dynamic_pointer_cast<SpawnRockEvent>(e)){
+                _action.processSpawnRockEvent(spawnRockEvent);
+            }
+        }
+        if (_state == ROCK) {
+            if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
+                _action.processCollectedRockEvent(collectedRockEvent);
+            }
+        }
     }
      
     if (!_pausePhysics) _map->getWorld()->update(step);
@@ -846,7 +922,7 @@ void TutorialScene::postUpdate(float remain) {
                 changeCharacter(_carrot2UUID);
                 _character->setPosition(plantingspot->getPosition());
                 changeCharacter(_farmerUUID);
-                _character->setPosition(plantingspot->getPosition());
+                _character->setPosition(plantingspot->getPosition() + Vec2(0, 0.75));
                 auto e = RootEvent::allocRootEvent(_carrot2UUID, plantingspot->getPlantingID(), _character->getPosition());
                 _action.processRootEvent(std::dynamic_pointer_cast<RootEvent>(e));
                 
@@ -882,8 +958,10 @@ void TutorialScene::postUpdate(float remain) {
         case CARROTLEAVES:
             if (_map->getCarrots().at(1)->getX() < -2) {
                 _time = 0;
-                _map->getBabyCarrots().at(0)->setBodyType(b2BodyType::b2_dynamicBody);
-                _state = BABYENTERS;
+                _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(Vec2(7.5, 12.5), 0, Vec2::ZERO, ""));
+                _state = ROCK;
+                _character->setLinearVelocity(Vec2::ZERO);
+                _map->getFarmers().at(0)->setLinearVelocity(Vec2::ZERO);
             }
             break;
         case BABYENTERS:
@@ -909,6 +987,20 @@ void TutorialScene::postUpdate(float remain) {
             }
             break;
         case ROCK:
+            if (_map->getFarmers().at(0)->isStunned()) {
+                _time = 0;
+                _state = FARMERRUNS;
+                _input->pause();
+            }
+            break;
+        case FARMERRUNS:
+            if (_map->getFarmers().at(0)->getY() > 24) {
+                _input->unpause();
+                _state = LASTBABY;
+                _time = 0;
+                _character = _map->changeCharacter(_carrotUUID);
+                _map->getBabyCarrots().at(0)->setBodyType(b2BodyType::b2_dynamicBody);
+            }
             break;
         case CARROTWIN:
             if (_time > 1.5){

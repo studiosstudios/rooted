@@ -551,11 +551,14 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
             ++carrot;
         }
         else {
+            // This is the carrot that was added to ensure proper costume customization, but because it is the current bunny's, we must remove it
             auto pit = std::find(_players.begin(), _players.end(), *carrot);
             if (pit != _players.end()) {
-                _players.erase(pit);
+                _players.erase(pit); // Remove from players vec
             }
-            _entitiesNode->removeChild((*carrot)->getSceneNode());
+            _entitiesNode->removeChild((*carrot)->getSceneNode()); // Remove from scene2d node
+            _world->removeObstacle((*carrot)); // Remove from box2d world
+            // Not currently explicitly removing the debug and associated wheatnode... Not sure if that's OK
             carrot = _carrots.erase(carrot);
         }
     }

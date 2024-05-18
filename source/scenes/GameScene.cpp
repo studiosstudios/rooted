@@ -264,6 +264,7 @@ void GameScene::unload() {
  * This method disposes of the world and creates a new one.
  */
 void GameScene::reset() {
+//    if (!_mapGen) { _mapGen = true; }
     // Load a new level
     _seed++;
     _map->clearRootNode();
@@ -375,21 +376,15 @@ void GameScene::gameReset() {
 void GameScene::preUpdate(float dt) {
     _time += dt;
     if (_mapGen) {
-        
-        CULog("map generation go");
         CULog("time: %f", _time);
-        if (_genTimes.size() == 0) {
-            _justGenerated = false;
-            _mapGen = false;
-            _time = 0.0;
-        }
-        else if (_time > _genTimes.front() && !_justGenerated) {
-            CULog("generated another map");
-            _justGenerated = true;
-            _genTimes.pop_front();
-            reset();
-        } else if (_time > _genTimes.front()) {
-            _justGenerated = false;
+        if (_genTimes.size() > 0) {
+            if (_time > _genTimes.front() && !_justGenerated) {
+                _justGenerated = true;
+                _genTimes.pop_front();
+                reset();
+            } else if (_time > _genTimes.front()) {
+                _justGenerated = false;
+            }
         }
     }
   
@@ -444,6 +439,9 @@ void GameScene::fixedUpdate(float step) {
     if (_mapGen) {
         _map->getWorld()->update(step);
         _map->updateShaders(step, _cam.getCamera()->getCombined());
+        _cam.setShake(_character->getStunTime() * STUN_SCREEN_SHAKE);
+        _cam.setTarget(_character->getPosition()*_scale);
+        _cam.update(step);
     }
     else {
         // Turn the physics engine crank.
@@ -552,6 +550,11 @@ void GameScene::fixedUpdate(float step) {
  */
 void GameScene::postUpdate(float remain) {
     if (_mapGen) {
+        if (_genTimes.size() == 0 && _time > 3.0f) {
+            _justGenerated = false;
+            _mapGen = false;
+            _time = 0.0;
+        }
         _map->getWorld()->garbageCollect();
     }
     else {

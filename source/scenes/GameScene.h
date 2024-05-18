@@ -259,6 +259,8 @@ public:
     * @param value whether the level is failed.
     */
     void setFailure(bool value);
+    
+    void setMapGen(bool value) { _mapGen = value; }
 
 
 #pragma mark -

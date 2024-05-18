@@ -266,8 +266,5 @@ void MenuScene::togglePopup(bool active) {
     _popup->setVisible(active);
     if (active) {
         _popupclose->activate();
-    } else {
-        _popupclose->deactivate();
-        _popupclose->setDown(false);
-    }
+    } 
 }

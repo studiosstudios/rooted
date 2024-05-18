@@ -25,10 +25,12 @@
 #define MAP_UNIT_HEIGHT   9.0f
 /** The number of map rows/cols to spawn (including outer maps) */
 #define NUMBER_MAP_UNITS  5
+/** How much of the world outside the map is shown */
+#define OUTER_MAP_BORDER 2.0f
 /** Default drawscale */
 #define DEFAULT_DRAWSCALE 32.0f
 /** Zoom of camera relative to scene */
-#define DEFAULT_CAMERA_ZOOM 1.0f
+#define DEFAULT_CAMERA_ZOOM 2.0f
 /** Camera gliding rate */
 #define CAMERA_GLIDE_RATE 0.06f
 /** Camera zoom rate **/

@@ -139,7 +139,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
     
     bool showGrid = true; //change this to show the grid in debug
     if (showGrid) {
-        for (int x = 0; x < _mapbounds.size.width; x++) {
+        for (int x = 0; x < _worldbounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _worldbounds.size.height)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -147,7 +147,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
             _debugnode->addChild(rect);
         }
         
-        for (int y = 0; y < _mapbounds.size.height; y++) {
+        for (int y = 0; y < _worldbounds.size.height; y++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(_worldbounds.size.width, 1)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -213,9 +213,9 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
 void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarrots, int numPlantingSpots){
     
     if (_tutorial) {
-        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * NUMBER_MAP_UNITS);
-        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * NUMBER_MAP_UNITS));
-        _mapInfo.resize(1, std::vector<std::pair<std::string, float>>(NUMBER_MAP_UNITS));
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
+        _mapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT * 3));
+        _mapInfo.resize(1, std::vector<std::pair<std::string, float>>(3));
         
         //load in tutorial map
         std::shared_ptr<JsonValue> json = _assets->get<JsonValue>("tutorialBottom");
@@ -228,11 +228,11 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     } else {
         _rand32.seed(randSeed);
         _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * NUMBER_MAP_UNITS);
-        _mapbounds.set(_worldbounds);
-        _innermapbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * (NUMBER_MAP_UNITS-2));
-        _innermapbounds.origin.set(_mapbounds.origin);
+        _mapbounds.set(Rect(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT, MAP_UNIT_WIDTH * 3, MAP_UNIT_HEIGHT * 3));
+        _mapbounds.origin -= Vec2(1.6, 0.9) * OUTER_MAP_BORDER;
+        _mapbounds.size += 2 * Vec2(1.6, 0.9) * OUTER_MAP_BORDER;
         
-        _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
+        _mapInfo.resize(_worldbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_worldbounds.size.height / MAP_UNIT_HEIGHT));
         
         //randomly select a map for each location and object info lists
 //        for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
@@ -244,11 +244,11 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
 //        }
         
         //randomly select a map for each position
-        for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
-            for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
+        for (int i = 0; i < _worldbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
+            for (int j = 0; j < _worldbounds.size.height / MAP_UNIT_HEIGHT; j++) {
                 std::string mapName;
                 //outer
-                if (i == 0 || i == _mapbounds.size.width / MAP_UNIT_WIDTH - 1 || j == 0 || j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                if (i == 0 || i == _worldbounds.size.width / MAP_UNIT_WIDTH - 1 || j == 0 || j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 1) {
                     mapName = _mapNamesOuter[floor(float(_rand32()) / _rand32.max() * _mapNamesOuter.size())];
                 }
                 //bottom left
@@ -256,31 +256,31 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
                     mapName = _mapNamesBL[floor(float(_rand32()) / _rand32.max() * _mapNamesBL.size())];
                 }
                 //top left
-                else if (i == 1 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                else if (i == 1 && j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesTL[floor(float(_rand32()) / _rand32.max() * _mapNamesTL.size())];
                 }
                 //bottom right
-                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
+                else if (i == _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
                     mapName = _mapNamesBR[floor(float(_rand32()) / _rand32.max() * _mapNamesBR.size())];
                 }
                 //top right
-                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                else if (i == _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesTR[floor(float(_rand32()) / _rand32.max() * _mapNamesTR.size())];
                 }
                 //bottom
-                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
+                else if (i < _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
                     mapName = _mapNamesB[floor(float(_rand32()) / _rand32.max() * _mapNamesB.size())];
                 }
                 //top
-                else if (i < _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                else if (i < _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesT[floor(float(_rand32()) / _rand32.max() * _mapNamesT.size())];
                 }
                 //left
-                else if (i == 1 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                else if (i == 1 && j < _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesL[floor(float(_rand32()) / _rand32.max() * _mapNamesL.size())];
                 }
                 //right
-                else if (i == _mapbounds.size.width / MAP_UNIT_WIDTH - 2 && j < _mapbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                else if (i == _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j < _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
                     mapName = _mapNamesR[floor(float(_rand32()) / _rand32.max() * _mapNamesR.size())];
                 }
                 
@@ -410,10 +410,10 @@ void Map::populate() {
     spawnBabyCarrots();
     
     //place boundary walls
-    loadBoundary(Vec2(-0.5, _mapbounds.size.height/2), Size(1, _mapbounds.size.height));
-    loadBoundary(Vec2(_mapbounds.size.width+0.5, _mapbounds.size.height/2), Size(1, _mapbounds.size.height));
-    loadBoundary(Vec2(_mapbounds.size.width/2, -0.5), Size(_mapbounds.size.width, 1));
-    loadBoundary(Vec2(_mapbounds.size.width/2, _mapbounds.size.height+0.5), Size(_mapbounds.size.width, 1));
+    loadBoundary(Vec2(-0.5, _mapbounds.size.height/2)  + _mapbounds.origin, Size(1, _mapbounds.size.height));
+    loadBoundary(Vec2(_mapbounds.size.width+0.5, _mapbounds.size.height/2) + _mapbounds.origin, Size(1, _mapbounds.size.height));
+    loadBoundary(Vec2(_mapbounds.size.width/2, -0.5) + _mapbounds.origin, Size(_mapbounds.size.width, 1));
+    loadBoundary(Vec2(_mapbounds.size.width/2, _mapbounds.size.height+0.5) + _mapbounds.origin, Size(_mapbounds.size.width, 1));
     
     //add grass background node
     float grassScale = 16.0 * DEFAULT_DRAWSCALE / _scale.x;

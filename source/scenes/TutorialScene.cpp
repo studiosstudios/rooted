@@ -108,14 +108,14 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
     _cam.setZoom(zoom);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
     Application::get()->setClearColor(Color4::CLEAR);
-    _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
+    _cam.setFrac(Rect(Vec2::ZERO, Vec2(1.0/3.0, 2.0/3.0)));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
     
     _input->pause();
@@ -206,7 +206,7 @@ void TutorialScene::reset() {
     _cam.setZoom(zoom);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
     _cam.setZoom(zoom);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
@@ -215,7 +215,7 @@ void TutorialScene::reset() {
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
-    _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
+    _cam.setFrac(Rect(Vec2::ZERO, Vec2(1.0/3.0, 2.0/3.0)));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won

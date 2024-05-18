@@ -104,6 +104,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         _facing = SOUTH;
         _state = STANDING;
         _prevState = STANDING;
+        updateSprite(0);
         updateCurAnimDurationForState();
         
         return true;
@@ -114,6 +115,11 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
 #pragma mark -
 #pragma mark Animation
 
+
+void EntityModel::updateCurAnimDurationForState() {
+    curAnimTime = 0;
+}
+
 /**
     Whether this EntityModel should step in its animation for this frame.
  
@@ -121,7 +127,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING;
+    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING || _state == STANDING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -172,7 +178,6 @@ EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
             break;
         }
     }
-//    std::cout << "Ang: " << ang << " | Dir: " << dir << "\n";
     return dir;
 }
 
@@ -190,23 +195,21 @@ void EntityModel::setMovement(Vec2 movement) {
 EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(EntityState state) {
     switch (state) {
         case STANDING:
-        case SNEAKING:
-        case WALKING:
         case STUNNED:  // TBI
         case CARRYING: // This is handled in Farmer's method, but otherwise we will use the walk sprites
+            return _idleSprites;
+        case SNEAKING:
+        case WALKING:
         case ROOTING:  // TBI
         case CAUGHT:   // TBI
         case ROOTED:   // TBI
         case UNROOTING:// TBI
             return _walkSprites;
-            break;
         case RUNNING:
             return _runSprites;
-            break;
         case DASHING:
             makeDashEffect();
             return _dashSprites;
-            break;
     }
 }
 
@@ -345,6 +348,11 @@ void EntityModel::dispose() {
     _dashEffectSprite = nullptr;
 }
 
+void EntityModel::resetStateCooldowns() {
+    dashTimer = 0;
+    curAnimTime = 0;
+}
+
 /**
  *  Steps the state machine of this EntityModel.
  *
@@ -358,6 +366,7 @@ void EntityModel::updateState(float dt) {
     if (_dashCooldown > 0) {
         _dashCooldown = std::max(0.0f, _dashCooldown - dt);
     }
+    
     
     _prevState = _state;
     bool stateChanged = false;
@@ -429,6 +438,7 @@ void EntityModel::updateState(float dt) {
 void EntityModel::stun() {
     _state = STUNNED;
     _stunTime = STUN_SECS;
+    resetStateCooldowns();
     // TODO: updateSprite would need to be called here if we get a sprite
 }
 

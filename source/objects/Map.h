@@ -400,7 +400,7 @@ private:
     
 //    void initEntitySpriteNode(const std::shared_ptr<scene2::SpriteNode>& node);
     
-    EntityModel::DirectionalSprites initEntityDirectionalSprites(std::string prefix, std::string suffix, float scale = 0.15f);
+    EntityModel::DirectionalSprites initEntityDirectionalSprites(std::string prefix, std::string suffix, float scale = 0.15f, bool anchorDown = false);
     
     /**
      * Adds a boundary box obstacle to the world.

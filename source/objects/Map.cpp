@@ -735,7 +735,7 @@ void Map::spawnFarmers() {
         farmer->setDashColliderSize(Size(FARMER_DASH_HITBOX_WIDTH, FARMER_DASH_HITBOX_HEIGHT));
         farmer->setRockColliderSize(Size(FARMER_ROCK_HITBOX_WIDTH, FARMER_ROCK_HITBOX_HEIGHT));
         
-        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
+        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(DASH_EFFECT_SPRITE), 2, 6);
         dashEffectNode->setVisible(false);
         dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
         dashEffectNode->setPriority(float(Map::DrawOrder::CLOUDS));
@@ -866,7 +866,7 @@ void Map::spawnCarrots() {
         carrot->setSceneNode(walkDS.southSprite);
         carrot->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         
-        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
+        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(DASH_EFFECT_SPRITE), 2, 6);
         dashEffectNode->setVisible(false);
         dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
         dashEffectNode->setPriority(float(Map::DrawOrder::CLOUDS));

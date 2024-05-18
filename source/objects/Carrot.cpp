@@ -59,6 +59,7 @@ void Carrot::escaped(){
 }
 
 void Carrot::updateCurAnimDurationForState() {
+    EntityModel::updateCurAnimDurationForState();
     switch (_state) {
             // TODO: This needs to be split up into the correct animDurations for each type of movement states
         case SNEAKING:

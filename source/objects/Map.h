@@ -123,6 +123,7 @@ private:
     std::vector<std::vector<std::pair<std::string, float>>> _mapInfo;
 
     bool _tutorial;
+    bool _swipe;
     
     std::vector<std::string> _playerUUIDs;
     std::string _farmerUUID;
@@ -340,6 +341,17 @@ public:
     void resetPlayers();
     
     bool isFarmer() { return _character->getUUID() == _farmerUUID; }
+    
+    void setSwipe(bool b){
+        _swipe = b;
+        _farmers.at(0)->setSwipe(_swipe);
+        for(auto c : _carrots){
+            c->setSwipe(_swipe);
+        }
+        for(auto b : _babies){
+            b->setSwipe(_swipe);
+        }
+    }
 
 #pragma mark -
 #pragma mark Rock
@@ -388,7 +400,7 @@ private:
     
 //    void initEntitySpriteNode(const std::shared_ptr<scene2::SpriteNode>& node);
     
-    EntityModel::DirectionalSprites initEntityDirectionalSprites(std::string prefix, std::string suffix, float scale = 0.15f);
+    EntityModel::DirectionalSprites initEntityDirectionalSprites(std::string prefix, std::string suffix, float scale = 0.15f, bool anchorDown = false);
     
     /**
      * Adds a boundary box obstacle to the world.

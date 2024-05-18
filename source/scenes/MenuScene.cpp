@@ -99,15 +99,91 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
         }
     });
     
-    // TODO: SET UP OPTIONS SCENE HERE
-    // only temp until we have another way to access the tutorial again
+    // SET UP OPTIONS SCENE
+    _optionsscene = _assets->get<scene2::SceneNode>("optionsmenu");
+    _optionsscene->setContentSize(dimen);
+    _optionsscene->doLayout();
+    
+    _backoutoptions = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_back"));
+    _backoutoptions->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _choice = Choice::MAIN;
+            _currmenuchoice = Choice::MAIN;
+        }
+    });
+    _joystickdirbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_joystick_joystickdirection"));
+    _joystickdirbutton->setToggle(true);
+    _joystickdirbutton->setDown(false);
+    _joystickdirbutton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _swipedirbutton->setDown(false);
+        } else {
+            _swipedirbutton->setDown(true);
+        }
+    });
+    _swipedirbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_swipe_swipedirection"));
+    _swipedirbutton->setToggle(true);
+    _swipedirbutton->setDown(true);
+    _swipedirbutton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _joystickdirbutton->setDown(false);
+        } else {
+            _joystickdirbutton->setDown(true);
+        }
+    });
+    _dashinfobutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_dashinfo"));
+    _dashinfobutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            togglePopup(true);
+        }
+    });
+    _hapticsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_hapticsoption_boxselect"));
+    _hapticsbutton->setToggle(true);
+    _hapticsbutton->setDown(true);
+    _hapticsbutton->addListener([this](const std::string& name, bool down) {
+        CULog("toggle button");
+    });
+    _soundslider = std::dynamic_pointer_cast<scene2::Slider>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_soundoption_slider"));
+    _soundslider->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            CULog("sound");
+        }
+    });
+    _musicslider = std::dynamic_pointer_cast<scene2::Slider>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_musicoption_slider"));
+    _musicslider->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            CULog("music");
+        }
+    });
+    // do not add these to the map
+    _popup = _assets->get<scene2::SceneNode>("optionsmenu_popup");
+    _popupclose = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_popup_exitpopup"));
+    _popupclose->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            togglePopup(false);
+        }
+    });
+    
+#ifndef CU_TOUCH_SCREEN
+    Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
+#endif
+    
+    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _dashinfobutton};
+    _screenButtonMap.insert({Choice::SETTINGS, optionsbuttons});
+    
     _optionsbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            _choice = Choice::TUTORIAL;
+            _choice = Choice::SETTINGS;
         }
     });
     
     // TODO: SET UP STATS SCENE HERE
+    // only temp until we have another way to access the tutorial again
+    _statsbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _choice = Choice::TUTORIAL;
+        }
+    });
     
     // set choices
     _choice = NONE;
@@ -178,13 +254,55 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
         }
         switch (sceneType) {
             case MAIN:
+                _swipedirbutton->deactivate();
+                _joystickdirbutton->deactivate();
+                _soundslider->deactivate();
+                _musicslider->deactivate();
+                _hapticsbutton->deactivate();
                 addChild(_menuscene);
                 break;
             case LOBBY:
+                _swipedirbutton->deactivate();
+                _joystickdirbutton->deactivate();
+                _soundslider->deactivate();
+                _musicslider->deactivate();
+                _hapticsbutton->deactivate();
                 addChild(_lobbyscene);
+                break;
+            case SETTINGS:
+                // activate stuff for settings specific things
+                _swipedirbutton->activate();
+                _joystickdirbutton->activate();
+                _soundslider->activate();
+                _musicslider->activate();
+                _hapticsbutton->activate();
+                addChild(_optionsscene);
                 break;
             default:
                 break;
         }
     }
+}
+
+void MenuScene::togglePopup(bool active) {
+    _popup->setVisible(active);
+    if (active) {
+        _popupclose->activate();
+    }
+}
+
+bool MenuScene::hapticsTrue(){
+    return _hapticsbutton->isDown();
+}
+
+bool MenuScene::swipeTrue(){
+    return _swipedirbutton->isDown();
+}
+
+float MenuScene::musicSliderVal(){
+    return _musicslider->getValue();
+}
+
+float MenuScene::soundSliderVal(){
+    return _soundslider->getValue();
 }

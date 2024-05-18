@@ -108,6 +108,12 @@ protected:
     
     int _ready;
 
+    bool _haptics;
+
+    bool _swipe;
+    
+    float _soundScale;
+
 #pragma mark Internal Object Management
 
     /** Moves the camera to focus the avatar */
@@ -360,7 +366,20 @@ public:
     
     int getCarrotsLeft();
     
-// READY EVENT AS AN INNER CLASS BECAUSE WE DON'T NEED THIS EVENT OTHERWISE
+    void setHaptics(bool b) {
+        _haptics = b;
+        _collision.setHaptics(b);
+    };
+    void setSwipe(bool b) {
+        _swipe = b;
+        _map->setSwipe(b);
+    };
+    void setSoundScale(float f) {
+        _soundScale = f;
+        _action.setSoundScale(f);
+    }
+
+    // READY EVENT AS AN INNER CLASS BECAUSE WE DON'T NEED THIS EVENT OTHERWISE
     class ReadyEvent : public NetEvent {
     public:
         std::shared_ptr<NetEvent> newEvent() override {

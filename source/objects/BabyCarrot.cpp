@@ -21,6 +21,7 @@
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
 bool BabyCarrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+    _isCaptured = false;
     _state = State::ROAM;
     _target = pos;
     _numFramesStuck = 0;

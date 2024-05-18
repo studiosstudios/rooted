@@ -114,7 +114,9 @@ private:
     std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _winnerNodes;
     std::shared_ptr<cugl::scene2::Button> _exitbutton;
     std::shared_ptr<cugl::scene2::Button> _winnernextbutton;
-
+    
+    // 0 = not pressed, 1 = pressed, 2 = waiting
+    int _nextGame;
 
 public:
 #pragma mark Constructor/Destructor/Dispose
@@ -172,6 +174,10 @@ public:
     int getNextRound() { return _nextRound; }
     
     void setNextRound(int n) { _nextRound = n; }
+    
+    int getNextGame() { return _nextGame; }
+    
+    void setNextGame(int n) { _nextGame = n; }
     
     void setCharacterDisplay(bool active, int carrot);
     

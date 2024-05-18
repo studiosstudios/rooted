@@ -269,7 +269,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
     _nextbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            CULog("this button was pressed");
             _postroundscene->setVisible(false);
             _playerpointinfo->setVisible(true);
             _nextroundbutton->activate();
@@ -335,17 +334,20 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // winner specific buttons
     _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_exit"));
-    _exitbutton->addListener([this](const std::string& name, bool down) {
-        if (!down) {
-            // TODO: disconnect to the main menu
-        }
-    });
+    _exitbutton->setVisible(false);
+    //    _exitbutton->addListener([this](const std::string& name, bool down) {
+//        if (!down) {
+//            // TODO: disconnect to the main menu
+//        }
+//    });
     _winnernextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_next"));
     _winnernextbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
             // TODO: send the next game event
+            _nextGame = 1;
         }
     });
+    _nextGame = 0;
     
     _characterdisplayNodes.clear();
     _carrotpreviewNodes.clear();
@@ -470,6 +472,12 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
         label->setText("...");
     } else {
         label->setText("NEXT");
+    }
+    auto label2 = std::dynamic_pointer_cast<scene2::Label>(_winnernextbutton->getChildByName("rematch"));
+    if (_nextGame == 2) {
+        label2->setText("...");
+    } else {
+        label2->setText("rematch");
     }
     _carrotsRemainingBoard->setVisible(debugActive);
     _barrotsRemainingBoard->setVisible(debugActive);

@@ -107,6 +107,8 @@ protected:
     int _numPlanting;
     
     int _ready;
+    
+    int _readyNewGame;
 
     bool _haptics;
 
@@ -388,16 +390,31 @@ public:
     // READY EVENT AS AN INNER CLASS BECAUSE WE DON'T NEED THIS EVENT OTHERWISE
     class ReadyEvent : public NetEvent {
     public:
+        NetcodeSerializer _serializer;
+        NetcodeDeserializer _deserializer;
+        
+        // 0 = round, 1 = game, 2 = start
+        int type;
+        
         std::shared_ptr<NetEvent> newEvent() override {
             return std::make_shared<ReadyEvent>();
         }
-        static std::shared_ptr<NetEvent> alloc() {
-            return std::make_shared<ReadyEvent>();
+        static std::shared_ptr<NetEvent> alloc(int type) {
+            auto res =  std::make_shared<ReadyEvent>();
+            res->type = type;
+            return res;
         }
         std::vector<std::byte> serialize() override {
-            return std::vector<std::byte>();
+            _serializer.reset();
+            _serializer.writeUint32(type);
+            return _serializer.serialize();
         }
-        void deserialize(const std::vector<std::byte>& data) override { }
+        void deserialize(const std::vector<std::byte>& data) override {
+            _deserializer.reset();
+            _deserializer.receive(data);
+            int t = _deserializer.readUint32();
+            type = t;
+        }
     };
 };
 

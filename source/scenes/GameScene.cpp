@@ -185,6 +185,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     }
         
     _ready = 0;
+    _readyNewGame = 0;
     
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
@@ -335,6 +336,7 @@ void GameScene::reset() {
     _startTime = Timestamp();
     
     _ready = 0;
+    _readyNewGame = 0;
     
     _charDisplayTimer = 100;
         
@@ -354,6 +356,8 @@ void GameScene::gameReset() {
     // reset round and points
     _round = 1;
     _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
+    _ui.setRabbitPreview(false);
+    _ui.setCarrotPreview(false, 0);
     _characterWin = -1;
     // reset points
     std::fill(_points.begin(), _points.end(), 0);
@@ -391,10 +395,10 @@ void GameScene::preUpdate(float dt) {
 
     // Process the toggled key commands
     if (_input->didDebug()) { setDebug(!isDebug()); }
-    if (_input->didReset()) {
-        _network->pushOutEvent(ResetEvent::allocResetEvent());
-        return;
-    }
+//    if (_input->didReset()) {
+//        _network->pushOutEvent(ResetEvent::allocResetEvent());
+//        return;
+//    }
     if (_input->didExit()) {
         CULog("Shutting down");
         Application::get()->quit();
@@ -463,7 +467,11 @@ void GameScene::fixedUpdate(float step) {
             _action.processCollectedRockEvent(collectedRockEvent);
         }
         if(auto readyEvent = std::dynamic_pointer_cast<ReadyEvent>(e)) {
-            _ready += 1;
+            if (readyEvent->type == 0) {
+                _ready += 1;
+            } else if (readyEvent->type == 1) {
+                _readyNewGame += 1;
+            }
         }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
@@ -566,13 +574,20 @@ void GameScene::postUpdate(float remain) {
         }
 
         if (_ready == _network->getNumPlayers() && _network->isHost()) {
-            _network->pushOutEvent(ResetEvent::allocResetEvent());
+            _network->pushOutEvent(ResetEvent::allocResetEvent(0));
             _ready = 0; // need this otherwise it will send out two of these events
+        } else if (_readyNewGame == _network->getNumPlayers() && _network->isHost()) {
+            _network->pushOutEvent(ResetEvent::allocResetEvent(1));
+            _readyNewGame = 0; // need this otherwise it will send out two of these events
         }
         
         if (_ui.getNextRound() == 1){
             _ui.setNextRound(2);
-            _network->pushOutEvent(ReadyEvent::alloc());
+            _network->pushOutEvent(ReadyEvent::alloc(0));
+        }
+        else if (_ui.getNextGame() == 1){
+            _ui.setNextGame(2);
+            _network->pushOutEvent(ReadyEvent::alloc(1));
         }
         else{
             //do nothing and wait for host to reset
@@ -771,7 +786,11 @@ void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event) {
     while(_network->isInAvailable()){
         _network->popInEvent();
     }
-    reset();
+    if (event->getType() == 0) {
+        reset();
+    } else {
+        gameReset();
+    }
 }
 
 int GameScene::getCarrotsLeft() {

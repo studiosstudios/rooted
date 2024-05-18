@@ -230,6 +230,7 @@ void RootedApp::preUpdate(float dt) {
         _tutorial.preUpdate(dt);
         _tutorial.setHaptics(_mainmenu.hapticsTrue());
         if (_tutorial.returnToMenu()){
+            _tutorial.dispose();
             _tutorial.setActive(false);
             _mainmenu.setActive(true);
             _status = MENU;

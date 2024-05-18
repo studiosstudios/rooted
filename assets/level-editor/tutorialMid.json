@@ -19,7 +19,7 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":116,
                  "name":"",
@@ -47,7 +47,7 @@
                  "y":64
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":117,
                  "name":"",
@@ -75,7 +75,7 @@
                  "y":96
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":118,
                  "name":"",
@@ -103,7 +103,7 @@
                  "y":128
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":119,
                  "name":"",
@@ -131,7 +131,7 @@
                  "y":160
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":120,
                  "name":"",
@@ -159,7 +159,7 @@
                  "y":192
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":121,
                  "name":"",
@@ -187,7 +187,7 @@
                  "y":224
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":122,
                  "name":"",
@@ -215,7 +215,7 @@
                  "y":256
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":123,
                  "name":"",
@@ -254,7 +254,7 @@
                  "y":0
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":125,
                  "name":"",
@@ -282,7 +282,7 @@
                  "y":64
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":126,
                  "name":"",
@@ -310,7 +310,7 @@
                  "y":96
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":127,
                  "name":"",
@@ -338,7 +338,7 @@
                  "y":128
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":128,
                  "name":"",
@@ -366,7 +366,7 @@
                  "y":160
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":129,
                  "name":"",
@@ -394,7 +394,7 @@
                  "y":224
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":130,
                  "name":"",
@@ -422,7 +422,7 @@
                  "y":192
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":131,
                  "name":"",
@@ -451,7 +451,7 @@
                 },
             
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":132,
                  "name":"",
@@ -490,7 +490,7 @@
                  "y":0
                 }, 
                 {
-                 "gid":47,
+                 "gid":54,
                  "height":32,
                  "id":134,
                  "name":"",
@@ -518,7 +518,7 @@
                  "y":32
                 }, 
                 {
-                 "gid":46,
+                 "gid":53,
                  "height":32,
                  "id":135,
                  "name":"",
@@ -544,6 +544,18 @@
                  "width":32,
                  "x":480,
                  "y":32
+                }, 
+                {
+                 "gid":44,
+                 "height":32,
+                 "id":136,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Rock",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -563,7 +575,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":136,
+ "nextobjectid":137,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -573,7 +585,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.1",
+ "tiledversion":"1.10.2",
  "tileheight":32,
  "tilesets":[
         {
@@ -585,7 +597,7 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":36,
+         "firstgid":43,
          "source":"environment.tsx"
         }],
  "tilewidth":32,

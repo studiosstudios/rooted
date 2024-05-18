@@ -90,6 +90,7 @@ protected:
         UNROOT,         //teach unrooting
         CARROTLEAVES,   //unrooted carrot leaves
         ROCK,           //ignore for now - farmer leaves?
+        FARMERRUNS,
         BABYENTERS,     //one more baby enters
         LASTBABY,       //catch last baby
         CARROTWIN,      //win screen for catching last baby

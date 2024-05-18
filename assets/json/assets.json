@@ -33,6 +33,18 @@
                 "bot_right" : [384,   384, 511, 511]
             }
         },
+        "barn": {
+            "file":     "textures/barn.png"
+        },
+        "tractor": {
+            "file":     "textures/tractor.png"
+        },
+        "scarecrow": {
+            "file":     "textures/scarecrow.png"
+        },
+        "mill": {
+            "file":     "textures/mill.png"
+        },
         "dude": {
             "file":     "textures/dude.png"
         },
@@ -89,6 +101,30 @@
         },
         "farmer-northeast-dash": {
             "file":     "textures/farmer-northeast-dash.png"
+        },
+        "fence0": {
+            "file":     "textures/fence0.png"
+        },
+        "fence1": {
+            "file":     "textures/fence1.png"
+        },
+        "fence2": {
+            "file":     "textures/fence2.png"
+        },
+        "fence3": {
+            "file":     "textures/fence3.png"
+        },
+        "fence5": {
+            "file":     "textures/fence5.png"
+        },
+        "fence6": {
+            "file":     "textures/fence6.png"
+        },
+        "fence7": {
+            "file":     "textures/fence7.png"
+        },
+        "fence8": {
+            "file":     "textures/fence8.png"
         },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
@@ -206,6 +242,60 @@
         "unit_6": {
             "file":     "textures/maps/unit_6.png"
         },
+        "unit_tl_1": {
+            "file":     "textures/maps/unit_tl_1.png"
+        },
+        "unit_tl_2": {
+            "file":     "textures/maps/unit_tl_2.png"
+        },
+        "unit_t_1": {
+            "file":     "textures/maps/unit_t_1.png"
+        },
+        "unit_t_2": {
+            "file":     "textures/maps/unit_t_2.png"
+        },
+        "unit_tr_1": {
+            "file":     "textures/maps/unit_tr_1.png"
+        },
+        "unit_tr_2": {
+            "file":     "textures/maps/unit_tr_2.png"
+        },
+        "unit_l_1": {
+            "file":     "textures/maps/unit_l_1.png"
+        },
+        "unit_l_2": {
+            "file":     "textures/maps/unit_l_2.png"
+        },
+        "unit_m_1": {
+            "file":     "textures/maps/unit_m_1.png"
+        },
+        "unit_m_2": {
+            "file":     "textures/maps/unit_m_2.png"
+        },
+        "unit_r_1": {
+            "file":     "textures/maps/unit_r_1.png"
+        },
+        "unit_r_2": {
+            "file":     "textures/maps/unit_r_2.png"
+        },
+        "unit_bl_1": {
+            "file":     "textures/maps/unit_bl_1.png"
+        },
+        "unit_bl_2": {
+            "file":     "textures/maps/unit_bl_2.png"
+        },
+        "unit_b_1": {
+            "file":     "textures/maps/unit_b_1.png"
+        },
+        "unit_b_2": {
+            "file":     "textures/maps/unit_b_2.png"
+        },
+        "unit_br_1": {
+            "file":     "textures/maps/unit_br_1.png"
+        },
+        "unit_br_2": {
+            "file":     "textures/maps/unit_br_2.png"
+        },
         "shader_clouds": {
             "file":     "textures/clouds.png",
             "wrapS":    "repeat",
@@ -309,6 +399,21 @@
         },
         "dialoguebox": {
             "file": "textures/dialoguebox.png"
+        },
+        "lobbybkg": {
+            "file": "textures/lobbybkg.png"
+        },
+        "lobbyid": {
+            "file": "textures/lobbyidbkg.png"
+        },
+        "playercount": {
+            "file": "textures/playercountbkg.png"
+        },
+        "carrotbutton2": {
+            "file": "textures/carrotbutton2.png"
+        },
+        "carrotbutton1": {
+            "file": "textures/carrotbutton1.png"
         }
     },
     "jsons": {
@@ -324,6 +429,29 @@
         "gridUnit4": "level-editor/gridUnit4.json",
         "gridUnit5": "level-editor/gridUnit5.json",
         "gridUnit6": "level-editor/gridUnit6.json",
+        "unit_tl_1": "level-editor/unit_tl_1.json",
+        "unit_tl_2": "level-editor/unit_tl_2.json",
+        "unit_t_1": "level-editor/unit_t_1.json",
+        "unit_t_2": "level-editor/unit_t_2.json",
+        "unit_tr_1": "level-editor/unit_tr_1.json",
+        "unit_tr_2": "level-editor/unit_tr_2.json",
+        "unit_l_1": "level-editor/unit_l_1.json",
+        "unit_l_2": "level-editor/unit_l_2.json",
+        "unit_m_1": "level-editor/unit_m_1.json",
+        "unit_m_2": "level-editor/unit_m_2.json",
+        "unit_r_1": "level-editor/unit_r_1.json",
+        "unit_r_2": "level-editor/unit_r_2.json",
+        "unit_bl_1": "level-editor/unit_bl_1.json",
+        "unit_bl_2": "level-editor/unit_bl_2.json",
+        "unit_b_1": "level-editor/unit_b_1.json",
+        "unit_b_2": "level-editor/unit_b_2.json",
+        "unit_br_1": "level-editor/unit_br_1.json",
+        "unit_br_2": "level-editor/unit_br_2.json",
+        "unit_outer_1": "level-editor/unit_outer_1.json",
+        "unit_outer_2": "level-editor/unit_outer_2.json",
+        "unit_outer_3": "level-editor/unit_outer_3.json",
+        "unit_outer_4": "level-editor/unit_outer_4.json",
+        "unit_outer_5": "level-editor/unit_outer_5.json",
         "tutorialTop": "level-editor/tutorialTop.json",
         "tutorialMid": "level-editor/tutorialMid.json",
         "tutorialBottom": "level-editor/tutorialBottom.json",
@@ -350,15 +478,27 @@
             "stream":   true,
             "volume":   0.5
         },
-        "win": {
+        "carrotsWin": {
             "type":     "sample",
-            "file":     "sounds/victory.ogg",
+            "file":     "sounds/carrot-victory.ogg",
             "stream":   true,
             "volume":   1
         },
-        "lose": {
+        "carrotsLose": {
             "type":     "sample",
-            "file":     "sounds/lose.ogg",
+            "file":     "sounds/carrot-lose.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerWin": {
+            "type":     "sample",
+            "file":     "sounds/farmer-victory.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerLose": {
+            "type":     "sample",
+            "file":     "sounds/farmer-lose.ogg",
             "stream":   true,
             "volume":   1
         },
@@ -401,7 +541,12 @@
         "dash": {
             "type":     "sample",
             "file":     "sounds/dash.wav",
-            "volume":   0.5
+            "volume":   0.2
+        },
+        "capture": {
+            "type":     "sample",
+            "file":     "sounds/pop.ogg",
+            "volume":   1
         }
     },
     "fonts": {
@@ -417,9 +562,21 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 16
         },
+        "gaeguBold30": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 30
+        },
+        "gaeguBold35": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 35
+        },
         "gaeguBold40": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 40
+        },
+        "gaeguBold45": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 45
         },
         "gaeguBold50": {
             "file": "fonts/Gaegu-Bold.ttf",
@@ -471,6 +628,7 @@
         "numpadwidget" : "widgets/numpadwidget.json",
         "lobbyclient" : "widgets/lobbyclient.json",
         "lobbyhost" : "widgets/lobbyhost.json",
+        "lobbyinfowidget" : "widgets/lobbyinfowidget.json",
         "prelobby": "widgets/prelobby.json",
         "backbuttonwidget" : "widgets/backbuttonwidget.json",
         "lobbyidwidget" : "widgets/lobbyidwidget.json",
@@ -490,6 +648,12 @@
             "type"   : "Widget",
             "data"   : {
                 "key"     : "lobbyclient"
+            }
+        },
+        "lobbyinfowidget": {
+            "type": "Widget",
+            "data": {
+                "key": "lobbyinfowidget"
             }
         },
         "mainmenu": {

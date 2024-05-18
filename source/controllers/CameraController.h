@@ -41,7 +41,7 @@ protected:
     /* Draw scale */
     float _scale;
     /* The proportion of the scene that the camera should stay inside */
-    Vec2 _frac;
+    Rect _frac;
     /* Amount of time to hold camera in zoom out pos upon cam init */
     int _startTimer;
     /* Max amount to shake the cam per frame */
@@ -74,7 +74,7 @@ public:
     *
     * @return true if the controller is initialized properly, false otherwise
     */
-    bool init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Vec2 frac);
+    bool init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Rect frac);
 #pragma mark -
 #pragma mark Camera Handling
 
@@ -108,7 +108,7 @@ public:
 
     void setPosition(Vec3 pos, bool setTarget);
 
-    void setFrac(Vec2 frac) { _frac = frac; }
+    void setFrac(Rect frac) { _frac = frac; }
     
     void setZoomTarget(float target) { _zoomTarget = target; }
     

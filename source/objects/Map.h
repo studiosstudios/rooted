@@ -7,12 +7,12 @@
 
 #include <cugl/cugl.h>
 #include <any>
-
 #include "BabyCarrot.h"
 #include "Carrot.h"
 #include "Farmer.h"
 #include "Wheat.h"
 #include "PlantingSpot.h"
+#include "Decoration.h"
 #include "Collectible.h"
 #include "../shaders/EntitiesNode.h"
 #include "../shaders/ShaderNode.h"
@@ -35,6 +35,10 @@ private:
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> _boundaries;
     /** references to the planting spots */
     std::vector<std::shared_ptr<PlantingSpot>> _plantingSpot;
+    /** references to the decorations */
+    std::vector<std::shared_ptr<Decoration>> _decorations;
+    /** references to the environmental collidables */
+    std::vector<std::shared_ptr<physics2::BoxObstacle>> _envCollidables;
     /** references to the rocks */
     std::vector<std::shared_ptr<Collectible>> _rocks;
     /** reference to the box2d world */
@@ -45,6 +49,8 @@ private:
     Rect _worldbounds;
     /** The bounds of this map in physics coordinates */
     Rect _mapbounds;
+    /** The bounds of the inner map in physics coordinates */
+    Rect _innermapbounds;
     /** The global gravity for this level */
     Vec2 _gravity;
     /** The scale between the physics world and the screen */
@@ -67,11 +73,11 @@ private:
     std::shared_ptr<EntitiesNode> _shaderedEntitiesNode;
     
     std::shared_ptr<scene2::SceneNode> _entitiesNode;
-
+    
     std::unordered_map<std::string, std::any> _propertiesMap;
-
+    
     std::shared_ptr<ShaderRenderer> _shaderrenderer;
-
+    
     std::shared_ptr<WheatScene> _wheatscene;
     
     /** Possible init positions of carrots */
@@ -85,6 +91,10 @@ private:
     
     std::vector<Rect> _plantingSpawns;
     
+    std::vector<std::tuple<Rect, std::string, int, int>> _decorationSpawns;
+    
+    std::vector<Rect> _envCollidableSpawns;
+    
     std::vector<std::pair<Rect, bool>> _rockSpawns;
     
     int _numRockSpawns;
@@ -93,6 +103,18 @@ private:
     
     /** Vector of key names for all map units in assets json */
     std::vector<std::string> _mapNames;
+    
+    std::vector<std::string> _mapNamesTL;
+    std::vector<std::string> _mapNamesT;
+    std::vector<std::string> _mapNamesTR;
+    std::vector<std::string> _mapNamesL;
+    std::vector<std::string> _mapNamesM;
+    std::vector<std::string> _mapNamesR;
+    std::vector<std::string> _mapNamesBL;
+    std::vector<std::string> _mapNamesB;
+    std::vector<std::string> _mapNamesBR;
+    
+    std::vector<std::string> _mapNamesOuter;
     
     /** Mersenne Twister random number generator to ensure randomness is consistent without broadcasting across network (hopefully) */
     std::mt19937 _rand32;
@@ -121,6 +143,7 @@ public:
         PLAYER,
         WHEAT,
         ENTITIESSHADER, //the entities drawn with the wheat cover shader
+        DECORATIONS,
         CLOUDS
     };
 
@@ -167,6 +190,13 @@ public:
      * @return the bounds of this map in physics coordinates
      */
     const Rect &getMapBounds() const { return _mapbounds; }
+    
+    /**
+     * Returns the bounds of the inner map in physics coordinates
+     *
+     * @return the bounds of the inner map in physics coordinates
+     */
+    const Rect &getInnerMapBounds() const { return _innermapbounds; }
 
 #pragma mark Drawing Methods
 
@@ -288,6 +318,8 @@ public:
 
     std::vector<std::shared_ptr<PlantingSpot>> &getPlantingSpots() { return _plantingSpot; }
     
+    std::vector<std::shared_ptr<Decoration>> &getDecorations() { return _decorations; }
+    
     std::vector<std::shared_ptr<cugl::physics2::BoxObstacle>> &getBoundaries() { return _boundaries; }
 
     std::vector<std::shared_ptr<Collectible>> &getRocks() { return _rocks; }
@@ -362,6 +394,10 @@ private:
     
     void spawnPlantingSpots();
     
+    void spawnDecorations();
+    
+    void spawnEnvCollidables();
+        
     void spawnFarmers();
     
     void spawnCarrots();

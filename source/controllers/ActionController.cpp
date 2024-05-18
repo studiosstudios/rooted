@@ -21,6 +21,8 @@ using namespace cugl;
 #define DASH_EFFECT               "dash"
 /** The key the rustle sounds */
 #define RUSTLE_MUSIC              "rustle"
+/** The sound effect for capture event */
+#define CAPTURE_EFFECT            "capture"
 /** Limits volume to be in between 0-1 */
 #define VOLUME_FACTOR    1
 
@@ -34,6 +36,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _world = _map->getWorld();
     _network = network;
     _assets = assets;
+    _freeMeter = 0;
     if (_network->isHost()) {
         _ai = AIController::alloc(map);
     }
@@ -58,14 +61,14 @@ void ActionController::preUpdate(float dt) {
     playerEntity->setMovement(_input->getMovement());
     bool didDash = _input->didDash();
     playerEntity->setDashInput(didDash, _input->getDashVector());
-    if(didDash){
-        std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
-        AudioEngine::get()->play("dash", source);
-    }
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     EntityModel::EntityState oldState = playerEntity->getEntityState();
     playerEntity->updateState(dt);
+    if(didDash && playerEntity->getEntityState() == EntityModel::EntityState::DASHING){
+        std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
+        AudioEngine::get()->play("dash", source);
+    }
     if(playerEntity->getEntityState() != oldState){
         _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
     }
@@ -88,6 +91,12 @@ void ActionController::preUpdate(float dt) {
     for (auto it = barrots.begin(); it != barrots.end(); ++it) {
         (*it)->getSceneNode()->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - ((*it)->getY()-(*it)->getHeight()/2)/mapheight/2.0);
         (*it)->updateSprite(dt, false);
+    }
+    
+    // decoration animations
+    auto decs = _map->getDecorations();
+    for (auto it = decs.begin(); it != decs.end(); ++it) {
+        (*it)->stepAnimation(dt);
     }
     
     // Find current character's planting spot
@@ -150,9 +159,17 @@ void ActionController::preUpdate(float dt) {
 
     if(!_map->isFarmer()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
-        if(_input->didShakeDevice() && rand() % 20 < 21 && carrotEntity->isCaptured()){
-            _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
-//            Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+        if(_input->didShakeDevice() && carrotEntity->isCaptured()){
+            _freeMeter+=2;
+//            std::cout<<"free meter" << _freeMeter << "\n";
+            if(_freeMeter >= 50){
+                _freeMeter = 0;
+                _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
+                Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+            }
+        }
+        else{
+            _freeMeter = max(0, _freeMeter-1);
         }
     }
 }
@@ -320,6 +337,13 @@ void ActionController::updateRustlingNoise(){
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
     _map->getFarmers().at(0)->grabCarrot();
+    if(_map->isFarmer()){
+        std::shared_ptr<Sound> source = _assets->get<Sound>(CAPTURE_EFFECT);
+        AudioEngine::get()->play("capture", source);
+    }
+    if(_map->getCharacter()->getUUID() == event->getUUID()){
+        Haptics::get()->playContinuous(1.0, 0.8, 0.3);
+    }
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             carrot->setSensor(true);

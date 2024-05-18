@@ -137,9 +137,9 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
 //    _entitiesNode->allocNode();
 //    _entitiesNode->setPriority(float(DrawOrder::ENTITIES));
     
-    bool showGrid = true; //change this to show the grid in debug
+    bool showGrid = false; //change this to show the grid in debug
     if (showGrid) {
-        for (int x = 0; x < _mapbounds.size.width; x++) {
+        for (int x = 0; x < _worldbounds.size.width; x++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(1, _worldbounds.size.height)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -147,7 +147,7 @@ void Map::setRootNode(const std::shared_ptr<scene2::SceneNode> &node) {
             _debugnode->addChild(rect);
         }
         
-        for (int y = 0; y < _mapbounds.size.height; y++) {
+        for (int y = 0; y < _worldbounds.size.height; y++) {
             std::shared_ptr<scene2::WireNode> rect = scene2::WireNode::allocWithPath(Rect(Vec2::ZERO, Vec2(_worldbounds.size.width, 1)));
             rect->setColor(Color4::WHITE);
             rect->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -194,6 +194,16 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
         CUAssertLog(false, "Failed to load map names");
     }
     _mapNames = json->get("names")->asStringArray();
+    _mapNamesTL = json->get("top_left")->asStringArray();
+    _mapNamesT = json->get("top")->asStringArray();
+    _mapNamesTR = json->get("top_right")->asStringArray();
+    _mapNamesL = json->get("left")->asStringArray();
+    _mapNamesM = json->get("middle")->asStringArray();
+    _mapNamesR = json->get("right")->asStringArray();
+    _mapNamesBL = json->get("bottom_left")->asStringArray();
+    _mapNamesB = json->get("bottom")->asStringArray();
+    _mapNamesBR = json->get("bottom_right")->asStringArray();
+    _mapNamesOuter = json->get("outer")->asStringArray();
     
     _tutorial = tutorial;
     
@@ -217,18 +227,69 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
         json = _assets->get<JsonValue>("tutorialTop");
         loadTiledJson(json, 0, 2);
         
-        
     } else {
         _rand32.seed(randSeed);
-        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * 3);
-        _mapbounds.size.set(Size(MAP_UNIT_WIDTH*3, MAP_UNIT_HEIGHT * 3));
+        _worldbounds.size.set(Size(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT) * NUMBER_MAP_UNITS);
+        _mapbounds.set(Rect(MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT, MAP_UNIT_WIDTH * 3, MAP_UNIT_HEIGHT * 3));
+        _mapbounds.origin -= Vec2(1.6, 0.9) * OUTER_MAP_BORDER;
+        _mapbounds.size += 2 * Vec2(1.6, 0.9) * OUTER_MAP_BORDER;
         
-        _mapInfo.resize(_mapbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_mapbounds.size.height / MAP_UNIT_HEIGHT));
+        _mapInfo.resize(_worldbounds.size.width / MAP_UNIT_WIDTH, std::vector<std::pair<std::string, float>>(_worldbounds.size.height / MAP_UNIT_HEIGHT));
         
         //randomly select a map for each location and object info lists
-        for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
-            for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
-                std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
+//        for (int i = 0; i < _mapbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
+//            for (int j = 0; j < _mapbounds.size.height / MAP_UNIT_HEIGHT; j++) {
+//                std::string mapName = _mapNames[floor(float(_rand32()) / _rand32.max() * _mapNames.size())];
+//                std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
+//                loadTiledJson(json, i, j);
+//            }
+//        }
+        
+        //randomly select a map for each position
+        for (int i = 0; i < _worldbounds.size.width / MAP_UNIT_WIDTH; i++ ) {
+            for (int j = 0; j < _worldbounds.size.height / MAP_UNIT_HEIGHT; j++) {
+                std::string mapName;
+                //outer
+                if (i == 0 || i == _worldbounds.size.width / MAP_UNIT_WIDTH - 1 || j == 0 || j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 1) {
+                    mapName = _mapNamesOuter[floor(float(_rand32()) / _rand32.max() * _mapNamesOuter.size())];
+                }
+                //bottom left
+                else if (i == 1 && j == 1) {
+                    mapName = _mapNamesBL[floor(float(_rand32()) / _rand32.max() * _mapNamesBL.size())];
+                }
+                //top left
+                else if (i == 1 && j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                    mapName = _mapNamesTL[floor(float(_rand32()) / _rand32.max() * _mapNamesTL.size())];
+                }
+                //bottom right
+                else if (i == _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
+                    mapName = _mapNamesBR[floor(float(_rand32()) / _rand32.max() * _mapNamesBR.size())];
+                }
+                //top right
+                else if (i == _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                    mapName = _mapNamesTR[floor(float(_rand32()) / _rand32.max() * _mapNamesTR.size())];
+                }
+                //bottom
+                else if (i < _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == 1) {
+                    mapName = _mapNamesB[floor(float(_rand32()) / _rand32.max() * _mapNamesB.size())];
+                }
+                //top
+                else if (i < _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j == _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                    mapName = _mapNamesT[floor(float(_rand32()) / _rand32.max() * _mapNamesT.size())];
+                }
+                //left
+                else if (i == 1 && j < _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                    mapName = _mapNamesL[floor(float(_rand32()) / _rand32.max() * _mapNamesL.size())];
+                }
+                //right
+                else if (i == _worldbounds.size.width / MAP_UNIT_WIDTH - 2 && j < _worldbounds.size.height / MAP_UNIT_HEIGHT - 2) {
+                    mapName = _mapNamesR[floor(float(_rand32()) / _rand32.max() * _mapNamesR.size())];
+                }
+                
+                //else its middle
+                else {
+                    mapName = _mapNamesM[floor(float(_rand32()) / _rand32.max() * _mapNamesM.size())];
+                }
                 std::shared_ptr<JsonValue> json = _assets->get<JsonValue>(mapName);
                 loadTiledJson(json, i, j);
             }
@@ -240,12 +301,14 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     std::shuffle(_farmerSpawns.begin(), _farmerSpawns.end(), _rand32);
     std::shuffle(_babyCarrotSpawns.begin(), _babyCarrotSpawns.end(), _rand32);
     std::shuffle(_plantingSpawns.begin(), _plantingSpawns.end(), _rand32);
+    std::shuffle(_decorationSpawns.begin(), _decorationSpawns.end(), _rand32);
     
     //take just first num{object} elements of each vector
     _carrotSpawns = std::vector(_carrotSpawns.begin(), _carrotSpawns.begin() + std::min(numCarrots, int(_carrotSpawns.size())));
     _farmerSpawns = std::vector(_farmerSpawns.begin(), _farmerSpawns.begin() + std::min(numFarmers, int(_farmerSpawns.size())));
     _babyCarrotSpawns = std::vector(_babyCarrotSpawns.begin(), _babyCarrotSpawns.begin() + std::min(numBabyCarrots, int(_babyCarrotSpawns.size())));
     _plantingSpawns = std::vector(_plantingSpawns.begin(), _plantingSpawns.begin() + std::min(numPlantingSpots, int(_plantingSpawns.size())));
+//    _decorationSpawns = std::vector(_decorationSpawns.begin(), _decorationSpawns.begin() + std::min(1, int(_decorationSpawns.size())));
 }
  
 void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
@@ -281,6 +344,13 @@ void Map::loadTiledJson(std::shared_ptr<JsonValue>& json, int i, int j) {
             } else if (name == "environment") {
                 if (type == "PlantingSpot") {
                     _plantingSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
+                } else if (type == "Decoration") {
+                    std::string decName = std::any_cast<std::string>(_propertiesMap.at("name"));
+                    int decFrameRows = std::any_cast<int>(_propertiesMap.at("frame_rows"));
+                    int decFrameCols = std::any_cast<int>(_propertiesMap.at("frame_cols"));
+                    _decorationSpawns.push_back(std::tuple(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), decName, decFrameRows, decFrameCols));
+                } else if (type == "EnvCollidable") {
+                    _envCollidableSpawns.push_back(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height));
                 } else if (type == "Rock") {
                     _rockSpawns.push_back(std::pair(Rect(x + i * MAP_UNIT_WIDTH+ 0.5 * width, y + j * MAP_UNIT_HEIGHT + 0.5 * height, width, height), true));
                 } else {
@@ -335,15 +405,17 @@ void Map::populate() {
     _worldnode->addChild(_cloudsnode);
     
     spawnPlantingSpots();
+    spawnDecorations();
+    spawnEnvCollidables();
     spawnFarmers();
     spawnCarrots();
     spawnBabyCarrots();
     
     //place boundary walls
-    loadBoundary(Vec2(-0.5, _mapbounds.size.height/2), Size(1, _mapbounds.size.height));
-    loadBoundary(Vec2(_mapbounds.size.width+0.5, _mapbounds.size.height/2), Size(1, _mapbounds.size.height));
-    loadBoundary(Vec2(_mapbounds.size.width/2, -0.5), Size(_mapbounds.size.width, 1));
-    loadBoundary(Vec2(_mapbounds.size.width/2, _mapbounds.size.height+0.5), Size(_mapbounds.size.width, 1));
+    loadBoundary(Vec2(-0.5, _mapbounds.size.height/2)  + _mapbounds.origin, Size(1, _mapbounds.size.height));
+    loadBoundary(Vec2(_mapbounds.size.width+0.5, _mapbounds.size.height/2) + _mapbounds.origin, Size(1, _mapbounds.size.height));
+    loadBoundary(Vec2(_mapbounds.size.width/2, -0.5) + _mapbounds.origin, Size(_mapbounds.size.width, 1));
+    loadBoundary(Vec2(_mapbounds.size.width/2, _mapbounds.size.height+0.5) + _mapbounds.origin, Size(_mapbounds.size.width, 1));
     
     //add grass background node
     float grassScale = 16.0 * DEFAULT_DRAWSCALE / _scale.x;
@@ -414,6 +486,8 @@ void Map::clearWorld() {
         (*it) = nullptr;
     }
     _plantingSpot.clear();
+    _decorations.clear();
+    _envCollidables.clear();
     for (auto it = _rocks.begin(); it != _rocks.end(); ++it) {
         if (_world != nullptr) {
             _world->removeObstacle((*it));
@@ -444,6 +518,8 @@ void Map::clearWorld() {
     _farmerSpawns.clear();
     _babyCarrotSpawns.clear();
     _plantingSpawns.clear();
+    _decorationSpawns.clear();
+    _envCollidableSpawns.clear();
     _rockSpawns.clear();
 }
 
@@ -571,6 +647,60 @@ void Map::spawnPlantingSpots() {
 
         plantingSpot->setSceneNode(_assets, float(Map::DrawOrder::PLANTINGSPOT));
         addObstacle(plantingSpot, plantingSpot->getSceneNode());
+    }
+}
+
+void Map::spawnDecorations() {
+    for (std::tuple decInfo : _decorationSpawns) {
+        Rect rect = get<0>(decInfo);
+        std::string decName = get<1>(decInfo);
+        int decFrameRows = get<2>(decInfo);
+        int decFrameCols = get<3>(decInfo);
+        std::shared_ptr<Decoration> dec = Decoration::alloc(rect.origin, rect.size, _scale.x);
+        if (decFrameCols > 1 || decFrameRows > 1) { dec->setShouldAnimate(true); }
+        dec->setDebugColor(DEBUG_COLOR);
+        dec->setName("decoration");
+        
+        auto decSprite = _assets->get<Texture>(decName);
+        auto decNode = scene2::SpriteNode::allocWithSheet(decSprite, decFrameRows, decFrameCols);
+        float texscale = (decSprite->getWidth()/decFrameRows)/_scale.x;
+        decNode->setScale((rect.size.width > rect.size.height) ? 1.0 / texscale * rect.size.width : 1.0 / texscale * rect.size.height);
+        
+        //sorry
+        if (decName == "barn") {
+            CULog("barn height: %f", dec->getHeight());
+            decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-0.9*dec->getHeight()/2)/_mapbounds.size.height/2.0);
+        } else if (decName == "tractor") {
+            CULog("tractor height: %f", dec->getHeight());
+            decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-dec->getHeight()/2)/_mapbounds.size.height/2.0);
+        } else if (decName == "scarecrow") {
+            CULog("scarecrow height: %f", dec->getHeight());
+            decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-1.6*dec->getHeight()/2)/_mapbounds.size.height/2.0);
+        } else if (decName == "mill") {
+            CULog("mill height: %f", dec->getHeight());
+            decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-0.63*dec->getHeight()/2)/_mapbounds.size.height/2.0);
+        } else {
+            decNode->setPriority((float) Map::DrawOrder::ENTITIES + 0.5 - (dec->getY()-dec->getHeight()/2)/_mapbounds.size.height/2.0);
+        }
+        _entitiesNode->addChild(decNode);
+        
+        dec->setSpriteNodes(decNode);
+        dec->setSceneNode(decNode);
+        dec->setDrawScale(_scale.x);
+        dec->setDebugScene(_debugnode);
+        
+        _decorations.push_back(dec);
+    }
+}
+
+void Map::spawnEnvCollidables() {
+    for (Rect rect : _envCollidableSpawns) {
+        std::shared_ptr<physics2::BoxObstacle> obs = physics2::BoxObstacle::alloc(rect.origin-Vec2(0, rect.size.height), rect.size);
+        obs->setSensor(false);
+        obs->setDebugColor(Color4::RED);
+        obs->setDebugScene(_debugnode);
+        _envCollidables.push_back(obs);
+        _world->initObstacle(obs);
     }
 }
 

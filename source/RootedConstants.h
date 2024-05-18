@@ -23,6 +23,10 @@
 #define MAP_UNIT_WIDTH   16.0f
 /** Height of the game world in Box2d units */
 #define MAP_UNIT_HEIGHT   9.0f
+/** The number of map rows/cols to spawn (including outer maps) */
+#define NUMBER_MAP_UNITS  5
+/** How much of the world outside the map is shown */
+#define OUTER_MAP_BORDER 2.0f
 /** Default drawscale */
 #define DEFAULT_DRAWSCALE 32.0f
 /** Zoom of camera relative to scene */
@@ -70,10 +74,14 @@
 #define RESET_MESSAGE    "RESETTING"
 /** The color of the reset message */
 #define RESET_COLOR      Color4::YELLOW
-/** The key the victory game music */
-#define WIN_MUSIC       "win"
-/** The key the failure game music */
-#define LOSE_MUSIC      "lose"
+/** The key the carrot victory game music */
+#define C_WIN_MUSIC       "carrotsWin"
+/** The key the carrot failure game music */
+#define C_LOSE_MUSIC      "carrotsLose"
+/** The key the farmer victory game music */
+#define F_WIN_MUSIC       "farmerWin"
+/** The key the farmer failure game music */
+#define F_LOSE_MUSIC      "farmerLose"
 /** The sound effect for firing a bullet */
 #define PEW_EFFECT      "pew"
 /** The sound effect for a bullet collision */

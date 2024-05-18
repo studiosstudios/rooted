@@ -159,10 +159,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     setFailure(false);
     _isGameOverScreen = false;
     
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, 
+              Rect(_map->getMapBounds().origin/_map->getWorldBounds().size, _map->getMapBounds().size/_map->getWorldBounds().size));
     
-    float mapX = _map->getMapBounds().getMaxX()*_scale;
-    float mapY = _map->getMapBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().size.width*_scale;
+    float mapY = _map->getMapBounds().size.height*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -287,11 +288,12 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale,
+              Rect(_map->getMapBounds().origin/_map->getWorldBounds().size, _map->getMapBounds().size/_map->getWorldBounds().size));
     
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    float mapX = _map->getMapBounds().getMaxX()*_scale;
-    float mapY = _map->getMapBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().size.width*_scale;
+    float mapY = _map->getMapBounds().size.height*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -587,6 +589,7 @@ void GameScene::pauseNonEssentialAudio(){
     for(auto carrot:_map->getCarrots()){
         AudioEngine::get()->clear(carrot->getUUID());
     }
+    AudioEngine::get()->clear("barrot");
 }
 
 /**
@@ -601,7 +604,13 @@ void GameScene::setComplete(bool value) {
     _complete = value;
     if (value && change) {
         pauseNonEssentialAudio();
-        std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+        std::shared_ptr<Sound> source;
+        if(_map->isFarmer()){
+            source = _assets->get<Sound>(F_WIN_MUSIC);
+        }
+        else{
+            source = _assets->get<Sound>(C_WIN_MUSIC);
+        }
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
         _ui.setWinVisible(true);
         _countdown = EXIT_COUNT;
@@ -622,7 +631,13 @@ void GameScene::setFailure(bool value) {
     _failed = value;
     if (value) {
         pauseNonEssentialAudio();
-        std::shared_ptr<Sound> source = _assets->get<Sound>(LOSE_MUSIC);
+        std::shared_ptr<Sound> source;
+        if(_map->isFarmer()){
+            source = _assets->get<Sound>(F_LOSE_MUSIC);
+        }
+        else{
+            source = _assets->get<Sound>(C_LOSE_MUSIC);
+        }
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
         _ui.setLoseVisible(true);
         _countdown = EXIT_COUNT;

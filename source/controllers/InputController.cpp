@@ -130,6 +130,7 @@ bool InputController::init(const Rect bounds, const std::shared_ptr<cugl::JsonVa
 	
 #endif
     _active = success;
+    _lastAcceleration = 0;
     return success;
 }
 
@@ -185,7 +186,12 @@ void InputController::update(float dt) {
 #endif
     Accelerometer* acc = Input::get<Accelerometer>();
     if(acc != nullptr && !_paused) {
-        _deviceShaking = acc->getAcceleration().lengthSquared() > 10;
+        float currAcceleration = acc->getAcceleration().lengthSquared();
+        float delta = currAcceleration - _lastAcceleration;
+        _acceleration = _acceleration * 0.9 + delta;
+        _deviceShaking = _acceleration > 4;
+        _lastAcceleration = currAcceleration;
+//        std::cout << "acceleration: " << _acceleration << "\n";
     }
     _resetPressed = _keyReset && debug;
     _debugPressed = _keyDebug && debug;

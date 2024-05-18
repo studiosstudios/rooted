@@ -47,6 +47,8 @@ protected:
     /* Max amount to shake the cam per frame */
     float _shake;
     
+    bool _nozoom;
+    
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -126,6 +128,8 @@ public:
     std::shared_ptr<cugl::OrthographicCamera> getCamera() { return _camera; };
     
     const Vec2 boundPosition(Vec2 pos);
+    
+    void setNoZoom(bool z) { _nozoom = z; }
 };
 
 #endif

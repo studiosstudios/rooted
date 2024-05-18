@@ -113,6 +113,10 @@ protected:
     bool _swipe;
     
     float _soundScale;
+    
+    int _charDisplayTimer;
+    
+    float _beginningZoom;
 
 #pragma mark Internal Object Management
 

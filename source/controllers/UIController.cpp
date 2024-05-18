@@ -83,6 +83,22 @@ void UIController::setEndVariables(int roundNum, int length, int babies, std::ve
     }
 }
 
+void UIController::setCharacterDisplay(bool active, int carrot) {
+    _characterdisplay->setVisible(active);
+}
+
+void UIController::setRabbitPreview(bool active) {
+    _rabbitpreview->setVisible(active);
+}
+
+void UIController::setCarrotPreview(bool active, int carrot) {
+    _carrotpreview->setVisible(active);
+}
+
+void UIController::setWinnerDisplay(bool active, int carrot) {
+    _winner->setVisible(active);
+}
+
 void UIController::setSpeechBubbleVisible(bool visible) {
     _speechBubble->setVisible(visible);
 }
@@ -278,6 +294,30 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     });
     
     _nextRound = 0;
+    
+    _characterdisplay = _assets->get<scene2::SceneNode>("characterdisplay");
+    _characterdisplay->setScale(1 / _cameraZoom);
+    _characterdisplay->doLayout(); // Repositions the HUD
+    _characterdisplay->setVisible(true);
+    _uinode->addChild(_characterdisplay);
+    
+    _rabbitpreview = _assets->get<scene2::SceneNode>("rabbitpreview");
+    _rabbitpreview->setScale(1 / _cameraZoom);
+    _rabbitpreview->doLayout(); // Repositions the HUD
+    _rabbitpreview->setVisible(false);
+    _uinode->addChild(_rabbitpreview);
+    
+    _carrotpreview = _assets->get<scene2::SceneNode>("carrotpreview");
+    _carrotpreview->setScale(1 / _cameraZoom);
+    _carrotpreview->doLayout(); // Repositions the HUD
+    _carrotpreview->setVisible(false);
+    _uinode->addChild(_carrotpreview);
+    
+    _winner = _assets->get<scene2::SceneNode>("winner");
+    _winner->setScale(1 / _cameraZoom);
+    _winner->doLayout(); // Repositions the HUD
+    _winner->setVisible(false);
+    _uinode->addChild(_winner);
     
     return true;
 }

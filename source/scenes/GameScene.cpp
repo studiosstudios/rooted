@@ -167,8 +167,12 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     float mapX = _map->getMapBounds().size.width*_scale;
     float mapY = _map->getMapBounds().size.height*_scale;
     
-    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
-    _cam.setZoom(beginning_zoom);
+    _beginningZoom = std::max(dimen.width/mapX, dimen.height/mapY);
+    
+//    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
+//    _cam.setZoom(beginning_zoom);
+//    _cam.setZoom(DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale);
+    _cam.setNoZoom(true);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
     
     _round = 1;
@@ -185,6 +189,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
+    
+    _charDisplayTimer = 100;
+    
+    _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
         
     return true;
 }
@@ -304,8 +312,12 @@ void GameScene::reset() {
     float mapX = _map->getMapBounds().size.width*_scale;
     float mapY = _map->getMapBounds().size.height*_scale;
     
-    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
-    _cam.setZoom(beginning_zoom);
+    _beginningZoom = std::max(dimen.width/mapX, dimen.height/mapY);
+
+//    float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
+//    _cam.setZoom(beginning_zoom);
+//    _cam.setZoom(DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale);
+    _cam.setNoZoom(true);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
@@ -322,6 +334,16 @@ void GameScene::reset() {
     
     _ready = 0;
     
+    _charDisplayTimer = 100;
+        
+    _ui.setCharacterDisplay(false, 0);
+    
+    if (_farmerUUID == _character->getUUID()) {
+        _ui.setRabbitPreview(true);
+    } else {
+        _ui.setCarrotPreview(true, _map->getCarrotTypeForUUID(_character->getUUID()));
+    }
+    
     _ui.setEndVisible(false);
 }
 
@@ -329,6 +351,7 @@ void GameScene::gameReset() {
     reset();
     // reset round and points
     _round = 1;
+    _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
     // reset points
     std::fill(_points.begin(), _points.end(), 0);
 }
@@ -357,7 +380,7 @@ void GameScene::gameReset() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void GameScene::preUpdate(float dt) {
-    if (_map == nullptr || (_countdown >= 0 && _network->getNumPlayers() > 1)) {
+    if (_map == nullptr || (_countdown >= 0 && _network->getNumPlayers() > 1) || (_charDisplayTimer >= 0)) {
         return;
     }
 
@@ -547,6 +570,18 @@ void GameScene::postUpdate(float remain) {
         else{
             //do nothing and wait for host to reset
         }
+    }
+    else if (_charDisplayTimer > 0) {
+        _charDisplayTimer--;
+    }
+    else if (_charDisplayTimer == 0) {
+        // now set the camera zoom
+        _ui.setCharacterDisplay(false, 0);
+        _ui.setRabbitPreview(false);
+        _ui.setCarrotPreview(false, 0);
+        _cam.setZoom(_beginningZoom);
+        _cam.setNoZoom(false);
+        _charDisplayTimer = -1;
     }
     else{
         _action.postUpdate(remain);

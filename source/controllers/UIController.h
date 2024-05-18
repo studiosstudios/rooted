@@ -103,6 +103,11 @@ private:
     // 0 = not pressed, 1 = pressed, 2 = waiting
     int _nextRound;
     
+    std::shared_ptr<cugl::scene2::SceneNode> _characterdisplay;
+    std::shared_ptr<cugl::scene2::SceneNode> _rabbitpreview;
+    std::shared_ptr<cugl::scene2::SceneNode> _carrotpreview;
+    std::shared_ptr<cugl::scene2::SceneNode> _winner;
+
 public:
 #pragma mark Constructor/Destructor/Dispose
 #pragma mark -
@@ -159,6 +164,14 @@ public:
     int getNextRound() { return _nextRound; }
     
     void setNextRound(int n) { _nextRound = n; }
+    
+    void setCharacterDisplay(bool active, int carrot);
+    
+    void setRabbitPreview(bool active);
+    
+    void setCarrotPreview(bool active, int carrot);
+    
+    void setWinnerDisplay(bool active, int carrot);
 };
 
 #endif /* UIController_h */

@@ -37,15 +37,19 @@ void CameraController::update(float dt) {
     float curr_x = _camera->getPosition().x;
     float curr_y = _camera->getPosition().y;
     Vec2 newPos = boundPosition(_posTarget);
-    if(_startTimer > 0){
-        _startTimer--;
-    }
-    if(_startTimer == 0){
-        if(std::abs(_camera->getZoom() - _zoomTarget) > ZOOM_ERR){
-            zoomIn((_zoomTarget-_camera->getZoom())*ZOOM_RATE);
+    if (_nozoom) {
+        _camera->setZoom(_zoomTarget);
+    } else {
+        if(_startTimer > 0){
+            _startTimer--;
         }
-        else {
-            _camera->setZoom(_zoomTarget);
+        if(_startTimer == 0){
+            if(std::abs(_camera->getZoom() - _zoomTarget) > ZOOM_ERR){
+                zoomIn((_zoomTarget-_camera->getZoom())*ZOOM_RATE);
+            }
+            else {
+                _camera->setZoom(_zoomTarget);
+            }
         }
     }
     if(std::abs(newPos.x-curr_x) < CAM_POSITION_ERR && std::abs(newPos.y-curr_y) < CAM_POSITION_ERR){

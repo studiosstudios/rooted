@@ -93,6 +93,8 @@
 #define RESET_COLOR      Color4::YELLOW
 /** The effect for button click */
 #define BUTTON_EFFECT       "button"
+/** The effect for carrot button click */
+#define C_BUTTON_EFFECT       "carrotButton"
 /** The key the carrot victory game music */
 #define C_WIN_MUSIC       "carrotsWin"
 /** The key the carrot failure game music */

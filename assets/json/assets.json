@@ -882,6 +882,11 @@
             "type":     "sample",
             "file":     "sounds/button-click.ogg",
             "volume":   0.5
+        },
+        "carrotButton": {
+            "type":     "sample",
+            "file":     "sounds/button-click2.ogg",
+            "volume":   0.5
         }
     },
     "fonts": {

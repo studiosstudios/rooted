@@ -92,6 +92,10 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     for (int ii = 0; ii < _numbers.size(); ii++) {
         auto n = _numbers.at(ii);
         n->addListener([this, ii](const std::string& name, bool down) {
+            if(down){
+                std::shared_ptr<Sound> source = _assets->get<Sound>(C_BUTTON_EFFECT);
+                AudioEngine::get()->play("carrotButton", source, false, _soundScale);
+            }
             if (!down && _gameid->getText().length() < 5) {
                 _gameid->setText(_gameid->getText() + std::to_string(ii));
             }

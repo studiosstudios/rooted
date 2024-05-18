@@ -712,6 +712,8 @@ void Map::spawnEnvCollidables() {
         obs->setSensor(false);
         obs->setDebugColor(Color4::RED);
         obs->setDebugScene(_debugnode);
+        obs->setName("env_collidable");
+        obs->setRestitution(0.4);
         _envCollidables.push_back(obs);
         _world->initObstacle(obs);
     }
@@ -730,6 +732,8 @@ void Map::spawnFarmers() {
         farmer->setRunSprites(initEntityDirectionalSprites("farmer-", "-run"));
         farmer->setDashSprites(initEntityDirectionalSprites("farmer-", "-dash"));
 //        farmer->setBaseCarrySprites(initEntityDirectionalSprites("farmer-", "-carry"));
+        farmer->setDashColliderSize(Size(FARMER_DASH_HITBOX_WIDTH, FARMER_DASH_HITBOX_HEIGHT));
+        farmer->setRockColliderSize(Size(FARMER_ROCK_HITBOX_WIDTH, FARMER_ROCK_HITBOX_HEIGHT));
         
         farmer->setSceneNode(walkDS.southSprite);
         farmer->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
@@ -754,6 +758,8 @@ void Map::spawnBabyCarrots() {
         baby->setName("baby");
         baby->setID((unsigned)_babies.size());
         baby->setColliderSize(Size(BARROT_HITBOX_WIDTH, BARROT_HITBOX_HEIGHT));
+        baby->setDashColliderSize(Size(BARROT_DASH_HITBOX_WIDTH, BARROT_DASH_HITBOX_HEIGHT));
+        baby->setRockColliderSize(Size(BARROT_ROCK_HITBOX_WIDTH, BARROT_ROCK_HITBOX_HEIGHT));
         _babies.push_back(baby);
         
         // TODO: Stagger baby carrot animation times with a random number generator -CJ
@@ -841,6 +847,8 @@ void Map::spawnCarrots() {
         carrot->setDebugColor(DEBUG_COLOR);
         carrot->setName("carrot");
         carrot->setColliderSize(Size(CARROT_HITBOX_WIDTH, CARROT_HITBOX_HEIGHT));
+        carrot->setDashColliderSize(Size(CARROT_DASH_HITBOX_WIDTH, CARROT_DASH_HITBOX_HEIGHT));
+        carrot->setRockColliderSize(Size(CARROT_ROCK_HITBOX_WIDTH, CARROT_ROCK_HITBOX_HEIGHT));
         _carrots.push_back(carrot);
         _players.push_back(carrot);
         
@@ -1000,6 +1008,9 @@ void Map::spawnRock(Vec2 pos, int idx, Vec2 vel, string uuid) {
     rock->setDebugScene(_debugnode);
     
     rock->setScale(0.035f * _scale/DEFAULT_DRAWSCALE);
+    if (!vel.isZero()) {
+        rock->setY(rock->getY() + rock->getHeight()/2);
+    }
     _rocks.push_back(rock);
     
     auto wheatnode = rock->allocWheatHeightNode(1);

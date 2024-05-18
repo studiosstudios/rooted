@@ -534,6 +534,9 @@
         },
         "carrotbutton1": {
             "file": "textures/carrotbutton1.png"
+        },
+        "topback": {
+            "file": "textures/topback.png"
         }
     },
     "jsons": {
@@ -624,23 +627,8 @@
         },
         "rustle": {
             "type":     "sample",
-            "file":     "sounds/rustlingAlt.ogg",
+            "file":     "sounds/rustling-alt.ogg",
             "stream":   true,
-            "volume":   0.5
-        },
-        "jump": {
-            "type":     "sample",
-            "file":     "sounds/jump.wav",
-            "volume":   0.5
-        },
-        "pew": {
-            "type":     "sample",
-            "file":     "sounds/pew.wav",
-            "volume":   0.5
-        },
-        "pop": {
-            "type":     "sample",
-            "file":     "sounds/plop.wav",
             "volume":   0.5
         },
         "bunny-root": {

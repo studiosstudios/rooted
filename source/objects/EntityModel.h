@@ -262,10 +262,21 @@ protected:
     
     /** stuff to do with the actual collision hitbox */
     cugl::Size _collidersize;
-    b2PolygonShape _collidershape;
     b2Fixture* _colliderfixture;
     std::shared_ptr<cugl::scene2::WireNode> _colliderdebug;
     std::string _collidername;
+    
+    /** the hitbox for dash collisions - both when dashing into entities and when when an entity dashes into you*/
+    cugl::Size _dashColliderSize;
+    b2Fixture* _dashColliderFixture;
+    std::shared_ptr<cugl::scene2::WireNode> _dashColliderDebug;
+    std::string _dashColliderName;
+    
+    /** the hitbox for rock collisions */
+    cugl::Size _rockColliderSize;
+    b2Fixture* _rockColliderFixture;
+    std::shared_ptr<cugl::scene2::WireNode> _rockColliderDebug;
+    std::string _rockColliderName;
 
 
 public:
@@ -660,6 +671,8 @@ public:
     bool isStunned() { return _state == STUNNED; }
     
     void setColliderSize(const cugl::Size& size) { _collidersize = size; }
+    void setRockColliderSize(const cugl::Size& size) { _rockColliderSize = size; }
+    void setDashColliderSize(const cugl::Size& size) { _dashColliderSize = size; }
 
     
 #pragma mark -

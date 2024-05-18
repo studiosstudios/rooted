@@ -84,6 +84,8 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
     _collidersize = size;
+    _dashColliderSize = size;
+    _rockColliderSize = size;
 //    nsize.width  *= DUDE_HSHRINK;
 //    nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
@@ -283,13 +285,26 @@ void EntityModel::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
-    _collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
+    b2PolygonShape collidershape;
+    collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
     
     b2FixtureDef fixturedef;
-    fixturedef.shape = &_collidershape;
+    fixturedef.shape = &collidershape;
     _collidername = "collider";
     fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
     _colliderfixture = _body->CreateFixture(&fixturedef);
+    
+    collidershape.SetAsBox(_dashColliderSize.width/2, _dashColliderSize.height/2, b2Vec2(0, -(getHeight() - _dashColliderSize.height)/2), 0);
+    fixturedef.shape = &collidershape;
+    _dashColliderName = "dash";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_dashColliderName);
+    _dashColliderFixture = _body->CreateFixture(&fixturedef);
+    
+    collidershape.SetAsBox(_rockColliderSize.width/2, _rockColliderSize.height/2, b2Vec2(0, -(getHeight() - _rockColliderSize.height)/2), 0);
+    fixturedef.shape = &collidershape;
+    _rockColliderName = "rock";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_rockColliderName);
+    _rockColliderFixture = _body->CreateFixture(&fixturedef);
 }
 
 /**
@@ -306,6 +321,14 @@ void EntityModel::releaseFixtures() {
     if (_colliderfixture != nullptr) {
         _body->DestroyFixture(_colliderfixture);
         _colliderfixture = nullptr;
+    }
+    if (_dashColliderFixture != nullptr) {
+        _body->DestroyFixture(_dashColliderFixture);
+        _dashColliderFixture = nullptr;
+    }
+    if (_rockColliderFixture != nullptr) {
+        _body->DestroyFixture(_rockColliderFixture);
+        _rockColliderFixture = nullptr;
     }
 }
 
@@ -525,6 +548,32 @@ void EntityModel::resetDebug() {
     }
     _colliderdebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
     _colliderdebug->setPosition(Vec2(getWidth()/2, 0));
+    
+    if (_dashColliderDebug == nullptr) {
+        _dashColliderDebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_dashColliderSize));
+        _dashColliderDebug->setRelativeColor(false);
+        _dashColliderDebug->setColor(Color4::ORANGE);
+        if (_scene != nullptr) {
+            _debug->addChild(_dashColliderDebug);
+        }
+    } else {
+        _dashColliderDebug->setPath(Rect(Vec2::ZERO,_dashColliderSize));
+    }
+    _dashColliderDebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _dashColliderDebug->setPosition(Vec2(getWidth()/2, 0));
+    
+    if (_rockColliderDebug == nullptr) {
+        _rockColliderDebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_rockColliderSize));
+        _rockColliderDebug->setRelativeColor(false);
+        _rockColliderDebug->setColor(Color4::BLACK);
+        if (_scene != nullptr) {
+            _debug->addChild(_rockColliderDebug);
+        }
+    } else {
+        _rockColliderDebug->setPath(Rect(Vec2::ZERO,_rockColliderSize));
+    }
+    _rockColliderDebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _rockColliderDebug->setPosition(Vec2(getWidth()/2, 0));
 }
 
 std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {

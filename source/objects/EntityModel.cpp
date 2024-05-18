@@ -139,8 +139,7 @@ void EntityModel::stepAnimation(float dt) {
             curAnimTime = 0;
         }
     }
-   
-    
+    animateDashEffect(dt);
 }
 
 #pragma mark -
@@ -204,6 +203,7 @@ EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(Entit
             return _runSprites;
             break;
         case DASHING:
+            makeDashEffect();
             return _dashSprites;
             break;
     }
@@ -218,7 +218,6 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         face = calculateFacing(_dashVector);
     }
     if (!((_prevState == _state) && (_facing == face))) {
-        
         // Get correct DirectionalSprites
         DirectionalSprites ds = getDirectionalSpritesForState(_state);
         
@@ -342,6 +341,7 @@ void EntityModel::dispose() {
     _node = nullptr;
     _wheatHeightNode = nullptr;
     _geometry = nullptr;
+    _dashEffectSprite = nullptr;
 }
 
 /**
@@ -389,6 +389,10 @@ void EntityModel::updateState(float dt) {
                 dashTimer = 8;
                 _dashCooldown = DASH_COOLDOWN_SECS;
                 stateChanged = true;
+                _makeDashTrail = true;
+//                makeDashEffect();
+//                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+//                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
             else {
                 nextState = getMovementState();
@@ -520,7 +524,8 @@ void EntityModel::update(float dt) {
     }
     
     if (_wheatHeightNode != nullptr) {
-        updateWheatHeightNode();
+//        updateWheatHeightNode();
+//        updateWheatNodes(dt);
     }
 }
 
@@ -582,7 +587,7 @@ std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
     _wheatSizeTarget = 0.75;
     _currWheatHeight = _wheatHeightTarget;
     _currWheatSize = _wheatSizeTarget;
-    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(0.8, 0.8)));
+    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(100.0, 100.0)));
     _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
     _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
     _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -609,7 +614,6 @@ void EntityModel::updateWheatHeightNode() {
     _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     
     Vec2 velocity = getLinearVelocity();
-    float angle = atan2(velocity.y, velocity.x);
     
     if (_state == DASHING) {
         _wheatSizeTarget = 1.5;
@@ -626,4 +630,157 @@ void EntityModel::updateWheatHeightNode() {
                                       _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 }
 
+void EntityModel::updateWheatNodes(float dt) {
+//    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    
+    Vec2 velocity = getLinearVelocity();
+    
+//    if (_state == DASHING) {
+////        _wheatSizeTarget = 1.5;
+////        _wheatHeightTarget = -100;
+//        
+//    } else {
+//        _wheatSizeTarget = 0.75;
+//        _wheatHeightTarget = round(velocity.length());
+//        _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+//        _wheatHeightNode->setColor(Color4(0, 20, 0, 255));
+//        _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+//    }
+    
+    if (_makeDashTrail) {
+        _wheatSizeTarget = 1.5;
+        _wheatHeightTarget = -100;
+//        CULog("making dash trail");
+//        _timeSinceTrailSpawn += dt;
+//        if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
+////            CULog("add dash ellipse");
+//            
+//        }
+        auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.0, 1.0)));
+//            ellipse->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
+//                                              _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+        ellipse->setPosition(getX(), getY()-getHeight());
+        ellipse->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
+        _dashTrail.push_back(ellipse);
+        _timeSinceTrailSpawn = 0.0f;
+        ellipse->setColor(Color4(0, 0, 20, 255));
+        _wheatHeightNode->getParent()->addChild(ellipse);
+        _dashNodes.push_back(ellipse);
+        
+        if (_dashTrail.size() >= _maxTrailPoints) {
+            _makeDashTrail = false;
+        }
+//            CULog("finished dash trail");
+//            for (auto d : _dashNodes) {
+//                CULog("remove dash node");
+//                d->removeFromParent();
+//            }
+    } 
+    
+    else if (_makeDashTrail == false && _dashTrail.size() > 0) {
+        _trailVanishTime -= dt;
+        if (_trailVanishTime <= 0) {
+    //        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+    //        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+    //        CULog("shrinking trail");
+            auto first_node = _dashTrail[0];
+            auto size = first_node->getSize();
+            size.width -= _trailVanishRate;
+            size.height -= _trailVanishRate;
+    //        first_node->setColor(first_node->getColor()-Color4(0,0,1,0));
+            
+    //        _wheatHeightTarget += 1;
+            
+    //        if (first_node->getColor().b <= 0) {
+    //            CULog("removed dash node");
+    //            first_node->removeFromParent();
+    //            _dashTrail.erase(_dashTrail.begin());
+    //        }
+            
+            if (size.width <= 0.0f || size.height <= 0.0f) {
+    //            CULog("removed dash node");
+                first_node->removeFromParent();
+                _dashTrail.erase(_dashTrail.begin());
+            }
+            first_node->SceneNode::setContentSize(size);
+    //        first_node->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+        }
+    }
+    
+    else {
+        _trailVanishTime = DASH_TRAIL_HOLD;
+//        CULog("rustling node");
+        _wheatSizeTarget = 0.75;
+        _wheatHeightTarget = round(velocity.length());
+        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+        
+        _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+        _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+        _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+    }
 
+}
+
+void EntityModel::makeDashEffect() {
+    if (!_shouldAnimateDash) {
+        _shouldAnimateDash = true;
+        _dashEffectSprite->setVisible(true);
+        _dashEffectSprite->setPosition(getPosition() * _drawScale);
+
+    }
+    switch (calculateFacing(_dashVector)) {
+        case SOUTH:
+            CULog("dash south");
+            _dashEffectSprite->setAngle(0);
+            break;
+        case NORTH:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(180 * DEGREE_TO_RADIAN);
+            break;
+        case EAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(90 * DEGREE_TO_RADIAN);
+            break;
+        case WEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(270 * DEGREE_TO_RADIAN);
+            break;
+        case SOUTHEAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(45 * DEGREE_TO_RADIAN);
+            break;
+        case SOUTHWEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(315 * DEGREE_TO_RADIAN);
+            break;
+        case NORTHEAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(135 * DEGREE_TO_RADIAN);
+            break;
+        case NORTHWEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(225 * DEGREE_TO_RADIAN);
+            break;
+        default:
+            _dashEffectSprite->setAngle(0);
+            break;
+    }
+}
+
+void EntityModel::animateDashEffect(float dt) {
+    if (_dashEffectSprite != nullptr) {
+        if (_shouldAnimateDash) {
+            curDashAnimTime += dt;
+            int frame = lround(_dashEffectSprite->getSpan() * curDashAnimTime / curDashAnimDuration) % _dashEffectSprite->getSpan();
+            if (curDashAnimTime > curDashAnimDuration || frame >= 11) {
+                curDashAnimTime = 0;
+                _shouldAnimateDash = false;
+                _dashEffectSprite->setVisible(false);
+                _dashEffectSprite->setFrame(0);
+            } else {
+                _dashEffectSprite->setFrame(frame);
+            }
+        }
+    }
+}

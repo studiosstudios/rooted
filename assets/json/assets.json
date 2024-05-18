@@ -336,6 +336,9 @@
         "barrot-southeast-diaper": {
             "file":     "textures/barrot-southeast-diaper.png"
         },
+        "dash-effect-sheet": {
+            "file":     "textures/dash-effect.png"
+        },
         "baby": {
             "file":     "textures/baby.png"
         },
@@ -460,6 +463,9 @@
         },
         "unit_br_2": {
             "file":     "textures/maps/unit_br_2.png"
+        },
+        "tutorial_bottom": {
+            "file":     "textures/maps/tutorial_bottom.png"
         },
         "shader_clouds": {
             "file":     "textures/clouds.png",

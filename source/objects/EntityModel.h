@@ -47,6 +47,7 @@
 #include <cugl/physics2/CUBoxObstacle.h>
 #include <cugl/physics2/CUCapsuleObstacle.h>
 #include <cugl/scene2/graph/CUWireNode.h>
+#include "../RootedConstants.h"
 
 #pragma mark -
 #pragma mark Drawing Constants
@@ -91,6 +92,8 @@
 #define BARROT_SOUTHEAST_WALK_SPRITE "barrot-southeast-walk"
 
 #define BABY_TEXTURE   "baby"
+
+#define DASH_EFFECT_SPRITE "dash-effect-sheet"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -195,6 +198,9 @@ protected:
     DirectionalSprites _runSprites;
     DirectionalSprites _dashSprites;
     
+    std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
+    bool _shouldAnimateDash = false;
+    
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
@@ -208,6 +214,13 @@ protected:
     /** The amount of time that has elapsed in the current animation cycle
         For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
     float curAnimTime = 0.0f;
+    
+    /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
+    float curDashAnimDuration = 1.2f;
+    
+    /** The amount of time that has elapsed in the current animation cycle
+        For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
+    float curDashAnimTime = 0.0f;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -258,6 +271,23 @@ protected:
     unsigned int _wheatQueryId;
     /** If the middle bottom pixel of the hitbox of this entity model is in wheat */
     bool _inWheat;
+    
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashTrail;
+
+    int _maxTrailPoints = 15;
+    
+    float _trailSpawnInterval = 0.02f;
+    
+    float _trailVanishRate = 0.5f;
+    
+    float _timeSinceTrailSpawn = 0.0f;
+    
+    bool _makeDashTrail = false;
+    
+    float _trailVanishTime = DASH_TRAIL_HOLD;
+    
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _dashNodes;
+
     bool _hasRock;
     
     /** stuff to do with the actual collision hitbox */
@@ -549,6 +579,15 @@ public:
     }
         
     /**
+     * Sets  the dash effect sprite nodes associated with this EntityModel
+     *
+     */
+    void setDashEffectSpriteNode(const std::shared_ptr<cugl::scene2::SpriteNode>& dashEffectNode) {
+        _dashEffectSprite = dashEffectNode;
+//        _node->addChild(dashEffectNode);
+    }
+    
+    /**
      * Steps the current sprite's animation by dt.
      *
      * This steps the current sprite node associated with this EntityModel by incrementing curAnimTime by dt and comparing it with curAnimDuration
@@ -736,11 +775,17 @@ public:
         _state = state;
     }
     
+    void animateDashEffect(float dt);
+    
+    void makeDashEffect();
+    
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
     
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode(std::shared_ptr<cugl::Texture> &rustle);
 
     virtual void updateWheatHeightNode();
+    
+    virtual void updateWheatNodes(float dt);
 
     std::shared_ptr<cugl::scene2::SceneNode> getWheatHeightNode() { return _wheatHeightNode; };
 

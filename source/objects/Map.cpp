@@ -736,9 +736,18 @@ void Map::spawnFarmers() {
         farmer->setDashColliderSize(Size(FARMER_DASH_HITBOX_WIDTH, FARMER_DASH_HITBOX_HEIGHT));
         farmer->setRockColliderSize(Size(FARMER_ROCK_HITBOX_WIDTH, FARMER_ROCK_HITBOX_HEIGHT));
         
+        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
+        dashEffectNode->setVisible(false);
+        dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
+        dashEffectNode->setPriority(float(Map::DrawOrder::CLOUDS));
+        
+        _worldnode->addChild(dashEffectNode);
+        
         farmer->setSceneNode(walkDS.southSprite);
         farmer->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
 
+        farmer->setDashEffectSpriteNode(dashEffectNode);
+        
         farmer->setDebugScene(_debugnode);
 
         auto wheatnode = farmer->allocWheatHeightNode();
@@ -862,9 +871,17 @@ void Map::spawnCarrots() {
         carrot->setSceneNode(walkDS.southSprite);
         carrot->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         
+        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
+        dashEffectNode->setVisible(false);
+        dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
+        dashEffectNode->setPriority(float(Map::DrawOrder::CLOUDS));
+        
+        _worldnode->addChild(dashEffectNode);
         carrot->setWalkSprites(walkDS);
         carrot->setRunSprites(walkDS);
         carrot->setDashSprites(initEntityDirectionalSprites("carrot-", "-dash", 0.125f));
+        
+        carrot->setDashEffectSpriteNode(dashEffectNode);
         
         carrot->setDebugScene(_debugnode);
         
@@ -903,6 +920,7 @@ void Map::updateShaders(float step, Mat4 perspective) {
     }
     _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / scale * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);
+    _wheatscene->updateWindEffect();
 }
 
 void Map::resetPlantingSpots() {

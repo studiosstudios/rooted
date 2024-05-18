@@ -624,6 +624,10 @@ void Map::spawnFarmers() {
         carrotfarmerNode->setVisible(false);
         carrotfarmerNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
         
+        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
+        dashEffectNode->setVisible(false);
+        dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
+        
         _entitiesNode->addChild(farmerSouthWalkNode);
         _entitiesNode->addChild(farmerNorthWalkNode);
         _entitiesNode->addChild(farmerEastWalkNode);
@@ -638,6 +642,8 @@ void Map::spawnFarmers() {
         _entitiesNode->addChild(farmerNorthDashNode);
         _entitiesNode->addChild(farmerEastDashNode);
         _entitiesNode->addChild(carrotfarmerNode);
+        
+        _entitiesNode->addChild(dashEffectNode);
         
         farmer->setSpriteNodes(farmerNorthWalkNode,
                                farmerNorthEastWalkNode,
@@ -655,6 +661,7 @@ void Map::spawnFarmers() {
                                farmerEastDashNode,
                                farmerSouthDashNode);
         
+        
         farmer->setNormalNode(farmerSouthWalkNode);
         farmer->setCaptureNode(carrotfarmerNode);
         
@@ -662,6 +669,8 @@ void Map::spawnFarmers() {
         farmer->setDrawScale(
                 _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
 
+        farmer->setDashEffectSpriteNode(dashEffectNode);
+        
         farmer->setDebugScene(_debugnode);
 
         auto wheatnode = farmer->allocWheatHeightNode();
@@ -893,6 +902,10 @@ void Map::spawnCarrots() {
 //        carrotSouthEastDashNode->setAnchor(Vec2(0.5, 0.25));
         carrotSouthEastDashNode->setVisible(false);
         
+        auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
+        dashEffectNode->setVisible(false);
+        dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
+        
         _entitiesNode->addChild(carrotNorthWalkNode);
         _entitiesNode->addChild(carrotEastWalkNode);
         _entitiesNode->addChild(carrotSouthWalkNode);
@@ -904,6 +917,8 @@ void Map::spawnCarrots() {
         _entitiesNode->addChild(carrotNorthEastDashNode);
         _entitiesNode->addChild(carrotSouthEastDashNode);
         
+        _entitiesNode->addChild(dashEffectNode);
+
         carrot->setSceneNode(carrotSouthWalkNode);
         carrot->setDrawScale(
                              _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
@@ -923,6 +938,8 @@ void Map::spawnCarrots() {
                                carrotEastDashNode,
                                carrotSouthEastDashNode,
                                carrotSouthDashNode);
+        
+        carrot->setDashEffectSpriteNode(dashEffectNode);
         
         carrot->setDebugScene(_debugnode);
         

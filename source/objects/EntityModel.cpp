@@ -136,8 +136,7 @@ void EntityModel::stepAnimation(float dt) {
             curAnimTime = 0;
         }
     }
-   
-    
+    animateDashEffect(dt);
 }
 
 #pragma mark -
@@ -351,6 +350,7 @@ void EntityModel::dispose() {
     _eastWalkSprite = nullptr;
     _southEastWalkSprite = nullptr;
     _southWalkSprite = nullptr;
+    _dashEffectSprite = nullptr;
 }
 
 /**
@@ -399,6 +399,7 @@ void EntityModel::updateState(float dt) {
                 _dashCooldown = DASH_COOLDOWN_SECS;
                 stateChanged = true;
                 _makeDashTrail = true;
+                makeDashEffect();
 //                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
 //                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
@@ -700,4 +701,65 @@ void EntityModel::updateWheatNodes(float dt) {
         _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
     }
 
+}
+
+void EntityModel::makeDashEffect() {
+    _shouldAnimateDash = true;
+    _dashEffectSprite->setVisible(true);
+    _dashEffectSprite->setPosition(getPosition() * _drawScale);
+    
+    switch (calculateFacing(_dashVector)) {
+        case SOUTH:
+            CULog("dash south");
+            _dashEffectSprite->setAngle(0);
+            break;
+        case NORTH:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(180 * DEGREE_TO_RADIAN);
+            break;
+        case EAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(90 * DEGREE_TO_RADIAN);
+            break;
+        case WEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(270 * DEGREE_TO_RADIAN);
+            break;
+        case SOUTHEAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(45 * DEGREE_TO_RADIAN);
+            break;
+        case SOUTHWEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(315 * DEGREE_TO_RADIAN);
+            break;
+        case NORTHEAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(135 * DEGREE_TO_RADIAN);
+            break;
+        case NORTHWEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(225 * DEGREE_TO_RADIAN);
+            break;
+        default:
+            _dashEffectSprite->setAngle(0);
+            break;
+    }
+}
+
+void EntityModel::animateDashEffect(float dt) {
+    if (_dashEffectSprite != nullptr) {
+        if (_shouldAnimateDash) {
+            curDashAnimTime += dt;
+            if (curDashAnimTime > curDashAnimDuration) {
+                curDashAnimTime = 0;
+                _shouldAnimateDash = false;
+            } else {
+                _dashEffectSprite->setFrame(lround(_dashEffectSprite->getSpan() * curDashAnimTime / curDashAnimDuration) % _dashEffectSprite->getSpan());
+            }
+        } else {
+            _dashEffectSprite->setVisible(false);
+            _dashEffectSprite->setFrame(0);
+        }
+    }
 }

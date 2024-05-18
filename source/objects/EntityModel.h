@@ -93,6 +93,8 @@
 
 #define BABY_TEXTURE   "baby"
 
+#define DASH_EFFECT_SPRITE "dash-effect-sheet"
+
 #pragma mark -
 #pragma mark Physics Constants
 /** The factor to multiply by the input */
@@ -191,6 +193,9 @@ protected:
     std::shared_ptr<cugl::scene2::SpriteNode> _northEastDashSprite;
     std::shared_ptr<cugl::scene2::SpriteNode> _southEastDashSprite;
     
+    std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
+    bool _shouldAnimateDash = false;
+    
 	/** The scale between the physics world and the screen */
 	float _drawScale;
 
@@ -204,6 +209,13 @@ protected:
     /** The amount of time that has elapsed in the current animation cycle
         For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
     float curAnimTime = 0.0f;
+    
+    /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
+    float curDashAnimDuration = 1.5f;
+    
+    /** The amount of time that has elapsed in the current animation cycle
+        For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */
+    float curDashAnimTime = 0.0f;
    
 	/**
 	* Redraws the outline of the physics fixtures to the debug node
@@ -562,6 +574,15 @@ public:
     }
     
     /**
+     * Sets  the dash effect sprite nodes associated with this EntityModel
+     *
+     */
+    void setDashEffectSpriteNode(const std::shared_ptr<cugl::scene2::SpriteNode>& dashEffectNode) {
+        _dashEffectSprite = dashEffectNode;
+//        _node->addChild(dashEffectNode);
+    }
+    
+    /**
      * Steps the current sprite's animation by dt.
      *
      * This steps the current sprite node associated with this EntityModel by incrementing curAnimTime by dt and comparing it with curAnimDuration
@@ -744,6 +765,10 @@ public:
         _prevState = _state;
         _state = state;
     }
+    
+    void animateDashEffect(float dt);
+    
+    void makeDashEffect();
     
     virtual std::shared_ptr<cugl::scene2::SceneNode> allocWheatHeightNode();
     

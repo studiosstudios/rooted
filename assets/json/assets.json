@@ -129,6 +129,9 @@
         "barrot-southeast-walk": {
             "file":     "textures/barrot-southeast-walk.png"
         },
+        "dash-effect-sheet": {
+            "file":     "textures/dash-effect.png"
+        },
         "baby": {
             "file":     "textures/baby.png"
         },

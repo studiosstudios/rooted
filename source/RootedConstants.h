@@ -44,6 +44,8 @@
 #define DEFAULT_GRAVITY 0.0f
 /** The number of frame to wait before reinitializing the game */
 #define EXIT_COUNT      240
+/** The conversion from degrees to radians */
+#define DEGREE_TO_RADIAN  0.0174533
 
 #pragma mark -
 #pragma mark Game Logic Constants

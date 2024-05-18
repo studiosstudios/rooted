@@ -90,7 +90,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _numFarmers = 1;
     _numCarrots = _network->getNumPlayers() - 1;
-    _numBabies = (_network->getNumPlayers() - 1) * 15 + 5;
+    _numBabies = (_network->getNumPlayers() - 1) * 5 + 5;
     _numPlanting = 8;
 
     _map->generate(_seed, _numFarmers, _numCarrots, _numBabies, _numPlanting);

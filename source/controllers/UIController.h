@@ -95,7 +95,6 @@ private:
     
     std::shared_ptr<cugl::scene2::Button> _nextbutton;
     std::shared_ptr<cugl::scene2::SceneNode> _playerpointinfo;
-    std::shared_ptr<cugl::scene2::Button> _exitbutton;
     std::shared_ptr<cugl::scene2::Button> _nextroundbutton;
     // a map from the little icon of the player to an array of the number of points you have
     std::map<std::shared_ptr<cugl::scene2::SceneNode>, std::vector<std::shared_ptr<cugl::scene2::SceneNode>>> _points;
@@ -113,6 +112,8 @@ private:
 
     std::shared_ptr<cugl::scene2::SceneNode> _winner;
     std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _winnerNodes;
+    std::shared_ptr<cugl::scene2::Button> _exitbutton;
+    std::shared_ptr<cugl::scene2::Button> _winnernextbutton;
 
 
 public:

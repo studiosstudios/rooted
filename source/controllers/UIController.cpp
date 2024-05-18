@@ -109,6 +109,15 @@ void UIController::setWinnerDisplay(bool active, int carrot) {
         (*it)->setVisible(false);
     }
     _winnerNodes.at(carrot)->setVisible(true);
+    if (active) {
+        _exitbutton->activate();
+        _winnernextbutton->activate();
+    } else {
+        _exitbutton->deactivate();
+        _exitbutton->setDown(false);
+        _winnernextbutton->deactivate();
+        _winnernextbutton->setDown(false);
+    }
 }
 
 void UIController::setSpeechBubbleVisible(bool visible) {
@@ -291,13 +300,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
         _points.insert({wholenode, elements});
     }
     
-    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
-    _exitbutton->setVisible(false);
-//    _exitbutton->addListener([this](const std::string& name, bool down) {
-//        if (!down) {
-//            // TODO: disconnect to the main menu
-//        }
-//    });
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
@@ -330,6 +332,20 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _winner->doLayout(); // Repositions the HUD
     _winner->setVisible(false);
     _uinode->addChild(_winner);
+    
+    // winner specific buttons
+    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_exit"));
+    _exitbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // TODO: disconnect to the main menu
+        }
+    });
+    _winnernextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_next"));
+    _winnernextbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // TODO: send the next game event
+        }
+    });
     
     _characterdisplayNodes.clear();
     _carrotpreviewNodes.clear();

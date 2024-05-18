@@ -19,7 +19,6 @@ void UIController::dispose() {
     _assets = nullptr;
     _input = nullptr;
     _uinode = nullptr;
-    _filledpoint = nullptr;
 }
 
 void UIController::setWinVisible(bool visible) {
@@ -63,17 +62,19 @@ void UIController::setEndVariables(int roundNum, int length, int babies, int car
     }
     
     auto temp =_uinode->getChildByName("playerpoints")->getChildByName("playerpoints");
-    
-    for (int ii = 1; ii <= _points.size(); ii++) {
+    // set all to not be visible first
+    for (int ii = 0; ii < _points.size(); ii++) {
         temp->getChildByName("playerpointinfo_" + std::to_string(ii))->setVisible(false);
     }
+    // TODO: CHANGE THIS SO THAT IT REFLECTS UUID AND STUFF
     for (int ii = 0; ii < pointsVec.size(); ii++) {
-        auto temp2 = temp->getChildByName("playerpointinfo_" + std::to_string(ii + 1));
+        auto temp2 = temp->getChildByName("playerpointinfo_" + std::to_string(ii));
         temp2->setVisible(true);
         
         for (int jj = 0; jj < pointsVec.at(ii); jj++) {
-            if (jj <= 9) {
-                std::dynamic_pointer_cast<scene2::PolygonNode>(temp2->getChildByName("points")->getChildByName("point" + std::to_string(jj)))->setTexture(_filledpoint);
+            if (jj < 10) {
+                _points.at(temp2).at(jj * 2)->setVisible(false);
+                _points.at(temp2).at(jj * 2 + 1)->setVisible(true);
             }
         }
     }
@@ -240,16 +241,19 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _playerpointinfo->setVisible(false);
     _uinode->addChild(_playerpointinfo);
     
-    // there are 5 (1-5) rows with 9 (0-8)
+    // there are 4 (0-3) rows with 10 (0-9)
     // playerpoints_playerpoints_playerpointinfo_x
-    // playerpoints_playerpoints_playerpointinfo_x_points_pointx
+    // playerpoints_playerpoints_playerpointinfo_x_points_emptypoint_x
+    // playerpoints_playerpoints_playerpointinfo_x_fullpoints_fullpoint_x
     _points.clear();
-    for (int ii = 1; ii <= 5; ii++) {
+    for (int ii = 0; ii < 4; ii++) {
         std::shared_ptr<scene2::SceneNode> wholenode = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii));
         std::vector<std::shared_ptr<scene2::SceneNode>> elements;
-        for (int jj = 0; jj < 9; jj++) {
-            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_points_point" + std::to_string(jj));
+        for (int jj = 9; jj >= 0; jj--) {
+            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_points_emptypoint_" + std::to_string(jj));
             elements.push_back(temp);
+            std::shared_ptr<scene2::SceneNode> temp2 = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_fullpoints_fullpoint_" + std::to_string(jj));
+            elements.push_back(temp2);
         }
         _points.insert({wholenode, elements});
     }
@@ -263,13 +267,12 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            CULog("the next next button was pressed");
             _nextRound = 1;
         }
     });
         
     // get the filled in texture
-    _filledpoint = _assets->get<Texture>("filledpoint");
+//    _filledpoint = _assets->get<Texture>("filledpoint");
     
     _nextRound = 0;
     

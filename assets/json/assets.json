@@ -295,7 +295,7 @@
         "emptypoint" : {
             "file" : "textures/emptypoint.png"
         },
-        "filledpoint" : {
+        "fullpoint" : {
             "file" : "textures/filledpoint.png"
         },
         "speechbubble": {
@@ -318,6 +318,18 @@
         },
         "carrotbutton1": {
             "file": "textures/carrotbutton1.png"
+        },
+        "Big_Icon_1" : {
+            "file" : "textures/Big_Icon_1.png"
+        },
+        "Big_Icon_2" : {
+            "file" : "textures/Big_Icon_2.png"
+        },
+        "Big_Icon_3" : {
+            "file" : "textures/Big_Icon_3.png"
+        },
+        "Big_Icon_4" : {
+            "file" : "textures/Big_Icon_4.png"
         }
     },
     "jsons": {

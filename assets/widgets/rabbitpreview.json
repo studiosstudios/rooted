@@ -1,0 +1,120 @@
+{
+    "variables": {},
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                0
+            ],
+            "size": [
+                1024,
+                576
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                0
+            ],
+            "visible": true
+        },
+        "children": {
+            "wheatbkg": {
+                "type": "Image",
+                "data": {
+                    "texture": "wheatbkg",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        1024,
+                        576
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "fill",
+                    "y_anchor": "fill",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "farmertext": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0.5,
+                        1
+                    ],
+                    "size": [
+                        683,
+                        100
+                    ],
+                    "position": [
+                        171,
+                        476
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold80",
+                    "text": "You are the farmer!",
+                    "foreground": "#ffffffff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "top",
+                    "halign": "left"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "rabbit": {
+                "type": "Image",
+                "data": {
+                    "texture": "rabbit",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        392.7,
+                        458.4
+                    ],
+                    "angle": 0,
+                    "position": [
+                        316,
+                        -0.4
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "middle",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": -0.1
+                }
+            }
+        }
+    }
+}

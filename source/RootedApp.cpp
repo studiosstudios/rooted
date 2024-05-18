@@ -52,6 +52,7 @@ void RootedApp::onStartup() {
     _loaded = false;
     _loading.init(_assets);
     _status = LOAD;
+    _haptics = true;
     
     // Que up the other assets
     AudioEngine::start();
@@ -192,6 +193,8 @@ void RootedApp::preUpdate(float dt) {
         if(AudioEngine::get()->getState("menu") != AudioEngine::State::PLAYING){
             AudioEngine::get()->play("menu", source, true);
         }
+        _haptics = _mainmenu.hapticsTrue();
+        std::cout << "TEST HAPTICS: " << _haptics << "\n";
     }
     else if (_status == HOST){
         updateHostScene(dt);
@@ -201,6 +204,7 @@ void RootedApp::preUpdate(float dt) {
     }
     else if (_status == GAME){
         _gameplay.preUpdate(dt);
+        _gameplay.setHaptics(_haptics);
         AudioEngine::get()->pause("menu");
         AudioEngine::get()->pause("tutorial");
         std::shared_ptr<Sound> source = _assets->get<Sound>(LEVEL_MUSIC);
@@ -213,6 +217,7 @@ void RootedApp::preUpdate(float dt) {
     }
     else if (_status == TUTORIAL){
         _tutorial.preUpdate(dt);
+        _tutorial.setHaptics(_mainmenu.hapticsTrue());
         if (_tutorial.returnToMenu()){
             _tutorial.setActive(false);
             _mainmenu.setActive(true);

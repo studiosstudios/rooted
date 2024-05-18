@@ -45,6 +45,8 @@ protected:
     UIController _ui;
     /** Controller for camera */
     CameraController _cam;
+    
+    bool _haptics;
 
     // VIEW
     /** Reference to the physics root of the scene graph */
@@ -308,6 +310,8 @@ public:
     void render(const std::shared_ptr<SpriteBatch> &batch);
 
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
+    
+    void setHaptics(bool b) { _haptics = b; };
 
 private:
     void changeCharacter(std::string UUID);

@@ -30,12 +30,13 @@ using namespace cugl;
  * Initializes an ActionController
  */
 bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-    const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets) {
+    const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets, bool haptics) {
     _map = map;
     _input = input;
     _world = _map->getWorld();
     _network = network;
     _assets = assets;
+    _haptics = haptics;
     _freeMeter = 0;
     if (_network->isHost()) {
         _ai = AIController::alloc(map);
@@ -127,7 +128,8 @@ void ActionController::preUpdate(float dt) {
         auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
         if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
             //        std::cout<<"farmer did the rooting\n";
-            Haptics::get()->playContinuous(1.0, 0.3, 0.2);
+            if(_haptics)
+                Haptics::get()->playContinuous(1.0, 0.3, 0.2);
             std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_BUNNY_EFFECT);
             AudioEngine::get()->play("root-bunny", source);
             
@@ -165,7 +167,8 @@ void ActionController::preUpdate(float dt) {
             if(_freeMeter >= 50){
                 _freeMeter = 0;
                 _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
-                Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+                if(_haptics)
+                    Haptics::get()->playContinuous(1.0, 0.3, 0.1);
             }
         }
         else{
@@ -362,7 +365,8 @@ void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& 
         AudioEngine::get()->play("capture", source);
     }
     if(_map->getCharacter()->getUUID() == event->getUUID()){
-        Haptics::get()->playContinuous(1.0, 0.8, 0.3);
+        if(_haptics)
+            Haptics::get()->playContinuous(1.0, 0.8, 0.3);
     }
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
@@ -392,7 +396,8 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
             }
             carrot->gotRooted();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
-                Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+                if(_haptics)
+                    Haptics::get()->playContinuous(1.0, 0.3, 0.1);
                 std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_CARROT_EFFECT);
                 AudioEngine::get()->play("root-carrot", source);
             }
@@ -412,7 +417,8 @@ void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& ev
         if(carrot->getUUID() == event->getUUID()){
             carrot->gotUnrooted();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
-                Haptics::get()->playContinuous(1.0, 0.3, 0.1);
+                if(_haptics)
+                    Haptics::get()->playContinuous(1.0, 0.3, 0.1);
                 std::shared_ptr<Sound> source = _assets->get<Sound>(UNROOTING_EFFECT);
                 AudioEngine::get()->play("unroot", source);
             }
@@ -459,10 +465,12 @@ void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event)
 void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event){
     _map->getFarmers().at(0)->carrotEscaped();
     if(_map->isFarmer()){
-        Haptics::get()->playContinuous(1.0, 0.8, 0.3);
+        if(_haptics)
+            Haptics::get()->playContinuous(1.0, 0.8, 0.3);
     }
     else if(_map->getCharacter()->getUUID() == event->getUUID()){
-        Haptics::get()->playContinuous(1.0, 0.5, 0.2);
+        if(_haptics)
+            Haptics::get()->playContinuous(1.0, 0.5, 0.2);
     }
     for(auto carrot : _map->getCarrots()){
         if(event->getUUID() == carrot->getUUID()){

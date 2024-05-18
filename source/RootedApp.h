@@ -43,6 +43,7 @@ protected:
     HostScene _hostgame;
     ClientScene _joingame;
     TutorialScene _tutorial;
+    bool _haptics;
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;

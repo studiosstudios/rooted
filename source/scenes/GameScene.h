@@ -103,6 +103,8 @@ protected:
     int _numBabies;
     
     int _numPlanting;
+    
+    bool _haptics;
 
     
 //    std::map<std::shared_ptr<EntityModel>
@@ -342,6 +344,11 @@ public:
     void render(const std::shared_ptr<SpriteBatch> &batch);
     
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
+    
+    void setHaptics(bool b) {
+        _haptics = b;
+        _collision.setHaptics(b);
+    };
 };
 
 #endif /* RootedGameScene_h */

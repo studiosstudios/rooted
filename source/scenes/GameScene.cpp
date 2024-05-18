@@ -117,7 +117,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network, _assets, _haptics);
     _active = true;
     _complete = false;
     setDebug(false);
@@ -258,7 +258,7 @@ void GameScene::reset() {
     _map->resetPlayers();
     
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network, _assets, _haptics);
 
     if (_isHost) {
         _map->acquireMapOwnership();

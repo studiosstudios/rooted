@@ -94,7 +94,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network, _assets, _haptics);
     setDebug(false);
 
     _map->acquireMapOwnership();
@@ -197,7 +197,7 @@ void TutorialScene::reset() {
     _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID, _carrot2UUID}, _farmerUUID, _carrotUUID);
     
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network, _assets, _haptics);
 
     Size dimen = computeActiveSize();
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :

@@ -35,6 +35,7 @@ private:
     std::shared_ptr<NetworkController> _network;
     std::shared_ptr<cugl::AssetManager> _assets;
     int _freeMeter;
+    bool _haptics;
     
     /**
      * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character.
@@ -63,7 +64,7 @@ public:
      * Initializes an ActionController
      */
     bool init(std::shared_ptr<Map> &map, std::shared_ptr<InputController> &input,
-              const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets);
+              const std::shared_ptr<NetworkController> &network, const std::shared_ptr<cugl::AssetManager> &assets, bool haptics);
 
     void updateBabyCarrots();
     

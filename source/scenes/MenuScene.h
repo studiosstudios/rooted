@@ -34,6 +34,8 @@ public:
         STATS,
         SETTINGS
     };
+    
+    bool hapticsTrue();
 
 protected:
     /** The asset manager for this scene. */

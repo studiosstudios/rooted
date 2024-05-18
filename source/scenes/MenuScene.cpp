@@ -164,7 +164,9 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
         }
     });
     
+#ifndef CU_TOUCH_SCREEN
     Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
+#endif
     
     std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _dashinfobutton};
     _screenButtonMap.insert({Choice::SETTINGS, optionsbuttons});
@@ -287,4 +289,8 @@ void MenuScene::togglePopup(bool active) {
     if (active) {
         _popupclose->activate();
     }
+}
+
+bool MenuScene::hapticsTrue(){
+    return _hapticsbutton->isDown();
 }

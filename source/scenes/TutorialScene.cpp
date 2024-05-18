@@ -672,12 +672,6 @@ void TutorialScene::preUpdate(float dt) {
                     for (auto it = barrots.begin(); it != barrots.end(); ++it) {
                         (*it)->updateSprite(dt, false);
                     }
-                    //move farmer
-                    auto farmer = _map->getFarmers().at(0);
-                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.15);
-                    farmer->updateState(dt);
-                    farmer->applyForce();
-                    farmer->stepAnimation(dt);
                 }
                 _cam.setTarget(_character->getPosition()*_scale);
                 
@@ -699,13 +693,15 @@ void TutorialScene::preUpdate(float dt) {
         case CARROTWIN:
             break;
         case SWITCH: {
-            _black->setColor(Color4(0,0,0, std::max(255.0 - _time * 2 * 255,  0.0)));
+            _black->setVisible(true);
+            _black->setColor(Color4(0,0,0, (255 - _black->getColor().a) * 0.07 + _black->getColor().a));
             _action.preUpdate(dt);
             
         }
             break;
         case CATCHCARROT: {
             _action.preUpdate(dt);
+            _black->setColor(Color4(0,0,0, _black->getColor().a * 0.9));
             _cam.setTarget(_character->getPosition()*_scale);
             
             if (_step == 9) {
@@ -1003,7 +999,9 @@ void TutorialScene::postUpdate(float remain) {
         case ROCK:
             if (_map->getFarmers().at(0)->isStunned()) {
                 _time = 0;
+                _character = _map->changeCharacter(_carrotUUID);
                 _character->setSensor(true);
+                _map->getFarmers().at(0)->setSensor(true);
                 _state = FARMERRUNS;
                 _input->pause();
             }
@@ -1013,6 +1011,7 @@ void TutorialScene::postUpdate(float remain) {
                 _input->unpause();
                 _state = LASTBABY;
                 _time = 0;
+                _map->getFarmers().at(0)->setBodyType(b2_staticBody);
                 _character = _map->changeCharacter(_carrotUUID);
                 _character->setSensor(false);
                 _map->getBabyCarrots().at(0)->setBodyType(b2BodyType::b2_dynamicBody);
@@ -1037,6 +1036,8 @@ void TutorialScene::postUpdate(float remain) {
                 _time = 0;
                 _pausePhysics = false;
                 _input->unpause();
+                _map->getFarmers().at(0)->setSensor(false);
+                _map->getFarmers().at(0)->setBodyType(b2_dynamicBody);
                 _state = CATCHCARROT;
             }
             break;
@@ -1063,23 +1064,10 @@ void TutorialScene::postUpdate(float remain) {
         case FARMERWIN:
             if (_time > 2.0){
                 _ui.setWinVisible(false);
-                // current character is still farmer
-                float x = _map->getMapBounds().size.width/2.0;
-                float y = _map->getMapBounds().size.height/2.0;
-                _character->setPosition(x, y);
-                _state = FREEPLAY;
-                _time = 0;
                 _pausePhysics = true;
                 _input->pause();
-                
-                auto carrot1 = _map->getCarrots().at(0);
-                auto carrot2 = _map->getCarrots().at(1);
-                carrot1->setBodyType(b2BodyType::b2_staticBody);
-                carrot2->setBodyType(b2BodyType::b2_staticBody);
-                carrot1->resetCarrot();
-                carrot2->resetCarrot();
-                carrot1->setPosition(x*1.2, y*0.5);
-                _returnToMenu = true;
+                _black->setColor(Color4(0,0,0, (255 - _black->getColor().a) * 0.07 + _black->getColor().a));
+                if (_time > 4.0) _returnToMenu = true;
 //                carrot2->setPosition(x*0.8, y*0.5);
                 
             }

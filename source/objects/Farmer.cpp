@@ -10,31 +10,24 @@ bool Farmer::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
 
 void Farmer::dispose() {
     EntityModel::dispose();
-    _normalNode = nullptr;
-    _captureNode = nullptr;
 }
 
 void Farmer::grabCarrot(){
     _isHoldingCarrot = true;
     _state = CARRYING;
     updateSprite(0);
-//    _normalNode->setVisible(false);
-//    _captureNode->setVisible(true);
-//    setSceneNode(_captureNode);
 }
 
 void Farmer::rootCarrot(){
     _isHoldingCarrot = false;
     _state = STANDING;
     updateSprite(0);
-//    _captureNode->setVisible(false);
-//    _normalNode->setVisible(true);
-//    setSceneNode(_normalNode);
 }
 
 void Farmer::carrotEscaped(){
     _isHoldingCarrot = false;
-    setSceneNode(_normalNode);
+    _state = STANDING;
+    updateSprite(0);
 }
 
 void Farmer::setMovement(Vec2 movement) {

@@ -84,6 +84,12 @@
         "farmer-east-dash": {
             "file":     "textures/farmer-east-dash.png"
         },
+        "farmer-southeast-dash": {
+            "file":     "textures/farmer-southeast-dash.png"
+        },
+        "farmer-northeast-dash": {
+            "file":     "textures/farmer-northeast-dash.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },

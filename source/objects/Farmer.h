@@ -16,8 +16,6 @@ private:
     bool _isHoldingCarrot;
     bool _canPlant;
     bool _dashWindow;
-    std::shared_ptr<cugl::scene2::SpriteNode> _normalNode;
-    std::shared_ptr<cugl::scene2::SpriteNode> _captureNode;
     
     // Animation timers
     float sneakAnimDuration = 2.0f;
@@ -53,11 +51,7 @@ public:
 
     bool canPlant() { return _canPlant; };
     
-    void setCanPlant(bool plant) { _canPlant = plant; };
-    
-    void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
-    
-    void setCaptureNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _captureNode = n; }
+    void setCanPlant(bool plant) { _canPlant = plant; };    
     
     void setMovement(cugl::Vec2 movement) override;
     

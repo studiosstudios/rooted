@@ -580,114 +580,19 @@ void Map::spawnFarmers() {
         farmer->setDebugColor(DEBUG_COLOR);
         farmer->setName("farmer");
         farmer->setColliderSize(Size(FARMER_HITBOX_WIDTH, FARMER_HITBOX_HEIGHT));
-        
-        
-//        auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_SOUTH_WALK_SPRITE);
-//        auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
-//        auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
-//        auto farmerNorthEastWalkSprite  = _assets->get<Texture>(FARMER_NORTHEAST_WALK_SPRITE);
-//        auto farmerSouthEastWalkSprite  = _assets->get<Texture>(FARMER_SOUTHEAST_WALK_SPRITE);
-//
-//        auto farmerSouthWalkJson = _assets->get<JsonValue>("sprite-metadata")->get(FARMER_SOUTH_WALK_SPRITE);
-////        farmerSouthWalkJson->getInt("rows");
-////        farmerSouthWalkJson->getInt("cols");
-//        auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite,farmerSouthWalkJson->getInt("rows"),
-//                                                                      farmerSouthWalkJson->getInt("cols"));
-//        farmerSouthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-//        farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-//        
-//        auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
-//        farmerNorthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-//        farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-//        farmerNorthWalkNode->setVisible(false);
-//        
-//        auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
-//        farmerEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-//        farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-//        farmerEastWalkNode->setVisible(false);
-//        
-//        auto farmerNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthEastWalkSprite, 3, 4);
-//        farmerNorthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-//        farmerNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-//        farmerNorthEastWalkNode->setVisible(false);
-//        
-//        auto farmerSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthEastWalkSprite, 3, 4, 9);
-//        farmerSouthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-//        farmerSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-//        farmerSouthEastWalkNode->setVisible(false);
-        
-        // Run sprites
-        auto farmerSouthRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_SOUTH_RUN_SPRITE), 2, 4);
-        farmerSouthRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerSouthRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerSouthRunNode->setVisible(false);
-        
-        auto farmerNorthRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_NORTH_RUN_SPRITE), 2, 4, 6);
-        farmerNorthRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerNorthRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerNorthRunNode->setVisible(false);
-        
-        auto farmerEastRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_EAST_RUN_SPRITE), 2, 4);
-        farmerEastRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerEastRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerEastRunNode->setVisible(false);
-        
-        auto farmerNorthEastRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_NORTHEAST_RUN_SPRITE), 2, 4);
-        farmerNorthEastRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerNorthEastRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerNorthEastRunNode->setVisible(false);
-        
-        auto farmerSouthEastRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_SOUTHEAST_RUN_SPRITE), 3, 4);
-        farmerSouthEastRunNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerSouthEastRunNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerSouthEastRunNode->setVisible(false);
-        
-        // Dash sprites
-        auto farmerSouthDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_SOUTH_DASH_SPRITE), 1, 1);
-        farmerSouthDashNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerSouthDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerSouthDashNode->setVisible(false);
-        
-        auto farmerNorthDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_NORTH_DASH_SPRITE), 1, 1);
-        farmerNorthDashNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerNorthDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerNorthDashNode->setVisible(false);
-        
-        auto farmerEastDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_EAST_DASH_SPRITE), 1, 1);
-        farmerEastDashNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerEastDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerEastDashNode->setVisible(false);
-        
+                
         auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
         carrotfarmerNode->setVisible(false);
         carrotfarmerNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
         
-        
-        // Add all nodes as subnode to _entitesNode
-//        _entitiesNode->addChild(farmerSouthWalkNode);
-//        _entitiesNode->addChild(farmerNorthWalkNode);
-//        _entitiesNode->addChild(farmerEastWalkNode);
-//        _entitiesNode->addChild(farmerNorthEastWalkNode);
-//        _entitiesNode->addChild(farmerSouthEastWalkNode);
-        _entitiesNode->addChild(farmerSouthRunNode);
-        _entitiesNode->addChild(farmerNorthRunNode);
-        _entitiesNode->addChild(farmerEastRunNode);
-        _entitiesNode->addChild(farmerNorthEastRunNode);
-        _entitiesNode->addChild(farmerSouthEastRunNode);
-        _entitiesNode->addChild(farmerSouthDashNode);
-        _entitiesNode->addChild(farmerNorthDashNode);
-        _entitiesNode->addChild(farmerEastDashNode);
         _entitiesNode->addChild(carrotfarmerNode);
         
         // Set farmer's walk/run/dash sprite nodes
         farmer->setWalkSprites(initEntityDirectionalSprites("farmer-", "-walk"));
-        farmer->setRunSprites(EntityModel::DirectionalSprites(farmerNorthRunNode, farmerNorthEastRunNode, farmerEastRunNode, farmerSouthEastRunNode, farmerSouthRunNode));
-        farmer->setDashSprites(EntityModel::DirectionalSprites(farmerNorthDashNode, farmerEastDashNode, farmerEastDashNode, farmerEastDashNode, farmerSouthDashNode));
+        farmer->setRunSprites(initEntityDirectionalSprites("farmer-", "-run"));
+        farmer->setDashSprites(initEntityDirectionalSprites("farmer-", "-dash"));
         farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode));
-        
-        farmer->setNormalNode(carrotfarmerNode);
-        farmer->setCaptureNode(carrotfarmerNode);
-        
+                
         EntityModel::DirectionalSprites farmerBaseCarry;
         farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode));
         

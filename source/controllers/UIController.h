@@ -126,6 +126,9 @@ public:
     void setDialogBoxVisible(bool visible);
     bool getDialogBoxVisible() { return _dialogBox->isVisible(); };
     void setDialogBoxText(std::string text);
+    cugl::Vec2 getJoyNodePosition() { return _joyback->getPosition(); }
+    
+    std::shared_ptr<cugl::scene2::SceneNode> getJoyNode() { return _joynode; }
     
     void setCharacter(const std::shared_ptr<EntityModel>& character) {
         _character = character;

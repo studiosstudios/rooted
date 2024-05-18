@@ -588,6 +588,12 @@
         },
         "topback": {
             "file": "textures/topback.png"
+        },
+        "lefthand": {
+            "file": "textures/handjoystick.png"
+        },
+        "righthand": {
+            "file": "textures/righthand.png"
         }
     },
     "jsons": {

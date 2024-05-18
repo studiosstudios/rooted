@@ -68,7 +68,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _map = Map::alloc(_assets, true); // Obtains ownership of root.
 
-    _map->generate(0, 1, 2, 2, 2);
+    _map->generate(0, 1, 3, 2, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -133,6 +133,21 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _pausePhysics = false;
     
     _step = 0;
+    
+    _lefthandNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("lefthand"));
+    _righthandNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("righthand"));
+    _lefthandNode->setScale(0.12);
+    _lefthandNode->setAnchor(Vec2::ANCHOR_MIDDLE_RIGHT);
+    _righthandNode->setScale(0.3);
+    _fakejoyBack = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("joystick-back"));
+    _fakejoyBack->setScale(0.5f / zoom);
+    _fakejoyBack->setPosition(Vec2(SCENE_WIDTH/10, SCENE_HEIGHT/2)/zoom);
+    _uinode->addChild(_fakejoyBack);
+    _uinode->addChild(_lefthandNode);
+    _uinode->addChild(_righthandNode);
+    _lefthandNode->setVisible(false);
+    _righthandNode->setVisible(false);
+    _fakejoyBack->setVisible(false);
 
     return true;
 }
@@ -176,7 +191,7 @@ void TutorialScene::reset() {
     // Load a new level
     _map->clearRootNode();
     _map->dispose();
-    _map->generate(0, 1, 2, 2, 2);
+    _map->generate(0, 1, 3, 2, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -313,7 +328,6 @@ void TutorialScene::preUpdate(float dt) {
                 }
                 _character->updateState(dt);
                 _character->applyForce();
-                _character->stepAnimation(dt);
                 
             }
             break;
@@ -323,24 +337,51 @@ void TutorialScene::preUpdate(float dt) {
             // show dialog boxes one by one
             if (_step == 0) {
                 _input->pause();
-                _step = 1;
-            }
-            if (_step == 1) {
                 _ui.setDialogBoxVisible(true);
-                _step = 2;
-                _input->showDisplayJoystick();
+                _step = 1;
+                _lefthandNode->setPosition(Vec2(SCENE_WIDTH*0.1, SCENE_HEIGHT/2)/_cam.getCamera()->getZoom());
+                _lefthandNode->setColor(Color4::CLEAR);
+                _fakejoyBack->setColor(Color4::CLEAR);
+                _fakejoyBack->setVisible(true);
+                _lefthandNode->setVisible(true);
             }
-            else if (_step == 2 && _input->didContinue()) {
-                _ui.setDialogBoxVisible(false);
-                _step = 3;
-                _input->unpause();
-                _input->resetJoystick();
+            else if (_step == 1) {
+                if (_input->didContinue()) {
+                    _ui.setDialogBoxVisible(false);
+                    _step = 2;
+                    _input->unpause();
+                } else {
+                    _lefthandNode->setPosition(Vec2(SCENE_WIDTH*(0.165 + std::sin(_time * 1.3) * 0.06), SCENE_HEIGHT/2)/_cam.getCamera()->getZoom());
+                    _lefthandNode->setColor(Color4(255, 255, 255, 255 * std::clamp(_time - 1.2f, 0.0f, 1.0f)));
+                    _fakejoyBack->setColor(Color4(255, 255, 255, 255 * std::clamp(_time - 1.2f, 0.0f, 1.0f)));
+                }
+            } else {
+                float alpha = _fakejoyBack->getColor().a;
+                _fakejoyBack->setColor(Color4(255, 255, 255, 0.7*alpha));
+                _lefthandNode->setColor(Color4(255, 255, 255, 0.7*alpha));
             }
             break;
-        case CATCHBABIES:
-            _action.preUpdate(dt);
-            _cam.setTarget(_character->getPosition()*_scale);
-            break;
+        case CATCHBABIES: {
+                _action.preUpdate(dt);
+                _cam.setTarget(_character->getPosition()*_scale);
+                
+                if (_step == 2) {
+                    _input->pause();
+                    _ui.setDialogBoxText("Swipe on the right side of the screen to dash!\nDash into baby carrots to catch them!");
+                    _ui.setDialogBoxVisible(true);
+                    _step = 1;
+                }
+                else if (_step == 1) {
+                    if (_input->didContinue()) {
+                        _ui.setDialogBoxVisible(false);
+                        _step = 3;
+                        _input->unpause();
+                    } else {
+                        
+                    }
+                }
+                break;
+            }
         case SHOWFARMER:
             {
             if (_character->getName() == "carrot") { //wait until carrot animation finishes

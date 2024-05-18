@@ -540,12 +540,14 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != farmerUUID) {
+            EntityModel::CarrotType ct = _playerCarrotTypeMap[uuid];
             (*carrot)->setUUID(uuid);
-            (*carrot)->setCarrotType(_playerCarrotTypeMap[uuid]);
+            (*carrot)->setCarrotType(ct);
             if (uuid == thisUUID) {
                 ret = (*carrot);
                 getWorld()->getOwnedObstacles().insert({*carrot, 0});
             }
+            _farmers.at(0)->appendCarrySprite(ct, initEntityDirectionalSprites("farmer-", EntityModel::getCarrotTypeSuffix(ct)));
             carrot++;
         }
     }

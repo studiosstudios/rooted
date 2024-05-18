@@ -139,11 +139,11 @@ public:
         UNROOTING   // carrot only
     };
     
-    static enum CarrotType {
+    enum CarrotType {
         CLOAK,
         FLOWER,
         HEADPHONES,
-        TIE
+        SCARF
     };
     
     /** Struct for directional sprites, currently in use in Farmer only but could extend */
@@ -515,6 +515,19 @@ public:
     void setRunSprites(DirectionalSprites ds) {_runSprites = ds;}
     
     void setDashSprites(DirectionalSprites ds) {_dashSprites = ds;}
+    
+    static std::string getCarrotTypeSuffix(CarrotType ct) {
+        switch (ct) {
+            case CLOAK:
+                return "-cloak";
+            case FLOWER:
+                return "-flower";
+            case HEADPHONES:
+                return "-headphones";
+            case SCARF:
+                return "-scarf";
+        }
+    }
     
 //    /**
 //     * Sets all of the sprite nodes associated with this EntityModel

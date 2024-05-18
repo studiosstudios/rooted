@@ -81,6 +81,90 @@
         "cols": 4,
         "size": 10
     },
+    "farmer-south-cloak": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-north-cloak": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-east-cloak": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-northeast-cloak": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-southeast-cloak": {
+        "rows": 3,
+        "cols": 4,
+        "size": 10
+    },
+    "farmer-south-flower": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-north-flower": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-east-flower": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-northeast-flower": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-southeast-flower": {
+        "rows": 3,
+        "cols": 4,
+        "size": 10
+    },
+    "farmer-south-headphones": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-north-headphones": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-east-headphones": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-northeast-headphones": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-southeast-headphones": {
+        "rows": 3,
+        "cols": 4,
+        "size": 10
+    },
+    "farmer-south-scarf": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-north-scarf": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-east-scarf": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-northeast-scarf": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-southeast-scarf": {
+        "rows": 3,
+        "cols": 4,
+        "size": 10
+    },
     "carrot-south-walk": {
         "rows": 3,
         "cols": 4,

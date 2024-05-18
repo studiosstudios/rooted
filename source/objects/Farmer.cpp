@@ -16,8 +16,8 @@ void Farmer::dispose() {
 void Farmer::grabCarrot(CarrotType carrotType){
     _isHoldingCarrot = true;
     _state = CARRYING;
-    updateSprite(0);
     _carriedCarrotType = carrotType;
+    updateSprite(0);
     std::cout << "Carrying " << carrotType << "\n";
 }
 
@@ -43,9 +43,9 @@ void Farmer::setMovement(Vec2 movement) {
 
 EntityModel::DirectionalSprites Farmer::getDirectionalSpritesForState(EntityModel::EntityState state) {
     switch (state) {
-//        case CARRYING:
-//            return _carryingSprites[_carriedCarrotType];
-//            break;
+        case CARRYING:
+            return _carryingSprites[_carriedCarrotType];
+            break;
         default:
             return EntityModel::getDirectionalSpritesForState(state);
     }

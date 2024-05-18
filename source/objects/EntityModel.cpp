@@ -118,7 +118,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING;
+    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING;
 }
 
 void EntityModel::stepAnimation(float dt) {

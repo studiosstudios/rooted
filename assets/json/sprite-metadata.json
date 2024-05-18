@@ -60,6 +60,27 @@
         "rows": 1,
         "cols": 1
     },
+    "farmer-south-carry": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-north-carry": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-east-carry": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-northeast-carry": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-southeast-carry": {
+        "rows": 3,
+        "cols": 4,
+        "size": 10
+    },
     "carrot-south-walk": {
         "rows": 3,
         "cols": 4,

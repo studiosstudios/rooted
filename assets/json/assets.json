@@ -102,6 +102,21 @@
         "farmer-northeast-dash": {
             "file":     "textures/farmer-northeast-dash.png"
         },
+        "farmer-south-carry": {
+            "file":     "textures/farmer-south-carry.png"
+        },
+        "farmer-north-carry": {
+            "file":     "textures/farmer-north-carry.png"
+        },
+        "farmer-east-carry": {
+            "file":     "textures/farmer-east-carry.png"
+        },
+        "farmer-southeast-carry": {
+            "file":     "textures/farmer-southeast-carry.png"
+        },
+        "farmer-northeast-carry": {
+            "file":     "textures/farmer-northeast-carry.png"
+        },
         "fence0": {
             "file":     "textures/fence0.png"
         },

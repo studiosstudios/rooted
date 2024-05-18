@@ -710,23 +710,15 @@ void Map::spawnFarmers() {
         farmer->setDebugColor(DEBUG_COLOR);
         farmer->setName("farmer");
         farmer->setColliderSize(Size(FARMER_HITBOX_WIDTH, FARMER_HITBOX_HEIGHT));
-                
-        auto carrotfarmerNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROTFARMER_TEXTURE), 1, 1);
-        carrotfarmerNode->setVisible(false);
-        carrotfarmerNode->setScale(0.23f * _scale/DEFAULT_DRAWSCALE);
-        
-        _entitiesNode->addChild(carrotfarmerNode);
-        
+                                
         // Set farmer's walk/run/dash sprite nodes
-        farmer->setWalkSprites(initEntityDirectionalSprites("farmer-", "-walk"));
+        auto walkDS = initEntityDirectionalSprites("farmer-", "-walk");
+        farmer->setWalkSprites(walkDS);
         farmer->setRunSprites(initEntityDirectionalSprites("farmer-", "-run"));
         farmer->setDashSprites(initEntityDirectionalSprites("farmer-", "-dash"));
-        farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode));
-                
-        EntityModel::DirectionalSprites farmerBaseCarry;
-        farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode));
+        farmer->setBaseCarrySprites(initEntityDirectionalSprites("farmer-", "-carry"));
         
-        farmer->setSceneNode(carrotfarmerNode);
+        farmer->setSceneNode(walkDS.southSprite);
         farmer->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
 
         farmer->setDebugScene(_debugnode);

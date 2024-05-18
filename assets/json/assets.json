@@ -411,6 +411,45 @@
         },
         "topback": {
             "file": "textures/topback.png"
+        },
+        "optionsinfobkg": {
+            "file": "textures/optionsinfobkg.png"
+        },
+        "dashicon2select": {
+            "file": "textures/dashicon2select.png"
+        },
+        "dashicon2unselect": {
+            "file": "textures/dashicon2unselect.png"
+        },
+        "dashicon1unselect": {
+            "file": "textures/dashicon1unselect.png"
+        },
+        "dashicon1select": {
+            "file": "textures/dashicon1select.png"
+        },
+        "infoicon": {
+            "file": "textures/infoicon.png"
+        },
+        "checkboxunselect": {
+            "file": "textures/optionunselected.png"
+        },
+        "checkboxselect": {
+            "file": "textures/optionselected.png"
+        },
+        "hapticsicon": {
+            "file": "textures/hapticsicon.png"
+        },
+        "soundicon": {
+            "file": "textures/soundfxicon.png"
+        },
+        "slot": {
+            "file": "textures/audioslider.png"
+        },
+        "knob": {
+            "file": "textures/audioknob.png"
+        },
+        "musicicon": {
+            "file": "textures/musicicon.png"
         }
     },
     "jsons": {
@@ -616,7 +655,8 @@
         "playercountwidget" : "widgets/playercountwidget.json",
         "postround": "widgets/postround.json",
         "playerpoints" : "widgets/playerpoints.json",
-        "playerpointinfo" : "widgets/playerpointinfowidget.json"
+        "playerpointinfo" : "widgets/playerpointinfowidget.json",
+        "optionsmenu": "widgets/optionsmenu.json"
     },
     "scene2s" : {
         "host": {
@@ -665,6 +705,12 @@
             "type"   : "Widget",
             "data"   : {
                 "key"     : "loadingscreen"
+            }
+        },
+        "optionsmenu": {
+            "type": "Widget",
+            "data": {
+                "key": "optionsmenu"
             }
         }
     }

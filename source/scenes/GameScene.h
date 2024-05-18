@@ -113,6 +113,14 @@ protected:
     bool _swipe;
     
     float _soundScale;
+    
+    float _time = 0.0f;
+    
+    bool _mapGen = false;
+    
+    std::deque<float> _genTimes;
+    
+    bool _justGenerated = false;
 
 #pragma mark Internal Object Management
 

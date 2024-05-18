@@ -65,6 +65,21 @@ GameScene::GameScene() : Scene2(),
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
+    
+    _genTimes.push_back(0.1);
+    _genTimes.push_back(0.2);
+    _genTimes.push_back(0.3);
+    _genTimes.push_back(0.4);
+    _genTimes.push_back(0.5);
+    _genTimes.push_back(0.6);
+    _genTimes.push_back(0.7);
+    _genTimes.push_back(0.8);
+    _genTimes.push_back(1.0);
+    _genTimes.push_back(1.4);
+    _genTimes.push_back(1.8);
+    _genTimes.push_back(2.2);
+    _genTimes.push_back(2.8);
+    
     // Initialize the scene to a locked width
     Size dimen = computeActiveSize();
     if (assets == nullptr) {
@@ -169,6 +184,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
+    _mapGen = true;
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
     
     _round = 1;
@@ -357,6 +373,26 @@ void GameScene::gameReset() {
  * @param dt    The amount of time (in seconds) since the last frame
  */
 void GameScene::preUpdate(float dt) {
+    _time += dt;
+    if (_mapGen) {
+        
+        CULog("map generation go");
+        CULog("time: %f", _time);
+        if (_genTimes.size() == 0) {
+            _justGenerated = false;
+            _mapGen = false;
+            _time = 0.0;
+        }
+        else if (_time > _genTimes.front() && !_justGenerated) {
+            CULog("generated another map");
+            _justGenerated = true;
+            _genTimes.pop_front();
+            reset();
+        } else if (_time > _genTimes.front()) {
+            _justGenerated = false;
+        }
+    }
+  
     if (_map == nullptr || (_countdown >= 0 && _network->getNumPlayers() > 1)) {
         return;
     }
@@ -375,6 +411,7 @@ void GameScene::preUpdate(float dt) {
     }
 
     _action.preUpdate(dt);
+ 
 }
 
 /**
@@ -404,85 +441,91 @@ void GameScene::preUpdate(float dt) {
  * @param step  The number of fixed seconds for this step
  */
 void GameScene::fixedUpdate(float step) {
-    // Turn the physics engine crank.
-    while(_network->isInAvailable()){
-        auto e = _network->popInEvent();
-        if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
-            //            CULog("Received dash event");
-            _action.processCaptureEvent(captureEvent);
-        }
-        if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
-            //            std::cout<<"got a root event\n";
-            _action.processRootEvent(rootEvent);
-        }
-        if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
-            _action.processUnrootEvent(unrootEvent);
-        }
-        if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
-            _action.processBarrotEvent(captureBarrotEvent);
-        }
-        if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
-            processResetEvent(resetEvent);
-        }
-        if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
-            _action.processMoveEvent(moveEvent);
-        }
-        if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
-            _action.processFreeEvent(freeEvent);
-        }
-        if(auto spawnRockEvent = std::dynamic_pointer_cast<SpawnRockEvent>(e)){
-            _action.processSpawnRockEvent(spawnRockEvent);
-        }
-        if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
-            _action.processCollectedRockEvent(collectedRockEvent);
-        }
-        if(auto readyEvent = std::dynamic_pointer_cast<ReadyEvent>(e)) {
-            _ready += 1;
-        }
+    if (_mapGen) {
+        _map->getWorld()->update(step);
+        _map->updateShaders(step, _cam.getCamera()->getCombined());
     }
-    if (_countdown >= 0 && _network->getNumPlayers() > 1){
-        return;
-    }
-    
-    _map->getWorld()->update(step);
-    _cam.setShake(_character->getStunTime() * STUN_SCREEN_SHAKE);
-    _cam.setTarget(_character->getPosition()*_scale);
-    _cam.update(step);
-    
-    _map->updateShaders(step, _cam.getCamera()->getCombined());
+    else {
+        // Turn the physics engine crank.
+        while(_network->isInAvailable()){
+            auto e = _network->popInEvent();
+            if(auto captureEvent = std::dynamic_pointer_cast<CaptureEvent>(e)){
+                //            CULog("Received dash event");
+                _action.processCaptureEvent(captureEvent);
+            }
+            if(auto rootEvent = std::dynamic_pointer_cast<RootEvent>(e)){
+                //            std::cout<<"got a root event\n";
+                _action.processRootEvent(rootEvent);
+            }
+            if(auto unrootEvent = std::dynamic_pointer_cast<UnrootEvent>(e)){
+                _action.processUnrootEvent(unrootEvent);
+            }
+            if(auto captureBarrotEvent = std::dynamic_pointer_cast<CaptureBarrotEvent>(e)){
+                _action.processBarrotEvent(captureBarrotEvent);
+            }
+            if(auto resetEvent = std::dynamic_pointer_cast<ResetEvent>(e)){
+                processResetEvent(resetEvent);
+            }
+            if(auto moveEvent = std::dynamic_pointer_cast<MoveEvent>(e)){
+                _action.processMoveEvent(moveEvent);
+            }
+            if(auto freeEvent = std::dynamic_pointer_cast<FreeEvent>(e)){
+                _action.processFreeEvent(freeEvent);
+            }
+            if(auto spawnRockEvent = std::dynamic_pointer_cast<SpawnRockEvent>(e)){
+                _action.processSpawnRockEvent(spawnRockEvent);
+            }
+            if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
+                _action.processCollectedRockEvent(collectedRockEvent);
+            }
+            if(auto readyEvent = std::dynamic_pointer_cast<ReadyEvent>(e)) {
+                _ready += 1;
+            }
+        }
+        if (_countdown >= 0 && _network->getNumPlayers() > 1){
+            return;
+        }
+        
+        _map->getWorld()->update(step);
+        _cam.setShake(_character->getStunTime() * STUN_SCREEN_SHAKE);
+        _cam.setTarget(_character->getPosition()*_scale);
+        _cam.update(step);
+        
+        _map->updateShaders(step, _cam.getCamera()->getCombined());
 
-    
-    //check if entities are in wheat
-    //TODO: make entities vector in map for convenience?
-    //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
-    
-    //create queries
-    for (auto baby : _map->getBabyCarrots()) {
-        baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
-    }
-    for (auto farmer : _map->getFarmers()) {
-        farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
-        //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
-    }
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
-    }
+        
+        //check if entities are in wheat
+        //TODO: make entities vector in map for convenience?
+        //not entirely sure if it is ok to put this here because of opengl stuff but so far it seems fine
+        
+        //create queries
+        for (auto baby : _map->getBabyCarrots()) {
+            baby->setWheatQueryId(_map->getWheatScene()->addWheatQuery(baby->getPosition() - Vec2(0, baby->getHeight()/2)));
+        }
+        for (auto farmer : _map->getFarmers()) {
+            farmer->setWheatQueryId(_map->getWheatScene()->addWheatQuery(farmer->getPosition() - Vec2(0, farmer->getHeight()/2)));
+            //farmer->getSceneNode()->setColor(farmer->isInWheat() ? Color4::RED : Color4::WHITE);
+        }
+        for (auto carrot : _map->getCarrots()) {
+            carrot->setWheatQueryId(_map->getWheatScene()->addWheatQuery(carrot->getPosition() - Vec2(0, carrot->getHeight()/2)));
+        }
 
-    //resolve queries
-    _map->getWheatScene()->doQueries();
+        //resolve queries
+        _map->getWheatScene()->doQueries();
 
-    //fetch results
-    for (auto farmer : _map->getFarmers()) {
-        farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
+        //fetch results
+        for (auto farmer : _map->getFarmers()) {
+            farmer->setInWheat(_map->getWheatScene()->getWheatQueryResult(farmer->getWheatQueryId()));
+        }
+        for (auto carrot : _map->getCarrots()) {
+            carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
+        }
+        for (auto baby : _map->getBabyCarrots()) {
+            baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
+    //        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
+        }
+        _map->getWheatScene()->clearQueries();
     }
-    for (auto carrot : _map->getCarrots()) {
-        carrot->setInWheat(_map->getWheatScene()->getWheatQueryResult(carrot->getWheatQueryId()));
-    }
-    for (auto baby : _map->getBabyCarrots()) {
-        baby->setInWheat(_map->getWheatScene()->getWheatQueryResult(baby->getWheatQueryId()));
-//        baby->getSceneNode()->setColor(baby->isInWheat() ? Color4::RED : Color4::WHITE);
-    }
-    _map->getWheatScene()->clearQueries();
 }
 
 /**
@@ -508,96 +551,99 @@ void GameScene::fixedUpdate(float step) {
  * @param remain    The amount of time (in seconds) last fixedUpdate
  */
 void GameScene::postUpdate(float remain) {
-    // Reset the game if we win or lose.
-    
-    _ui.update(remain, _cam.getCamera(), getCarrotsLeft(), _map->getBabyCarrots().size(), _debug, _character->canDash());
+    if (_mapGen) {
+        _map->getWorld()->garbageCollect();
+    }
+    else {
+        // Reset the game if we win or lose.
         
-    if (_countdown > 0) {
-        _countdown--;
-    } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
-        // are we displaying the end game screen
-        if (!_isGameOverScreen) {
-            _isGameOverScreen = true;
+        _ui.update(remain, _cam.getCamera(), getCarrotsLeft(), _map->getBabyCarrots().size(), _debug, _character->canDash());
             
-            // get the vector of carrots that have been rooted
-            vector<int> carrots;
-            for (auto it = _map->getCarrots().begin(); it != _map->getCarrots().end(); it++) {
-                if ((*it)->isRooted()) {
-                    carrots.push_back(_map->getCarrotTypeForUUID((*it)->getUUID()));
+        if (_countdown > 0) {
+            _countdown--;
+        } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
+            // are we displaying the end game screen
+            if (!_isGameOverScreen) {
+                _isGameOverScreen = true;
+                
+                // get the vector of carrots that have been rooted
+                vector<int> carrots;
+                for (auto it = _map->getCarrots().begin(); it != _map->getCarrots().end(); it++) {
+                    if ((*it)->isRooted()) {
+                        carrots.push_back(_map->getCarrotTypeForUUID((*it)->getUUID()));
+                    }
                 }
+                
+                // set how the end screen should display
+                _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), carrots, _points, _map->getCarrotTypeForUUID(_character->getUUID()));
+                
+                // display end scene
+                _ui.setEndVisible(true);
+            }
+
+            if (_ready == _network->getNumPlayers() && _network->isHost()) {
+                _network->pushOutEvent(ResetEvent::allocResetEvent());
+                _ready = 0; // need this otherwise it will send out two of these events
             }
             
-            // set how the end screen should display
-            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), carrots, _points, _map->getCarrotTypeForUUID(_character->getUUID()));
-            
-            // display end scene
-            _ui.setEndVisible(true);
-        }
-
-        if (_ready == _network->getNumPlayers() && _network->isHost()) {
-            _network->pushOutEvent(ResetEvent::allocResetEvent());
-            _ready = 0; // need this otherwise it will send out two of these events
-        }
-        
-        if (_ui.getNextRound() == 1){
-            CULog("hello pushing out event");
-            _ui.setNextRound(2);
-            _network->pushOutEvent(ReadyEvent::alloc());
+            if (_ui.getNextRound() == 1){
+                CULog("hello pushing out event");
+                _ui.setNextRound(2);
+                _network->pushOutEvent(ReadyEvent::alloc());
+            }
+            else{
+                //do nothing and wait for host to reset
+            }
         }
         else{
-            //do nothing and wait for host to reset
-        }
-    }
-    else{
-        _action.postUpdate(remain);
+            _action.postUpdate(remain);
 
-        // Since items may be deleted, garbage collect
-        _map->getWorld()->garbageCollect();
-        
-        bool farmerWin = _map->getCarrots().size() > 0;
-        for(auto carrot : _map->getCarrots()){
-            if(!carrot->isRooted()){
-                farmerWin = false;
-            }
-        }
-        if(farmerWin){
-            // add points for farmer
-            _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 3;
-
-            if(_character->getUUID() == _farmerUUID){
-                setComplete(true);
-            }
-            else{
-                setFailure(true);
-            }
-        }
-        bool carrotWin = true;
-        for(auto babyCarrot : _map->getBabyCarrots()){
-            if(!babyCarrot->isCaptured()){
-                carrotWin = false;
-            }
-        }
-        if(carrotWin){
-            // add points for carrot
-            for (int ii = 0; ii < _points.size(); ii++) {
-                if (ii != _map->getCarrotTypeForUUID(_farmerUUID)) {
-                    _points[ii] += 1;
+            // Since items may be deleted, garbage collect
+            _map->getWorld()->garbageCollect();
+            
+            bool farmerWin = _map->getCarrots().size() > 0;
+            for(auto carrot : _map->getCarrots()){
+                if(!carrot->isRooted()){
+                    farmerWin = false;
                 }
             }
-            if(_character->getUUID() == _farmerUUID){
-                setFailure(true);
+            if(farmerWin){
+                // add points for farmer
+                _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 3;
+
+                if(_character->getUUID() == _farmerUUID){
+                    setComplete(true);
+                }
+                else{
+                    setFailure(true);
+                }
             }
-            else{
-                setComplete(true);
+            bool carrotWin = true;
+            for(auto babyCarrot : _map->getBabyCarrots()){
+                if(!babyCarrot->isCaptured()){
+                    carrotWin = false;
+                }
             }
+            if(carrotWin){
+                // add points for carrot
+                for (int ii = 0; ii < _points.size(); ii++) {
+                    if (ii != _map->getCarrotTypeForUUID(_farmerUUID)) {
+                        _points[ii] += 1;
+                    }
+                }
+                if(_character->getUUID() == _farmerUUID){
+                    setFailure(true);
+                }
+                else{
+                    setComplete(true);
+                }
+            }
+    //        if(farmerWin || carrotWin){
+    //            _network->disconnect();
+    //        }
         }
-//        if(farmerWin || carrotWin){
-//            _network->disconnect();
-//        }
+        _map->getCharacter()->getSceneNode()->TexturedNode::setIsPlayer(true);
     }
-    
-    _map->getCharacter()->getSceneNode()->TexturedNode::setIsPlayer(true);
-    
 }
 
 /**

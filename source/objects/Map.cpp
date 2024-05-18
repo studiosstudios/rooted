@@ -642,21 +642,10 @@ void Map::spawnFarmers() {
         _entitiesNode->addChild(carrotfarmerNode);
         
         // Set farmer's walk/run/dash sprite nodes
-        farmer->setSpriteNodes(farmerNorthWalkNode,
-                               farmerNorthEastWalkNode,
-                               farmerEastWalkNode,
-                               farmerSouthEastWalkNode,
-                               farmerSouthWalkNode,
-                               farmerNorthRunNode,
-                               farmerNorthEastRunNode,
-                               farmerEastRunNode,
-                               farmerSouthEastRunNode,
-                               farmerSouthRunNode,
-                               farmerNorthDashNode,
-                               farmerEastDashNode,
-                               farmerEastDashNode,
-                               farmerEastDashNode,
-                               farmerSouthDashNode);
+        farmer->setWalkSprites(EntityModel::DirectionalSprites(farmerNorthWalkNode, farmerNorthEastWalkNode, farmerEastWalkNode, farmerSouthEastWalkNode, farmerSouthWalkNode));
+        farmer->setRunSprites(EntityModel::DirectionalSprites(farmerNorthRunNode, farmerNorthEastRunNode, farmerEastRunNode, farmerSouthEastRunNode, farmerSouthRunNode));
+        farmer->setDashSprites(EntityModel::DirectionalSprites(farmerNorthDashNode, farmerEastDashNode, farmerEastDashNode, farmerEastDashNode, farmerSouthDashNode));
+
         
         farmer->setNormalNode(farmerSouthWalkNode);
         farmer->setCaptureNode(carrotfarmerNode);
@@ -727,21 +716,27 @@ void Map::spawnBabyCarrots() {
         _entitiesNode->addChild(babyNorthEastWalkNode);
         _entitiesNode->addChild(babySouthEastWalkNode);
         
-        baby->setSpriteNodes(babyNorthWalkNode, // lol
-                             babyNorthEastWalkNode,
-                             babyEastWalkNode,
-                             babySouthEastWalkNode,
-                             babySouthWalkNode,
-                             babyNorthWalkNode, // lol
-                             babyNorthEastWalkNode,
-                             babyEastWalkNode,
-                             babySouthEastWalkNode,
-                             babySouthWalkNode,
-                             babyNorthWalkNode, // lol
-                             babyNorthEastWalkNode,
-                             babyEastWalkNode,
-                             babySouthEastWalkNode,
-                             babySouthWalkNode);
+        baby->setWalkSprites(EntityModel::DirectionalSprites(babyNorthWalkNode,
+                                                             babyNorthEastWalkNode,
+                                                             babyEastWalkNode,
+                                                             babySouthEastWalkNode,
+                                                             babySouthWalkNode));
+        
+//        baby->setSpriteNodes(babyNorthWalkNode, // lol
+//                             babyNorthEastWalkNode,
+//                             babyEastWalkNode,
+//                             babySouthEastWalkNode,
+//                             babySouthWalkNode,
+//                             babyNorthWalkNode, // lol
+//                             babyNorthEastWalkNode,
+//                             babyEastWalkNode,
+//                             babySouthEastWalkNode,
+//                             babySouthWalkNode,
+//                             babyNorthWalkNode, // lol
+//                             babyNorthEastWalkNode,
+//                             babyEastWalkNode,
+//                             babySouthEastWalkNode,
+//                             babySouthWalkNode);
         
         baby->setSceneNode(babySouthWalkNode);
         baby->setDrawScale(
@@ -914,21 +909,10 @@ void Map::spawnCarrots() {
         carrot->setDrawScale(
                              _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         // Create the polygon node (empty, as the model will initialize)
-        carrot->setSpriteNodes(carrotNorthWalkNode,
-                               carrotNorthEastWalkNode,
-                               carrotEastWalkNode,
-                               carrotSouthEastWalkNode,
-                               carrotSouthWalkNode,
-                               carrotNorthWalkNode,
-                               carrotNorthEastWalkNode,
-                               carrotEastWalkNode,
-                               carrotSouthEastWalkNode,
-                               carrotSouthWalkNode,
-                               carrotNorthDashNode,
-                               carrotNorthEastDashNode,
-                               carrotEastDashNode,
-                               carrotSouthEastDashNode,
-                               carrotSouthDashNode);
+        
+        carrot->setWalkSprites(EntityModel::DirectionalSprites(carrotNorthWalkNode, carrotNorthEastWalkNode, carrotEastWalkNode, carrotSouthEastWalkNode, carrotSouthWalkNode));
+        carrot->setRunSprites(EntityModel::DirectionalSprites(carrotNorthWalkNode, carrotNorthEastWalkNode, carrotEastWalkNode, carrotSouthEastWalkNode, carrotSouthWalkNode));
+        carrot->setDashSprites(EntityModel::DirectionalSprites(carrotNorthDashNode, carrotNorthEastDashNode, carrotEastDashNode, carrotSouthEastDashNode, carrotSouthDashNode));
         
         carrot->setDebugScene(_debugnode);
         

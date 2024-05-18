@@ -194,101 +194,50 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
     }
     if (!((_prevState == _state) && (_facing == face))) {
         
-        auto sprite = _southWalkSprite;
+        DirectionalSprites ds;
+        // Get correct DirectionalSprites
         switch (_state) {
-            case STUNNED:
-                //TODO: stunned animation?
             case STANDING:
-                // TODO: Idle animations here
             case SNEAKING:
             case WALKING:
-                if (face == SOUTH) {
-                    sprite = _southWalkSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northWalkSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastWalkSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastWalkSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastWalkSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
+            case STUNNED:
+            case CARRYING:
+            case ROOTING:
+            case CAUGHT:
+            case ROOTED:
+            case UNROOTING:
+                ds = _walkSprites;
                 break;
             case RUNNING:
-                if (face == SOUTH) {
-                    sprite = _southRunSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northRunSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastRunSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastRunSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastRunSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
+                ds = _runSprites;
                 break;
             case DASHING:
-                if (face == SOUTH) {
-                    sprite = _southDashSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northDashSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastDashSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastDashSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastDashSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            case CARRYING: {
-                DirectionalSprites ds = getSpritesForState();
-                if (face == SOUTH) {
-                    sprite = ds.southSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = ds.northSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = ds.eastSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = ds.northEastSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = ds.southEastSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            }
-            case CAUGHT:
-            case ROOTING:
-            case UNROOTING:
-            case ROOTED:
+                ds = _dashSprites;
                 break;
         }
+        
+        std::shared_ptr<cugl::scene2::SpriteNode> sprite;
+        
+        // Get correct directionality
+        if (face == SOUTH) {
+            sprite = ds.southSprite;
+        }
+        else if (face == NORTH) {
+            sprite = ds.northSprite;
+        }
+        else if (face == EAST || face == WEST) {
+            sprite = ds.eastSprite;
+        }
+        else if (face == NORTHEAST || face == NORTHWEST) {
+            sprite = ds.northEastSprite;
+        }
+        else if (face == SOUTHEAST || face == SOUTHWEST) {
+            sprite = ds.southEastSprite;
+        }
+        if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+            sprite->flipHorizontal(!sprite->isFlipHorizontal());
+        }
+        
         setSceneNode(sprite);
         _facing = face;
     }
@@ -366,12 +315,6 @@ void EntityModel::dispose() {
     _node = nullptr;
     _wheatHeightNode = nullptr;
     _geometry = nullptr;
-    
-    _northWalkSprite = nullptr;
-    _northEastWalkSprite = nullptr;
-    _eastWalkSprite = nullptr;
-    _southEastWalkSprite = nullptr;
-    _southWalkSprite = nullptr;
 }
 
 /**

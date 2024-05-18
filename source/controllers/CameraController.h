@@ -22,8 +22,12 @@ class CameraController {
 protected:
     /* The scene position that this camera moves towards */
     Vec2 _posTarget;
+    /* The scene position of this camera before any screen shake */
+    Vec2 _pos;
     /* The zoom target that this camera interpolates towards */
     float _zoomTarget;
+    /* The zoom that this camera should maintain during regular gameplay */
+    float _defaultZoom;
     /* The pointer to root node of the scene */
     std::shared_ptr<scene2::SceneNode> _root;
     /* The UI layer that will move with the camera */
@@ -40,6 +44,8 @@ protected:
     Rect _frac;
     /* Amount of time to hold camera in zoom out pos upon cam init */
     int _startTimer;
+    /* Max amount to shake the cam per frame */
+    float _shake;
     
 public:
 #pragma mark -
@@ -98,7 +104,9 @@ public:
     /**
     * This method sets the position of the camera.
     */
-    void setPosition(Vec3 pos);
+    void setPosition(Vec3 pos) { setPosition(pos, true); }
+
+    void setPosition(Vec3 pos, bool setTarget);
 
     void setFrac(Rect frac) { _frac = frac; }
     
@@ -107,6 +115,8 @@ public:
     void setTarget(const Vec2 target) { _posTarget = target; }
     
     void setTarget(float x, float y) { _posTarget.set(x, y); }
+
+    void setShake(float shake) { _shake = shake; }
     
     /**
     * Gets the camera

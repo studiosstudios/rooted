@@ -24,33 +24,37 @@ using namespace cugl;
  * object. This makes it safe to use this class without a pointer.
  */
 InputController::InputController() :
-_active(false),
-_resetPressed(false),
-_debugPressed(false),
-_exitPressed(false),
-_rustlePressed(false),
-_dashPressed(false),
-_showPlayerPressed(false),
-_switchPressed(false),
-_rootPressed(false),
-_throwRockPressed(false),
-_keyReset(false),
-_keyDebug(false),
-_keyExit(false),
-_keyRustle(false),
-_keyShowPlayer(false),
-_movement(Vec2(0,0)),
-_joystick(false),
-_hasJumped(false),
+// Action inputs
 _keyDash(false),
 _keyDashPressed(false),
-_keyContinue(false),
-_continuePressed(false),
-_keyContinuePressed(false),
-_paused(false),
+_dashPressed(false),
+
+_keyRoot(false),
+_rootPressed(false),
+
+_keyUnroot(false),
+_unrootPressed(false),
+
 _keyThrowRock(false),
+_throwRockPressed(false),
+
+// Meta inputs
+_keyReset(false),
+_resetPressed(false),
+_keyDebug(false),
+_debugPressed(false),
+_keyExit(false),
+_exitPressed(false),
+_keyContinue(false),
+_keyContinuePressed(false),
+_continuePressed(false),
+
+// Utility fields
+_active(false),
 _dashPressedThisSwipe(false),
-_currentSwipeColor(Color4::WHITE) {
+_joystick(false),
+_paused(false),
+_movement(Vec2(0,0)) {
 }
 
 /**
@@ -94,9 +98,6 @@ bool InputController::init(const Rect bounds, const std::shared_ptr<cugl::JsonVa
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
     
-    std::cout << (int) lineData->type() << "\n";
-    std::cout << lineData->toString() << "\n";
-    
     _lineGesturer = cugl::GestureRecognizer::alloc();
     _lineGesturer->setSimilarityThreshold(LINE_GESTURE_SIMILARITY);
     _lineGesturer->setOrientationTolerance(-1);
@@ -129,6 +130,7 @@ bool InputController::init(const Rect bounds, const std::shared_ptr<cugl::JsonVa
 	
 #endif
     _active = success;
+    _lastAcceleration = 0;
     return success;
 }
 
@@ -152,10 +154,9 @@ void InputController::update(float dt) {
     _keyReset  = keys->keyPressed(RESET_KEY);
     _keyDebug  = keys->keyPressed(DEBUG_KEY) && debug;
     _keyExit   = keys->keyPressed(EXIT_KEY);
-    _keyRustle = keys->keyPressed(KeyCode::M);
-    _keyShowPlayer = keys->keyPressed(KeyCode::V);
+//    _keyRustle = keys->keyPressed(KeyCode::M);
+//    _keyShowPlayer = keys->keyPressed(KeyCode::V);
     _keyDash   = keys->keyPressed(KeyCode::X) && !_paused;
-    _keySwitch = keys->keyPressed(KeyCode::S);
     _keyRoot   = keys->keyPressed(KeyCode::Z) && !_paused;
     _keyUnroot = keys->keyPressed(KeyCode::Z) && !_paused;
     _keyContinue = keys->keyPressed(KeyCode::Q);
@@ -179,21 +180,24 @@ void InputController::update(float dt) {
     } else {
         _movement.y = 0;
     }
+    
+    if (_keyDash) _dashVector = Vec2(_movement);
+    
     _movement *= (1 - _paused);
     _movement.normalize();
 #endif
     Accelerometer* acc = Input::get<Accelerometer>();
     if(acc != nullptr && !_paused) {
-        _deviceShaking = acc->getAcceleration().lengthSquared() > 10;
+        float currAcceleration = acc->getAcceleration().lengthSquared();
+        float delta = currAcceleration - _lastAcceleration;
+        _acceleration = _acceleration * 0.9 + delta;
+        _deviceShaking = _acceleration > 4;
+        _lastAcceleration = currAcceleration;
+//        std::cout << "acceleration: " << _acceleration << "\n";
     }
     _resetPressed = _keyReset && debug;
     _debugPressed = _keyDebug && debug;
     _exitPressed  = _keyExit;
-    // for testing rustling
-    _rustlePressed = _keyRustle;
-    _showPlayerPressed = _keyShowPlayer;
-    
-    _switchPressed = _keySwitch;
 
     _dashPressed  = (_keyDash && !_keyDashPressed);
     _keyDashPressed = _keyDash;
@@ -214,7 +218,6 @@ void InputController::update(float dt) {
     _keyExit = false;
     _keyReset = false;
     _keyDebug = false;
-    _keyShowPlayer = false;
     _keyContinue = false;
 #endif
 }
@@ -227,7 +230,6 @@ void InputController::clear() {
     _debugPressed = false;
     _exitPressed  = false;
     _dashPressed  = false;
-    _keyShowPlayer = false;
     _rootPressed = false;
     _continuePressed = false;
 }
@@ -241,8 +243,6 @@ void InputController::clear() {
 void InputController::createZones() {
 	_jzone = _tbounds;
 	_jzone.size.width *= JOY_ZONE_WIDTH;
-    _jzone.size.height *= JOY_ZONE_HEIGHT;
-    _jzone.origin.y += _jzone.size.height; // We add to the origin because this is when coordinates still have y-origin in top-left
 	_rzone = _tbounds;
 	_rzone.size.width *= RIGHT_ZONE;
 	_rzone.origin.x = _tbounds.origin.x+_tbounds.size.width-_rzone.size.width;
@@ -383,7 +383,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
             if ( _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
                 _keyThrowRock = (event.timestamp.ellapsedMillis(_rtime) <= DOUBLE_CLICK);
             }
-
         case Zone::MAIN:
             // Only process if no touch in zone
             if (_rtouch.touchids.empty()) {
@@ -392,10 +391,8 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                 _rtouch.touchids.insert(event.touch);
                 _keyDash = false;
                 _keyRoot = false;
-                _keyShowPlayer = false;
                 _dashPressedThisSwipe = false;
                 _swipePoints->clear();
-                _currentSwipeColor = Color4::WHITE;
                 addSwipePoint(screenPos);
             } else {
                 Vec2 offset = event.position-_rtouch.position;
@@ -403,27 +400,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
                     _rtouch.touchids.insert(event.touch);
                 }
             }
-            break;
-//        case Zone::MAIN:
-            // Only check for double tap in Main if nothing else down
-            
-            
-//            if (_jtouch.touchids.empty() && _rtouch.touchids.empty() && _mtouch.touchids.empty()) {
-//                _keyDebug = (event.timestamp.ellapsedMillis(_mtime) <= DOUBLE_CLICK);
-//            }
-//            
-//            // Keep count of touches in Main zone if next to each other.
-//            if (_mtouch.touchids.empty()) {
-//                _mtouch.position = event.position;
-//                _mtouch.touchids.insert(event.touch);
-//            } else {
-//                Vec2 offset = event.position-_mtouch.position;
-//                if (offset.lengthSquared() < NEAR_TOUCH*NEAR_TOUCH) {
-//                    _mtouch.touchids.insert(event.touch);
-//                }
-//            }
-            
-            
             break;
         default:
             CUAssertLog(false, "Touch is out of bounds");
@@ -439,9 +415,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
  * @param focus	Whether the listener currently has focus
  */
 void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
-    // Reset all keys that might have been set
     Vec2 pos = event.position;
-//    Vec2 screenPos = touch2Screen(pos);
     Zone zone = getZone(pos);
     if (_jtouch.touchids.find(event.touch) != _jtouch.touchids.end()) {
         _jtouch.touchids.clear();
@@ -450,17 +424,10 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     }
     else if (_rtouch.touchids.find(event.touch) != _rtouch.touchids.end()) {
         _keyDash = false;
-//        _keySwitch = false;
         _keyRoot = false;
         _keyUnroot = false;
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
-    }
-    else if (zone == Zone::MAIN) {
-        if (_mtouch.touchids.find(event.touch) != _mtouch.touchids.end()) {
-            _mtouch.touchids.erase(event.touch);
-        }
-        _mtime = event.timestamp;
     }
     _keyContinue = true;
 }
@@ -495,37 +462,13 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
             if (_internalSwipePoints.size() > SWIPE_POINT_MINIMUM &&
                 _lineGesturer->similarity("line", getInternalSwipePointsVector(), true) > LINE_GESTURE_SIMILARITY &&
                 _internalSwipePoints.front().first.distanceSquared(_internalSwipePoints.back().first) > SWIPE_LENGTH * SWIPE_LENGTH){
-//                std::cout << "Circle CCW: " << _gesturer->similarity("circle", getInternalSwipePointsVector(), true) << "\n";
-//                std::cout << "Circle CW: " << _gesturer->similarity("circle2", getInternalSwipePointsVector(), true) << "\n";
                 _keyDash = !_paused;
                 _dashPressedThisSwipe = true;
                 loadDashVector();
-                _currentSwipeColor = Color4::ORANGE;
-            }
-                
-                //            if (_swipePoints->begin() != _swipePoints->end() && (screenPos.y - _swipePoints->back().first.y) > SWIPE_LENGTH) {
-                //                _keyDash = true;
-                //                _currentSwipeColor = Color4::ORANGE;
-                //            }
-                //            else if (_swipePoints->begin() != _swipePoints->end() && (_swipePoints->back().first.y - screenPos.y) > SWIPE_LENGTH) {
-                //                _keyRoot = true;
-                //                _keyUnroot = true;
-                //                _rtouch.position = pos;
-                //                _currentSwipeColor = Color4::BLUE;
-                //            }
-                //            else if ((pos.x-_rtouch.position.x) > SWIPE_LENGTH) {
-                //                _keyShowPlayer = true;
-                //            }
             }
         }
     }
-//    else if (_mtouch.touchids.size() > 1) {
-//        // We only process multifinger swipes in main
-//        int swipe = processSwipe(_mtouch.position, event.position, event.timestamp);
-//        if (swipe == 1) {
-//            _keyReset = true;
-//        }
-//    }
+}
 
 int InputController::signum(int num) {
     if (num > 0) {

@@ -53,6 +53,10 @@
 #pragma mark Game Logic Constants
 /** Time in seconds that must elapse before being able to perform another dash */
 #define DASH_COOLDOWN_SECS 3
+/** Time in seconds that being hit by a rock stuns a player */
+#define STUN_SECS 1
+/** Max camera coordinate units that the camera can shake when player is stunned */
+#define STUN_SCREEN_SHAKE 5
 
 #pragma mark -
 #pragma mark Asset Constants
@@ -167,13 +171,32 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define MAX_WHEAT_HEIGHT 25.0
 #define STEP_SIZE 1.0
 
-
 #pragma mark COLLECTIBLE
 #define SPAWN_RATE 0.005
 #define MAX_NUM_COLLECTIBLES 8
-#define MAX_COLLECTIBLE_AGE 1
+#define MAX_COLLECTIBLE_AGE 3
 #define SPAWN_COOLDOWN 600
+#define THROW_SPEED 10
+#define MIN_STUN_IMPULSE 3.0
 #define PROGRESS 0.02f
+
+#pragma mark FARMER
+#define FARMER_WIDTH 0.7f
+#define FARMER_HEIGHT 1.2f
+#define FARMER_HITBOX_WIDTH 0.55f
+#define FARMER_HITBOX_HEIGHT 0.3f
+
+#pragma mark CARROT
+#define CARROT_WIDTH 0.5f
+#define CARROT_HEIGHT 1.5
+#define CARROT_HITBOX_WIDTH 0.4f
+#define CARROT_HITBOX_HEIGHT 0.3f
+
+#pragma mark BARROT
+#define BARROT_WIDTH 0.5f
+#define BARROT_HEIGHT 1.3
+#define BARROT_HITBOX_WIDTH 0.4f
+#define BARROT_HITBOX_HEIGHT 0.3f
 
 const bool debug = true;
 

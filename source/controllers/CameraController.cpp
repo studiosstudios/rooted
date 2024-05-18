@@ -21,6 +21,10 @@ bool CameraController::init(const std::shared_ptr<cugl::scene2::SceneNode> root,
     _ui = ui;
     _frac = frac;
     _scale = scale;
+    _pos = _camera->getPosition();
+    _defaultZoom = DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale;
+    _zoomTarget = _defaultZoom;
+    _shake = 0;
     _startTimer = HOLD_CAM; //DEAL WITH THIS IN ACTUAL CODE
 
     return true;
@@ -37,20 +41,20 @@ void CameraController::update(float dt) {
         _startTimer--;
     }
     if(_startTimer == 0){
-        float targetZoom = DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale;
-        if(_camera->getZoom() < targetZoom-ZOOM_ERR){
-            zoomIn((targetZoom-_camera->getZoom())*ZOOM_RATE);
+        if(std::abs(_camera->getZoom() - _zoomTarget) > ZOOM_ERR){
+            zoomIn((_zoomTarget-_camera->getZoom())*ZOOM_RATE);
         }
-        else if (_camera->getZoom() < targetZoom){
-            _camera->setZoom(targetZoom);
+        else {
+            _camera->setZoom(_zoomTarget);
         }
     }
     if(std::abs(newPos.x-curr_x) < CAM_POSITION_ERR && std::abs(newPos.y-curr_y) < CAM_POSITION_ERR){
-        _camera->setPosition(Vec3(newPos.x, newPos.y, _camera->getPosition().z));
+        _pos.set(newPos);
     }
     else {
-        _camera->setPosition(Vec3(curr_x + (newPos.x-curr_x) * _lerp, curr_y + (newPos.y-curr_y) * _lerp, _camera->getPosition().z));
+        _pos += (newPos - _pos) * _lerp;
     }
+    setPosition(_pos, false);
     _camera->update();
 }
 
@@ -72,7 +76,7 @@ void CameraController::zoomIn(float zoom) {
     // Don't let it be greater than max zoom
     if (originalZoom + zoom > _maxZoom) return;
     float truezoom = std::min(originalZoom + zoom, DEFAULT_CAMERA_ZOOM*DEFAULT_DRAWSCALE/_scale);
-    _camera->setZoom(truezoom);
+    _camera->setZoom(originalZoom + zoom);
     // If this causes the camera to go out of bounds, revert the change
     if (_root->getSize().width < _camera->getViewport().getMaxX() / _camera->getZoom() || _root->getSize().height < _camera->getViewport().getMaxY() / _camera->getZoom()) {
         _camera->setZoom(originalZoom);
@@ -81,10 +85,13 @@ void CameraController::zoomIn(float zoom) {
 //    _ui->setScale(1 / _camera->getZoom());
 }
 
-void CameraController::setPosition(Vec3 pos){
-    _posTarget.x = pos.x;
-    _posTarget.y = pos.y;
-    _camera->setPosition(boundPosition(pos));
+void CameraController::setPosition(Vec3 pos, bool setTarget){
+    if (setTarget) {
+        _posTarget.x = pos.x;
+        _posTarget.y = pos.y;
+    }
+    Vec2 rand = Vec2((((float) std::rand()/RAND_MAX) * 2.0 - 1) * _shake, (((float) std::rand()/RAND_MAX) * 2.0 - 1) * _shake);
+    _camera->setPosition(boundPosition(pos) + rand);
 }
 
 const Vec2 CameraController::boundPosition(Vec2 pos) {

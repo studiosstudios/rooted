@@ -336,7 +336,7 @@ void ActionController::updateRustlingNoise(){
 }
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
-    _map->getFarmers().at(0)->grabCarrot();
+    _map->getFarmers().at(0)->grabCarrot(_map->getCarrotTypeForUUID(event->getUUID()));
     if(_map->isFarmer()){
         std::shared_ptr<Sound> source = _assets->get<Sound>(CAPTURE_EFFECT);
         AudioEngine::get()->play("capture", source);

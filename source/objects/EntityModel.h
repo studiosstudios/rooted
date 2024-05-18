@@ -122,9 +122,9 @@ public:
     /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
     
     /** State that a rooted! player entity can be in. Some of these states are specific
-        to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which staztes an entity can
-        be in. */
+     to only a certain type of character (ex. only a bunny can be PLANTING), so
+     we need to enforce the corresponding invariants for which staztes an entity can
+     be in. */
     enum EntityState {
         STANDING,
         SNEAKING,
@@ -137,6 +137,13 @@ public:
         CAUGHT,     // carrot only
         ROOTED,      // carrot only
         UNROOTING   // carrot only
+    };
+    
+    static enum CarrotType {
+        CLOAK,
+        FLOWER,
+        HEADPHONES,
+        TIE
     };
     
     /** Struct for directional sprites, currently in use in Farmer only but could extend */

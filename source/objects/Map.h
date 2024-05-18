@@ -129,6 +129,7 @@ private:
     std::string _thisUUID;
     
     std::shared_ptr<cugl::JsonValue> _spriteMetadata;
+    std::map<std::string, EntityModel::CarrotType> _playerCarrotTypeMap;
 
     
 public:
@@ -279,6 +280,8 @@ public:
      * position of each entity being drawn and its location in the wheat field.
      */
     void setViewportSize(Size size);
+    
+    EntityModel::CarrotType getCarrotTypeForUUID(string uuid) { return _playerCarrotTypeMap[uuid]; }
 
 #pragma mark -
 #pragma mark Asset Loading

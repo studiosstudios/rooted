@@ -22,7 +22,8 @@ private:
     float walkAnimDuration = 1.0f;
     float runAnimDuration = 0.5f;
     
-    DirectionalSprites _baseCarrySprites;
+    std::map<CarrotType, DirectionalSprites> _carryingSprites;
+    CarrotType _carriedCarrotType;
 
 public:
     int captureTime;
@@ -45,7 +46,7 @@ public:
     
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
-    void grabCarrot();
+    void grabCarrot(CarrotType carrotType);
     void rootCarrot();
     void carrotEscaped();
 
@@ -55,16 +56,13 @@ public:
     
     void setMovement(cugl::Vec2 movement) override;
     
-    void setBaseCarrySprites(DirectionalSprites sprites) {
-        _baseCarrySprites = sprites;
+    void appendCarrySprite(CarrotType ct, DirectionalSprites ds) {
+        _carryingSprites.insert({ct, ds});
     }
     
     DirectionalSprites getDirectionalSpritesForState(EntityState state) override;
     
-    DirectionalSprites getSpritesForState() override {
-        return _baseCarrySprites;
-    }
-    
+
     void updateCurAnimDurationForState() override;
 
     void resetFarmer();

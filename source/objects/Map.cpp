@@ -521,6 +521,7 @@ void Map::clearWorld() {
     _decorationSpawns.clear();
     _envCollidableSpawns.clear();
     _rockSpawns.clear();
+    _playerCarrotTypeMap.clear();
 }
 
 std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> players, std::string farmerUUID, std::string thisUUID) {
@@ -529,11 +530,18 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     _farmerUUID = farmerUUID;
     _thisUUID = thisUUID;
     bool isHost = farmerUUID == thisUUID;
+    
+    // Give each player a carrot type
+    int carrotTypeCount = 0;
+    for (std::string uuid : players) {
+        _playerCarrotTypeMap.insert({uuid, static_cast<EntityModel::CarrotType>(carrotTypeCount++)});
+    }
 
     auto carrot = _carrots.begin();
     for (std::string uuid : players) {
         if (uuid != farmerUUID) {
             (*carrot)->setUUID(uuid);
+            (*carrot)->setCarrotType(_playerCarrotTypeMap[uuid]);
             if (uuid == thisUUID) {
                 ret = (*carrot);
                 getWorld()->getOwnedObstacles().insert({*carrot, 0});
@@ -716,7 +724,7 @@ void Map::spawnFarmers() {
         farmer->setWalkSprites(walkDS);
         farmer->setRunSprites(initEntityDirectionalSprites("farmer-", "-run"));
         farmer->setDashSprites(initEntityDirectionalSprites("farmer-", "-dash"));
-        farmer->setBaseCarrySprites(initEntityDirectionalSprites("farmer-", "-carry"));
+//        farmer->setBaseCarrySprites(initEntityDirectionalSprites("farmer-", "-carry"));
         
         farmer->setSceneNode(walkDS.southSprite);
         farmer->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM

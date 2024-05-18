@@ -9,13 +9,16 @@ bool Farmer::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
 }
 
 void Farmer::dispose() {
+    _carryingSprites.clear();
     EntityModel::dispose();
 }
 
-void Farmer::grabCarrot(){
+void Farmer::grabCarrot(CarrotType carrotType){
     _isHoldingCarrot = true;
     _state = CARRYING;
     updateSprite(0);
+    _carriedCarrotType = carrotType;
+    std::cout << "Carrying " << carrotType << "\n";
 }
 
 void Farmer::rootCarrot(){
@@ -40,9 +43,9 @@ void Farmer::setMovement(Vec2 movement) {
 
 EntityModel::DirectionalSprites Farmer::getDirectionalSpritesForState(EntityModel::EntityState state) {
     switch (state) {
-        case CARRYING:
-            return _baseCarrySprites;
-            break;
+//        case CARRYING:
+//            return _carryingSprites[_carriedCarrotType];
+//            break;
         default:
             return EntityModel::getDirectionalSpritesForState(state);
     }

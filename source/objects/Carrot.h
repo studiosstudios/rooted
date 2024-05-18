@@ -21,6 +21,7 @@ private:
     
     // Animation
     float walkAnimDuration = 1.0f;
+    CarrotType _carrotType;
     
 public:
 #pragma mark -
@@ -87,6 +88,10 @@ public:
     int getNumBabyCarrots() { return  _numBabyCarrots; };
     
     void resetCarrot();
+    
+    void setCarrotType(CarrotType ct) { _carrotType = ct; }
+    
+    CarrotType getCarrotType() { return _carrotType; }
     
 #pragma mark -
 #pragma mark Interactions

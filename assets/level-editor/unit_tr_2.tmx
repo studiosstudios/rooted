@@ -8,47 +8,47 @@
  </properties>
  <tileset firstgid="1" source="entities.tsx"/>
  <tileset firstgid="4" source="maps.tsx"/>
- <tileset firstgid="44" source="environment.tsx"/>
+ <tileset firstgid="45" source="environment.tsx"/>
  <objectgroup id="9" name="wheat">
   <object id="158" gid="25" x="0" y="288" width="512" height="288"/>
  </objectgroup>
  <objectgroup id="8" name="environment">
-  <object id="138" gid="44" x="414" y="286" width="64" height="64"/>
-  <object id="160" gid="57" x="32" y="32" width="32" height="32"/>
-  <object id="161" gid="57" x="64" y="32" width="32" height="32"/>
-  <object id="162" gid="57" x="96" y="32" width="32" height="32"/>
-  <object id="163" gid="57" x="128" y="32" width="32" height="32"/>
-  <object id="164" gid="57" x="160" y="32" width="32" height="32"/>
-  <object id="165" gid="57" x="192" y="32" width="32" height="32"/>
-  <object id="166" gid="57" x="224" y="32" width="32" height="32"/>
-  <object id="167" gid="57" x="256" y="32" width="32" height="32"/>
-  <object id="168" gid="57" x="288" y="32" width="32" height="32"/>
-  <object id="169" gid="57" x="320" y="32" width="32" height="32"/>
-  <object id="170" gid="57" x="352" y="32" width="32" height="32"/>
-  <object id="171" gid="57" x="384" y="32" width="32" height="32"/>
-  <object id="172" gid="57" x="416" y="32" width="32" height="32"/>
-  <object id="173" gid="57" x="448" y="32" width="32" height="32"/>
+  <object id="138" gid="45" x="414" y="286" width="64" height="64"/>
+  <object id="160" gid="58" x="32" y="32" width="32" height="32"/>
+  <object id="161" gid="58" x="64" y="32" width="32" height="32"/>
+  <object id="162" gid="58" x="96" y="32" width="32" height="32"/>
+  <object id="163" gid="58" x="128" y="32" width="32" height="32"/>
+  <object id="164" gid="58" x="160" y="32" width="32" height="32"/>
+  <object id="165" gid="58" x="192" y="32" width="32" height="32"/>
+  <object id="166" gid="58" x="224" y="32" width="32" height="32"/>
+  <object id="167" gid="58" x="256" y="32" width="32" height="32"/>
+  <object id="168" gid="58" x="288" y="32" width="32" height="32"/>
+  <object id="169" gid="58" x="320" y="32" width="32" height="32"/>
+  <object id="170" gid="58" x="352" y="32" width="32" height="32"/>
+  <object id="171" gid="58" x="384" y="32" width="32" height="32"/>
+  <object id="172" gid="58" x="416" y="32" width="32" height="32"/>
+  <object id="173" gid="58" x="448" y="32" width="32" height="32"/>
   <object id="174" type="EnvCollidable" x="0" y="12" width="512" height="15.6439"/>
-  <object id="175" gid="57" x="0" y="32" width="32" height="32"/>
-  <object id="176" gid="56" x="480" y="32" width="32" height="32"/>
-  <object id="177" gid="54" x="480" y="64" width="32" height="32"/>
-  <object id="178" gid="54" x="480" y="96" width="32" height="32"/>
-  <object id="179" gid="54" x="480" y="128" width="32" height="32"/>
-  <object id="180" gid="54" x="480" y="160" width="32" height="32"/>
-  <object id="181" gid="54" x="480" y="224" width="32" height="32"/>
-  <object id="182" gid="54" x="480" y="192" width="32" height="32"/>
-  <object id="183" gid="54" x="480" y="256" width="32" height="32"/>
-  <object id="184" gid="54" x="480" y="288" width="32" height="32"/>
+  <object id="175" gid="58" x="0" y="32" width="32" height="32"/>
+  <object id="176" gid="57" x="480" y="32" width="32" height="32"/>
+  <object id="177" gid="55" x="480" y="64" width="32" height="32"/>
+  <object id="178" gid="55" x="480" y="96" width="32" height="32"/>
+  <object id="179" gid="55" x="480" y="128" width="32" height="32"/>
+  <object id="180" gid="55" x="480" y="160" width="32" height="32"/>
+  <object id="181" gid="55" x="480" y="224" width="32" height="32"/>
+  <object id="182" gid="55" x="480" y="192" width="32" height="32"/>
+  <object id="183" gid="55" x="480" y="256" width="32" height="32"/>
+  <object id="184" gid="55" x="480" y="288" width="32" height="32"/>
   <object id="185" type="EnvCollidable" x="492.144" y="0" width="19.8564" height="288"/>
-  <object id="186" gid="54" x="96" y="106" width="32" height="32"/>
-  <object id="187" gid="54" x="96" y="170" width="32" height="32"/>
-  <object id="188" gid="54" x="96" y="138" width="32" height="32"/>
-  <object id="189" gid="54" x="96" y="202" width="32" height="32"/>
-  <object id="190" gid="54" x="96" y="234" width="32" height="32"/>
-  <object id="191" gid="51" x="96" y="266" width="32" height="32"/>
-  <object id="192" gid="52" x="64" y="266" width="32" height="32"/>
-  <object id="193" gid="52" x="32" y="266" width="32" height="32"/>
-  <object id="194" gid="52" x="0" y="266" width="32" height="32"/>
+  <object id="186" gid="55" x="96" y="106" width="32" height="32"/>
+  <object id="187" gid="55" x="96" y="170" width="32" height="32"/>
+  <object id="188" gid="55" x="96" y="138" width="32" height="32"/>
+  <object id="189" gid="55" x="96" y="202" width="32" height="32"/>
+  <object id="190" gid="55" x="96" y="234" width="32" height="32"/>
+  <object id="191" gid="52" x="96" y="266" width="32" height="32"/>
+  <object id="192" gid="53" x="64" y="266" width="32" height="32"/>
+  <object id="193" gid="53" x="32" y="266" width="32" height="32"/>
+  <object id="194" gid="53" x="0" y="266" width="32" height="32"/>
   <object id="195" type="EnvCollidable" x="2" y="251.612" width="118" height="12.388"/>
   <object id="196" type="EnvCollidable" x="107.963" y="88.881" width="12.037" height="175.119"/>
  </objectgroup>

@@ -50,6 +50,7 @@
 #define EXIT_COUNT      240
 /** The conversion from degrees to radians */
 #define DEGREE_TO_RADIAN  0.0174533
+#define RADIAN_TO_DEGREE  57.2958
 
 #pragma mark -
 #pragma mark Game Logic Constants
@@ -165,6 +166,7 @@
 #pragma mark SHADERS
 #define WIND_SPEED 1.0
 const float WIND_DIRECTION[2] = {1.0, 1.0};
+#define WIND_COUNT 3
 #define CLOUD_SPEED 0.05
 #define DEFAULT_WHEAT_TEX_WIDTH 480
 #define DEFAULT_WHEAT_TEX_HEIGHT 270

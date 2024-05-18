@@ -27,6 +27,8 @@ protected:
     std::shared_ptr<Map> _map;
     /** The network controller */
     std::shared_ptr<NetworkController> _network;
+    /** Whether haptics is toggled */
+    bool _haptics;
 
 public:
 
@@ -79,6 +81,8 @@ public:
      * Callback for before solvisng collision.
      */
     void beforeSolve(b2Contact* contact, const b2Manifold* manifold);
+    
+    void setHaptics(bool b) { _haptics = b; };
 
 };
 

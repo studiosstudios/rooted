@@ -1,0 +1,201 @@
+{
+    "variables": {},
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0,
+                0
+            ],
+            "size": [
+                1024,
+                576
+            ],
+            "angle": 0,
+            "position": [
+                0,
+                0
+            ],
+            "visible": true
+        },
+        "children": {
+            "wheatbkg": {
+                "type": "Image",
+                "data": {
+                    "texture": "wheatbkg",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        1024,
+                        576
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "fill",
+                    "y_anchor": "fill",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "Big_Icon_4": {
+                "type": "Image",
+                "data": {
+                    "texture": "Big_Icon_4",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        190,
+                        403
+                    ],
+                    "angle": 0,
+                    "position": [
+                        414,
+                        7
+                    ],
+                    "visible": false
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "middle",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": -0.14
+                }
+            },
+            "Big_Icon_3": {
+                "type": "Image",
+                "data": {
+                    "texture": "Big_Icon_3",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        182,
+                        406
+                    ],
+                    "angle": 0,
+                    "position": [
+                        422,
+                        7
+                    ],
+                    "visible": false
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "middle",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": -0.14
+                }
+            },
+            "Big_Icon_2": {
+                "type": "Image",
+                "data": {
+                    "texture": "Big_Icon_2",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        201,
+                        404
+                    ],
+                    "angle": 0,
+                    "position": [
+                        403,
+                        7
+                    ],
+                    "visible": false
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "middle",
+                    "absolute": false,
+                    "x_offset": -0.01,
+                    "y_offset": -0.14
+                }
+            },
+            "Big_Icon_1": {
+                "type": "Image",
+                "data": {
+                    "texture": "Big_Icon_1",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        219,
+                        404
+                    ],
+                    "angle": 0,
+                    "position": [
+                        403,
+                        7
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "middle",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": -0.14
+                }
+            },
+            "carrottext": {
+                "type": "Label",
+                "data": {
+                    "anchor": [
+                        0.5,
+                        1
+                    ],
+                    "size": [
+                        586,
+                        100
+                    ],
+                    "position": [
+                        220,
+                        476
+                    ],
+                    "angle": 0,
+                    "visible": true,
+                    "font": "gaeguBold80",
+                    "text": "You are a carrot!",
+                    "foreground": "#ffffffff",
+                    "background": "#00000000",
+                    "padding": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "valign": "top",
+                    "halign": "left"
+                },
+                "children": {},
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            }
+        }
+    }
+}

@@ -197,6 +197,7 @@ protected:
     DirectionalSprites _walkSprites;
     DirectionalSprites _runSprites;
     DirectionalSprites _dashSprites;
+    DirectionalSprites _idleSprites;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
     bool _shouldAnimateDash = false;
@@ -253,6 +254,12 @@ protected:
     bool _rootInput;
     
     bool _unrootInput;
+    
+    /**
+     * False if user dashes in the direction they are facing
+     * True if user dashes in direction of swipe
+     */
+    bool _swipe; // true if user chose swipe to dash in direction, false for dash in joystick
     
     cugl::Vec2 _dashCache;
     /** Polygon factory for the wheat node. */
@@ -540,7 +547,7 @@ public:
      *
      * Virtual, should be implemented by all derived classes with respect to their specific animation durations.
      */
-    virtual void updateCurAnimDurationForState() {};
+    virtual void updateCurAnimDurationForState();
     
     /**
      * Returns whether the current EntityModel's state is one where the animation should be cycling
@@ -556,6 +563,8 @@ public:
     void setRunSprites(DirectionalSprites ds) {_runSprites = ds;}
     
     void setDashSprites(DirectionalSprites ds) {_dashSprites = ds;}
+    
+    void setIdleSprites(DirectionalSprites ds) {_idleSprites = ds;}
     
     static std::string getCarrotTypeSuffix(CarrotType ct) {
         switch (ct) {
@@ -712,6 +721,8 @@ public:
     void update(float dt) override;
     
     
+    void resetStateCooldowns();
+    
     /**
      *  Steps the state machine of this EntityModel.
      *
@@ -796,6 +807,34 @@ public:
     bool isInWheat() { return _inWheat; }
 
     void setInWheat(bool inWheat) { _inWheat = inWheat; }
+    
+    void setSwipe(bool b) { _swipe = b; }
+    
+    /**
+     * For debugging purposes only (every class of levels below this should have a local _swipe variable)
+     */
+    bool getSwipe() { return _swipe; }
+    
+    cugl::Vec2 facingToVec(EntityFacing facing){
+        switch(facing){
+            case EAST:
+                return cugl::Vec2(1,0);
+            case NORTHEAST:
+                return cugl::Vec2(1,1);
+            case NORTH:
+                return cugl::Vec2(0,1);
+            case NORTHWEST:
+                return cugl::Vec2(-1,1);
+            case WEST:
+                return cugl::Vec2(-1,0);
+            case SOUTHWEST:
+                return cugl::Vec2(-1,-1);
+            case SOUTH:
+                return cugl::Vec2(0,-1);
+            case SOUTHEAST:
+                return cugl::Vec2(1,-1);
+        }
+    }
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

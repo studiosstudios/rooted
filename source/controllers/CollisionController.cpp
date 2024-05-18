@@ -322,6 +322,7 @@ void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse*
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             if(name2 == "baby") {
                 BabyCarrot* babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+                std::cout << "baby carrot and carrot collision \n";
                 if(_map->getCharacter()->getUUID() == carrot->getUUID() && carrot->isDashing()){
                     _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), babycarrot->getID()));
                 }

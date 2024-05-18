@@ -601,7 +601,13 @@ void GameScene::setComplete(bool value) {
     _complete = value;
     if (value && change) {
         pauseNonEssentialAudio();
-        std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+        std::shared_ptr<Sound> source;
+        if(_map->isFarmer()){
+            source = _assets->get<Sound>(F_WIN_MUSIC);
+        }
+        else{
+            source = _assets->get<Sound>(C_WIN_MUSIC);
+        }
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
         _ui.setWinVisible(true);
         _countdown = EXIT_COUNT;
@@ -622,7 +628,13 @@ void GameScene::setFailure(bool value) {
     _failed = value;
     if (value) {
         pauseNonEssentialAudio();
-        std::shared_ptr<Sound> source = _assets->get<Sound>(LOSE_MUSIC);
+        std::shared_ptr<Sound> source;
+        if(_map->isFarmer()){
+            source = _assets->get<Sound>(F_LOSE_MUSIC);
+        }
+        else{
+            source = _assets->get<Sound>(C_LOSE_MUSIC);
+        }
         AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
         _ui.setLoseVisible(true);
         _countdown = EXIT_COUNT;

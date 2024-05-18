@@ -21,6 +21,8 @@ using namespace cugl;
 #define DASH_EFFECT               "dash"
 /** The key the rustle sounds */
 #define RUSTLE_MUSIC              "rustle"
+/** The sound effect for capture event */
+#define CAPTURE_EFFECT            "capture"
 /** Limits volume to be in between 0-1 */
 #define VOLUME_FACTOR    1
 
@@ -329,6 +331,13 @@ void ActionController::updateRustlingNoise(){
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
     _map->getFarmers().at(0)->grabCarrot();
+    if(_map->isFarmer()){
+        std::shared_ptr<Sound> source = _assets->get<Sound>(CAPTURE_EFFECT);
+        AudioEngine::get()->play("capture", source);
+    }
+    if(_map->getCharacter()->getUUID() == event->getUUID()){
+        Haptics::get()->playContinuous(1.0, 0.8, 0.3);
+    }
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             carrot->setSensor(true);

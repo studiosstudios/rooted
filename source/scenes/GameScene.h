@@ -123,6 +123,8 @@ protected:
     float _beginningZoom;
     
     int _characterWin;
+    
+    float _ellapsed;
 
 #pragma mark Internal Object Management
 
@@ -397,25 +399,30 @@ public:
         
         // 0 = round, 1 = game, 2 = start
         int type;
+        float time;
         
         std::shared_ptr<NetEvent> newEvent() override {
             return std::make_shared<ReadyEvent>();
         }
-        static std::shared_ptr<NetEvent> alloc(int type) {
+        static std::shared_ptr<NetEvent> alloc(int type, cugl::Timestamp start) {
             auto res =  std::make_shared<ReadyEvent>();
             res->type = type;
+            res->time = cugl::Timestamp().ellapsedMillis(start);
             return res;
         }
         std::vector<std::byte> serialize() override {
             _serializer.reset();
             _serializer.writeUint32(type);
+            _serializer.writeFloat(time);
             return _serializer.serialize();
         }
         void deserialize(const std::vector<std::byte>& data) override {
             _deserializer.reset();
             _deserializer.receive(data);
             int t = _deserializer.readUint32();
+            float ti = _deserializer.readFloat();
             type = t;
+            time = ti;
         }
     };
 };

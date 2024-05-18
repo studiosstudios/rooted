@@ -389,6 +389,9 @@ void EntityModel::updateState(float dt) {
                 _state = DASHING;
                 dashTimer = 8;
                 _dashCooldown = DASH_COOLDOWN_SECS;
+                if (!_swipe) {
+                    _dashVector = facingToVec(_facing);
+                }
                 stateChanged = true;
                 _makeDashTrail = true;
 //                makeDashEffect();

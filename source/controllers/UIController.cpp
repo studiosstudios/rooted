@@ -152,8 +152,8 @@ void UIController::initGameUINodes() {
 
     // TUTORIAL UI STUFF
     _dialogBox = scene2::NinePatch::allocWithTexture(_assets->get<Texture>("dialoguebox"), Rect(137, 137, 512, 512));
-    _dialogBox->SceneNode::setContentSize(Size(2000, 500));
-    _dialogBox->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT * 0.25)) / _cameraZoom);
+    _dialogBox->SceneNode::setContentSize(Size(2000, 550));
+    _dialogBox->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT * 0.23)) / _cameraZoom);
     _dialogBox->setAnchor(Vec2::ANCHOR_CENTER);
     _dialogBox->setScale(0);
     _dialogBox->setColor(Color4(255,255,255,255));

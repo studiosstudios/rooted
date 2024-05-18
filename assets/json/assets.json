@@ -624,7 +624,10 @@
         },
         "topback": {
             "file": "textures/topback.png"
-        }
+        },
+        "rabbit" : {
+            "file" : "textures/rabbit.png"
+       }
     },
     "jsons": {
         "server": "json/server.json",
@@ -804,6 +807,10 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 75
         },
+        "gaeguBold80": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 80
+        },
         "gaeguBold90": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 90
@@ -837,7 +844,11 @@
         "playercountwidget" : "widgets/playercountwidget.json",
         "postround": "widgets/postround.json",
         "playerpoints" : "widgets/playerpoints.json",
-        "playerpointinfo" : "widgets/playerpointinfowidget.json"
+        "playerpointinfo" : "widgets/playerpointinfowidget.json",
+        "characterdisplay" : "widgets/characterdisplay.json",
+        "rabbitpreview" : "widgets/rabbitpreview.json",
+        "carrotpreview" : "widgets/carrotpreview.json",
+        "winner" : "widgets/winner.json"
     },
     "scene2s" : {
         "host": {
@@ -886,6 +897,30 @@
             "type"   : "Widget",
             "data"   : {
                 "key"     : "loadingscreen"
+            }
+        },
+        "characterdisplay" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "characterdisplay"
+            }
+        },
+        "rabbitpreview" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "rabbitpreview"
+            }
+        },
+        "carrotpreview" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "carrotpreview"
+            }
+        },
+        "winner" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "carrotpreview"
             }
         }
     }

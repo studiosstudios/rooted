@@ -128,9 +128,10 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
         }
     });
     _hapticsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_hapticsoption_boxselect"));
+    _hapticsbutton->setToggle(true);
+    _hapticsbutton->setDown(true);
     _hapticsbutton->addListener([this](const std::string& name, bool down) {
-        if (!down) {
-        }
+        CULog("toggle button");
     });
     _soundslider = std::dynamic_pointer_cast<scene2::Slider>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_soundoption_slider"));
     _soundslider->addListener([this](const std::string& name, bool down) {
@@ -155,7 +156,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     
     Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
     
-    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _joystickdirbutton, _swipedirbutton, _dashinfobutton, _hapticsbutton};
+    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _joystickdirbutton, _swipedirbutton, _dashinfobutton};
     _screenButtonMap.insert({Choice::SETTINGS, optionsbuttons});
     
     _optionsbutton->addListener([this](const std::string& name, bool down) {
@@ -243,17 +244,20 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
             case MAIN:
                 _soundslider->deactivate();
                 _musicslider->deactivate();
+                _hapticsbutton->deactivate();
                 addChild(_menuscene);
                 break;
             case LOBBY:
                 _soundslider->deactivate();
                 _musicslider->deactivate();
+                _hapticsbutton->deactivate();
                 addChild(_lobbyscene);
                 break;
             case SETTINGS:
                 // activate stuff for settings specific things
                 _soundslider->activate();
                 _musicslider->activate();
+                _hapticsbutton->activate();
                 addChild(_optionsscene);
                 break;
             default:
@@ -266,5 +270,5 @@ void MenuScene::togglePopup(bool active) {
     _popup->setVisible(active);
     if (active) {
         _popupclose->activate();
-    } 
+    }
 }

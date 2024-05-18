@@ -701,7 +701,8 @@
                                                 44
                                             ],
                                             "visible": true,
-                                            "upnode": "checkboxunselect"
+                                            "upnode": "checkboxunselect",
+                                            "downnode": "checkboxselect"
                                         },
                                         "children": {
                                             "checkboxunselect": {

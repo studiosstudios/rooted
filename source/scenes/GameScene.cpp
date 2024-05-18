@@ -197,6 +197,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
     
     _characterWin = -1;
+    
+    _ellapsed = -1.0f;
         
     return true;
 }
@@ -352,6 +354,8 @@ void GameScene::reset() {
     }
     
     _ui.setEndVisible(false);
+    
+    _ellapsed = -1.0f;
 }
 
 void GameScene::gameReset() {
@@ -477,6 +481,9 @@ void GameScene::fixedUpdate(float step) {
                 _readyNewGame += 1;
             } else if (readyEvent->type == 2) {
                 _readyStart += 1;
+            } else if (readyEvent->type == 3) {
+                // set how the end screen should display
+                _ellapsed = Timestamp().ellapsedMillis(_startTime);
             }
         }
     }
@@ -565,20 +572,27 @@ void GameScene::postUpdate(float remain) {
     }
     else if (_charDisplayTimer == 0) {
         // now set the camera zoom
-        _network->pushOutEvent(ReadyEvent::alloc(2));
+        _network->pushOutEvent(ReadyEvent::alloc(2, _startTime));
         _charDisplayTimer = -1;
+    }
+    
+    if (_countdown == 1) {
+        if (_network->isHost()) {
+            _network->pushOutEvent(ReadyEvent::alloc(3, _startTime));
+        }
     }
         
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
+        
         // display the win screen
         if (_characterWin != -1) {
             _ui.setWinnerDisplay(true, _characterWin);
         }
         
         // are we displaying the end game screen
-        else if (!_isGameOverScreen) {
+        else if (!_isGameOverScreen && _ellapsed >= 0) {
             _isGameOverScreen = true;
             
             // get the vector of carrots that have been rooted
@@ -589,8 +603,7 @@ void GameScene::postUpdate(float remain) {
                 }
             }
             
-            // set how the end screen should display
-            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), carrots, _points, _map->getCarrotTypeForUUID(_character->getUUID()));
+            _ui.setEndVariables(_round, _ellapsed, _map->getBabyCarrots().size(), carrots, _points, _map->getCarrotTypeForUUID(_character->getUUID()));
             
             // display end scene
             _ui.setEndVisible(true);
@@ -606,11 +619,11 @@ void GameScene::postUpdate(float remain) {
         
         if (_ui.getNextRound() == 1){
             _ui.setNextRound(2);
-            _network->pushOutEvent(ReadyEvent::alloc(0));
+            _network->pushOutEvent(ReadyEvent::alloc(0, _startTime));
         }
         else if (_ui.getNextGame() == 1){
             _ui.setNextGame(2);
-            _network->pushOutEvent(ReadyEvent::alloc(1));
+            _network->pushOutEvent(ReadyEvent::alloc(1, _startTime));
         }
         else{
             //do nothing and wait for host to reset
@@ -685,7 +698,7 @@ void GameScene::postUpdate(float remain) {
         }
         if(farmerWin){
             // add points for farmer
-            _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 9;
+            _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 3;
 
             if(_character->getUUID() == _farmerUUID){
                 setComplete(true);
@@ -704,7 +717,7 @@ void GameScene::postUpdate(float remain) {
             // add points for carrot
             for (int ii = 0; ii < _points.size(); ii++) {
                 if (ii != _map->getCarrotTypeForUUID(_farmerUUID)) {
-                    _points[ii] += 9;
+                    _points[ii] += 1;
                 }
             }
             if(_character->getUUID() == _farmerUUID){

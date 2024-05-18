@@ -85,6 +85,10 @@ void UIController::setEndVariables(int roundNum, int length, int babies, std::ve
 
 void UIController::setCharacterDisplay(bool active, int carrot) {
     _characterdisplay->setVisible(active);
+    for (auto it = _characterdisplayNodes.begin(); it != _characterdisplayNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _characterdisplayNodes.at(carrot)->setVisible(true);
 }
 
 void UIController::setRabbitPreview(bool active) {
@@ -93,10 +97,18 @@ void UIController::setRabbitPreview(bool active) {
 
 void UIController::setCarrotPreview(bool active, int carrot) {
     _carrotpreview->setVisible(active);
+    for (auto it = _carrotpreviewNodes.begin(); it != _carrotpreviewNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _carrotpreviewNodes.at(carrot)->setVisible(true);
 }
 
 void UIController::setWinnerDisplay(bool active, int carrot) {
     _winner->setVisible(active);
+    for (auto it = _winnerNodes.begin(); it != _winnerNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _winnerNodes.at(carrot)->setVisible(true);
 }
 
 void UIController::setSpeechBubbleVisible(bool visible) {
@@ -318,6 +330,15 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _winner->doLayout(); // Repositions the HUD
     _winner->setVisible(false);
     _uinode->addChild(_winner);
+    
+    _characterdisplayNodes.clear();
+    _carrotpreviewNodes.clear();
+    _winnerNodes.clear();
+    for (int i = 0; i < 4; i++) {
+        _characterdisplayNodes.push_back(_assets->get<scene2::SceneNode>("characterdisplay_Big_Icon_" + std::to_string(i)));
+        _carrotpreviewNodes.push_back(_assets->get<scene2::SceneNode>("carrotpreview_Big_Icon_" + std::to_string(i)));
+        _winnerNodes.push_back(_assets->get<scene2::SceneNode>("characterdisplay_Big_Icon_" + std::to_string(i)));
+    }
     
     return true;
 }

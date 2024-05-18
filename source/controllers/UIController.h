@@ -104,9 +104,16 @@ private:
     int _nextRound;
     
     std::shared_ptr<cugl::scene2::SceneNode> _characterdisplay;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _characterdisplayNodes;
+
     std::shared_ptr<cugl::scene2::SceneNode> _rabbitpreview;
+
     std::shared_ptr<cugl::scene2::SceneNode> _carrotpreview;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _carrotpreviewNodes;
+
     std::shared_ptr<cugl::scene2::SceneNode> _winner;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _winnerNodes;
+
 
 public:
 #pragma mark Constructor/Destructor/Dispose

@@ -55,6 +55,9 @@ EntityModel::DirectionalSprites Farmer::getDirectionalSpritesForState(EntityMode
 void Farmer::updateCurAnimDurationForState() {
     switch (_state) {
             // TODO: This needs to be split up into the correct animDurations for each type of movement states
+        case STANDING:
+            curAnimDuration = standAnimDuration;
+            break;
         case SNEAKING:
             curAnimDuration = sneakAnimDuration;
             break;

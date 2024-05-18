@@ -162,6 +162,21 @@
         "farmer-northeast-scarf": {
             "file":     "textures/farmer-northeast-scarf.png"
         },
+        "farmer-south-idle": {
+            "file":     "textures/farmer-south-idle.png"
+        },
+        "farmer-north-idle": {
+            "file":     "textures/farmer-north-idle.png"
+        },
+        "farmer-east-idle": {
+            "file":     "textures/farmer-east-idle.png"
+        },
+        "farmer-southeast-idle": {
+            "file":     "textures/farmer-southeast-idle.png"
+        },
+        "farmer-northeast-idle": {
+            "file":     "textures/farmer-northeast-idle.png"
+        },
         "fence0": {
             "file":     "textures/fence0.png"
         },

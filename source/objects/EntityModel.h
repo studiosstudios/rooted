@@ -197,6 +197,7 @@ protected:
     DirectionalSprites _walkSprites;
     DirectionalSprites _runSprites;
     DirectionalSprites _dashSprites;
+    DirectionalSprites _idleSprites;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
     bool _shouldAnimateDash = false;
@@ -556,6 +557,8 @@ public:
     void setRunSprites(DirectionalSprites ds) {_runSprites = ds;}
     
     void setDashSprites(DirectionalSprites ds) {_dashSprites = ds;}
+    
+    void setIdleSprites(DirectionalSprites ds) {_idleSprites = ds;}
     
     static std::string getCarrotTypeSuffix(CarrotType ct) {
         switch (ct) {

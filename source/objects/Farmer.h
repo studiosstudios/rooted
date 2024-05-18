@@ -18,6 +18,7 @@ private:
     bool _dashWindow;
     
     // Animation timers
+    float standAnimDuration = 3.0f;
     float sneakAnimDuration = 2.0f;
     float walkAnimDuration = 1.0f;
     float runAnimDuration = 0.5f;

@@ -551,6 +551,11 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
             ++carrot;
         }
         else {
+            auto pit = std::find(_players.begin(), _players.end(), *carrot);
+            if (pit != _players.end()) {
+                _players.erase(pit);
+            }
+            _entitiesNode->removeChild((*carrot)->getSceneNode());
             carrot = _carrots.erase(carrot);
         }
     }
@@ -732,7 +737,7 @@ void Map::spawnFarmers() {
         farmer->setWalkSprites(walkDS);
         farmer->setRunSprites(initEntityDirectionalSprites("farmer-", "-run"));
         farmer->setDashSprites(initEntityDirectionalSprites("farmer-", "-dash"));
-//        farmer->setBaseCarrySprites(initEntityDirectionalSprites("farmer-", "-carry"));
+        farmer->setIdleSprites(initEntityDirectionalSprites("farmer-", "-idle"));
         farmer->setDashColliderSize(Size(FARMER_DASH_HITBOX_WIDTH, FARMER_DASH_HITBOX_HEIGHT));
         farmer->setRockColliderSize(Size(FARMER_ROCK_HITBOX_WIDTH, FARMER_ROCK_HITBOX_HEIGHT));
         

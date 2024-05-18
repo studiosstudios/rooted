@@ -165,6 +165,27 @@
         "cols": 4,
         "size": 10
     },
+    "farmer-south-idle": {
+        "rows": 2,
+        "cols": 4,
+        "size": 6
+    },
+    "farmer-north-idle": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-east-idle": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-northeast-idle": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-southeast-idle": {
+        "rows": 2,
+        "cols": 4
+    },
     "carrot-south-walk": {
         "rows": 3,
         "cols": 4,

@@ -193,6 +193,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _charDisplayTimer = 100;
     
     _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
+    
+    _characterWin = -1;
         
     return true;
 }
@@ -352,6 +354,7 @@ void GameScene::gameReset() {
     // reset round and points
     _round = 1;
     _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
+    _characterWin = -1;
     // reset points
     std::fill(_points.begin(), _points.end(), 0);
 }
@@ -538,8 +541,13 @@ void GameScene::postUpdate(float remain) {
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
+        // display the win screen
+        if (_characterWin != -1) {
+            _ui.setWinnerDisplay(true, _characterWin);
+        }
+        
         // are we displaying the end game screen
-        if (!_isGameOverScreen) {
+        else if (!_isGameOverScreen) {
             _isGameOverScreen = true;
             
             // get the vector of carrots that have been rooted
@@ -563,7 +571,6 @@ void GameScene::postUpdate(float remain) {
         }
         
         if (_ui.getNextRound() == 1){
-            CULog("hello pushing out event");
             _ui.setNextRound(2);
             _network->pushOutEvent(ReadyEvent::alloc());
         }
@@ -581,6 +588,7 @@ void GameScene::postUpdate(float remain) {
         _ui.setCarrotPreview(false, 0);
         _cam.setZoom(_beginningZoom);
         _cam.setNoZoom(false);
+        _startTime = Timestamp();
         _charDisplayTimer = -1;
     }
     else{
@@ -597,7 +605,7 @@ void GameScene::postUpdate(float remain) {
         }
         if(farmerWin){
             // add points for farmer
-            _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 3;
+            _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 9;
 
             if(_character->getUUID() == _farmerUUID){
                 setComplete(true);
@@ -616,7 +624,7 @@ void GameScene::postUpdate(float remain) {
             // add points for carrot
             for (int ii = 0; ii < _points.size(); ii++) {
                 if (ii != _map->getCarrotTypeForUUID(_farmerUUID)) {
-                    _points[ii] += 1;
+                    _points[ii] += 9;
                 }
             }
             if(_character->getUUID() == _farmerUUID){
@@ -629,6 +637,15 @@ void GameScene::postUpdate(float remain) {
 //        if(farmerWin || carrotWin){
 //            _network->disconnect();
 //        }
+        
+        // this is checking the wins across all rounds
+        // ties are decided by who is higher up
+        for (int ii = 0; ii < _points.size(); ii++) {
+            if (_points.at(ii) >= 10) {
+                _characterWin = ii;
+                break;
+            }
+        }
     }
     
     _map->getCharacter()->getSceneNode()->TexturedNode::setIsPlayer(true);

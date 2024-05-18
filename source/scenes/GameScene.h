@@ -117,6 +117,8 @@ protected:
     int _charDisplayTimer;
     
     float _beginningZoom;
+    
+    int _characterWin;
 
 #pragma mark Internal Object Management
 

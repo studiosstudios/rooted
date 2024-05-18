@@ -1045,7 +1045,7 @@
         "winner" : {
             "type"   : "Widget",
             "data"   : {
-                "key"     : "carrotpreview"
+                "key"     : "winner"
             }
         },
         "optionsmenu": {

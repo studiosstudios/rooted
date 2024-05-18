@@ -337,7 +337,7 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     for (int i = 0; i < 4; i++) {
         _characterdisplayNodes.push_back(_assets->get<scene2::SceneNode>("characterdisplay_Big_Icon_" + std::to_string(i)));
         _carrotpreviewNodes.push_back(_assets->get<scene2::SceneNode>("carrotpreview_Big_Icon_" + std::to_string(i)));
-        _winnerNodes.push_back(_assets->get<scene2::SceneNode>("characterdisplay_Big_Icon_" + std::to_string(i)));
+        _winnerNodes.push_back(_assets->get<scene2::SceneNode>("winner_characterdisplay_Big_Icon_" + std::to_string(i)));
     }
     
     return true;

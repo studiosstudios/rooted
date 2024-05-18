@@ -18,12 +18,14 @@ std::shared_ptr<NetEvent> RootEvent::newEvent(){
     return std::make_shared<RootEvent>();
 }
 
-std::shared_ptr<NetEvent> RootEvent::allocRootEvent(std::string uuid, int plantingspotid){
+std::shared_ptr<NetEvent> RootEvent::allocRootEvent(std::string uuid, int plantingspotid, Vec2 farmerPos){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<RootEvent>();
     event->_uuid = uuid;
     event->_plantingspotid = plantingspotid;
+    event->_farmerX = farmerPos.x;
+    event->_farmerY = farmerPos.y + 0.4f; // forgive me for this magic number, I must do what I must to put the rooted carrot in the correct place
     return event;
 #pragma mark END SOLUTION
 }
@@ -37,6 +39,8 @@ std::vector<std::byte> RootEvent::serialize(){
     _serializer.reset();
     _serializer.writeString(_uuid);
     _serializer.writeSint32(_plantingspotid);
+    _serializer.writeFloat(_farmerX);
+    _serializer.writeFloat(_farmerY);
     return _serializer.serialize();
 #pragma mark END SOLUTION
 }
@@ -60,5 +64,7 @@ void RootEvent::deserialize(const std::vector<std::byte>& data){
     _uuid = uuid;
     int plantingspotid = _deserializer.readSint32();
     _plantingspotid = plantingspotid;
+    _farmerX = _deserializer.readFloat();
+    _farmerY = _deserializer.readFloat();
 #pragma mark END SOLUTION
 }

@@ -16,7 +16,6 @@ void Farmer::dispose() {
 }
 
 void Farmer::grabCarrot(CarrotType carrotType){
-    _isHoldingCarrot = true;
     _state = CARRYING;
     _carriedCarrotType = carrotType;
     resetStateCooldowns();
@@ -24,14 +23,12 @@ void Farmer::grabCarrot(CarrotType carrotType){
 }
 
 void Farmer::rootCarrot(){
-    _isHoldingCarrot = false;
     _state = STANDING;
     resetStateCooldowns();
     updateSprite(0);
 }
 
 void Farmer::carrotEscaped(){
-    _isHoldingCarrot = false;
     _state = STANDING;
     resetStateCooldowns();
     updateSprite(0);

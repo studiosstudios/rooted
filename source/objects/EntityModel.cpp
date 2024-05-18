@@ -218,6 +218,10 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         _node->setVisible(false);
         return;
     }
+    else if (_state == ROOTED) {
+        // Special case: ROOTED node is set in Carrot class when the state happens, no need to change sprite, so we do nothing here
+        return;
+    }
     
     EntityFacing face;
     if (_state != DASHING) {
@@ -536,7 +540,12 @@ void EntityModel::update(float dt) {
     BoxObstacle::update(dt);
     
     if (_node != nullptr) {
-        _node->setPosition(getPosition()*_drawScale);
+        if (_state == ROOTED) {
+            _node->setPosition((getPosition()*_drawScale) - Vec2 {0, (getHeight()*_drawScale)/2});
+        }
+        else {
+            _node->setPosition(getPosition()*_drawScale);
+        }
         _node->setAngle(getAngle());
 //        if (isInWheat() && (int(_node->getPriority()) == 4)) {
 //            _node->setColor(Color4(255, 255, 255, 255.0/2));

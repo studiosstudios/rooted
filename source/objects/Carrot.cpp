@@ -41,9 +41,9 @@ void Carrot::gotCaptured(){
  */
 void Carrot::gotRooted(){
     _state = ROOTED;
+    setSceneNode(_rootedNode);
     resetStateCooldowns();
     setBodyType(b2BodyType::b2_staticBody);
-    updateSprite(0);
 }
 
 /**

@@ -351,6 +351,9 @@
         "carrot-idle-southeast-scarf": {
             "file":     "textures/carrot-idle-southeast-scarf.png"
         },
+        "carrot-top": {
+            "file":     "textures/carrot-top.png"
+        },
         "barrot-south-walk": {
             "file":     "textures/barrot-south-walk.png"
         },

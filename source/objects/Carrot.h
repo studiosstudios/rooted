@@ -22,6 +22,7 @@ private:
     // Animation
     float walkAnimDuration = 1.0f;
     CarrotType _carrotType;
+    std::shared_ptr<scene2::SpriteNode> _rootedNode;
     
 public:
 #pragma mark -
@@ -92,6 +93,8 @@ public:
     void setCarrotType(CarrotType ct) { _carrotType = ct; }
     
     CarrotType getCarrotType() { return _carrotType; }
+    
+    void setRootedSprite(const std::shared_ptr<scene2::SpriteNode>& rootedNode) { _rootedNode = rootedNode; }
     
 #pragma mark -
 #pragma mark Interactions

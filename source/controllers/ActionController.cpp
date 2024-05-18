@@ -164,7 +164,7 @@ void ActionController::preUpdate(float dt) {
     if(!_map->isFarmer()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && carrotEntity->isCaptured()){
-            _freeMeter+=2;
+            _freeMeter+=1;
             std::cout<<"free meter" << _freeMeter << "\n";
             if(_freeMeter >= 50){
                 _freeMeter = 0;

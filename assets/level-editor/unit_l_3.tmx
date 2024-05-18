@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="158">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="159">
  <editorsettings>
-  <export target="unit_l_2.json" format="json"/>
+  <export target="unit_l_3.json" format="json"/>
  </editorsettings>
  <properties>
   <property name="map-type" propertytype="MapType" value="middle-middle"/>
@@ -10,11 +10,11 @@
  <tileset firstgid="4" source="maps.tsx"/>
  <tileset firstgid="44" source="environment.tsx"/>
  <objectgroup id="9" name="wheat">
-  <object id="140" gid="26" x="0" y="288" width="512" height="288"/>
+  <object id="158" gid="43" x="0" y="288" width="512" height="288"/>
  </objectgroup>
  <objectgroup id="8" name="environment">
   <object id="138" gid="44" x="65" y="270" width="64" height="64"/>
-  <object id="141" gid="44" x="383" y="78" width="96" height="64"/>
+  <object id="141" gid="44" x="384" y="64" width="96" height="64"/>
   <object id="136" gid="45" x="480" y="288" width="32" height="32"/>
   <object id="145" gid="55" x="0" y="64" width="32" height="32"/>
   <object id="146" gid="55" x="0" y="96" width="32" height="32"/>
@@ -26,9 +26,6 @@
   <object id="152" gid="55" x="0" y="288" width="32" height="32"/>
   <object id="153" type="EnvCollidable" x="0" y="0" width="20.6601" height="288"/>
   <object id="154" gid="55" x="0" y="32" width="32" height="32"/>
-  <object id="155" gid="46" x="125" y="178" width="224" height="174.301"/>
-  <object id="156" gid="48" x="44.3174" y="16.6204" width="25.5379" height="51.2111"/>
-  <object id="157" type="EnvCollidable" x="140.251" y="118.263" width="200.056" height="43.8948"/>
  </objectgroup>
  <objectgroup id="7" name="entities">
   <object id="106" gid="2" x="224" y="256" width="32" height="32"/>

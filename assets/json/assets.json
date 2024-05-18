@@ -509,11 +509,17 @@
         "unit_l_2": {
             "file":     "textures/maps/unit_l_2.png"
         },
+        "unit_l_3": {
+            "file":     "textures/maps/unit_l_3.png"
+        },
         "unit_m_1": {
             "file":     "textures/maps/unit_m_1.png"
         },
         "unit_m_2": {
             "file":     "textures/maps/unit_m_2.png"
+        },
+        "unit_m_3": {
+            "file":     "textures/maps/unit_m_3.png"
         },
         "unit_r_1": {
             "file":     "textures/maps/unit_r_1.png"
@@ -770,8 +776,10 @@
         "unit_tr_2": "level-editor/unit_tr_2.json",
         "unit_l_1": "level-editor/unit_l_1.json",
         "unit_l_2": "level-editor/unit_l_2.json",
+        "unit_l_3": "level-editor/unit_l_3.json",
         "unit_m_1": "level-editor/unit_m_1.json",
         "unit_m_2": "level-editor/unit_m_2.json",
+        "unit_m_3": "level-editor/unit_m_3.json",
         "unit_r_1": "level-editor/unit_r_1.json",
         "unit_r_2": "level-editor/unit_r_2.json",
         "unit_bl_1": "level-editor/unit_bl_1.json",

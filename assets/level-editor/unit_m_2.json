@@ -42,7 +42,7 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":35,
+                 "gid":45,
                  "height":64,
                  "id":138,
                  "name":"",
@@ -50,11 +50,11 @@
                  "type":"PlantingSpot",
                  "visible":true,
                  "width":96,
-                 "x":385,
-                 "y":101
+                 "x":384,
+                 "y":64
                 }, 
                 {
-                 "gid":36,
+                 "gid":46,
                  "height":32,
                  "id":150,
                  "name":"",
@@ -66,7 +66,7 @@
                  "y":288
                 }, 
                 {
-                 "gid":45,
+                 "gid":55,
                  "height":32,
                  "id":155,
                  "name":"",
@@ -94,7 +94,7 @@
                  "y":132.476
                 }, 
                 {
-                 "gid":45,
+                 "gid":55,
                  "height":32,
                  "id":156,
                  "name":"",
@@ -122,7 +122,7 @@
                  "y":196.476
                 }, 
                 {
-                 "gid":45,
+                 "gid":55,
                  "height":32,
                  "id":157,
                  "name":"",
@@ -150,7 +150,7 @@
                  "y":164.476
                 }, 
                 {
-                 "gid":45,
+                 "gid":55,
                  "height":32,
                  "id":158,
                  "name":"",
@@ -189,7 +189,7 @@
                  "y":83
                 }, 
                 {
-                 "gid":42,
+                 "gid":52,
                  "height":32,
                  "id":160,
                  "name":"",
@@ -217,7 +217,7 @@
                  "y":260.476
                 }, 
                 {
-                 "gid":43,
+                 "gid":53,
                  "height":32,
                  "id":161,
                  "name":"",
@@ -245,7 +245,7 @@
                  "y":260.476
                 }, 
                 {
-                 "gid":45,
+                 "gid":55,
                  "height":32,
                  "id":162,
                  "name":"",
@@ -284,7 +284,7 @@
                  "y":242.03
                 }, 
                 {
-                 "gid":41,
+                 "gid":51,
                  "height":385.574,
                  "id":167,
                  "name":"",
@@ -319,7 +319,7 @@
                  "type":"EnvCollidable",
                  "visible":true,
                  "width":95,
-                 "x":206.19403,
+                 "x":206.194,
                  "y":99
                 }],
          "opacity":1,
@@ -542,7 +542,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.10.1",
  "tileheight":32,
  "tilesets":[
         {
@@ -554,7 +554,7 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":35,
+         "firstgid":45,
          "source":"environment.tsx"
         }],
  "tilewidth":32,

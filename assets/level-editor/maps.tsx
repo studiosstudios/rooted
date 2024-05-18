@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.1" name="maps" tilewidth="640" tileheight="360" tilecount="35" columns="0">
+<tileset version="1.10" tiledversion="1.10.1" name="maps" tilewidth="640" tileheight="360" tilecount="37" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="Map">
   <properties>
@@ -244,5 +244,19 @@
    <property name="name" value="unit_o_7"/>
   </properties>
   <image width="640" height="360" source="../textures/maps/unit_o_7.png"/>
+ </tile>
+ <tile id="39" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_l_3"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_l_3.png"/>
+ </tile>
+ <tile id="40" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_m_3"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_m_3.png"/>
  </tile>
 </tileset>

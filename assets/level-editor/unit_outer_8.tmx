@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="191">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="190">
  <editorsettings>
-  <export target="unit_outer_5.json" format="json"/>
+  <export target="unit_outer_8.json" format="json"/>
  </editorsettings>
  <properties>
   <property name="map-type" propertytype="MapType" value="middle-middle"/>
@@ -9,9 +9,7 @@
  <tileset firstgid="1" source="entities.tsx"/>
  <tileset firstgid="4" source="maps.tsx"/>
  <tileset firstgid="43" source="environment.tsx"/>
- <objectgroup id="9" name="wheat">
-  <object id="190" gid="40" x="-431" y="320" width="1056" height="448"/>
- </objectgroup>
+ <objectgroup id="9" name="wheat"/>
  <objectgroup id="8" name="environment"/>
  <objectgroup id="7" name="entities"/>
 </map>

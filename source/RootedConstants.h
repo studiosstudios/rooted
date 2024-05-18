@@ -26,7 +26,7 @@
 /** The number of map rows/cols to spawn (including outer maps) */
 #define NUMBER_MAP_UNITS  5
 /** How much of the world outside the map is shown */
-#define OUTER_MAP_BORDER 2.0f
+#define OUTER_MAP_BORDER 4.0f
 /** Default drawscale */
 #define DEFAULT_DRAWSCALE 32.0f
 /** Zoom of camera relative to scene */

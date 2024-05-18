@@ -9,6 +9,8 @@
 
 using namespace cugl;
 
+#define MAX_NUM_FRAMES_STUCK 10
+
 enum class State {
     EVADE,
     ROAM,

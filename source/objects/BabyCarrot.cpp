@@ -38,13 +38,13 @@ void BabyCarrot::gotCaptured() {
 void BabyCarrot::handleMaybeStuckBarrot() {
 //    std::cout<<_numFramesStuck<<"\n";
     float newDistAway = (getPosition()-_target).lengthSquared();
-    if(_state != State::SIT && (_distanceAwayFromTarget-newDistAway) < 0.2F){
+    if(_state != State::SIT && (_distanceAwayFromTarget-newDistAway) < 0.5F){
         _numFramesStuck++;
     }
     else{
         resetStuckBarrot();
     }
-    if(_numFramesStuck >= 20){
+    if(_numFramesStuck >= MAX_NUM_FRAMES_STUCK){
         _needNewTarget = true; //indicate to AIController a new target is necessary
     }
     _distanceAwayFromTarget = newDistAway;

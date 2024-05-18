@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="199">
+ <editorsettings>
+  <export target="unit_outer_1.json" format="json"/>
+ </editorsettings>
+ <properties>
+  <property name="map-type" propertytype="MapType" value="middle-middle"/>
+ </properties>
+ <tileset firstgid="1" source="entities.tsx"/>
+ <tileset firstgid="4" source="maps.tsx"/>
+ <tileset firstgid="43" source="environment.tsx"/>
+ <objectgroup id="9" name="wheat">
+  <object id="190" gid="36" x="0" y="346" width="512" height="288"/>
+ </objectgroup>
+ <objectgroup id="8" name="environment">
+  <object id="191" gid="51" x="138" y="268.226" width="32" height="32"/>
+  <object id="192" gid="51" x="170" y="268.226" width="32" height="32"/>
+  <object id="193" gid="51" x="202" y="268.226" width="32" height="32"/>
+  <object id="194" gid="51" x="234" y="268.226" width="32" height="32"/>
+  <object id="195" gid="51" x="266" y="268.226" width="32" height="32"/>
+  <object id="196" gid="51" x="298" y="268.226" width="32" height="32"/>
+  <object id="197" gid="51" x="330" y="268.226" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="7" name="entities"/>
+</map>

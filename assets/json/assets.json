@@ -33,6 +33,18 @@
                 "bot_right" : [384,   384, 511, 511]
             }
         },
+        "barn": {
+            "file":     "textures/barn.png"
+        },
+        "tractor": {
+            "file":     "textures/tractor.png"
+        },
+        "scarecrow": {
+            "file":     "textures/scarecrow.png"
+        },
+        "mill": {
+            "file":     "textures/mill.png"
+        },
         "dude": {
             "file":     "textures/dude.png"
         },
@@ -84,6 +96,96 @@
         "farmer-east-dash": {
             "file":     "textures/farmer-east-dash.png"
         },
+        "farmer-southeast-dash": {
+            "file":     "textures/farmer-southeast-dash.png"
+        },
+        "farmer-northeast-dash": {
+            "file":     "textures/farmer-northeast-dash.png"
+        },
+        "farmer-south-cloak": {
+            "file":     "textures/farmer-south-cloak.png"
+        },
+        "farmer-north-cloak": {
+            "file":     "textures/farmer-north-cloak.png"
+        },
+        "farmer-east-cloak": {
+            "file":     "textures/farmer-east-cloak.png"
+        },
+        "farmer-southeast-cloak": {
+            "file":     "textures/farmer-southeast-cloak.png"
+        },
+        "farmer-northeast-cloak": {
+            "file":     "textures/farmer-northeast-cloak.png"
+        },
+        "farmer-south-flower": {
+            "file":     "textures/farmer-south-flower.png"
+        },
+        "farmer-north-flower": {
+            "file":     "textures/farmer-north-flower.png"
+        },
+        "farmer-east-flower": {
+            "file":     "textures/farmer-east-flower.png"
+        },
+        "farmer-southeast-flower": {
+            "file":     "textures/farmer-southeast-flower.png"
+        },
+        "farmer-northeast-flower": {
+            "file":     "textures/farmer-northeast-flower.png"
+        },
+        "farmer-south-headphones": {
+            "file":     "textures/farmer-south-headphones.png"
+        },
+        "farmer-north-headphones": {
+            "file":     "textures/farmer-north-headphones.png"
+        },
+        "farmer-east-headphones": {
+            "file":     "textures/farmer-east-headphones.png"
+        },
+        "farmer-southeast-headphones": {
+            "file":     "textures/farmer-southeast-headphones.png"
+        },
+        "farmer-northeast-headphones": {
+            "file":     "textures/farmer-northeast-headphones.png"
+        },
+        "farmer-south-scarf": {
+            "file":     "textures/farmer-south-scarf.png"
+        },
+        "farmer-north-scarf": {
+            "file":     "textures/farmer-north-scarf.png"
+        },
+        "farmer-east-scarf": {
+            "file":     "textures/farmer-east-scarf.png"
+        },
+        "farmer-southeast-scarf": {
+            "file":     "textures/farmer-southeast-scarf.png"
+        },
+        "farmer-northeast-scarf": {
+            "file":     "textures/farmer-northeast-scarf.png"
+        },
+        "fence0": {
+            "file":     "textures/fence0.png"
+        },
+        "fence1": {
+            "file":     "textures/fence1.png"
+        },
+        "fence2": {
+            "file":     "textures/fence2.png"
+        },
+        "fence3": {
+            "file":     "textures/fence3.png"
+        },
+        "fence5": {
+            "file":     "textures/fence5.png"
+        },
+        "fence6": {
+            "file":     "textures/fence6.png"
+        },
+        "fence7": {
+            "file":     "textures/fence7.png"
+        },
+        "fence8": {
+            "file":     "textures/fence8.png"
+        },
         "carrot-south-walk": {
             "file":     "textures/carrot-south-walk.png"
         },
@@ -114,6 +216,66 @@
         "carrot-southeast-dash": {
             "file":     "textures/carrot-southeast-dash.png"
         },
+        "carrot-south-cloak": {
+            "file":     "textures/carrot-south-cloak.png"
+        },
+        "carrot-north-cloak": {
+            "file":     "textures/carrot-north-cloak.png"
+        },
+        "carrot-east-cloak": {
+            "file":     "textures/carrot-east-cloak.png"
+        },
+        "carrot-northeast-cloak": {
+            "file":     "textures/carrot-northeast-cloak.png"
+        },
+        "carrot-southeast-cloak": {
+            "file":     "textures/carrot-southeast-cloak.png"
+        },
+        "carrot-south-flower": {
+            "file":     "textures/carrot-south-flower.png"
+        },
+        "carrot-north-flower": {
+            "file":     "textures/carrot-north-flower.png"
+        },
+        "carrot-east-flower": {
+            "file":     "textures/carrot-east-flower.png"
+        },
+        "carrot-northeast-flower": {
+            "file":     "textures/carrot-northeast-flower.png"
+        },
+        "carrot-southeast-flower": {
+            "file":     "textures/carrot-southeast-flower.png"
+        },
+        "carrot-south-headphones": {
+            "file":     "textures/carrot-south-headphones.png"
+        },
+        "carrot-north-headphones": {
+            "file":     "textures/carrot-north-headphones.png"
+        },
+        "carrot-east-headphones": {
+            "file":     "textures/carrot-east-headphones.png"
+        },
+        "carrot-northeast-headphones": {
+            "file":     "textures/carrot-northeast-headphones.png"
+        },
+        "carrot-southeast-headphones": {
+            "file":     "textures/carrot-southeast-headphones.png"
+        },
+        "carrot-south-scarf": {
+            "file":     "textures/carrot-south-scarf.png"
+        },
+        "carrot-north-scarf": {
+            "file":     "textures/carrot-north-scarf.png"
+        },
+        "carrot-east-scarf": {
+            "file":     "textures/carrot-east-scarf.png"
+        },
+        "carrot-northeast-scarf": {
+            "file":     "textures/carrot-northeast-scarf.png"
+        },
+        "carrot-southeast-scarf": {
+            "file":     "textures/carrot-southeast-scarf.png"
+        },
         "barrot-south-walk": {
             "file":     "textures/barrot-south-walk.png"
         },
@@ -128,6 +290,54 @@
         },
         "barrot-southeast-walk": {
             "file":     "textures/barrot-southeast-walk.png"
+        },
+        "barrot-south-blanket": {
+            "file":     "textures/barrot-south-blanket.png"
+        },
+        "barrot-north-blanket": {
+            "file":     "textures/barrot-north-blanket.png"
+        },
+        "barrot-east-blanket": {
+            "file":     "textures/barrot-east-blanket.png"
+        },
+        "barrot-northeast-blanket": {
+            "file":     "textures/barrot-northeast-blanket.png"
+        },
+        "barrot-southeast-blanket": {
+            "file":     "textures/barrot-southeast-blanket.png"
+        },
+        "barrot-south-bow": {
+            "file":     "textures/barrot-south-bow.png"
+        },
+        "barrot-north-bow": {
+            "file":     "textures/barrot-north-bow.png"
+        },
+        "barrot-east-bow": {
+            "file":     "textures/barrot-east-bow.png"
+        },
+        "barrot-northeast-bow": {
+            "file":     "textures/barrot-northeast-bow.png"
+        },
+        "barrot-southeast-bow": {
+            "file":     "textures/barrot-southeast-bow.png"
+        },
+        "barrot-south-diaper": {
+            "file":     "textures/barrot-south-diaper.png"
+        },
+        "barrot-north-diaper": {
+            "file":     "textures/barrot-north-diaper.png"
+        },
+        "barrot-east-diaper": {
+            "file":     "textures/barrot-east-diaper.png"
+        },
+        "barrot-northeast-diaper": {
+            "file":     "textures/barrot-northeast-diaper.png"
+        },
+        "barrot-southeast-diaper": {
+            "file":     "textures/barrot-southeast-diaper.png"
+        },
+        "dash-effect-sheet": {
+            "file":     "textures/dash-effect.png"
         },
         "baby": {
             "file":     "textures/baby.png"
@@ -199,6 +409,84 @@
         },
         "unit_6": {
             "file":     "textures/maps/unit_6.png"
+        },
+        "unit_tl_1": {
+            "file":     "textures/maps/unit_tl_1.png"
+        },
+        "unit_tl_2": {
+            "file":     "textures/maps/unit_tl_2.png"
+        },
+        "unit_t_1": {
+            "file":     "textures/maps/unit_t_1.png"
+        },
+        "unit_t_2": {
+            "file":     "textures/maps/unit_t_2.png"
+        },
+        "unit_tr_1": {
+            "file":     "textures/maps/unit_tr_1.png"
+        },
+        "unit_tr_2": {
+            "file":     "textures/maps/unit_tr_2.png"
+        },
+        "unit_l_1": {
+            "file":     "textures/maps/unit_l_1.png"
+        },
+        "unit_l_2": {
+            "file":     "textures/maps/unit_l_2.png"
+        },
+        "unit_m_1": {
+            "file":     "textures/maps/unit_m_1.png"
+        },
+        "unit_m_2": {
+            "file":     "textures/maps/unit_m_2.png"
+        },
+        "unit_r_1": {
+            "file":     "textures/maps/unit_r_1.png"
+        },
+        "unit_r_2": {
+            "file":     "textures/maps/unit_r_2.png"
+        },
+        "unit_bl_1": {
+            "file":     "textures/maps/unit_bl_1.png"
+        },
+        "unit_bl_2": {
+            "file":     "textures/maps/unit_bl_2.png"
+        },
+        "unit_b_1": {
+            "file":     "textures/maps/unit_b_1.png"
+        },
+        "unit_b_2": {
+            "file":     "textures/maps/unit_b_2.png"
+        },
+        "unit_br_1": {
+            "file":     "textures/maps/unit_br_1.png"
+        },
+        "unit_br_2": {
+            "file":     "textures/maps/unit_br_2.png"
+        },
+        "unit_o_1": {
+            "file":     "textures/maps/unit_o_1.png"
+        },
+        "unit_o_2": {
+            "file":     "textures/maps/unit_o_2.png"
+        },
+        "unit_o_3": {
+            "file":     "textures/maps/unit_o_3.png"
+        },
+        "unit_o_4": {
+            "file":     "textures/maps/unit_o_4.png"
+        },
+        "unit_o_5": {
+            "file":     "textures/maps/unit_o_5.png"
+        },
+        "unit_o_6": {
+            "file":     "textures/maps/unit_o_6.png"
+        },
+        "unit_o_7": {
+            "file":     "textures/maps/unit_o_7.png"
+        },
+        "tutorial_bottom": {
+            "file":     "textures/maps/tutorial_bottom.png"
         },
         "shader_clouds": {
             "file":     "textures/clouds.png",
@@ -333,6 +621,9 @@
         },
         "statsboard": {
             "file": "textures/statsboard.png"
+        },
+        "topback": {
+            "file": "textures/topback.png"
         }
     },
     "jsons": {
@@ -348,11 +639,38 @@
         "gridUnit4": "level-editor/gridUnit4.json",
         "gridUnit5": "level-editor/gridUnit5.json",
         "gridUnit6": "level-editor/gridUnit6.json",
+        "unit_tl_1": "level-editor/unit_tl_1.json",
+        "unit_tl_2": "level-editor/unit_tl_2.json",
+        "unit_t_1": "level-editor/unit_t_1.json",
+        "unit_t_2": "level-editor/unit_t_2.json",
+        "unit_tr_1": "level-editor/unit_tr_1.json",
+        "unit_tr_2": "level-editor/unit_tr_2.json",
+        "unit_l_1": "level-editor/unit_l_1.json",
+        "unit_l_2": "level-editor/unit_l_2.json",
+        "unit_m_1": "level-editor/unit_m_1.json",
+        "unit_m_2": "level-editor/unit_m_2.json",
+        "unit_r_1": "level-editor/unit_r_1.json",
+        "unit_r_2": "level-editor/unit_r_2.json",
+        "unit_bl_1": "level-editor/unit_bl_1.json",
+        "unit_bl_2": "level-editor/unit_bl_2.json",
+        "unit_b_1": "level-editor/unit_b_1.json",
+        "unit_b_2": "level-editor/unit_b_2.json",
+        "unit_br_1": "level-editor/unit_br_1.json",
+        "unit_br_2": "level-editor/unit_br_2.json",
+        "unit_outer_1": "level-editor/unit_outer_1.json",
+        "unit_outer_2": "level-editor/unit_outer_2.json",
+        "unit_outer_3": "level-editor/unit_outer_3.json",
+        "unit_outer_4": "level-editor/unit_outer_4.json",
+        "unit_outer_5": "level-editor/unit_outer_5.json",
+        "unit_outer_6": "level-editor/unit_outer_6.json",
+        "unit_outer_7": "level-editor/unit_outer_7.json",
+        "unit_outer_8": "level-editor/unit_outer_8.json",
         "tutorialTop": "level-editor/tutorialTop.json",
         "tutorialMid": "level-editor/tutorialMid.json",
         "tutorialBottom": "level-editor/tutorialBottom.json",
         "line-gesture": "json/line-gesture.json",
-        "circle-gesture": "json/circle-gesture.json"
+        "circle-gesture": "json/circle-gesture.json",
+        "sprite-metadata": "json/sprite-metadata.json"
     },
     "sounds": {
         "menu": {
@@ -373,37 +691,34 @@
             "stream":   true,
             "volume":   0.5
         },
-        "win": {
+        "carrotsWin": {
             "type":     "sample",
-            "file":     "sounds/victory.ogg",
+            "file":     "sounds/carrot-victory.ogg",
             "stream":   true,
             "volume":   1
         },
-        "lose": {
+        "carrotsLose": {
             "type":     "sample",
-            "file":     "sounds/lose.ogg",
+            "file":     "sounds/carrot-lose.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerWin": {
+            "type":     "sample",
+            "file":     "sounds/farmer-victory.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerLose": {
+            "type":     "sample",
+            "file":     "sounds/farmer-lose.ogg",
             "stream":   true,
             "volume":   1
         },
         "rustle": {
             "type":     "sample",
-            "file":     "sounds/rustlingAlt.ogg",
+            "file":     "sounds/rustling-alt.ogg",
             "stream":   true,
-            "volume":   0.5
-        },
-        "jump": {
-            "type":     "sample",
-            "file":     "sounds/jump.wav",
-            "volume":   0.5
-        },
-        "pew": {
-            "type":     "sample",
-            "file":     "sounds/pew.wav",
-            "volume":   0.5
-        },
-        "pop": {
-            "type":     "sample",
-            "file":     "sounds/plop.wav",
             "volume":   0.5
         },
         "bunny-root": {
@@ -424,7 +739,12 @@
         "dash": {
             "type":     "sample",
             "file":     "sounds/dash.wav",
-            "volume":   0.5
+            "volume":   0.2
+        },
+        "capture": {
+            "type":     "sample",
+            "file":     "sounds/pop.ogg",
+            "volume":   1
         }
     },
     "fonts": {

@@ -9,28 +9,28 @@ bool Farmer::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
 }
 
 void Farmer::dispose() {
+    _carryingSprites.clear();
     EntityModel::dispose();
-    _normalNode = nullptr;
-    _captureNode = nullptr;
 }
 
-void Farmer::grabCarrot(){
+void Farmer::grabCarrot(CarrotType carrotType){
     _isHoldingCarrot = true;
-//    _normalNode->setVisible(false);
-//    _captureNode->setVisible(true);
-    setSceneNode(_captureNode);
+    _state = CARRYING;
+    _carriedCarrotType = carrotType;
+    updateSprite(0);
+    std::cout << "Carrying " << carrotType << "\n";
 }
 
 void Farmer::rootCarrot(){
     _isHoldingCarrot = false;
-//    _captureNode->setVisible(false);
-//    _normalNode->setVisible(true);
-    setSceneNode(_normalNode);
+    _state = STANDING;
+    updateSprite(0);
 }
 
 void Farmer::carrotEscaped(){
     _isHoldingCarrot = false;
-    setSceneNode(_normalNode);
+    _state = STANDING;
+    updateSprite(0);
 }
 
 void Farmer::setMovement(Vec2 movement) {
@@ -39,6 +39,16 @@ void Farmer::setMovement(Vec2 movement) {
         return;
     }
     EntityModel::setMovement(movement);
+}
+
+EntityModel::DirectionalSprites Farmer::getDirectionalSpritesForState(EntityModel::EntityState state) {
+    switch (state) {
+        case CARRYING:
+            return _carryingSprites[_carriedCarrotType];
+            break;
+        default:
+            return EntityModel::getDirectionalSpritesForState(state);
+    }
 }
 
 

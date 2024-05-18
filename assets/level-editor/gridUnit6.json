@@ -42,7 +42,7 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":14,
+                 "gid":35,
                  "height":96,
                  "id":124,
                  "name":"",
@@ -54,7 +54,7 @@
                  "y":177
                 }, 
                 {
-                 "gid":15,
+                 "gid":36,
                  "height":32,
                  "id":137,
                  "name":"",
@@ -66,7 +66,7 @@
                  "y":32
                 }, 
                 {
-                 "gid":15,
+                 "gid":36,
                  "height":32,
                  "id":138,
                  "name":"",
@@ -336,7 +336,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":156,
+ "nextobjectid":157,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -346,7 +346,7 @@
          "value":"middle-middle"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.10.2",
+ "tiledversion":"1.10.1",
  "tileheight":32,
  "tilesets":[
         {
@@ -358,7 +358,7 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":14,
+         "firstgid":35,
          "source":"environment.tsx"
         }],
  "tilewidth":32,

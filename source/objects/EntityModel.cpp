@@ -84,6 +84,8 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
     _collidersize = size;
+    _dashColliderSize = size;
+    _rockColliderSize = size;
 //    nsize.width  *= DUDE_HSHRINK;
 //    nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
@@ -118,7 +120,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING;
+    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -137,8 +139,7 @@ void EntityModel::stepAnimation(float dt) {
             curAnimTime = 0;
         }
     }
-   
-    
+    animateDashEffect(dt);
 }
 
 #pragma mark -
@@ -185,6 +186,29 @@ void EntityModel::setMovement(Vec2 movement) {
     _movement = movement;
 }
 
+EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(EntityState state) {
+    switch (state) {
+        case STANDING:
+        case SNEAKING:
+        case WALKING:
+        case STUNNED:  // TBI
+        case CARRYING: // This is handled in Farmer's method, but otherwise we will use the walk sprites
+        case ROOTING:  // TBI
+        case CAUGHT:   // TBI
+        case ROOTED:   // TBI
+        case UNROOTING:// TBI
+            return _walkSprites;
+            break;
+        case RUNNING:
+            return _runSprites;
+            break;
+        case DASHING:
+            makeDashEffect();
+            return _dashSprites;
+            break;
+    }
+}
+
 void EntityModel::updateSprite(float dt, bool useMovement) {
     EntityFacing face;
     if (_state != DASHING) {
@@ -194,81 +218,31 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         face = calculateFacing(_dashVector);
     }
     if (!((_prevState == _state) && (_facing == face))) {
+        // Get correct DirectionalSprites
+        DirectionalSprites ds = getDirectionalSpritesForState(_state);
         
-        auto sprite = _southWalkSprite;
-        switch (_state) {
-            case STUNNED:
-                //TODO: stunned animation?
-            case STANDING:
-                // TODO: Idle animations here
-            case SNEAKING:
-            case WALKING:
-                if (face == SOUTH) {
-                    sprite = _southWalkSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northWalkSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastWalkSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastWalkSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastWalkSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            case RUNNING:
-                if (face == SOUTH) {
-                    sprite = _southRunSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northRunSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastRunSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastRunSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastRunSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            case DASHING:
-                if (face == SOUTH) {
-                    sprite = _southDashSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northDashSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastDashSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastDashSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastDashSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            case CARRYING:
-            case CAUGHT:
-            case ROOTING:
-            case UNROOTING:
-            case ROOTED:
-                break;
+        std::shared_ptr<cugl::scene2::SpriteNode> sprite;
+        
+        // Get correct directionality
+        if (face == SOUTH) {
+            sprite = ds.southSprite;
         }
+        else if (face == NORTH) {
+            sprite = ds.northSprite;
+        }
+        else if (face == EAST || face == WEST) {
+            sprite = ds.eastSprite;
+        }
+        else if (face == NORTHEAST || face == NORTHWEST) {
+            sprite = ds.northEastSprite;
+        }
+        else if (face == SOUTHEAST || face == SOUTHWEST) {
+            sprite = ds.southEastSprite;
+        }
+        if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+            sprite->flipHorizontal(!sprite->isFlipHorizontal());
+        }
+        
         setSceneNode(sprite);
         _facing = face;
     }
@@ -310,13 +284,26 @@ void EntityModel::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
-    _collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
+    b2PolygonShape collidershape;
+    collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
     
     b2FixtureDef fixturedef;
-    fixturedef.shape = &_collidershape;
+    fixturedef.shape = &collidershape;
     _collidername = "collider";
     fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
     _colliderfixture = _body->CreateFixture(&fixturedef);
+    
+    collidershape.SetAsBox(_dashColliderSize.width/2, _dashColliderSize.height/2, b2Vec2(0, -(getHeight() - _dashColliderSize.height)/2), 0);
+    fixturedef.shape = &collidershape;
+    _dashColliderName = "dash";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_dashColliderName);
+    _dashColliderFixture = _body->CreateFixture(&fixturedef);
+    
+    collidershape.SetAsBox(_rockColliderSize.width/2, _rockColliderSize.height/2, b2Vec2(0, -(getHeight() - _rockColliderSize.height)/2), 0);
+    fixturedef.shape = &collidershape;
+    _rockColliderName = "rock";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_rockColliderName);
+    _rockColliderFixture = _body->CreateFixture(&fixturedef);
 }
 
 /**
@@ -334,6 +321,14 @@ void EntityModel::releaseFixtures() {
         _body->DestroyFixture(_colliderfixture);
         _colliderfixture = nullptr;
     }
+    if (_dashColliderFixture != nullptr) {
+        _body->DestroyFixture(_dashColliderFixture);
+        _dashColliderFixture = nullptr;
+    }
+    if (_rockColliderFixture != nullptr) {
+        _body->DestroyFixture(_rockColliderFixture);
+        _rockColliderFixture = nullptr;
+    }
 }
 
 /**
@@ -346,12 +341,7 @@ void EntityModel::dispose() {
     _node = nullptr;
     _wheatHeightNode = nullptr;
     _geometry = nullptr;
-    
-    _northWalkSprite = nullptr;
-    _northEastWalkSprite = nullptr;
-    _eastWalkSprite = nullptr;
-    _southEastWalkSprite = nullptr;
-    _southWalkSprite = nullptr;
+    _dashEffectSprite = nullptr;
 }
 
 /**
@@ -399,6 +389,10 @@ void EntityModel::updateState(float dt) {
                 dashTimer = 8;
                 _dashCooldown = DASH_COOLDOWN_SECS;
                 stateChanged = true;
+                _makeDashTrail = true;
+//                makeDashEffect();
+//                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+//                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
             else {
                 nextState = getMovementState();
@@ -431,6 +425,7 @@ void EntityModel::updateState(float dt) {
 void EntityModel::stun() {
     _state = STUNNED;
     _stunTime = STUN_SECS;
+    // TODO: updateSprite would need to be called here if we get a sprite
 }
 
 /**
@@ -456,6 +451,7 @@ void EntityModel::applyForce() {
             speed.set(normMovement).scale(SNEAK_SPEED);
             setLinearVelocity(speed);
             break;
+        case CARRYING:
         case WALKING:
             speed.set(normMovement).scale(WALK_SPEED);
             setLinearVelocity(speed);
@@ -528,7 +524,8 @@ void EntityModel::update(float dt) {
     }
     
     if (_wheatHeightNode != nullptr) {
-        updateWheatHeightNode();
+//        updateWheatHeightNode();
+//        updateWheatNodes(dt);
     }
 }
 
@@ -556,6 +553,32 @@ void EntityModel::resetDebug() {
     }
     _colliderdebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
     _colliderdebug->setPosition(Vec2(getWidth()/2, 0));
+    
+    if (_dashColliderDebug == nullptr) {
+        _dashColliderDebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_dashColliderSize));
+        _dashColliderDebug->setRelativeColor(false);
+        _dashColliderDebug->setColor(Color4::ORANGE);
+        if (_scene != nullptr) {
+            _debug->addChild(_dashColliderDebug);
+        }
+    } else {
+        _dashColliderDebug->setPath(Rect(Vec2::ZERO,_dashColliderSize));
+    }
+    _dashColliderDebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _dashColliderDebug->setPosition(Vec2(getWidth()/2, 0));
+    
+    if (_rockColliderDebug == nullptr) {
+        _rockColliderDebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_rockColliderSize));
+        _rockColliderDebug->setRelativeColor(false);
+        _rockColliderDebug->setColor(Color4::BLACK);
+        if (_scene != nullptr) {
+            _debug->addChild(_rockColliderDebug);
+        }
+    } else {
+        _rockColliderDebug->setPath(Rect(Vec2::ZERO,_rockColliderSize));
+    }
+    _rockColliderDebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _rockColliderDebug->setPosition(Vec2(getWidth()/2, 0));
 }
 
 std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
@@ -564,7 +587,7 @@ std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {
     _wheatSizeTarget = 0.75;
     _currWheatHeight = _wheatHeightTarget;
     _currWheatSize = _wheatSizeTarget;
-    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(0.8, 0.8)));
+    _wheatHeightNode = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _wheatSizeTarget * Size(100.0, 100.0)));
     _wheatHeightNode->setColor(Color4(0, 0, 0, 255));
     _wheatHeightNode->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
     _wheatHeightNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -591,7 +614,6 @@ void EntityModel::updateWheatHeightNode() {
     _wheatHeightNode->setPosition(getX(), getY()-getHeight());
     
     Vec2 velocity = getLinearVelocity();
-    float angle = atan2(velocity.y, velocity.x);
     
     if (_state == DASHING) {
         _wheatSizeTarget = 1.5;
@@ -608,4 +630,157 @@ void EntityModel::updateWheatHeightNode() {
                                       _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
 }
 
+void EntityModel::updateWheatNodes(float dt) {
+//    _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+    
+    Vec2 velocity = getLinearVelocity();
+    
+//    if (_state == DASHING) {
+////        _wheatSizeTarget = 1.5;
+////        _wheatHeightTarget = -100;
+//        
+//    } else {
+//        _wheatSizeTarget = 0.75;
+//        _wheatHeightTarget = round(velocity.length());
+//        _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+//        _wheatHeightNode->setColor(Color4(0, 20, 0, 255));
+//        _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+//    }
+    
+    if (_makeDashTrail) {
+        _wheatSizeTarget = 1.5;
+        _wheatHeightTarget = -100;
+//        CULog("making dash trail");
+//        _timeSinceTrailSpawn += dt;
+//        if (_timeSinceTrailSpawn >= _trailSpawnInterval) {
+////            CULog("add dash ellipse");
+//            
+//        }
+        auto ellipse = scene2::PolygonNode::allocWithPoly(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.0, 1.0)));
+//            ellipse->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0,
+//                                              _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+        ellipse->setPosition(getX(), getY()-getHeight());
+        ellipse->setBlendFunc(GL_DST_ALPHA, GL_ZERO, GL_ONE, GL_ONE);
+        _dashTrail.push_back(ellipse);
+        _timeSinceTrailSpawn = 0.0f;
+        ellipse->setColor(Color4(0, 0, 20, 255));
+        _wheatHeightNode->getParent()->addChild(ellipse);
+        _dashNodes.push_back(ellipse);
+        
+        if (_dashTrail.size() >= _maxTrailPoints) {
+            _makeDashTrail = false;
+        }
+//            CULog("finished dash trail");
+//            for (auto d : _dashNodes) {
+//                CULog("remove dash node");
+//                d->removeFromParent();
+//            }
+    } 
+    
+    else if (_makeDashTrail == false && _dashTrail.size() > 0) {
+        _trailVanishTime -= dt;
+        if (_trailVanishTime <= 0) {
+    //        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+    //        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+    //        CULog("shrinking trail");
+            auto first_node = _dashTrail[0];
+            auto size = first_node->getSize();
+            size.width -= _trailVanishRate;
+            size.height -= _trailVanishRate;
+    //        first_node->setColor(first_node->getColor()-Color4(0,0,1,0));
+            
+    //        _wheatHeightTarget += 1;
+            
+    //        if (first_node->getColor().b <= 0) {
+    //            CULog("removed dash node");
+    //            first_node->removeFromParent();
+    //            _dashTrail.erase(_dashTrail.begin());
+    //        }
+            
+            if (size.width <= 0.0f || size.height <= 0.0f) {
+    //            CULog("removed dash node");
+                first_node->removeFromParent();
+                _dashTrail.erase(_dashTrail.begin());
+            }
+            first_node->SceneNode::setContentSize(size);
+    //        first_node->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+        }
+    }
+    
+    else {
+        _trailVanishTime = DASH_TRAIL_HOLD;
+//        CULog("rustling node");
+        _wheatSizeTarget = 0.75;
+        _wheatHeightTarget = round(velocity.length());
+        _currWheatHeight += (_wheatHeightTarget - _currWheatHeight) * 0.1;
+        _currWheatSize += (_wheatSizeTarget - _currWheatSize) * 0.1;
+        
+        _wheatHeightNode->setPolygon(pf.makeEllipse(Vec2(0,0), _currWheatSize * Size(1.6, 0.9)));
+        _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+        _wheatHeightNode->setColor(Color4(0,_currWheatHeight > 0 ? int(_currWheatHeight) : 0, _currWheatHeight < 0 ? -int(_currWheatHeight) : 0,255));
+    }
 
+}
+
+void EntityModel::makeDashEffect() {
+    if (!_shouldAnimateDash) {
+        _shouldAnimateDash = true;
+        _dashEffectSprite->setVisible(true);
+        _dashEffectSprite->setPosition(getPosition() * _drawScale);
+
+    }
+    switch (calculateFacing(_dashVector)) {
+        case SOUTH:
+            CULog("dash south");
+            _dashEffectSprite->setAngle(0);
+            break;
+        case NORTH:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(180 * DEGREE_TO_RADIAN);
+            break;
+        case EAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(90 * DEGREE_TO_RADIAN);
+            break;
+        case WEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(270 * DEGREE_TO_RADIAN);
+            break;
+        case SOUTHEAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(45 * DEGREE_TO_RADIAN);
+            break;
+        case SOUTHWEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(315 * DEGREE_TO_RADIAN);
+            break;
+        case NORTHEAST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(135 * DEGREE_TO_RADIAN);
+            break;
+        case NORTHWEST:
+            CULog("dash north");
+            _dashEffectSprite->setAngle(225 * DEGREE_TO_RADIAN);
+            break;
+        default:
+            _dashEffectSprite->setAngle(0);
+            break;
+    }
+}
+
+void EntityModel::animateDashEffect(float dt) {
+    if (_dashEffectSprite != nullptr) {
+        if (_shouldAnimateDash) {
+            curDashAnimTime += dt;
+            int frame = lround(_dashEffectSprite->getSpan() * curDashAnimTime / curDashAnimDuration) % _dashEffectSprite->getSpan();
+            if (curDashAnimTime > curDashAnimDuration || frame >= 11) {
+                curDashAnimTime = 0;
+                _shouldAnimateDash = false;
+                _dashEffectSprite->setVisible(false);
+                _dashEffectSprite->setFrame(0);
+            } else {
+                _dashEffectSprite->setFrame(frame);
+            }
+        }
+    }
+}

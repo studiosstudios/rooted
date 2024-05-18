@@ -23,6 +23,10 @@
 #define MAP_UNIT_WIDTH   16.0f
 /** Height of the game world in Box2d units */
 #define MAP_UNIT_HEIGHT   9.0f
+/** The number of map rows/cols to spawn (including outer maps) */
+#define NUMBER_MAP_UNITS  5
+/** How much of the world outside the map is shown */
+#define OUTER_MAP_BORDER 4.0f
 /** Default drawscale */
 #define DEFAULT_DRAWSCALE 32.0f
 /** Zoom of camera relative to scene */
@@ -44,6 +48,8 @@
 #define DEFAULT_GRAVITY 0.0f
 /** The number of frame to wait before reinitializing the game */
 #define EXIT_COUNT      240
+/** The conversion from degrees to radians */
+#define DEGREE_TO_RADIAN  0.0174533
 
 #pragma mark -
 #pragma mark Game Logic Constants
@@ -70,16 +76,14 @@
 #define RESET_MESSAGE    "RESETTING"
 /** The color of the reset message */
 #define RESET_COLOR      Color4::YELLOW
-/** The key the victory game music */
-#define WIN_MUSIC       "win"
-/** The key the failure game music */
-#define LOSE_MUSIC      "lose"
-/** The sound effect for firing a bullet */
-#define PEW_EFFECT      "pew"
-/** The sound effect for a bullet collision */
-#define POP_EFFECT      "pop"
-/** The sound effect for jumping */
-#define JUMP_EFFECT     "jump"
+/** The key the carrot victory game music */
+#define C_WIN_MUSIC       "carrotsWin"
+/** The key the carrot failure game music */
+#define C_LOSE_MUSIC      "carrotsLose"
+/** The key the farmer victory game music */
+#define F_WIN_MUSIC       "farmerWin"
+/** The key the farmer failure game music */
+#define F_LOSE_MUSIC      "farmerLose"
 /** The volume for the music */
 #define MUSIC_VOLUME    0.7f
 /** The volume for sound effects */
@@ -161,11 +165,13 @@
 #pragma mark SHADERS
 #define WIND_SPEED 1.0
 const float WIND_DIRECTION[2] = {1.0, 1.0};
+#define WIND_COUNT 3
 #define CLOUD_SPEED 0.05
 #define DEFAULT_WHEAT_TEX_WIDTH 480
 #define DEFAULT_WHEAT_TEX_HEIGHT 270
 #define MAX_WHEAT_HEIGHT 25.0
 #define STEP_SIZE 1.0
+#define DASH_TRAIL_HOLD 0.5f
 
 #pragma mark COLLECTIBLE
 #define SPAWN_RATE 0.005
@@ -173,7 +179,7 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define MAX_COLLECTIBLE_AGE 3
 #define SPAWN_COOLDOWN 600
 #define THROW_SPEED 10
-#define MIN_STUN_IMPULSE 3.0
+#define MIN_STUN_VELOCITY 6.0
 #define PROGRESS 0.02f
 
 #pragma mark FARMER
@@ -181,18 +187,30 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define FARMER_HEIGHT 1.2f
 #define FARMER_HITBOX_WIDTH 0.55f
 #define FARMER_HITBOX_HEIGHT 0.3f
+#define FARMER_DASH_HITBOX_WIDTH 0.6f
+#define FARMER_DASH_HITBOX_HEIGHT 0.9f
+#define FARMER_ROCK_HITBOX_WIDTH 0.6f
+#define FARMER_ROCK_HITBOX_HEIGHT 0.7f
 
 #pragma mark CARROT
 #define CARROT_WIDTH 0.5f
 #define CARROT_HEIGHT 1.5
 #define CARROT_HITBOX_WIDTH 0.4f
 #define CARROT_HITBOX_HEIGHT 0.3f
+#define CARROT_DASH_HITBOX_WIDTH 0.45f
+#define CARROT_DASH_HITBOX_HEIGHT 0.85f
+#define CARROT_ROCK_HITBOX_WIDTH 0.45f
+#define CARROT_ROCK_HITBOX_HEIGHT 0.65f
 
 #pragma mark BARROT
 #define BARROT_WIDTH 0.5f
 #define BARROT_HEIGHT 1.3
 #define BARROT_HITBOX_WIDTH 0.4f
 #define BARROT_HITBOX_HEIGHT 0.3f
+#define BARROT_DASH_HITBOX_WIDTH 0.45f
+#define BARROT_DASH_HITBOX_HEIGHT 0.85f
+#define BARROT_ROCK_HITBOX_WIDTH 0.4f
+#define BARROT_ROCK_HITBOX_HEIGHT 0.3f
 
 const bool debug = true;
 

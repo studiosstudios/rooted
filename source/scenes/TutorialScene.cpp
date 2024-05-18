@@ -86,6 +86,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
+    
+//    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale * std::max(dimen.width/SCENE_WIDTH, dimen.height/SCENE_HEIGHT);
     addChild(_rootnode);
     addChild(_uinode);
@@ -108,14 +110,14 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
     _cam.setZoom(zoom);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
     Application::get()->setClearColor(Color4::CLEAR);
-    _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
+    _cam.setFrac(Rect(Vec2::ZERO, Vec2(1.0/3.0, 2.0/3.0)));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
     
     _input->pause();
@@ -202,11 +204,11 @@ void TutorialScene::reset() {
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
-    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    _cam.setZoom(zoom);
+//    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
+    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale * std::max(dimen.width/SCENE_WIDTH, dimen.height/SCENE_HEIGHT);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
     _cam.setZoom(zoom);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
@@ -215,7 +217,7 @@ void TutorialScene::reset() {
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
-    _cam.setFrac(Vec2(1.0/3.0, 2.0/3.0));
+    _cam.setFrac(Rect(Vec2::ZERO, Vec2(1.0/3.0, 2.0/3.0)));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
 //
     //need to reset game state, otherwise gonna loop forever because gamestate is always in a position where a team has already won
@@ -828,7 +830,7 @@ void TutorialScene::postUpdate(float remain) {
                 _time = 0;
                 
                 pauseNonEssentialAudio();
-                std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+                std::shared_ptr<Sound> source = _assets->get<Sound>(C_WIN_MUSIC);
                 AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
                 _ui.setWinVisible(true);
             }
@@ -871,7 +873,7 @@ void TutorialScene::postUpdate(float remain) {
                 _input->pause();
                 _state = FARMERWIN;
                 pauseNonEssentialAudio();
-                std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+                std::shared_ptr<Sound> source = _assets->get<Sound>(C_WIN_MUSIC);
                 AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
                 _ui.setWinVisible(true);
             }

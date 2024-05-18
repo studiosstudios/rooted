@@ -107,12 +107,24 @@ protected:
     int _numPlanting;
     
     int _ready;
+    
+    int _readyNewGame;
+    
+    int _readyStart;
 
     bool _haptics;
 
     bool _swipe;
     
     float _soundScale;
+    
+    int _charDisplayTimer;
+    
+    float _beginningZoom;
+    
+    int _characterWin;
+    
+    float _ellapsed;
 
 #pragma mark Internal Object Management
 
@@ -382,16 +394,36 @@ public:
     // READY EVENT AS AN INNER CLASS BECAUSE WE DON'T NEED THIS EVENT OTHERWISE
     class ReadyEvent : public NetEvent {
     public:
+        NetcodeSerializer _serializer;
+        NetcodeDeserializer _deserializer;
+        
+        // 0 = round, 1 = game, 2 = start
+        int type;
+        float time;
+        
         std::shared_ptr<NetEvent> newEvent() override {
             return std::make_shared<ReadyEvent>();
         }
-        static std::shared_ptr<NetEvent> alloc() {
-            return std::make_shared<ReadyEvent>();
+        static std::shared_ptr<NetEvent> alloc(int type, cugl::Timestamp start) {
+            auto res =  std::make_shared<ReadyEvent>();
+            res->type = type;
+            res->time = cugl::Timestamp().ellapsedMillis(start);
+            return res;
         }
         std::vector<std::byte> serialize() override {
-            return std::vector<std::byte>();
+            _serializer.reset();
+            _serializer.writeUint32(type);
+            _serializer.writeFloat(time);
+            return _serializer.serialize();
         }
-        void deserialize(const std::vector<std::byte>& data) override { }
+        void deserialize(const std::vector<std::byte>& data) override {
+            _deserializer.reset();
+            _deserializer.receive(data);
+            int t = _deserializer.readUint32();
+            float ti = _deserializer.readFloat();
+            type = t;
+            time = ti;
+        }
     };
 };
 

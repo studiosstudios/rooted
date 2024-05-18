@@ -127,7 +127,7 @@ void EntityModel::updateCurAnimDurationForState() {
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING || _state == STANDING;
+    return isMoving() || _state == DASHING || _state == ROOTING || (!_movement.isZero() && _state == CARRYING) || _state == STANDING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -214,6 +214,16 @@ EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(Entit
 }
 
 void EntityModel::updateSprite(float dt, bool useMovement) {
+    if (_state == CAUGHT) {
+        // Special case: CAUGHT state is just invisible, no other changes
+        _node->setVisible(false);
+        return;
+    }
+    else if (_state == ROOTED) {
+        // Special case: ROOTED node is set in Carrot class when the state happens, no need to change sprite, so we do nothing here
+        return;
+    }
+    
     EntityFacing face;
     if (_state != DASHING) {
         face = calculateFacing(useMovement ? _movement : getLinearVelocity());
@@ -364,9 +374,8 @@ void EntityModel::updateState(float dt) {
     }
     
     if (_dashCooldown > 0) {
-        _dashCooldown = std::max(0.0f, _dashCooldown - dt);
+        _dashCooldown -= dt;
     }
-    
     
     _prevState = _state;
     bool stateChanged = false;
@@ -394,10 +403,10 @@ void EntityModel::updateState(float dt) {
         case WALKING:
         case RUNNING: {
             // Moving -> Dashing
-            if (_dashCooldown == 0 && dashTimer == 0 && _dashInput) {
+            if (_dashCooldown <= 0 && dashTimer <= 0 && _dashInput) {
                 _state = DASHING;
-                dashTimer = 8;
-                _dashCooldown = DASH_COOLDOWN_SECS;
+                dashTimer = dashTimerLength;
+                _dashCooldown = dashCooldownLength;
                 if (!_swipe) {
                     _dashVector = facingToVec(_facing);
                 }
@@ -415,11 +424,17 @@ void EntityModel::updateState(float dt) {
         }
         case DASHING: {
             // Dashing -> Moving
-            dashTimer--;
-            if (dashTimer == 0) {
+            dashTimer -= dt;
+            std::cout << dashTimer << "\n";
+            if (dashTimer <= 0) {
                 _state = getMovementState();
                 stateChanged = true;
             }
+            break;
+        }
+        case CAUGHT:
+        case ROOTED: {
+            // Immobile states
             break;
         }
         default: {
@@ -470,21 +485,23 @@ void EntityModel::applyForce() {
             setLinearVelocity(speed);
             break;
         case RUNNING: {
-            speed.set(normMovement).scale(RUN_SPEED);
+            speed.set(normMovement).scale(runSpeed);
             setLinearVelocity(speed);
             break;
         }
         case DASHING: {
-            setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(DUDE_DASH));
+            setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(dashMag));
+            break;
+        }
+        case CAUGHT:
+        case ROOTED: {
+            // Immobile cases
             break;
         }
         default: {
             CULog("State not implemented yet");
         }
     }
-    
-    // Don't want to be moving. Damp out player motion
-    
 }
 
 bool EntityModel::isDashing() {
@@ -526,7 +543,12 @@ void EntityModel::update(float dt) {
     BoxObstacle::update(dt);
     
     if (_node != nullptr) {
-        _node->setPosition(getPosition()*_drawScale);
+        if (_state == ROOTED) {
+            _node->setPosition((getPosition()*_drawScale) - Vec2 {0, (getHeight()*_drawScale)/2});
+        }
+        else {
+            _node->setPosition(getPosition()*_drawScale);
+        }
         _node->setAngle(getAngle());
 //        if (isInWheat() && (int(_node->getPriority()) == 4)) {
 //            _node->setColor(Color4(255, 255, 255, 255.0/2));

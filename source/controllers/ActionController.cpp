@@ -68,7 +68,7 @@ void ActionController::preUpdate(float dt) {
     EntityModel::EntityState oldState = playerEntity->getEntityState();
     playerEntity->updateState(dt);
     if(didDash && playerEntity->getEntityState() == EntityModel::EntityState::DASHING){
-        std::cout<<"getting player swipe status: "<<playerEntity->getSwipe()<<"\n";
+//        std::cout<<"getting player swipe status: "<<playerEntity->getSwipe()<<"\n";
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
         AudioEngine::get()->play("dash", source, false, _soundScale);
     }
@@ -138,7 +138,7 @@ void ActionController::preUpdate(float dt) {
             // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
             for (auto carrot : _map->getCarrots()) {
                 if (carrot->isCaptured()) {
-                    _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID()));
+                    _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID(), farmerEntity->getPosition()));
                 }
             }
         }
@@ -155,7 +155,7 @@ void ActionController::preUpdate(float dt) {
                     closestCarrot = carrot;
                 }
             }
-            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
+            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0 && closestCarrot->hasLivesLeft()){
                 _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
             }
         }
@@ -164,7 +164,7 @@ void ActionController::preUpdate(float dt) {
     if(!_map->isFarmer()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && carrotEntity->isCaptured()){
-            _freeMeter+=2;
+            _freeMeter+=1;
             std::cout<<"free meter" << _freeMeter << "\n";
             if(_freeMeter >= 50){
                 _freeMeter = 0;
@@ -396,7 +396,9 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
             if (_map->getCharacter()->getUUID() != _map->getFarmers().at(0)->getUUID()) {
                 _map->getFarmers().at(0)->getSceneNode()->setPriority(float(Map::DrawOrder::ENTITIES));
             }
+            carrot->setPosition(event->getFarmerPos());
             carrot->gotRooted();
+            carrot->loseLife();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
                 if(_haptics)
                     Haptics::get()->playContinuous(1.0, 0.3, 0.1);
@@ -418,6 +420,7 @@ void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& ev
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             carrot->gotUnrooted();
+            carrot->loseLife();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
                 if(_haptics)
                     Haptics::get()->playContinuous(1.0, 0.3, 0.1);
@@ -467,6 +470,7 @@ void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event)
 void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event){
     _map->getFarmers().at(0)->carrotEscaped();
     if(_map->isFarmer()){
+        _map->getCharacter()->stun();
         if(_haptics)
             Haptics::get()->playContinuous(1.0, 0.8, 0.3);
     }

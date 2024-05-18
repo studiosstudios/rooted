@@ -412,6 +412,10 @@
         "rows": 2,
         "cols": 5
     },
+    "carrot-top": {
+        "rows": 1,
+        "cols": 1
+    },
     "barrot-south-walk": {
         "rows": 2,
         "cols": 5

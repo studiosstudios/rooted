@@ -95,6 +95,7 @@ void InputController::dispose() {
  */
 bool InputController::init(const Rect bounds, const std::shared_ptr<cugl::JsonValue>& lineData, const std::shared_ptr<cugl::JsonValue>& circleData) {
     bool success = true;
+    _time = 0;
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
     
@@ -208,6 +209,7 @@ void InputController::update(float dt) {
     _keyContinuePressed = _keyContinue;
     _throwRockPressed  = _keyThrowRock;
     _keyThrowRock = false;
+    _time += dt;
 
     // _movement is now updated directly in processJoystick
 
@@ -363,6 +365,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     Vec2 pos = event.position;
     Vec2 screenPos = touch2Screen(pos);
     Zone zone = getZone(pos);
+    _time = 0;
     switch (zone) {
         case Zone::JOY:
             // Only process if no touch in zone
@@ -427,7 +430,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
         _rtime = event.timestamp;
         _rtouch.touchids.clear();
     }
-    _keyContinue = true;
+    _keyContinue = _time < 0.125;
 }
 
 
@@ -450,12 +453,11 @@ void InputController::touchesMovedCB(const TouchEvent& event, const Vec2& previo
         
         // If this swipe was already used for a dash, can't use it for any other gestures
         if (!_keyDash) {
-        
             // Handle circle (root/unroot gesture)
             bool validCircleGesture = (_swipePoints->size() > SWIPE_POINT_MINIMUM && _circleGesturer->match(getSwipePointsVector()).length() > 0);
             _keyRoot = validCircleGesture;
             _keyUnroot = validCircleGesture;
-        
+            
             // Handle dash
             if (_internalSwipePoints.size() > SWIPE_POINT_MINIMUM &&
                 _lineGesturer->similarity("line", getInternalSwipePointsVector(), true) > LINE_GESTURE_SIMILARITY &&

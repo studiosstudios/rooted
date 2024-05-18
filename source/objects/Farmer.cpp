@@ -7,6 +7,10 @@
 bool Farmer::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     _isHoldingCarrot = false;
     bool _canPlant = true;
+    dashMag = FARMER_DASH_MAG;
+    dashTimerLength = FARMER_DASH_TIMER;
+    dashCooldownLength = FARMER_DASH_COOLDOWN;
+    runSpeed = FARMER_RUN_SPEED;
     return EntityModel::init(pos, size, scale);
 }
 
@@ -16,7 +20,6 @@ void Farmer::dispose() {
 }
 
 void Farmer::grabCarrot(CarrotType carrotType){
-    _isHoldingCarrot = true;
     _state = CARRYING;
     _carriedCarrotType = carrotType;
     resetStateCooldowns();
@@ -24,14 +27,12 @@ void Farmer::grabCarrot(CarrotType carrotType){
 }
 
 void Farmer::rootCarrot(){
-    _isHoldingCarrot = false;
     _state = STANDING;
     resetStateCooldowns();
     updateSprite(0);
 }
 
 void Farmer::carrotEscaped(){
-    _isHoldingCarrot = false;
     _state = STANDING;
     resetStateCooldowns();
     updateSprite(0);

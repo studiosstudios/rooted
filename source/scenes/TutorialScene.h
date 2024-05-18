@@ -90,6 +90,7 @@ protected:
         UNROOT,         //teach unrooting
         CARROTLEAVES,   //unrooted carrot leaves
         ROCK,           //ignore for now - farmer leaves?
+        FARMERRUNS,
         BABYENTERS,     //one more baby enters
         LASTBABY,       //catch last baby
         CARROTWIN,      //win screen for catching last baby
@@ -113,6 +114,12 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _black;
     
     bool _pausePhysics;
+    
+    std::shared_ptr<cugl::scene2::PolygonNode> _lefthandNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> _righthandNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> _fakejoyBack;
+    
+    Vec2 carrotAItarget;
     
     
 

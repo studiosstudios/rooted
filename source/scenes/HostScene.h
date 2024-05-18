@@ -10,6 +10,7 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "../controllers/NetworkController.h"
+#include "../RootedConstants.h"
 
 #define PING_TEST_COUNT 5
 
@@ -47,6 +48,8 @@ protected:
     int _sendCount;
     
     int _receiveCount;
+    
+    float _soundScale;
 
 public:
 #pragma mark -
@@ -112,6 +115,8 @@ public:
      * Returns whether the back button is pressed
      */
     bool getBackClicked() { return _backClicked; };
+    
+    void setSoundScale(float f) { _soundScale = f; }
 
 private:
     /**
@@ -131,7 +136,6 @@ private:
      * This method prompts the network controller to start the game.
      */
     void startGame();
-    
 };
 
 #endif /* __HOST_SCENE_H__ */

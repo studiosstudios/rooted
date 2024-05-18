@@ -15,7 +15,9 @@
 using namespace cugl;
 
 void UIController::dispose() {
-    _uinode->removeAllChildren();
+    if (_uinode != nullptr){
+        _uinode->removeAllChildren();
+    }
     _assets = nullptr;
     _input = nullptr;
     _uinode = nullptr;
@@ -83,12 +85,52 @@ void UIController::setEndVariables(int roundNum, int length, int babies, std::ve
     }
 }
 
+void UIController::setCharacterDisplay(bool active, int carrot) {
+    _characterdisplay->setVisible(active);
+    for (auto it = _characterdisplayNodes.begin(); it != _characterdisplayNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _characterdisplayNodes.at(carrot)->setVisible(true);
+}
+
+void UIController::setRabbitPreview(bool active) {
+    _rabbitpreview->setVisible(active);
+}
+
+void UIController::setCarrotPreview(bool active, int carrot) {
+    _carrotpreview->setVisible(active);
+    for (auto it = _carrotpreviewNodes.begin(); it != _carrotpreviewNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _carrotpreviewNodes.at(carrot)->setVisible(true);
+}
+
+void UIController::setWinnerDisplay(bool active, int carrot) {
+    _winner->setVisible(active);
+    for (auto it = _winnerNodes.begin(); it != _winnerNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _winnerNodes.at(carrot)->setVisible(true);
+    if (active) {
+        _exitbutton->activate();
+        _winnernextbutton->activate();
+    } else {
+        _exitbutton->deactivate();
+        _exitbutton->setDown(false);
+        _winnernextbutton->deactivate();
+        _winnernextbutton->setDown(false);
+    }
+}
+
 void UIController::setSpeechBubbleVisible(bool visible) {
     _speechBubble->setVisible(visible);
 }
 
 void UIController::setDialogBoxVisible(bool visible) {
-    _dialogBox->setVisible(visible);
+    if (visible != _dialogBoxVisible) {
+        _easingtime = 0;
+        _dialogBoxVisible = visible;
+    }
 }
 
 void UIController::setDialogBoxText(std::string text) {
@@ -148,36 +190,24 @@ void UIController::initGameUINodes() {
     _barrotsRemainingBoard->addChild(_barrotsRemainingText);
 
     // TUTORIAL UI STUFF
-    _speechBubble = scene2::NinePatch::allocWithTexture(_assets->get<Texture>("speechbubble"), Rect(137, 666, 512, 512));
-    _speechBubble->SceneNode::setContentSize(Size(1000, 500));
-    _speechBubble->setPosition((Vec2(SCENE_WIDTH/2 - 300, SCENE_HEIGHT/2 - 100)) / _cameraZoom);
-    _speechBubble->setAnchor(Vec2::ANCHOR_CENTER);
-    _speechBubble->setScale(0.18 * _drawScale/DEFAULT_DRAWSCALE);
-    _speechBubble->setVisible(false);
-    _uinode->addChild(_speechBubble);
-    
-    _speechBubbleText = scene2::Label::allocWithText("Oh no, all of my baby carrots have escaped!", _assets->get<Font>("gaeguBold75"));
-    _speechBubbleText->setHorizontalAlignment(HorizontalAlign::CENTER);
-    _speechBubbleText->setVerticalAlignment(VerticalAlign::TOP);
-    _speechBubbleText->setPadding(80, 0, 80, 0);
-    _speechBubbleText->setContentSize(_speechBubble->getContentSize());
-    _speechBubbleText->doLayout();
-    _speechBubbleText->setWrap(true);
-    _speechBubble->addChild(_speechBubbleText);
-
-    _dialogBox = scene2::NinePatch::allocWithTexture(_assets->get<Texture>("dialoguebox"), Rect(137, 666, 512, 512));
-    _dialogBox->SceneNode::setContentSize(Size(1300, 500));
-    _dialogBox->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2)) / _cameraZoom);
+    _dialogBox = scene2::NinePatch::allocWithTexture(_assets->get<Texture>("dialoguebox"), Rect(137, 137, 512, 512));
+    _dialogBox->SceneNode::setContentSize(Size(2000, 550));
+    _dialogBox->setPosition((Vec2(SCENE_WIDTH/2, SCENE_HEIGHT * 0.23)) / _cameraZoom);
     _dialogBox->setAnchor(Vec2::ANCHOR_CENTER);
-    _dialogBox->setScale(0.18 * _drawScale/DEFAULT_DRAWSCALE);
-    _dialogBox->setVisible(false);
+    _dialogBox->setScale(0);
+    _dialogBox->setColor(Color4(255,255,255,255));
+    _dialogBox->setVisible(true);
     _uinode->addChild(_dialogBox);
+    _dialogBoxVisible = false;
+    _dialogBoxFullScale = 0.2 * _drawScale/DEFAULT_DRAWSCALE;
+    _easingtime = 1.0;
     
-    _dialogBoxText = scene2::Label::allocWithText("Drag left side of screen to move. Swipe in a direction to dash. \n Capture all of the baby carrots!", _assets->get<Font>("gaeguBold75"));
+    _dialogBoxText = scene2::Label::allocWithText("Your baby carrots have escaped!\nUse the joystick on left side of screen to move.", _assets->get<Font>("gaeguBold75"));
     _dialogBoxText->setHorizontalAlignment(HorizontalAlign::CENTER);
-    _dialogBoxText->setVerticalAlignment(VerticalAlign::TOP);
-    _dialogBoxText->setPadding(200, 0, 200, 0);
+    _dialogBoxText->setVerticalAlignment(VerticalAlign::MIDDLE);
+    _dialogBoxText->setPadding(150, 0, 150, 0);
     _dialogBoxText->setContentSize(_dialogBox->getContentSize());
+    _dialogBoxText->setRelativeColor(false);
     _dialogBoxText->doLayout();
     _dialogBoxText->setWrap(true);
     _dialogBox->addChild(_dialogBoxText);
@@ -203,8 +233,8 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     _uinode->setContentSize(SCENE_WIDTH / _cameraZoom, SCENE_HEIGHT / _cameraZoom);
     
-    initJoystickNodes();
     initGameUINodes();
+    initJoystickNodes();
     
     _swipeNode = scene2::PolygonNode::alloc();
     _swipeNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -232,7 +262,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
     _nextbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            CULog("this button was pressed");
             _postroundscene->setVisible(false);
             _playerpointinfo->setVisible(true);
             _nextroundbutton->activate();
@@ -263,13 +292,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
         _points.insert({wholenode, elements});
     }
     
-    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
-    _exitbutton->setVisible(false);
-//    _exitbutton->addListener([this](const std::string& name, bool down) {
-//        if (!down) {
-//            // TODO: disconnect to the main menu
-//        }
-//    });
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
@@ -278,6 +300,56 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     });
     
     _nextRound = 0;
+    
+    _characterdisplay = _assets->get<scene2::SceneNode>("characterdisplay");
+    _characterdisplay->setScale(1 / _cameraZoom);
+    _characterdisplay->doLayout(); // Repositions the HUD
+    _characterdisplay->setVisible(true);
+    _uinode->addChild(_characterdisplay);
+    
+    _rabbitpreview = _assets->get<scene2::SceneNode>("rabbitpreview");
+    _rabbitpreview->setScale(1 / _cameraZoom);
+    _rabbitpreview->doLayout(); // Repositions the HUD
+    _rabbitpreview->setVisible(false);
+    _uinode->addChild(_rabbitpreview);
+    
+    _carrotpreview = _assets->get<scene2::SceneNode>("carrotpreview");
+    _carrotpreview->setScale(1 / _cameraZoom);
+    _carrotpreview->doLayout(); // Repositions the HUD
+    _carrotpreview->setVisible(false);
+    _uinode->addChild(_carrotpreview);
+    
+    _winner = _assets->get<scene2::SceneNode>("winner");
+    _winner->setScale(1 / _cameraZoom);
+    _winner->doLayout(); // Repositions the HUD
+    _winner->setVisible(false);
+    _uinode->addChild(_winner);
+    
+    // winner specific buttons
+    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_exit"));
+    _exitbutton->setVisible(false);
+    //    _exitbutton->addListener([this](const std::string& name, bool down) {
+//        if (!down) {
+//            // TODO: disconnect to the main menu
+//        }
+//    });
+    _winnernextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_next"));
+    _winnernextbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // TODO: send the next game event
+            _nextGame = 1;
+        }
+    });
+    _nextGame = 0;
+    
+    _characterdisplayNodes.clear();
+    _carrotpreviewNodes.clear();
+    _winnerNodes.clear();
+    for (int i = 0; i < 4; i++) {
+        _characterdisplayNodes.push_back(_assets->get<scene2::SceneNode>("characterdisplay_Big_Icon_" + std::to_string(i)));
+        _carrotpreviewNodes.push_back(_assets->get<scene2::SceneNode>("carrotpreview_Big_Icon_" + std::to_string(i)));
+        _winnerNodes.push_back(_assets->get<scene2::SceneNode>("winner_characterdisplay_Big_Icon_" + std::to_string(i)));
+    }
     
     return true;
 }
@@ -394,9 +466,22 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
     } else {
         label->setText("NEXT");
     }
+    auto label2 = std::dynamic_pointer_cast<scene2::Label>(_winnernextbutton->getChildByName("rematch"));
+    if (_nextGame == 2) {
+        label2->setText("...");
+    } else {
+        label2->setText("rematch");
+    }
     _carrotsRemainingBoard->setVisible(debugActive);
     _barrotsRemainingBoard->setVisible(debugActive);
     updateSwipeSpline();
     updateInfoNodes(numCarrots, numBarrots);
     updateDashTimerNode(canDash);
+    
+    if (_dialogBoxVisible) {
+        _dialogBox->setScale(EasingFunction::elasticOut(_easingtime * 3, 0.7) * _dialogBoxFullScale);
+    } else {
+        _dialogBox->setScale(std::max((1.0f - EasingFunction::expoOut(_easingtime * 10)) * _dialogBoxFullScale, 0.0f));
+    }
+    _easingtime += step;
 }

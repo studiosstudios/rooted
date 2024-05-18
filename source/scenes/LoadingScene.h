@@ -34,6 +34,9 @@ protected:
     /** The "play" button */
     std::shared_ptr<cugl::scene2::Button>    _button;
 
+    std::shared_ptr<cugl::scene2::SceneNode> _logo;
+    
+    float _time;
     // MODEL
     /** The progress displayed on the screen */
     float _progress;

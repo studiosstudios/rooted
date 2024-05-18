@@ -45,7 +45,10 @@ protected:
     /* Amount of time to hold camera in zoom out pos upon cam init */
     int _startTimer;
     /* Max amount to shake the cam per frame */
-    float _shake;
+    float _shake; 
+    bool _isTutorial;
+    
+    bool _nozoom;
     
 public:
 #pragma mark -
@@ -74,7 +77,7 @@ public:
     *
     * @return true if the controller is initialized properly, false otherwise
     */
-    bool init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Rect frac);
+    bool init(const std::shared_ptr<cugl::scene2::SceneNode> root, float lerp, std::shared_ptr <cugl::OrthographicCamera> camera, std::shared_ptr<scene2::SceneNode> ui, float maxZoom, float scale, Rect frac, bool tutorial);
 #pragma mark -
 #pragma mark Camera Handling
 
@@ -126,6 +129,8 @@ public:
     std::shared_ptr<cugl::OrthographicCamera> getCamera() { return _camera; };
     
     const Vec2 boundPosition(Vec2 pos);
+    
+    void setNoZoom(bool z) { _nozoom = z; }
 };
 
 #endif

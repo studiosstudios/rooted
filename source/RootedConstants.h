@@ -82,12 +82,6 @@
 #define F_WIN_MUSIC       "farmerWin"
 /** The key the farmer failure game music */
 #define F_LOSE_MUSIC      "farmerLose"
-/** The sound effect for firing a bullet */
-#define PEW_EFFECT      "pew"
-/** The sound effect for a bullet collision */
-#define POP_EFFECT      "pop"
-/** The sound effect for jumping */
-#define JUMP_EFFECT     "jump"
 /** The volume for the music */
 #define MUSIC_VOLUME    0.7f
 /** The volume for sound effects */

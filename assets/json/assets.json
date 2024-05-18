@@ -419,6 +419,9 @@
         "unit_br_2": {
             "file":     "textures/maps/unit_br_2.png"
         },
+        "tutorial_bottom": {
+            "file":     "textures/maps/tutorial_bottom.png"
+        },
         "shader_clouds": {
             "file":     "textures/clouds.png",
             "wrapS":    "repeat",

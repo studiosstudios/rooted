@@ -56,8 +56,9 @@ void CollisionController::beginContact(b2Contact* contact) {
         if (name1 == "carrot") {
             Carrot* carrot = dynamic_cast<Carrot*>(bd1);
             if(_map->getCharacter()->getUUID() == carrot->getUUID() && (name2 == "farmer" || name2 == "baby")){
-                if(_haptics)
+                if(_haptics && !carrot->isSensor()){
                     Haptics::get()->playTransient(0.8, 0.1);
+                }
             }
             if(name2 == "planting spot" && _map->getCharacter()->getUUID() == carrot->getUUID()) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
@@ -83,8 +84,14 @@ void CollisionController::beginContact(b2Contact* contact) {
         if (name1 == "farmer") {
             Farmer* farmer = dynamic_cast<Farmer*>(bd1);
             if(_map->getCharacter()->getUUID() == farmer->getUUID() && (name2 == "baby" || name2 == "carrot")){
-                if(_haptics)
-                    Haptics::get()->playTransient(0.8, 0.1);
+                if(_haptics){
+                    if(name2 == "carrot"){
+                        Carrot* carrot = dynamic_cast<Carrot*>(bd2);
+                        if(!carrot->isSensor()){
+                            Haptics::get()->playTransient(0.8, 0.1);
+                        }
+                    }
+                }
             }
             if(name2 == "planting spot" && _map->getCharacter()->getUUID() == farmer->getUUID()) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
@@ -304,7 +311,7 @@ void CollisionController::beforeSolve(b2Contact* contact, const b2Manifold* mani
                     entity->stun();
                     if (Carrot* carrot = dynamic_cast<Carrot*>(bd2)) {
                         if (carrot->getUUID() == _map->getCharacter()->getUUID()) {
-                            if(_haptics)
+                            if(_haptics && !carrot->isSensor())
                                 Haptics::get()->playContinuous(0.8, 0.1, STUN_SECS);
                         }
                     }

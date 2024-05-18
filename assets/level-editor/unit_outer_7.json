@@ -8,9 +8,9 @@
          "name":"wheat",
          "objects":[
                 {
-                 "gid":40,
-                 "height":448,
-                 "id":190,
+                 "gid":42,
+                 "height":359,
+                 "id":189,
                  "name":"",
                  "properties":[
                         {
@@ -21,14 +21,14 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"unit_o_5"
+                         "value":"unit_o_7"
                         }],
                  "rotation":0,
                  "type":"Map",
                  "visible":true,
-                 "width":1056,
-                 "x":-431,
-                 "y":320
+                 "width":583,
+                 "x":-38,
+                 "y":323
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -59,7 +59,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":191,
+ "nextobjectid":190,
  "orientation":"orthogonal",
  "properties":[
         {

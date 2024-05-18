@@ -539,6 +539,27 @@
         "unit_br_2": {
             "file":     "textures/maps/unit_br_2.png"
         },
+        "unit_o_1": {
+            "file":     "textures/maps/unit_o_1.png"
+        },
+        "unit_o_2": {
+            "file":     "textures/maps/unit_o_2.png"
+        },
+        "unit_o_3": {
+            "file":     "textures/maps/unit_o_3.png"
+        },
+        "unit_o_4": {
+            "file":     "textures/maps/unit_o_4.png"
+        },
+        "unit_o_5": {
+            "file":     "textures/maps/unit_o_5.png"
+        },
+        "unit_o_6": {
+            "file":     "textures/maps/unit_o_6.png"
+        },
+        "unit_o_7": {
+            "file":     "textures/maps/unit_o_7.png"
+        },
         "tutorial_bottom": {
             "file":     "textures/maps/tutorial_bottom.png"
         },
@@ -701,6 +722,9 @@
         "unit_outer_3": "level-editor/unit_outer_3.json",
         "unit_outer_4": "level-editor/unit_outer_4.json",
         "unit_outer_5": "level-editor/unit_outer_5.json",
+        "unit_outer_6": "level-editor/unit_outer_6.json",
+        "unit_outer_7": "level-editor/unit_outer_7.json",
+        "unit_outer_8": "level-editor/unit_outer_8.json",
         "tutorialTop": "level-editor/tutorialTop.json",
         "tutorialMid": "level-editor/tutorialMid.json",
         "tutorialBottom": "level-editor/tutorialBottom.json",

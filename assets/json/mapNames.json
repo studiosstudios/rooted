@@ -9,5 +9,13 @@
   "bottom_left" : ["unit_bl_1", "unit_bl_2"],
   "bottom" : ["unit_b_1", "unit_b_2"],
   "bottom_right" : ["unit_br_1", "unit_br_2"],
-  "outer" : ["unit_outer_1", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_3", "unit_outer_4", "unit_outer_5"]
+  "outer" : ["unit_outer_1", "unit_outer_1",
+      "unit_outer_2", "unit_outer_2",
+      "unit_outer_3", "unit_outer_3",
+      "unit_outer_4", "unit_outer_4",
+      "unit_outer_5", "unit_outer_5",
+      "unit_outer_6",
+      "unit_outer_7", "unit_outer_7",
+      "unit_outer_8", "unit_outer_8", "unit_outer_8"
+  ]
 }

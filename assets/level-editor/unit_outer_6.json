@@ -8,9 +8,9 @@
          "name":"wheat",
          "objects":[
                 {
-                 "gid":39,
-                 "height":477,
-                 "id":189,
+                 "gid":41,
+                 "height":359,
+                 "id":188,
                  "name":"",
                  "properties":[
                         {
@@ -21,14 +21,14 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"unit_o_4"
+                         "value":"unit_o_6"
                         }],
                  "rotation":0,
                  "type":"Map",
                  "visible":true,
-                 "width":924,
-                 "x":-60,
-                 "y":455
+                 "width":672,
+                 "x":-97,
+                 "y":327
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -42,60 +42,32 @@
          "name":"environment",
          "objects":[
                 {
-                 "gid":45,
-                 "height":160,
-                 "id":176,
+                 "gid":49,
+                 "height":385.574,
+                 "id":189,
                  "name":"",
                  "properties":[
                         {
                          "name":"frame_cols",
                          "type":"int",
-                         "value":1
+                         "value":5
                         }, 
                         {
                          "name":"frame_rows",
                          "type":"int",
-                         "value":1
+                         "value":3
                         }, 
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"barn"
+                         "value":"mill"
                         }],
                  "rotation":0,
                  "type":"Decoration",
                  "visible":true,
-                 "width":205.621,
-                 "x":138,
-                 "y":281
-                }, 
-                {
-                 "gid":46,
-                 "height":91.1026,
-                 "id":190,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"frame_cols",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"frame_rows",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"tractor"
-                        }],
-                 "rotation":0,
-                 "type":"Decoration",
-                 "visible":true,
-                 "width":107.565,
-                 "x":10,
-                 "y":281
+                 "width":311.226,
+                 "x":224,
+                 "y":256
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -115,7 +87,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":206,
+ "nextobjectid":190,
  "orientation":"orthogonal",
  "properties":[
         {

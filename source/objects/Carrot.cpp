@@ -31,31 +31,35 @@ bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
  * Sets carrot state after being captured
  */
 void Carrot::gotCaptured(){
-    _isCaptured = true;
-    getSceneNode()->setVisible(false);
+    _state = CAUGHT;
+    resetStateCooldowns();
+    updateSprite(0);
 }
 
 /**
  * Sets carrot state after getting rooted
  */
 void Carrot::gotRooted(){
-    _isCaptured = false;
-    _isRooted = true;
-    getSceneNode()->setVisible(true);
+    _state = ROOTED;
+    resetStateCooldowns();
     setBodyType(b2BodyType::b2_staticBody);
+    updateSprite(0);
 }
 
 /**
  * Sets carrot state after getting unrooted
  */
 void Carrot::gotUnrooted(){
+    _state = STANDING;
+    resetStateCooldowns();
     setBodyType(b2BodyType::b2_dynamicBody);
-    _isRooted = false;
+    updateSprite(0);
 }
 
 void Carrot::escaped(){
-    _isCaptured = false;
-    getSceneNode()->setVisible(true);
+    _state = STANDING;
+    resetStateCooldowns();
+    updateSprite(0);
 }
 
 void Carrot::updateCurAnimDurationForState() {

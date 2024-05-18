@@ -126,7 +126,7 @@ void EntityModel::updateCurAnimDurationForState() {
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING || _state == STANDING;
+    return isMoving() || _state == DASHING || _state == ROOTING || (!_movement.isZero() && _state == CARRYING) || _state == STANDING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -213,6 +213,12 @@ EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(Entit
 }
 
 void EntityModel::updateSprite(float dt, bool useMovement) {
+    if (_state == CAUGHT) {
+        // Special case: CAUGHT state is just invisible, no other changes
+        _node->setVisible(false);
+        return;
+    }
+    
     EntityFacing face;
     if (_state != DASHING) {
         face = calculateFacing(useMovement ? _movement : getLinearVelocity());
@@ -419,6 +425,11 @@ void EntityModel::updateState(float dt) {
             }
             break;
         }
+        case CAUGHT:
+        case ROOTED: {
+            // Immobile states
+            break;
+        }
         default: {
             CULog("updateState: Not implemented yet");
         }
@@ -475,13 +486,15 @@ void EntityModel::applyForce() {
             setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(DUDE_DASH));
             break;
         }
+        case CAUGHT:
+        case ROOTED: {
+            // Immobile cases
+            break;
+        }
         default: {
             CULog("State not implemented yet");
         }
     }
-    
-    // Don't want to be moving. Damp out player motion
-    
 }
 
 bool EntityModel::isDashing() {

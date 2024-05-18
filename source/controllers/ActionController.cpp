@@ -68,7 +68,7 @@ void ActionController::preUpdate(float dt) {
     EntityModel::EntityState oldState = playerEntity->getEntityState();
     playerEntity->updateState(dt);
     if(didDash && playerEntity->getEntityState() == EntityModel::EntityState::DASHING){
-        std::cout<<"getting player swipe status: "<<playerEntity->getSwipe()<<"\n";
+//        std::cout<<"getting player swipe status: "<<playerEntity->getSwipe()<<"\n";
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
         AudioEngine::get()->play("dash", source, false, _soundScale);
     }
@@ -468,6 +468,7 @@ void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event)
 void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event){
     _map->getFarmers().at(0)->carrotEscaped();
     if(_map->isFarmer()){
+        _map->getCharacter()->stun();
         if(_haptics)
             Haptics::get()->playContinuous(1.0, 0.8, 0.3);
     }

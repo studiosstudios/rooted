@@ -48,6 +48,8 @@ protected:
     float _shake; 
     bool _isTutorial;
     
+    bool _nozoom;
+    
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -127,6 +129,8 @@ public:
     std::shared_ptr<cugl::OrthographicCamera> getCamera() { return _camera; };
     
     const Vec2 boundPosition(Vec2 pos);
+    
+    void setNoZoom(bool z) { _nozoom = z; }
 };
 
 #endif

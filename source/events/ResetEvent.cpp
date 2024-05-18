@@ -18,10 +18,11 @@ std::shared_ptr<NetEvent> ResetEvent::newEvent(){
     return std::make_shared<ResetEvent>();
 }
 
-std::shared_ptr<NetEvent> ResetEvent::allocResetEvent(){
+std::shared_ptr<NetEvent> ResetEvent::allocResetEvent(int type){
     //TODO: make a new shared copy of the event and set its _pos to pos.
 #pragma mark BEGIN SOLUTION
     auto event = std::make_shared<ResetEvent>();
+    event->_type = type;
 //    event->_roomid = roomid;
     return event;
 #pragma mark END SOLUTION
@@ -34,6 +35,7 @@ std::vector<std::byte> ResetEvent::serialize(){
     //TODO: serialize _pos
 #pragma mark BEGIN SOLUTION
     _serializer.reset();
+    _serializer.writeUint32(_type);
 //    _serializer.writeString(_roomid);
     return _serializer.serialize();
 #pragma mark END SOLUTION
@@ -54,6 +56,8 @@ void ResetEvent::deserialize(const std::vector<std::byte>& data){
 #pragma mark BEGIN SOLUTION
     _deserializer.reset();
     _deserializer.receive(data);
+    int type = _deserializer.readUint32();
+    _type = type;
 //    std::string roomid = _deserializer.readString();
 //    _roomid = roomid;
 #pragma mark END SOLUTION

@@ -119,6 +119,8 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _righthandNode;
     std::shared_ptr<cugl::scene2::PolygonNode> _fakejoyBack;
     
+    Vec2 carrotAItarget;
+    
     
 
 #pragma mark Internal Object Management

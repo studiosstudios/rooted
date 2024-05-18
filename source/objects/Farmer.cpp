@@ -7,6 +7,10 @@
 bool Farmer::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     _isHoldingCarrot = false;
     bool _canPlant = true;
+    dashMag = FARMER_DASH_MAG;
+    dashTimerLength = FARMER_DASH_TIMER;
+    dashCooldownLength = FARMER_DASH_COOLDOWN;
+    runSpeed = FARMER_RUN_SPEED;
     return EntityModel::init(pos, size, scale);
 }
 

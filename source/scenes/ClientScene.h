@@ -16,7 +16,7 @@
 #include <vector>
 
 #include "../controllers/NetworkController.h"
-
+#include "../RootedConstants.h"
 
 using namespace cugl::physics2::net;
 
@@ -65,6 +65,7 @@ protected:
     /** Whether the back button had been clicked. */
     bool _backClicked = false;
 
+    float _soundScale;
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -129,6 +130,8 @@ public:
      * Returns whether the back button has been clicked
      */
     bool getBackClicked() { return _backClicked; }
+    
+    void setSoundScale(float f) { _soundScale = f; }
 
 private:
     /**

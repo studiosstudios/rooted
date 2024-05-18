@@ -22,6 +22,8 @@ protected:
     
     std::string _roomid;
     
+    int _type;
+    
 public:
     /**
     * This method is used by the NetEventController to create a new event of using a
@@ -32,7 +34,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocResetEvent();
+    static std::shared_ptr<NetEvent> allocResetEvent(int type);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -50,6 +52,7 @@ public:
     void deserialize(const std::vector<std::byte>& data) override;
     
 //    std::string getRoomId() { return _roomid; }
+    int getType() {return _type;}
 };
 
 #endif /* Gameover_h */

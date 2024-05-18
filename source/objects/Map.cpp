@@ -751,6 +751,9 @@ void Map::spawnFarmers() {
 }
 
 void Map::spawnBabyCarrots() {
+    int barrotModifierCount = 0;
+    int barrotModifierThreshold = (int) _babyCarrotSpawns.size() / 4;
+    std::vector<std::string> barrotModifiers {"-walk", "-blanket", "-bow", "-diaper"};
     for (Rect rect : _babyCarrotSpawns) {
         std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, Size(BARROT_WIDTH, BARROT_HEIGHT), _scale.x);
         baby->setEntityState(EntityModel::EntityState::WALKING);
@@ -763,7 +766,8 @@ void Map::spawnBabyCarrots() {
         _babies.push_back(baby);
         
         // TODO: Stagger baby carrot animation times with a random number generator -CJ
-        auto walkDS = initEntityDirectionalSprites("barrot-", "-walk", 0.125f);
+        int barrotModifierSelector = std::min((barrotModifierCount++ % barrotModifierThreshold), ((int) barrotModifiers.size()) - 1);
+        auto walkDS = initEntityDirectionalSprites("barrot-", barrotModifiers.at(barrotModifierSelector), 0.125f);
         baby->setWalkSprites(walkDS);
         
         baby->setSceneNode(walkDS.southSprite);

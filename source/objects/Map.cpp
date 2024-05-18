@@ -708,87 +708,14 @@ void Map::spawnCarrots() {
         _carrots.push_back(carrot);
         _players.push_back(carrot);
         
-        auto carrotSouthWalkSprite = _assets->get<Texture>(CARROT_SOUTH_WALK_SPRITE);
-        auto carrotNorthWalkSprite = _assets->get<Texture>(CARROT_NORTH_WALK_SPRITE);
-        auto carrotEastWalkSprite = _assets->get<Texture>(CARROT_EAST_WALK_SPRITE);
-        auto carrotNorthEastWalkSprite = _assets->get<Texture>(CARROT_NORTHEAST_WALK_SPRITE);
-        auto carrotSouthEastWalkSprite = _assets->get<Texture>(CARROT_SOUTHEAST_WALK_SPRITE);
+
+        auto walkDS = initEntityDirectionalSprites("carrot-", "-walk", 0.125f);
+        carrot->setSceneNode(walkDS.southSprite);
+        carrot->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         
-        auto carrotSouthWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                      carrotSouthWalkSprite, 3, 4, 11);
-        carrotSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotSouthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotSouthWalkNode->setAnchor(Vec2(0.5, 0.25));
-        carrotSouthWalkNode->setFrame(0);
-        carrotSouthWalkNode->setVisible(false);
-        
-        auto carrotNorthWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                      carrotNorthWalkSprite, 3, 4, 11);
-        carrotNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotNorthWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotNorthWalkNode->setAnchor(Vec2(0.5, 0.25));
-        carrotNorthWalkNode->setVisible(false);
-        
-        auto carrotEastWalkNode = scene2::SpriteNode::allocWithSheet(
-                                                                     carrotEastWalkSprite, 3, 4, 11);
-        carrotEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotEastWalkNode->setVisible(false);
-        
-        auto carrotNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotNorthEastWalkSprite, 3, 4, 11);
-        carrotNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotNorthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotNorthEastWalkNode->setVisible(false);
-        
-        auto carrotSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotSouthEastWalkSprite, 3, 4, 11);
-        carrotSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotSouthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotSouthEastWalkNode->setVisible(false);
-        
-        auto carrotSouthDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_SOUTH_DASH_SPRITE), 1, 5);
-        carrotSouthDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotSouthDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotSouthDashNode->setVisible(false);
-        
-        auto carrotNorthDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_NORTH_DASH_SPRITE), 1, 5);
-        carrotNorthDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotNorthDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotNorthDashNode->setVisible(false);
-        
-        auto carrotEastDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_EAST_DASH_SPRITE), 1, 5);
-        carrotEastDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotEastDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotEastDashNode->setVisible(false);
-        
-        auto carrotNorthEastDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_NORTHEAST_DASH_SPRITE), 1, 5);
-        carrotNorthEastDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotNorthEastDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotNorthEastDashNode->setVisible(false);
-        
-        auto carrotSouthEastDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_SOUTHEAST_DASH_SPRITE), 1, 5);
-        carrotSouthEastDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        carrotSouthEastDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-        carrotSouthEastDashNode->setVisible(false);
-        
-        _entitiesNode->addChild(carrotNorthWalkNode);
-        _entitiesNode->addChild(carrotEastWalkNode);
-        _entitiesNode->addChild(carrotSouthWalkNode);
-        _entitiesNode->addChild(carrotNorthEastWalkNode);
-        _entitiesNode->addChild(carrotSouthEastWalkNode);
-        _entitiesNode->addChild(carrotNorthDashNode);
-        _entitiesNode->addChild(carrotEastDashNode);
-        _entitiesNode->addChild(carrotSouthDashNode);
-        _entitiesNode->addChild(carrotNorthEastDashNode);
-        _entitiesNode->addChild(carrotSouthEastDashNode);
-        
-        carrot->setSceneNode(carrotSouthWalkNode);
-        carrot->setDrawScale(
-                             _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-        // Create the polygon node (empty, as the model will initialize)
-        
-        carrot->setWalkSprites(EntityModel::DirectionalSprites(carrotNorthWalkNode, carrotNorthEastWalkNode, carrotEastWalkNode, carrotSouthEastWalkNode, carrotSouthWalkNode));
-        carrot->setRunSprites(EntityModel::DirectionalSprites(carrotNorthWalkNode, carrotNorthEastWalkNode, carrotEastWalkNode, carrotSouthEastWalkNode, carrotSouthWalkNode));
-        carrot->setDashSprites(EntityModel::DirectionalSprites(carrotNorthDashNode, carrotNorthEastDashNode, carrotEastDashNode, carrotSouthEastDashNode, carrotSouthDashNode));
+        carrot->setWalkSprites(walkDS);
+        carrot->setRunSprites(walkDS);
+        carrot->setDashSprites(initEntityDirectionalSprites("carrot-", "-dash", 0.125f));
         
         carrot->setDebugScene(_debugnode);
         

@@ -322,7 +322,8 @@
         "tutorialMid": "level-editor/tutorialMid.json",
         "tutorialBottom": "level-editor/tutorialBottom.json",
         "line-gesture": "json/line-gesture.json",
-        "circle-gesture": "json/circle-gesture.json"
+        "circle-gesture": "json/circle-gesture.json",
+        "sprite-metadata": "json/sprite-metadata.json"
     },
     "sounds": {
         "menu": {

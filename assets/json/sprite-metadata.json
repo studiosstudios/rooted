@@ -1,0 +1,128 @@
+{
+    "farmer-south-walk": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-north-walk": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-east-walk": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-northeast-walk": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-southeast-walk": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-south-run": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-north-run": {
+        "rows": 3,
+        "cols": 4,
+        "size": 6
+    },
+    "farmer-east-run": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-northeast-run": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-southeast-run": {
+        "rows": 3,
+        "cols": 4
+    },
+    "farmer-south-dash": {
+        "rows": 1,
+        "cols": 1
+    },
+    "farmer-north-dash": {
+        "rows": 1,
+        "cols": 1
+    },
+    "farmer-east-dash": {
+        "rows": 1,
+        "cols": 1
+    },
+    "farmer-northeast-dash": {
+        "rows": 1,
+        "cols": 1
+    },
+    "farmer-southeast-dash": {
+        "rows": 1,
+        "cols": 1
+    },
+    "carrot-south-walk": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-north-walk": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-east-walk": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-northeast-walk": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-southeast-walk": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-south-dash": {
+        "rows": 1,
+        "cols": 5
+    },
+    "carrot-north-dash": {
+        "rows": 1,
+        "cols": 5
+    },
+    "carrot-east-dash": {
+        "rows": 1,
+        "cols": 5
+    },
+    "carrot-northeast-dash": {
+        "rows": 1,
+        "cols": 5
+    },
+    "carrot-southeast-dash": {
+        "rows": 1,
+        "cols": 5
+    },
+    "barrot-south-walk": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-north-walk": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-east-walk": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-northeast-walk": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-southeast-walk": {
+        "rows": 2,
+        "cols": 5
+    }
+}

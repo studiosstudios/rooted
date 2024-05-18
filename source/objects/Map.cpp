@@ -196,6 +196,8 @@ bool Map::init(const std::shared_ptr<AssetManager> &assets, bool tutorial) {
     _mapNames = json->get("names")->asStringArray();
     
     _tutorial = tutorial;
+    
+    _spriteMetadata = assets->get<JsonValue>("sprite-metadata");
 
     return true;
 }
@@ -373,6 +375,7 @@ void Map::dispose() {
         _world->dispose();
         _world = nullptr;
     }
+    _spriteMetadata = nullptr;
 }
 
 void Map::clearWorld() {
@@ -507,6 +510,36 @@ void Map::acquireMapOwnership() {
 #pragma mark -
 #pragma mark Individual Loaders
 
+//void Map::initEntitySpriteNode(const std::shared_ptr<scene2::SpriteNode>& node) {
+//    node->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+//    node->setPriority(float(Map::DrawOrder::ENTITIES));
+//    node->setVisible(false);
+//    _entitiesNode->addChild(node);
+//}
+
+EntityModel::DirectionalSprites Map::initEntityDirectionalSprites(std::string prefix, std::string suffix) {
+    std::vector<std::string> keys {"north", "northeast", "east", "southeast", "south"};
+    std::vector<std::shared_ptr<scene2::SpriteNode>> nodes;
+    for (auto keyit = keys.begin(); keyit != keys.end(); ++keyit) {
+        std::string key = prefix + *keyit + suffix;
+        auto metadata = _spriteMetadata->get(key);
+        int rows = metadata->getInt("rows");
+        int cols = metadata->getInt("cols");
+        int size = metadata->getInt("size", -1);
+        if (size == -1) {
+            size = rows * cols;
+        }
+        auto node = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(key), rows, cols, size);
+        node->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+        node->setPriority(float(Map::DrawOrder::ENTITIES));
+        node->setVisible(false);
+        _entitiesNode->addChild(node);
+        nodes.push_back(node);
+    }
+    EntityModel::DirectionalSprites ds {nodes.at(0), nodes.at(1), nodes.at(2), nodes.at(3), nodes.at(4)};
+    return ds;
+}
+
 /**
  * Adds a boundary box obstacle to the world.
  */
@@ -548,35 +581,40 @@ void Map::spawnFarmers() {
         farmer->setName("farmer");
         farmer->setColliderSize(Size(FARMER_HITBOX_WIDTH, FARMER_HITBOX_HEIGHT));
         
-        auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_SOUTH_WALK_SPRITE);
-        auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
-        auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
-        auto farmerNorthEastWalkSprite  = _assets->get<Texture>(FARMER_NORTHEAST_WALK_SPRITE);
-        auto farmerSouthEastWalkSprite  = _assets->get<Texture>(FARMER_SOUTHEAST_WALK_SPRITE);
-
-        auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite, 3, 4);
-        farmerSouthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         
-        auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
-        farmerNorthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerNorthWalkNode->setVisible(false);
-        
-        auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
-        farmerEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerEastWalkNode->setVisible(false);
-        
-        auto farmerNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthEastWalkSprite, 3, 4);
-        farmerNorthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerNorthEastWalkNode->setVisible(false);
-        
-        auto farmerSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthEastWalkSprite, 3, 4, 9);
-        farmerSouthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
-        farmerSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
-        farmerSouthEastWalkNode->setVisible(false);
+//        auto farmerSouthWalkSprite = _assets->get<Texture>(FARMER_SOUTH_WALK_SPRITE);
+//        auto farmerNorthWalkSprite = _assets->get<Texture>(FARMER_NORTH_WALK_SPRITE);
+//        auto farmerEastWalkSprite  = _assets->get<Texture>(FARMER_EAST_WALK_SPRITE);
+//        auto farmerNorthEastWalkSprite  = _assets->get<Texture>(FARMER_NORTHEAST_WALK_SPRITE);
+//        auto farmerSouthEastWalkSprite  = _assets->get<Texture>(FARMER_SOUTHEAST_WALK_SPRITE);
+//
+//        auto farmerSouthWalkJson = _assets->get<JsonValue>("sprite-metadata")->get(FARMER_SOUTH_WALK_SPRITE);
+////        farmerSouthWalkJson->getInt("rows");
+////        farmerSouthWalkJson->getInt("cols");
+//        auto farmerSouthWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthWalkSprite,farmerSouthWalkJson->getInt("rows"),
+//                                                                      farmerSouthWalkJson->getInt("cols"));
+//        farmerSouthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+//        farmerSouthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+//        
+//        auto farmerNorthWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthWalkSprite, 3, 4);
+//        farmerNorthWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+//        farmerNorthWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+//        farmerNorthWalkNode->setVisible(false);
+//        
+//        auto farmerEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerEastWalkSprite, 3, 4);
+//        farmerEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+//        farmerEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+//        farmerEastWalkNode->setVisible(false);
+//        
+//        auto farmerNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerNorthEastWalkSprite, 3, 4);
+//        farmerNorthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+//        farmerNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+//        farmerNorthEastWalkNode->setVisible(false);
+//        
+//        auto farmerSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(farmerSouthEastWalkSprite, 3, 4, 9);
+//        farmerSouthEastWalkNode->setScale(0.15f * _scale/DEFAULT_DRAWSCALE);
+//        farmerSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
+//        farmerSouthEastWalkNode->setVisible(false);
         
         // Run sprites
         auto farmerSouthRunNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(FARMER_SOUTH_RUN_SPRITE), 2, 4);
@@ -626,11 +664,11 @@ void Map::spawnFarmers() {
         
         
         // Add all nodes as subnode to _entitesNode
-        _entitiesNode->addChild(farmerSouthWalkNode);
-        _entitiesNode->addChild(farmerNorthWalkNode);
-        _entitiesNode->addChild(farmerEastWalkNode);
-        _entitiesNode->addChild(farmerNorthEastWalkNode);
-        _entitiesNode->addChild(farmerSouthEastWalkNode);
+//        _entitiesNode->addChild(farmerSouthWalkNode);
+//        _entitiesNode->addChild(farmerNorthWalkNode);
+//        _entitiesNode->addChild(farmerEastWalkNode);
+//        _entitiesNode->addChild(farmerNorthEastWalkNode);
+//        _entitiesNode->addChild(farmerSouthEastWalkNode);
         _entitiesNode->addChild(farmerSouthRunNode);
         _entitiesNode->addChild(farmerNorthRunNode);
         _entitiesNode->addChild(farmerEastRunNode);
@@ -642,18 +680,18 @@ void Map::spawnFarmers() {
         _entitiesNode->addChild(carrotfarmerNode);
         
         // Set farmer's walk/run/dash sprite nodes
-        farmer->setWalkSprites(EntityModel::DirectionalSprites(farmerNorthWalkNode, farmerNorthEastWalkNode, farmerEastWalkNode, farmerSouthEastWalkNode, farmerSouthWalkNode));
+        farmer->setWalkSprites(initEntityDirectionalSprites("farmer-", "-walk"));
         farmer->setRunSprites(EntityModel::DirectionalSprites(farmerNorthRunNode, farmerNorthEastRunNode, farmerEastRunNode, farmerSouthEastRunNode, farmerSouthRunNode));
         farmer->setDashSprites(EntityModel::DirectionalSprites(farmerNorthDashNode, farmerEastDashNode, farmerEastDashNode, farmerEastDashNode, farmerSouthDashNode));
         farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode));
         
-        farmer->setNormalNode(farmerSouthWalkNode);
+        farmer->setNormalNode(carrotfarmerNode);
         farmer->setCaptureNode(carrotfarmerNode);
         
         EntityModel::DirectionalSprites farmerBaseCarry;
         farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode,carrotfarmerNode));
         
-        farmer->setSceneNode(farmerSouthWalkNode);
+        farmer->setSceneNode(carrotfarmerNode);
         farmer->setDrawScale(
                 _scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
 

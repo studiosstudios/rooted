@@ -105,6 +105,8 @@ private:
     std::vector<std::string> _playerUUIDs;
     std::string _farmerUUID;
     std::string _thisUUID;
+    
+    std::shared_ptr<cugl::JsonValue> _spriteMetadata;
 
     
 public:
@@ -349,6 +351,10 @@ private:
      */
     bool readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight);
     
+//    void initEntitySpriteNode(const std::shared_ptr<scene2::SpriteNode>& node);
+    
+    EntityModel::DirectionalSprites initEntityDirectionalSprites(std::string prefix, std::string suffix);
+    
     /**
      * Adds a boundary box obstacle to the world.
      */
@@ -361,6 +367,7 @@ private:
     void spawnCarrots();
     
     void spawnBabyCarrots();
+    
 };
 
 #endif //ROOTED_MAP_H

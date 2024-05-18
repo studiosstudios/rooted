@@ -259,11 +259,12 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     }
     
     _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
-    _exitbutton->addListener([this](const std::string& name, bool down) {
-        if (!down) {
-            // TODO: disconnect to the main menu
-        }
-    });
+    _exitbutton->setVisible(false);
+//    _exitbutton->addListener([this](const std::string& name, bool down) {
+//        if (!down) {
+//            // TODO: disconnect to the main menu
+//        }
+//    });
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {

@@ -267,7 +267,7 @@
                     "visible": true
                 },
                 "children": {
-                    "playerpointinfo_0": {
+                    "playerpointinfo_3": {
                         "type": "Node",
                         "format": {
                             "type": "Anchored"
@@ -571,7 +571,7 @@
                                                 0,
                                                 0.03
                                             ],
-                                            "visible": false
+                                            "visible": true
                                         },
                                         "layout": {
                                             "x_anchor": "left",
@@ -590,7 +590,7 @@
                                     "y_offset": -0.34
                                 }
                             },
-                            "points": {
+                            "emptypoints": {
                                 "type": "Node",
                                 "format": {
                                     "type": "Anchored"
@@ -601,13 +601,13 @@
                                         1
                                     ],
                                     "size": [
-                                        372.24,
-                                        32.4
+                                        411,
+                                        33
                                     ],
                                     "angle": 0,
                                     "position": [
                                         137,
-                                        34.04
+                                        34
                                     ],
                                     "visible": true
                                 },
@@ -626,8 +626,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                84.96,
-                                                -0.01
+                                                379,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -635,8 +635,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.23,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_1": {
@@ -653,8 +653,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                42.48,
-                                                -0.01
+                                                339.84,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -662,8 +662,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.11,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_2": {
@@ -680,8 +680,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                0,
-                                                -0.01
+                                                297.36,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -689,8 +689,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_3": {
@@ -707,8 +707,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                212.4,
-                                                0.43
+                                                254.88,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -716,8 +716,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.57,
-                                            "y_offset": 0
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_4": {
@@ -734,8 +734,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                169.92,
-                                                0.43
+                                                212.4,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -743,8 +743,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.46,
-                                            "y_offset": 0
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_5": {
@@ -761,8 +761,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                127.44,
-                                                0.43
+                                                169.92,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -770,8 +770,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.34,
-                                            "y_offset": 0
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_6": {
@@ -788,8 +788,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                339.84,
-                                                0.43
+                                                127.44,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -797,8 +797,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.91,
-                                            "y_offset": 0
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_7": {
@@ -815,8 +815,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                297.36,
-                                                0.43
+                                                84.96,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -824,8 +824,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.8,
-                                            "y_offset": 0
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_8": {
@@ -842,8 +842,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                379,
-                                                -0.01
+                                                42.48,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -851,8 +851,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 1.02,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_9": {
@@ -869,8 +869,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                254.88,
-                                                0.43
+                                                0,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -878,8 +878,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.68,
-                                            "y_offset": 0
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
                                         }
                                     }
                                 },
@@ -927,7 +927,7 @@
                             "y_offset": -0.8
                         }
                     },
-                    "playerpointinfo_1": {
+                    "playerpointinfo_2": {
                         "type": "Node",
                         "format": {
                             "type": "Anchored"
@@ -1250,7 +1250,7 @@
                                     "y_offset": -0.34
                                 }
                             },
-                            "points": {
+                            "emptypoints": {
                                 "type": "Node",
                                 "format": {
                                     "type": "Anchored"
@@ -1261,13 +1261,13 @@
                                         1
                                     ],
                                     "size": [
-                                        372.24,
-                                        32.4
+                                        411,
+                                        33
                                     ],
                                     "angle": 0,
                                     "position": [
                                         137,
-                                        34.04
+                                        34
                                     ],
                                     "visible": true
                                 },
@@ -1286,8 +1286,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                84.96,
-                                                -0.01
+                                                379,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -1295,8 +1295,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.23,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_1": {
@@ -1313,8 +1313,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                42.48,
-                                                -0.01
+                                                339.84,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -1322,8 +1322,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.11,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_2": {
@@ -1340,8 +1340,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                0,
-                                                -0.01
+                                                297.36,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -1349,8 +1349,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_3": {
@@ -1367,8 +1367,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                212.4,
-                                                0.43
+                                                254.88,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -1376,8 +1376,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.57,
-                                            "y_offset": 0
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_4": {
@@ -1394,8 +1394,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                169.92,
-                                                0.43
+                                                212.4,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -1403,8 +1403,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.46,
-                                            "y_offset": 0
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_5": {
@@ -1421,8 +1421,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                127.44,
-                                                0.43
+                                                169.92,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -1430,8 +1430,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.34,
-                                            "y_offset": 0
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_6": {
@@ -1448,8 +1448,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                339.84,
-                                                0.43
+                                                127.44,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -1457,8 +1457,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.91,
-                                            "y_offset": 0
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_7": {
@@ -1475,8 +1475,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                297.36,
-                                                0.43
+                                                84.96,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -1484,8 +1484,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.8,
-                                            "y_offset": 0
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_8": {
@@ -1502,8 +1502,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                379,
-                                                -0.01
+                                                42.48,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -1511,8 +1511,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 1.02,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_9": {
@@ -1529,8 +1529,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                254.88,
-                                                0.43
+                                                0,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -1538,8 +1538,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.68,
-                                            "y_offset": 0
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
                                         }
                                     }
                                 },
@@ -1587,7 +1587,7 @@
                             "y_offset": -0.53
                         }
                     },
-                    "playerpointinfo_2": {
+                    "playerpointinfo_1": {
                         "type": "Node",
                         "format": {
                             "type": "Anchored"
@@ -1910,7 +1910,7 @@
                                     "y_offset": -0.34
                                 }
                             },
-                            "points": {
+                            "emptypoints": {
                                 "type": "Node",
                                 "format": {
                                     "type": "Anchored"
@@ -1921,13 +1921,13 @@
                                         1
                                     ],
                                     "size": [
-                                        372.24,
-                                        32.4
+                                        411,
+                                        33
                                     ],
                                     "angle": 0,
                                     "position": [
                                         137,
-                                        34.04
+                                        34
                                     ],
                                     "visible": true
                                 },
@@ -1946,8 +1946,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                84.96,
-                                                -0.01
+                                                379,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -1955,8 +1955,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.23,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_1": {
@@ -1973,8 +1973,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                42.48,
-                                                -0.01
+                                                339.84,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -1982,8 +1982,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.11,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_2": {
@@ -2000,8 +2000,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                0,
-                                                -0.01
+                                                297.36,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -2009,8 +2009,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_3": {
@@ -2027,8 +2027,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                212.4,
-                                                0.43
+                                                254.88,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -2036,8 +2036,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.57,
-                                            "y_offset": 0
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_4": {
@@ -2054,8 +2054,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                169.92,
-                                                0.43
+                                                212.4,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -2063,8 +2063,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.46,
-                                            "y_offset": 0
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_5": {
@@ -2081,8 +2081,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                127.44,
-                                                0.43
+                                                169.92,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -2090,8 +2090,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.34,
-                                            "y_offset": 0
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_6": {
@@ -2108,8 +2108,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                339.84,
-                                                0.43
+                                                127.44,
+                                                0.47
                                             ],
                                             "visible": true
                                         },
@@ -2117,8 +2117,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.91,
-                                            "y_offset": 0
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
                                         }
                                     },
                                     "emptypoint_7": {
@@ -2135,8 +2135,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                297.36,
-                                                0.43
+                                                84.96,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -2144,8 +2144,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.8,
-                                            "y_offset": 0
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_8": {
@@ -2162,8 +2162,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                379,
-                                                -0.01
+                                                42.48,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -2171,8 +2171,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 1.02,
-                                            "y_offset": -0.01
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
                                         }
                                     },
                                     "emptypoint_9": {
@@ -2189,8 +2189,8 @@
                                             ],
                                             "angle": 0,
                                             "position": [
-                                                254.88,
-                                                0.43
+                                                0,
+                                                0.03
                                             ],
                                             "visible": true
                                         },
@@ -2198,8 +2198,8 @@
                                             "x_anchor": "left",
                                             "y_anchor": "top",
                                             "absolute": false,
-                                            "x_offset": 0.68,
-                                            "y_offset": 0
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
                                         }
                                     }
                                 },
@@ -2247,7 +2247,7 @@
                             "y_offset": -0.27
                         }
                     },
-                    "playerpointinfo_3": {
+                    "playerpointinfo_0": {
                         "type": "Node",
                         "format": {
                             "type": "Anchored"

@@ -250,7 +250,7 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
         std::shared_ptr<scene2::SceneNode> wholenode = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii));
         std::vector<std::shared_ptr<scene2::SceneNode>> elements;
         for (int jj = 9; jj >= 0; jj--) {
-            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_points_emptypoint_" + std::to_string(jj));
+            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_emptypoints_emptypoint_" + std::to_string(jj));
             elements.push_back(temp);
             std::shared_ptr<scene2::SceneNode> temp2 = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_fullpoints_fullpoint_" + std::to_string(jj));
             elements.push_back(temp2);

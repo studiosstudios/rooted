@@ -194,6 +194,9 @@ void RootedApp::preUpdate(float dt) {
         if(AudioEngine::get()->getState("menu") != AudioEngine::State::PLAYING){
             AudioEngine::get()->play("menu", source, true);
         }
+        else if(AudioEngine::get()->getState("menu") == AudioEngine::State::PLAYING){
+            AudioEngine::get()->setVolume("menu", _mainmenu.musicSliderVal()/100.0f);
+        }
         _haptics = _mainmenu.hapticsTrue();
         _swipe = _mainmenu.swipeTrue();
     }
@@ -216,6 +219,9 @@ void RootedApp::preUpdate(float dt) {
         else if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
             AudioEngine::get()->play("game", source, true);
         }
+        else if(AudioEngine::get()->getState("game") == AudioEngine::State::PLAYING){
+            AudioEngine::get()->setVolume("game", _mainmenu.musicSliderVal()/100.0f);
+        }
     }
     else if (_status == TUTORIAL){
         _tutorial.preUpdate(dt);
@@ -229,6 +235,9 @@ void RootedApp::preUpdate(float dt) {
         std::shared_ptr<Sound> source = _assets->get<Sound>(TUTORIAL_MUSIC);
         if(AudioEngine::get()->getState("tutorial") != AudioEngine::State::PLAYING){
             AudioEngine::get()->play("tutorial", source, true);
+        }
+        else if(AudioEngine::get()->getState("tutorial") == AudioEngine::State::PLAYING){
+            AudioEngine::get()->setVolume("tutorial", _mainmenu.musicSliderVal()/100.0f);
         }
     }
     if(_network){

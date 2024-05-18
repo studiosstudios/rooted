@@ -37,6 +37,7 @@ public:
     
     bool hapticsTrue();
     bool swipeTrue();
+    float musicSliderVal();
 
 protected:
     /** The asset manager for this scene. */

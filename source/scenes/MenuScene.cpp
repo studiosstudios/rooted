@@ -298,3 +298,7 @@ bool MenuScene::hapticsTrue(){
 bool MenuScene::swipeTrue(){
     return _swipedirbutton->isDown();
 }
+
+float MenuScene::musicSliderVal(){
+    return _musicslider->getValue();
+}

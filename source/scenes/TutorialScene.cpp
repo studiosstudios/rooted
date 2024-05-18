@@ -86,6 +86,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
+    
+//    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale * std::max(dimen.width/SCENE_WIDTH, dimen.height/SCENE_HEIGHT);
     addChild(_rootnode);
     addChild(_uinode);
@@ -202,8 +204,8 @@ void TutorialScene::reset() {
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
-    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    _cam.setZoom(zoom);
+//    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
+    float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale * std::max(dimen.width/SCENE_WIDTH, dimen.height/SCENE_HEIGHT);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
     _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
@@ -828,7 +830,7 @@ void TutorialScene::postUpdate(float remain) {
                 _time = 0;
                 
                 pauseNonEssentialAudio();
-                std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+                std::shared_ptr<Sound> source = _assets->get<Sound>(C_WIN_MUSIC);
                 AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
                 _ui.setWinVisible(true);
             }
@@ -871,7 +873,7 @@ void TutorialScene::postUpdate(float remain) {
                 _input->pause();
                 _state = FARMERWIN;
                 pauseNonEssentialAudio();
-                std::shared_ptr<Sound> source = _assets->get<Sound>(WIN_MUSIC);
+                std::shared_ptr<Sound> source = _assets->get<Sound>(C_WIN_MUSIC);
                 AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
                 _ui.setWinVisible(true);
             }

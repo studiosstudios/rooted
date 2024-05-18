@@ -471,15 +471,27 @@
             "stream":   true,
             "volume":   0.5
         },
-        "win": {
+        "carrotsWin": {
             "type":     "sample",
-            "file":     "sounds/victory.ogg",
+            "file":     "sounds/carrot-victory.ogg",
             "stream":   true,
             "volume":   1
         },
-        "lose": {
+        "carrotsLose": {
             "type":     "sample",
-            "file":     "sounds/lose.ogg",
+            "file":     "sounds/carrot-lose.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerWin": {
+            "type":     "sample",
+            "file":     "sounds/farmer-victory.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerLose": {
+            "type":     "sample",
+            "file":     "sounds/farmer-lose.ogg",
             "stream":   true,
             "volume":   1
         },
@@ -522,7 +534,12 @@
         "dash": {
             "type":     "sample",
             "file":     "sounds/dash.wav",
-            "volume":   0.5
+            "volume":   0.2
+        },
+        "capture": {
+            "type":     "sample",
+            "file":     "sounds/pop.ogg",
+            "volume":   1
         }
     },
     "fonts": {

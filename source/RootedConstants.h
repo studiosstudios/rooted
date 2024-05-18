@@ -74,10 +74,14 @@
 #define RESET_MESSAGE    "RESETTING"
 /** The color of the reset message */
 #define RESET_COLOR      Color4::YELLOW
-/** The key the victory game music */
-#define WIN_MUSIC       "win"
-/** The key the failure game music */
-#define LOSE_MUSIC      "lose"
+/** The key the carrot victory game music */
+#define C_WIN_MUSIC       "carrotsWin"
+/** The key the carrot failure game music */
+#define C_LOSE_MUSIC      "carrotsLose"
+/** The key the farmer victory game music */
+#define F_WIN_MUSIC       "farmerWin"
+/** The key the farmer failure game music */
+#define F_LOSE_MUSIC      "farmerLose"
 /** The sound effect for firing a bullet */
 #define PEW_EFFECT      "pew"
 /** The sound effect for a bullet collision */

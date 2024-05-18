@@ -658,7 +658,7 @@
         "emptypoint" : {
             "file" : "textures/emptypoint.png"
         },
-        "filledpoint" : {
+        "fullpoint" : {
             "file" : "textures/filledpoint.png"
         },
         "speechbubble": {
@@ -682,8 +682,26 @@
         "carrotbutton1": {
             "file": "textures/carrotbutton1.png"
         },
+        "Big_Icon_1" : {
+            "file" : "textures/Big_Icon_1.png"
+        },
+        "Big_Icon_2" : {
+            "file" : "textures/Big_Icon_2.png"
+        },
+        "Big_Icon_3" : {
+            "file" : "textures/Big_Icon_3.png"
+        },
+        "Big_Icon_4" : {
+            "file" : "textures/Big_Icon_4.png"
+        },
+        "statsboard": {
+            "file": "textures/statsboard.png"
+        },
         "topback": {
             "file": "textures/topback.png"
+        },
+        "rabbit" : {
+            "file" : "textures/rabbit.png"
         },
         "optionsinfobkg": {
             "file": "textures/optionsinfobkg.png"
@@ -885,6 +903,10 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 45
         },
+        "gaeguBold48": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 48
+        },
         "gaeguBold50": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 50
@@ -908,6 +930,10 @@
         "gaeguBold75": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 75
+        },
+        "gaeguBold80": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 80
         },
         "gaeguBold90": {
             "file": "fonts/Gaegu-Bold.ttf",
@@ -943,6 +969,10 @@
         "postround": "widgets/postround.json",
         "playerpoints" : "widgets/playerpoints.json",
         "playerpointinfo" : "widgets/playerpointinfowidget.json",
+        "characterdisplay" : "widgets/characterdisplay.json",
+        "rabbitpreview" : "widgets/rabbitpreview.json",
+        "carrotpreview" : "widgets/carrotpreview.json",
+        "winner" : "widgets/winner.json",
         "optionsmenu": "widgets/optionsmenu.json"
     },
     "scene2s" : {
@@ -992,6 +1022,30 @@
             "type"   : "Widget",
             "data"   : {
                 "key"     : "loadingscreen"
+            }
+        },
+        "characterdisplay" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "characterdisplay"
+            }
+        },
+        "rabbitpreview" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "rabbitpreview"
+            }
+        },
+        "carrotpreview" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "carrotpreview"
+            }
+        },
+        "winner" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "carrotpreview"
             }
         },
         "optionsmenu": {

@@ -89,12 +89,14 @@ protected:
     string _farmerUUID;
     
     int _seed;
-    
+    /** Whether we are displaying the game over screen or not */
     bool _isGameOverScreen;
-    
+    /** Which round is this game at */
     int _round;
-    
+    /** When the round started */
     cugl::Timestamp _startTime;
+    /** The number of points each player has */
+    std::vector<int> _points;
 
     int _numFarmers;
     
@@ -104,13 +106,13 @@ protected:
     
     int _numPlanting;
     
+    int _ready;
+
     bool _haptics;
 
     bool _swipe;
     
     float _soundScale;
-//    std::map<std::shared_ptr<EntityModel>
-
 
 #pragma mark Internal Object Management
 
@@ -327,6 +329,17 @@ public:
      * @param remain    The amount of time (in seconds) last fixedUpdate
      */
     void postUpdate(float remain);
+    
+    /**
+     * Sets whether the scene is currently active
+     *
+     * This method should be used to toggle all the UI elements.  Buttons
+     * should be activated when it is made active and deactivated when
+     * it is not.
+     *
+     * @param value whether the scene is currently active
+     */
+    virtual void setActive(bool value) override;
 
     /**
      * Activates world collision callbacks on the given physics world and sets the collision callbacks
@@ -340,12 +353,18 @@ public:
      */
     void reset();
     
+    /**
+     * Resets all parameters of the game
+     */
+    void gameReset();
     
     void unload();
 
     void render(const std::shared_ptr<SpriteBatch> &batch);
     
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
+    
+    int getCarrotsLeft();
     
     void setHaptics(bool b) {
         _haptics = b;
@@ -359,6 +378,21 @@ public:
         _soundScale = f;
         _action.setSoundScale(f);
     }
+
+    // READY EVENT AS AN INNER CLASS BECAUSE WE DON'T NEED THIS EVENT OTHERWISE
+    class ReadyEvent : public NetEvent {
+    public:
+        std::shared_ptr<NetEvent> newEvent() override {
+            return std::make_shared<ReadyEvent>();
+        }
+        static std::shared_ptr<NetEvent> alloc() {
+            return std::make_shared<ReadyEvent>();
+        }
+        std::vector<std::byte> serialize() override {
+            return std::vector<std::byte>();
+        }
+        void deserialize(const std::vector<std::byte>& data) override { }
+    };
 };
 
 #endif /* RootedGameScene_h */

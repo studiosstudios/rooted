@@ -69,10 +69,10 @@
                         0.4
                     ],
                     "visible": true,
-                    "upnode": "next"
+                    "upnode": "bluearrowbutton"
                 },
                 "children": {
-                    "next": {
+                    "bluearrowbutton": {
                         "type": "Image",
                         "data": {
                             "texture": "bluearrowbutton",
@@ -256,26 +256,2649 @@
                         0.5
                     ],
                     "size": [
-                        578,
-                        420
+                        550,
+                        513
                     ],
                     "angle": 0,
                     "position": [
-                        223,
-                        118
+                        241,
+                        44
                     ],
                     "visible": true
                 },
                 "children": {
-                    "playerpointinfo_1": {
-                        "type": "Widget",
+                    "playerpointinfo_3": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
                         "data": {
-                            "key" : "playerpointinfo",
-                            "variables" : {
-                                "playernum" : "1",
-                                "visible" : true
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                548,
+                                101
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                1
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "fullpoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "fullpoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "emptypoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "emptypoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "Big_Icon_4": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "Big_Icon_2",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        47.5,
+                                        100.75
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        2,
+                                        0.25
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
                             }
-                        }, 
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": -0.8
+                        }
+                    },
+                    "playerpointinfo_2": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                548,
+                                101
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                138
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "fullpoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "fullpoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "emptypoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "emptypoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "Big_Icon_3": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "Big_Icon_1",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        45.5,
+                                        101.5
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        4,
+                                        -0.5
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.01,
+                                    "y_offset": 0
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": -0.53
+                        }
+                    },
+                    "playerpointinfo_1": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                548,
+                                101
+                            ],
+                            "angle": 0,
+                            "position": [
+                                2,
+                                275
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "fullpoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "fullpoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "emptypoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "emptypoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "Big_Icon_2": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "Big_Icon_4",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        50.25,
+                                        101
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": -0.27
+                        }
+                    },
+                    "playerpointinfo_0": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                548,
+                                101
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                412
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "fullpoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "fullpoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "fullpoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "fullpoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "fullpoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "emptypoints": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        411,
+                                        33
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        137,
+                                        34
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "emptypoint_0": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                379,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.92,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                339.84,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.83,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                297.36,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.72,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                254.88,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.62,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                212.4,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.52,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_5": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                169.92,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.41,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_6": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                127.44,
+                                                0.47
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.31,
+                                            "y_offset": -0.02
+                                        }
+                                    },
+                                    "emptypoint_7": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                84.96,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.21,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_8": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                42.48,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.1,
+                                            "y_offset": -0.03
+                                        }
+                                    },
+                                    "emptypoint_9": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "emptypoint",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                31.97,
+                                                31.97
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.03
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.03
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.25,
+                                    "y_offset": -0.34
+                                }
+                            },
+                            "Big_Icon_1": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "Big_Icon_3",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        54.75,
+                                        101
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            }
+                        },
                         "layout": {
                             "x_anchor": "left",
                             "y_anchor": "top",
@@ -283,78 +2906,14 @@
                             "x_offset": 0,
                             "y_offset": 0
                         }
-                    },
-                    "playerpointinfo_2": {
-                        "type": "Widget",
-                        "data" : {
-                            "key" : "playerpointinfo",
-                            "variables" : {
-                                "playernum" : "2"
-                            }
-                        },
-                        "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
-                            "absolute": false,
-                            "x_offset": 0,
-                            "y_offset": -0.21
-                        }
-                    },
-                    "playerpointinfo_3": {
-                        "type": "Widget",
-                        "data" : {
-                            "key" : "playerpointinfo",
-                            "variables" : {
-                                "playernum" : "3"
-                            }
-                        },
-                        "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
-                            "absolute": false,
-                            "x_offset": 0,
-                            "y_offset": -0.41
-                        }
-                    },
-                    "playerpointinfo_4": {
-                        "type": "Widget",
-                        "data" : {
-                            "key" : "playerpointinfo",
-                            "variables" : {
-                                "playernum" : "4"
-                            }
-                        },
-                        "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
-                            "absolute": false,
-                            "x_offset": 0,
-                            "y_offset": -0.62
-                        }
-                    },
-                    "playerpointinfo_5": {
-                        "type": "Widget",
-                        "data" : {
-                            "key" : "playerpointinfo",
-                            "variables" : {
-                                "playernum" : "5"
-                            }
-                        },
-                        "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
-                            "absolute": false,
-                            "x_offset": 0,
-                            "y_offset": -0.83
-                        }
                     }
                 },
                 "layout": {
-                    "x_anchor": "fill",
+                    "x_anchor": "center",
                     "y_anchor": "fill",
                     "absolute": false,
-                    "x_offset": 0.22,
-                    "y_offset": 0.2
+                    "x_offset": 0,
+                    "y_offset": 0.08
                 }
             }
         }

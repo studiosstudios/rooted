@@ -60,42 +60,42 @@
                         1
                     ],
                     "size": [
-                        778,
-                        444
+                        683,
+                        190
                     ],
                     "angle": 0,
                     "position": [
-                        14,
-                        66
+                        170,
+                        226
                     ],
                     "visible": true
                 },
                 "children": {
-                    "postroundstatbkg": {
+                    "statsboard": {
                         "type": "Image",
                         "data": {
-                            "texture": "postroundstatbkg",
+                            "texture": "statsboard",
                             "anchor": [
                                 0,
-                                0.5
+                                1
                             ],
                             "size": [
-                                777.6,
-                                444
+                                972,
+                                555
                             ],
                             "angle": 0,
                             "position": [
-                                0,
-                                0
+                                -144,
+                                -182
                             ],
                             "visible": true
                         },
                         "layout": {
                             "x_anchor": "left",
-                            "y_anchor": "fill",
+                            "y_anchor": "top",
                             "absolute": false,
-                            "x_offset": 0,
-                            "y_offset": 0
+                            "x_offset": -0.21,
+                            "y_offset": 1.07
                         }
                     },
                     "rootedcarrots": {
@@ -109,122 +109,231 @@
                                 1
                             ],
                             "size": [
-                                319,
-                                110
+                                444,
+                                217
                             ],
                             "angle": 0,
                             "position": [
-                                250,
-                                45
+                                120,
+                                -140
                             ],
                             "visible": true
                         },
                         "children": {
-                            "carrot": {
-                                "type": "Image",
+                            "carroticons": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
                                 "data": {
-                                    "texture": "carrotsingle",
                                     "anchor": [
                                         0,
                                         1
                                     ],
                                     "size": [
-                                        49,
-                                        110
+                                        405,
+                                        162.4
                                     ],
                                     "angle": 0,
                                     "position": [
-                                        0,
-                                        0
+                                        19,
+                                        -0.4
                                     ],
                                     "visible": true
+                                },
+                                "children": {
+                                    "Big_Icon_4": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "Big_Icon_2",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                76,
+                                                161.2
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                329,
+                                                1.2
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.81,
+                                            "y_offset": 0
+                                        }
+                                    },
+                                    "Big_Icon_3": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "Big_Icon_1",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                72.8,
+                                                162.4
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                227,
+                                                0
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.56,
+                                            "y_offset": 0
+                                        }
+                                    },
+                                    "Big_Icon_2": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "Big_Icon_4",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                80.4,
+                                                161.6
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                117,
+                                                0.8
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.29,
+                                            "y_offset": 0
+                                        }
+                                    },
+                                    "Big_Icon_1": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "Big_Icon_3",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                87.6,
+                                                161.6
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                0,
+                                                0.8
+                                            ],
+                                            "visible": false
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": 0
+                                        }
+                                    }
                                 },
                                 "layout": {
                                     "x_anchor": "left",
                                     "y_anchor": "top",
                                     "absolute": false,
-                                    "x_offset": 0,
+                                    "x_offset": 0.04,
+                                    "y_offset": -0.25
+                                }
+                            },
+                            "rootedcarrots": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        419,
+                                        63
+                                    ],
+                                    "position": [
+                                        25,
+                                        154
+                                    ],
+                                    "angle": 0,
+                                    "visible": false,
+                                    "font": "gaeguBold50",
+                                    "text": "YOU WERE ROOTED!",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "top",
+                                    "halign": "left"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.06,
                                     "y_offset": 0
                                 }
                             },
-                            "carrot_1": {
-                                "type": "Image",
+                            "nonerooted": {
+                                "type": "Label",
                                 "data": {
-                                    "texture": "carrotsingle",
                                     "anchor": [
                                         0,
                                         1
                                     ],
                                     "size": [
-                                        49,
-                                        110
+                                        318,
+                                        63
+                                    ],
+                                    "position": [
+                                        76,
+                                        154
                                     ],
                                     "angle": 0,
-                                    "position": [
-                                        90,
-                                        0
-                                    ],
-                                    "visible": true
-                                },
-                                "layout": {
-                                    "x_anchor": "left",
-                                    "y_anchor": "top",
-                                    "absolute": false,
-                                    "x_offset": 0.28,
-                                    "y_offset": 0
-                                }
-                            },
-                            "carrot_2": {
-                                "type": "Image",
-                                "data": {
-                                    "texture": "carrotsingle",
-                                    "anchor": [
+                                    "visible": true,
+                                    "font": "gaeguBold50",
+                                    "text": "NONE ROOTED!",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
                                         0,
-                                        1
-                                    ],
-                                    "size": [
-                                        49,
-                                        110
-                                    ],
-                                    "angle": 0,
-                                    "position": [
-                                        180,
-                                        0
-                                    ],
-                                    "visible": true
-                                },
-                                "layout": {
-                                    "x_anchor": "left",
-                                    "y_anchor": "top",
-                                    "absolute": false,
-                                    "x_offset": 0.56,
-                                    "y_offset": 0
-                                }
-                            },
-                            "carrot_3": {
-                                "type": "Image",
-                                "data": {
-                                    "texture": "carrotsingle",
-                                    "anchor": [
                                         0,
-                                        1
-                                    ],
-                                    "size": [
-                                        49,
-                                        110
-                                    ],
-                                    "angle": 0,
-                                    "position": [
-                                        270,
+                                        0,
                                         0
                                     ],
-                                    "visible": true
+                                    "valign": "top",
+                                    "halign": "left"
                                 },
+                                "children": {},
                                 "layout": {
                                     "x_anchor": "left",
                                     "y_anchor": "top",
                                     "absolute": false,
-                                    "x_offset": 0.85,
+                                    "x_offset": 0.17,
                                     "y_offset": 0
                                 }
                             }
@@ -233,47 +342,8 @@
                             "x_anchor": "left",
                             "y_anchor": "top",
                             "absolute": false,
-                            "x_offset": 0.32,
-                            "y_offset": -0.65
-                        }
-                    },
-                    "rootedcarrots_2": {
-                        "type": "Label",
-                        "data": {
-                            "anchor": [
-                                0,
-                                1
-                            ],
-                            "size": [
-                                532,
-                                60
-                            ],
-                            "position": [
-                                136,
-                                175
-                            ],
-                            "angle": 0,
-                            "visible": true,
-                            "font": "gaeguBold50",
-                            "text": "ROOTED CARROTS",
-                            "foreground": "#000000ff",
-                            "background": "#00000000",
-                            "padding": [
-                                0,
-                                0,
-                                0,
-                                0
-                            ],
-                            "valign": "top",
-                            "halign": "left"
-                        },
-                        "children": {},
-                        "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
-                            "absolute": false,
-                            "x_offset": 0.17,
-                            "y_offset": -0.47
+                            "x_offset": 0.18,
+                            "y_offset": -0.59
                         }
                     },
                     "babycarrotscount": {
@@ -292,51 +362,12 @@
                             ],
                             "angle": 0,
                             "position": [
-                                136,
-                                239
+                                0,
+                                87
                             ],
                             "visible": true
                         },
                         "children": {
-                            "numbabycarrots": {
-                                "type": "Label",
-                                "data": {
-                                    "anchor": [
-                                        0,
-                                        1
-                                    ],
-                                    "size": [
-                                        29,
-                                        63
-                                    ],
-                                    "position": [
-                                        493,
-                                        0
-                                    ],
-                                    "angle": 0,
-                                    "visible": true,
-                                    "font": "gaeguBold50",
-                                    "text": "0",
-                                    "foreground": "#000000ff",
-                                    "background": "#00000000",
-                                    "padding": [
-                                        0,
-                                        0,
-                                        0,
-                                        0
-                                    ],
-                                    "valign": "top",
-                                    "halign": "right"
-                                },
-                                "children": {},
-                                "layout": {
-                                    "x_anchor": "left",
-                                    "y_anchor": "top",
-                                    "absolute": false,
-                                    "x_offset": 0.94,
-                                    "y_offset": 0
-                                }
-                            },
                             "BABYCARROTS": {
                                 "type": "Label",
                                 "data": {
@@ -350,7 +381,7 @@
                                     ],
                                     "position": [
                                         0,
-                                        0
+                                        -10
                                     ],
                                     "angle": 0,
                                     "visible": true,
@@ -373,41 +404,10 @@
                                     "y_anchor": "top",
                                     "absolute": false,
                                     "x_offset": 0,
-                                    "y_offset": 0
+                                    "y_offset": -0.16
                                 }
-                            }
-                        },
-                        "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
-                            "absolute": false,
-                            "x_offset": 0.17,
-                            "y_offset": -0.32
-                        }
-                    },
-                    "gamelength": {
-                        "type": "Node",
-                        "format": {
-                            "type": "Anchored"
-                        },
-                        "data": {
-                            "anchor": [
-                                0,
-                                1
-                            ],
-                            "size": [
-                                532,
-                                63
-                            ],
-                            "angle": 0,
-                            "position": [
-                                136,
-                                302
-                            ],
-                            "visible": true
-                        },
-                        "children": {
-                            "gametime": {
+                            },
+                            "numbabycarrots": {
                                 "type": "Label",
                                 "data": {
                                     "anchor": [
@@ -415,17 +415,17 @@
                                         1
                                     ],
                                     "size": [
-                                        123,
-                                        54
+                                        29,
+                                        63
                                     ],
                                     "position": [
-                                        399,
-                                        4
+                                        654,
+                                        -10
                                     ],
                                     "angle": 0,
                                     "visible": true,
                                     "font": "gaeguBold50",
-                                    "text": "0:00",
+                                    "text": "000",
                                     "foreground": "#000000ff",
                                     "background": "#00000000",
                                     "padding": [
@@ -442,8 +442,78 @@
                                     "x_anchor": "left",
                                     "y_anchor": "top",
                                     "absolute": false,
-                                    "x_offset": 0.75,
-                                    "y_offset": -0.08
+                                    "x_offset": 1.25,
+                                    "y_offset": -0.16
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": -0.21
+                        }
+                    },
+                    "gamelength": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                683,
+                                63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                139
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "gametime": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        300,
+                                        63
+                                    ],
+                                    "position": [
+                                        579,
+                                        0
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold50",
+                                    "text": "0000:00",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "top",
+                                    "halign": "right"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.56,
+                                    "y_offset": 0
                                 }
                             },
                             "GAMELENGTH": {
@@ -490,30 +560,30 @@
                             "x_anchor": "left",
                             "y_anchor": "top",
                             "absolute": false,
-                            "x_offset": 0.17,
-                            "y_offset": -0.18
+                            "x_offset": 0,
+                            "y_offset": 0.06
                         }
                     },
-                    "roundnum": {
+                    "ROUNDNUM": {
                         "type": "Label",
                         "data": {
                             "anchor": [
-                                0,
+                                0.5,
                                 1
                             ],
                             "size": [
-                                334,
-                                79
+                                222,
+                                75
                             ],
                             "position": [
-                                236,
-                                365
+                                231,
+                                217
                             ],
                             "angle": 0,
                             "visible": true,
-                            "font": "gaeguBold65",
+                            "font": "gaeguBold60",
                             "text": "ROUND 1",
-                            "foreground": "#ffffffff",
+                            "foreground": "#000000ff",
                             "background": "#00000000",
                             "padding": [
                                 0,
@@ -521,16 +591,16 @@
                                 0,
                                 0
                             ],
-                            "valign": "middle",
-                            "halign": "center"
+                            "valign": "top",
+                            "halign": "left"
                         },
                         "children": {},
                         "layout": {
-                            "x_anchor": "left",
+                            "x_anchor": "center",
                             "y_anchor": "top",
                             "absolute": false,
-                            "x_offset": 0.3,
-                            "y_offset": 0
+                            "x_offset": 0,
+                            "y_offset": 0.6
                         }
                     }
                 },
@@ -538,8 +608,8 @@
                     "x_anchor": "left",
                     "y_anchor": "top",
                     "absolute": false,
-                    "x_offset": 0.01,
-                    "y_offset": -0.11
+                    "x_offset": 0.17,
+                    "y_offset": -0.28
                 }
             },
             "next": {
@@ -553,13 +623,13 @@
                         1
                     ],
                     "size": [
-                        197.4,
-                        117.6
+                        157.92,
+                        94.08
                     ],
                     "angle": 0,
                     "position": [
-                        815,
-                        7.4
+                        866,
+                        -0.08
                     ],
                     "visible": true,
                     "upnode": "bluearrowbutton"
@@ -574,8 +644,8 @@
                                 1
                             ],
                             "size": [
-                                197.4,
-                                117.6
+                                157.92,
+                                94.08
                             ],
                             "angle": 0,
                             "position": [
@@ -596,20 +666,20 @@
                         "type": "Label",
                         "data": {
                             "anchor": [
-                                0,
-                                1
+                                0.5,
+                                0.5
                             ],
                             "size": [
-                                129,
-                                75
+                                103,
+                                60
                             ],
                             "position": [
-                                23,
-                                21.599998474121094
+                                18.400001525878906,
+                                17.280000686645508
                             ],
                             "angle": 0,
                             "visible": true,
-                            "font": "gaeguBold60",
+                            "font": "gaeguBold48",
                             "text": "NEXT",
                             "foreground": "#ffffffff",
                             "background": "#00000000",
@@ -624,11 +694,11 @@
                         },
                         "children": {},
                         "layout": {
-                            "x_anchor": "left",
-                            "y_anchor": "top",
+                            "x_anchor": "fill",
+                            "y_anchor": "fill",
                             "absolute": false,
                             "x_offset": 0.12,
-                            "y_offset": -0.18
+                            "y_offset": 0.15
                         }
                     }
                 },
@@ -636,8 +706,8 @@
                     "x_anchor": "left",
                     "y_anchor": "top",
                     "absolute": false,
-                    "x_offset": 0.8,
-                    "y_offset": -0.78
+                    "x_offset": 0.85,
+                    "y_offset": -0.84
                 }
             }
         }

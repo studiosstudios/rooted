@@ -153,6 +153,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     }
     
     _network->attachEventType<ResetEvent>();
+    _network->attachEventType<ReadyEvent>();
     
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
@@ -170,14 +171,21 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _cam.setZoom(beginning_zoom);
     _cam.setPosition(_map->getCharacter()->getPosition() * _scale);
     
-    // TODO: figure out a way to separate resetting for a round and for a game
     _round = 1;
     _startTime = Timestamp();
-
+    
+    // using a vector because the positions should be the same each time
+    // i.e. bunny, then each of the carrots
+    for (int i = 0; i < _map->getPlayers().size(); i++) {
+        _points.push_back(0);
+    }
+        
+    _ready = 0;
+    
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
-
+        
     return true;
 }
 
@@ -308,8 +316,21 @@ void GameScene::reset() {
     setFailure(false);
     
     _isGameOverScreen = false;
+    
     _round += 1;
     _startTime = Timestamp();
+    
+    _ready = 0;
+    
+    _ui.setEndVisible(false);
+}
+
+void GameScene::gameReset() {
+    reset();
+    // reset round and points
+    _round = 1;
+    // reset points
+    std::fill(_points.begin(), _points.end(), 0);
 }
 
 #pragma mark -
@@ -415,6 +436,9 @@ void GameScene::fixedUpdate(float step) {
         if(auto collectedRockEvent = std::dynamic_pointer_cast<CollectedRockEvent>(e)){
             _action.processCollectedRockEvent(collectedRockEvent);
         }
+        if(auto readyEvent = std::dynamic_pointer_cast<ReadyEvent>(e)) {
+            _ready += 1;
+        }
     }
     if (_countdown >= 0 && _network->getNumPlayers() > 1){
         return;
@@ -486,17 +510,8 @@ void GameScene::fixedUpdate(float step) {
 void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
     
-    // TEMP CODE FOR OPEN BETA - CJ
-    int i = _network->getNumPlayers() - 1;
-    for (auto it = _map->getPlantingSpots().begin(); it != _map->getPlantingSpots().end(); it++) {
-        if ((*it)->getCarrotPlanted()) {
-            i--;
-        }
-    }
-    // TEMP CODE FOR OPEN BETA
-    
-    _ui.update(remain, _cam.getCamera(), i, _map->getBabyCarrots().size(), _debug, _character->canDash());
-    
+    _ui.update(remain, _cam.getCamera(), getCarrotsLeft(), _map->getBabyCarrots().size(), _debug, _character->canDash());
+        
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
@@ -504,15 +519,30 @@ void GameScene::postUpdate(float remain) {
         if (!_isGameOverScreen) {
             _isGameOverScreen = true;
             
+            // get the vector of carrots that have been rooted
+            vector<int> carrots;
+            for (auto it = _map->getCarrots().begin(); it != _map->getCarrots().end(); it++) {
+                if ((*it)->isRooted()) {
+                    carrots.push_back(_map->getCarrotTypeForUUID((*it)->getUUID()));
+                }
+            }
+            
             // set how the end screen should display
-            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), _map->getCarrots().size());
+            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), carrots, _points, _map->getCarrotTypeForUUID(_character->getUUID()));
             
             // display end scene
             _ui.setEndVisible(true);
         }
-        
-        if(_ui.isNextRound()){
+
+        if (_ready == _network->getNumPlayers() && _network->isHost()) {
             _network->pushOutEvent(ResetEvent::allocResetEvent());
+            _ready = 0; // need this otherwise it will send out two of these events
+        }
+        
+        if (_ui.getNextRound() == 1){
+            CULog("hello pushing out event");
+            _ui.setNextRound(2);
+            _network->pushOutEvent(ReadyEvent::alloc());
         }
         else{
             //do nothing and wait for host to reset
@@ -531,6 +561,9 @@ void GameScene::postUpdate(float remain) {
             }
         }
         if(farmerWin){
+            // add points for farmer
+            _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 3;
+
             if(_character->getUUID() == _farmerUUID){
                 setComplete(true);
             }
@@ -545,6 +578,12 @@ void GameScene::postUpdate(float remain) {
             }
         }
         if(carrotWin){
+            // add points for carrot
+            for (int ii = 0; ii < _points.size(); ii++) {
+                if (ii != _map->getCarrotTypeForUUID(_farmerUUID)) {
+                    _points[ii] += 1;
+                }
+            }
             if(_character->getUUID() == _farmerUUID){
                 setFailure(true);
             }
@@ -675,7 +714,7 @@ void GameScene::render(const std::shared_ptr<SpriteBatch> &batch) {
 //    _map->getWheatScene()->renderToScreen(1.0); //for debugging the wheat texture
 }
 
-void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){
+void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event) {
     _network->disablePhysics();
     while(_network->isInAvailable()){
         _network->popInEvent();
@@ -683,3 +722,38 @@ void GameScene::processResetEvent(const std::shared_ptr<ResetEvent>& event){
     reset();
 }
 
+int GameScene::getCarrotsLeft() {
+    int i = _network->getNumPlayers() - 1;
+    for (auto it = _map->getPlantingSpots().begin(); it != _map->getPlantingSpots().end(); it++) {
+        if ((*it)->getCarrotPlanted()) {
+            i--;
+        }
+    }
+    return i;
+}
+
+/**
+ * Sets whether the scene is currently active
+ *
+ * This method should be used to toggle all the UI elements.  Buttons
+ * should be activated when it is made active and deactivated when
+ * it is not.
+ *
+ * @param value whether the scene is currently active
+ */
+void GameScene::setActive(bool value) {
+    if (isActive() != value) {
+        Scene2::setActive(value);
+        if (value) {
+            // just reset the scene
+            gameReset();
+        } else {
+            // stop everything that we don't want in this scene
+            _map->clearRootNode();
+            _map->dispose();
+            _ui.dispose();
+            _collision.dispose();
+            _action.dispose();
+        }
+    }
+}

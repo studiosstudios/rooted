@@ -45,6 +45,16 @@ void Farmer::setMovement(Vec2 movement) {
     EntityModel::setMovement(movement);
 }
 
+EntityModel::DirectionalSprites Farmer::getDirectionalSpritesForState(EntityModel::EntityState state) {
+    switch (state) {
+        case CARRYING:
+            return _baseCarrySprites;
+            break;
+        default:
+            return EntityModel::getDirectionalSpritesForState(state);
+    }
+}
+
 
 void Farmer::updateCurAnimDurationForState() {
     switch (_state) {

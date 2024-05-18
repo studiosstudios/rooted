@@ -717,6 +717,8 @@ public:
     
     void stun();
     
+    virtual DirectionalSprites getDirectionalSpritesForState(EntityState state);
+    
     /** If useMovement is true, use the current EntityModel's \_movement argument. If false, use \_velocity. */
     void updateSprite(float dt, bool useMovement);
     

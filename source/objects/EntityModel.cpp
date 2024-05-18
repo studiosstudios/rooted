@@ -184,6 +184,28 @@ void EntityModel::setMovement(Vec2 movement) {
     _movement = movement;
 }
 
+EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(EntityState state) {
+    switch (state) {
+        case STANDING:
+        case SNEAKING:
+        case WALKING:
+        case STUNNED:  // TBI
+        case CARRYING: // This is handled in Farmer's method, but otherwise we will use the walk sprites
+        case ROOTING:  // TBI
+        case CAUGHT:   // TBI
+        case ROOTED:   // TBI
+        case UNROOTING:// TBI
+            return _walkSprites;
+            break;
+        case RUNNING:
+            return _runSprites;
+            break;
+        case DASHING:
+            return _dashSprites;
+            break;
+    }
+}
+
 void EntityModel::updateSprite(float dt, bool useMovement) {
     EntityFacing face;
     if (_state != DASHING) {
@@ -194,27 +216,8 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
     }
     if (!((_prevState == _state) && (_facing == face))) {
         
-        DirectionalSprites ds;
         // Get correct DirectionalSprites
-        switch (_state) {
-            case STANDING:
-            case SNEAKING:
-            case WALKING:
-            case STUNNED:
-            case CARRYING:
-            case ROOTING:
-            case CAUGHT:
-            case ROOTED:
-            case UNROOTING:
-                ds = _walkSprites;
-                break;
-            case RUNNING:
-                ds = _runSprites;
-                break;
-            case DASHING:
-                ds = _dashSprites;
-                break;
-        }
+        DirectionalSprites ds = getDirectionalSpritesForState(_state);
         
         std::shared_ptr<cugl::scene2::SpriteNode> sprite;
         

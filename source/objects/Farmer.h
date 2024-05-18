@@ -65,6 +65,8 @@ public:
         _baseCarrySprites = sprites;
     }
     
+    DirectionalSprites getDirectionalSpritesForState(EntityState state) override;
+    
     DirectionalSprites getSpritesForState() override {
         return _baseCarrySprites;
     }

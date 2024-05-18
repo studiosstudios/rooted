@@ -645,7 +645,7 @@ void Map::spawnFarmers() {
         farmer->setWalkSprites(EntityModel::DirectionalSprites(farmerNorthWalkNode, farmerNorthEastWalkNode, farmerEastWalkNode, farmerSouthEastWalkNode, farmerSouthWalkNode));
         farmer->setRunSprites(EntityModel::DirectionalSprites(farmerNorthRunNode, farmerNorthEastRunNode, farmerEastRunNode, farmerSouthEastRunNode, farmerSouthRunNode));
         farmer->setDashSprites(EntityModel::DirectionalSprites(farmerNorthDashNode, farmerEastDashNode, farmerEastDashNode, farmerEastDashNode, farmerSouthDashNode));
-
+        farmer->setBaseCarrySprites(EntityModel::DirectionalSprites(carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode, carrotfarmerNode));
         
         farmer->setNormalNode(farmerSouthWalkNode);
         farmer->setCaptureNode(carrotfarmerNode);
@@ -849,49 +849,41 @@ void Map::spawnCarrots() {
                                                                      carrotEastWalkSprite, 3, 4, 11);
         carrotEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotEastWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotEastWalkNode->setVisible(false);
         
         auto carrotNorthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotNorthEastWalkSprite, 3, 4, 11);
         carrotNorthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotNorthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotNorthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotNorthEastWalkNode->setVisible(false);
         
         auto carrotSouthEastWalkNode = scene2::SpriteNode::allocWithSheet(carrotSouthEastWalkSprite, 3, 4, 11);
         carrotSouthEastWalkNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotSouthEastWalkNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotSouthEastWalkNode->setAnchor(Vec2(0.5, 0.25));
         carrotSouthEastWalkNode->setVisible(false);
         
         auto carrotSouthDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_SOUTH_DASH_SPRITE), 1, 5);
         carrotSouthDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotSouthDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotSouthDashNode->setAnchor(Vec2(0.5, 0.25));
         carrotSouthDashNode->setVisible(false);
         
         auto carrotNorthDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_NORTH_DASH_SPRITE), 1, 5);
         carrotNorthDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotNorthDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotNorthDashNode->setAnchor(Vec2(0.5, 0.25));
         carrotNorthDashNode->setVisible(false);
         
         auto carrotEastDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_EAST_DASH_SPRITE), 1, 5);
         carrotEastDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotEastDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotEastDashNode->setAnchor(Vec2(0.5, 0.25));
         carrotEastDashNode->setVisible(false);
         
         auto carrotNorthEastDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_NORTHEAST_DASH_SPRITE), 1, 5);
         carrotNorthEastDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotNorthEastDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotNorthEastDashNode->setAnchor(Vec2(0.5, 0.25));
         carrotNorthEastDashNode->setVisible(false);
         
         auto carrotSouthEastDashNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>(CARROT_SOUTHEAST_DASH_SPRITE), 1, 5);
         carrotSouthEastDashNode->setPriority(float(Map::DrawOrder::ENTITIES));
         carrotSouthEastDashNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
-//        carrotSouthEastDashNode->setAnchor(Vec2(0.5, 0.25));
         carrotSouthEastDashNode->setVisible(false);
         
         _entitiesNode->addChild(carrotNorthWalkNode);

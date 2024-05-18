@@ -614,6 +614,51 @@ void GameScene::postUpdate(float remain) {
         }
         else{
             //do nothing and wait for host to reset
+            _action.postUpdate(remain);
+
+            // Since items may be deleted, garbage collect
+            _map->getWorld()->garbageCollect();
+            
+            bool farmerWin = _map->getCarrots().size() > 0;
+            for(auto carrot : _map->getCarrots()){
+                if(!carrot->isRooted()){
+                    farmerWin = false;
+                }
+            }
+            if(farmerWin){
+                // add points for farmer
+                _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 3;
+
+                if(_character->getUUID() == _farmerUUID){
+                    setComplete(true);
+                }
+                else{
+                    setFailure(true);
+                }
+            }
+            bool carrotWin = true;
+            for(auto babyCarrot : _map->getBabyCarrots()){
+                if(!babyCarrot->isCaptured()){
+                    carrotWin = false;
+                }
+            }
+            if(carrotWin){
+                // add points for carrot
+                for (int ii = 0; ii < _points.size(); ii++) {
+                    if (ii != _map->getCarrotTypeForUUID(_farmerUUID)) {
+                        _points[ii] += 1;
+                    }
+                }
+                if(_character->getUUID() == _farmerUUID){
+                    setFailure(true);
+                }
+                else{
+                    setComplete(true);
+                }
+            }
+    //        if(farmerWin || carrotWin){
+    //            _network->disconnect();
+    //        }
         }
     }
     else{

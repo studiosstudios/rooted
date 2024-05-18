@@ -155,7 +155,7 @@ void ActionController::preUpdate(float dt) {
                     closestCarrot = carrot;
                 }
             }
-            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
+            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0 && closestCarrot->hasLivesLeft()){
                 _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
             }
         }
@@ -398,6 +398,7 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
             }
             carrot->setPosition(event->getFarmerPos());
             carrot->gotRooted();
+            carrot->loseLife();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
                 if(_haptics)
                     Haptics::get()->playContinuous(1.0, 0.3, 0.1);
@@ -419,6 +420,7 @@ void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& ev
     for(auto carrot : _map->getCarrots()){
         if(carrot->getUUID() == event->getUUID()){
             carrot->gotUnrooted();
+            carrot->loseLife();
             if(carrot->getUUID() == _map->getCharacter()->getUUID()){
                 if(_haptics)
                     Haptics::get()->playContinuous(1.0, 0.3, 0.1);

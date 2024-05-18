@@ -24,6 +24,7 @@ bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     _isCaptured = false;
     _isRooted = false;
     _numBabyCarrots = 0;
+    _lives = 3;
     dashMag = CARROT_DASH_MAG;
     dashTimerLength = CARROT_DASH_TIMER;
     dashCooldownLength = CARROT_DASH_COOLDOWN;

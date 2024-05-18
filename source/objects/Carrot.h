@@ -18,6 +18,8 @@ private:
     bool _isRooted;
     /** number of baby carrots this carrot has caught so far */
     int _numBabyCarrots;
+    /** number of times this carrot can be rooted */
+    int _lives;
     
     // Animation
     float walkAnimDuration = 1.0f;
@@ -85,6 +87,10 @@ public:
     bool isRooted() { return _state == ROOTED; };
     
     bool isCaptured() { return _state == CAUGHT; };
+    
+    bool hasLivesLeft() { return _lives > 0; }
+    
+    void loseLife() { _lives = _lives - 1; }
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
     

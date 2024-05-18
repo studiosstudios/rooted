@@ -81,7 +81,6 @@ void Collectible::createFixtures() {
     fixturedef.density = 2.0;
     _collidername = "collider";
     fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
-    fixturedef.restitution = 0;
     _colliderfixture = _body->CreateFixture(&fixturedef);
 }
 

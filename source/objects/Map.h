@@ -127,6 +127,9 @@ private:
     std::vector<std::string> _playerUUIDs;
     std::string _farmerUUID;
     std::string _thisUUID;
+    
+    std::shared_ptr<cugl::JsonValue> _spriteMetadata;
+    std::map<std::string, EntityModel::CarrotType> _playerCarrotTypeMap;
 
     
 public:
@@ -277,6 +280,8 @@ public:
      * position of each entity being drawn and its location in the wheat field.
      */
     void setViewportSize(Size size);
+    
+    EntityModel::CarrotType getCarrotTypeForUUID(string uuid) { return _playerCarrotTypeMap[uuid]; }
 
 #pragma mark -
 #pragma mark Asset Loading
@@ -381,6 +386,10 @@ private:
      */
     bool readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileSize, int levelHeight);
     
+//    void initEntitySpriteNode(const std::shared_ptr<scene2::SpriteNode>& node);
+    
+    EntityModel::DirectionalSprites initEntityDirectionalSprites(std::string prefix, std::string suffix, float scale = 0.15f);
+    
     /**
      * Adds a boundary box obstacle to the world.
      */
@@ -397,6 +406,7 @@ private:
     void spawnCarrots();
     
     void spawnBabyCarrots();
+    
 };
 
 #endif //ROOTED_MAP_H

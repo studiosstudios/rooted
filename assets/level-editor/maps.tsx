@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.1" name="maps" tilewidth="640" tileheight="360" tilecount="27" columns="0">
+<tileset version="1.10" tiledversion="1.10.1" name="maps" tilewidth="640" tileheight="360" tilecount="28" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="Map">
   <properties>
@@ -188,5 +188,12 @@
    <property name="name" value="unit_br_2"/>
   </properties>
   <image width="640" height="360" source="../textures/maps/unit_br_2.png"/>
+ </tile>
+ <tile id="31" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="tutorial_bottom"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/tutorial_bottom.png"/>
  </tile>
 </tileset>

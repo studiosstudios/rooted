@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="205">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="215">
  <editorsettings>
   <export target="unit_br_2.json" format="json"/>
  </editorsettings>
@@ -43,6 +43,16 @@
   <object id="178" gid="45" x="480" y="32" width="32" height="32"/>
   <object id="179" gid="43" x="0" y="288" width="32" height="32"/>
   <object id="180" gid="42" x="480" y="288" width="32" height="32"/>
+  <object id="205" gid="43" x="96" y="44" width="32" height="32"/>
+  <object id="206" gid="43" x="128" y="44" width="32" height="32"/>
+  <object id="207" gid="43" x="160" y="44" width="32" height="32"/>
+  <object id="208" gid="43" x="192" y="44" width="32" height="32"/>
+  <object id="209" gid="43" x="224" y="44" width="32" height="32"/>
+  <object id="210" gid="43" x="256" y="44" width="32" height="32"/>
+  <object id="211" gid="43" x="288" y="44" width="32" height="32"/>
+  <object id="212" gid="43" x="320" y="44" width="32" height="32"/>
+  <object id="213" gid="43" x="352" y="44" width="32" height="32"/>
+  <object id="214" gid="43" x="384" y="44" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="entities">
   <object id="106" gid="2" x="96" y="128" width="32" height="32"/>
@@ -65,15 +75,5 @@
   <object id="130" gid="3" x="288" y="192" width="32" height="32"/>
   <object id="149" gid="3" x="224" y="128" width="32" height="32"/>
   <object id="133" gid="3" x="352" y="128" width="32" height="32"/>
-  <object id="191" gid="43" x="96" y="44" width="32" height="32"/>
-  <object id="192" gid="43" x="128" y="44" width="32" height="32"/>
-  <object id="193" gid="43" x="160" y="44" width="32" height="32"/>
-  <object id="194" gid="43" x="192" y="44" width="32" height="32"/>
-  <object id="195" gid="43" x="224" y="44" width="32" height="32"/>
-  <object id="196" gid="43" x="256" y="44" width="32" height="32"/>
-  <object id="197" gid="43" x="288" y="44" width="32" height="32"/>
-  <object id="198" gid="43" x="320" y="44" width="32" height="32"/>
-  <object id="200" gid="43" x="352" y="44" width="32" height="32"/>
-  <object id="201" gid="43" x="384" y="44" width="32" height="32"/>
  </objectgroup>
 </map>

@@ -110,7 +110,7 @@ void ActionController::preUpdate(float dt) {
     }
 
     if (_input->didThrowRock() && playerEntity->hasRock()) {
-        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition()-Vec2(0, playerEntity->getHeight()/2), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
         playerEntity->setHasRock(false);
     }
     
@@ -161,7 +161,7 @@ void ActionController::preUpdate(float dt) {
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && carrotEntity->isCaptured()){
             _freeMeter+=2;
-//            std::cout<<"free meter" << _freeMeter << "\n";
+            std::cout<<"free meter" << _freeMeter << "\n";
             if(_freeMeter >= 50){
                 _freeMeter = 0;
                 _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
@@ -260,13 +260,29 @@ float calculateVolume(EntityModel::EntityState state, float distance){
             stateToNum = 4;
             break;
     }
-    return distance == 0 ? stateToNum/4.0 : (stateToNum/(distance*distance))/VOLUME_FACTOR; //needs to be approx a function between 0 and 1
+    if(distance == 0){
+        return stateToNum/4.0;
+    }
+    else if(distance > 0 && distance < 2){
+        return stateToNum/4.0;
+    }
+    else if(distance >= 2 && distance < 4){
+        return stateToNum/5.0;
+    }
+    else if(distance >= 4 && distance < 6){
+        return stateToNum/7.0;
+    }
+    else{
+        return stateToNum/10.0;
+    }
+//    return distance == 0 ? stateToNum/4.0 : (stateToNum/(distance*distance))/VOLUME_FACTOR; //needs to be approx a function between 0 and 1
 }
 
 void ActionController::playRustling(std::shared_ptr<EntityModel> player, float distance, bool isBarrot){
     std::shared_ptr<Sound> source = _assets->get<Sound>(RUSTLE_MUSIC);
+//    std::cout<<"position: "<<_map->getFarmers().at(0)->getPosition().x << "\n";
     float newVolume;
-    if(distance > 20 || (player != nullptr && !player->isInWheat())){
+    if(distance > 12 || (player != nullptr && !player->isInWheat())){
         newVolume = 0;
     }
     else {
@@ -320,23 +336,27 @@ void ActionController::updateRustlingNoise(){
         playRustling(farmerEntity, distanceFromCharacter, false);
 //        std::cout << "bunny state: " << farmerEntity->getEntityState() << "\n";
     }
-    float closestBarrot = 21;
-    int numBarrotsClose = 0;
+    float closestBarrot = 13;
+    float numBarrotsClose = 0;
     for(auto barrot : _map->getBabyCarrots()){
         float tempBarrotDist = barrot->getPosition().distance(playerEntity->getPosition());
         closestBarrot = closestBarrot > tempBarrotDist ? tempBarrotDist : closestBarrot;
-        if(tempBarrotDist < 12){
-            numBarrotsClose++;
+        if(tempBarrotDist < 12 && barrot->isInWheat()){
+            numBarrotsClose+=1;
         }
     }
     if(numBarrotsClose > 1){
         numBarrotsClose *= 0.75;
     }
-    playRustling(nullptr, closestBarrot/(numBarrotsClose), true);
+    
+//    std::cout<<"closestBarrot: " << closestBarrot << "\n";
+//    std::cout<<"num nearby barrots: " << numBarrotsClose << "\n";
+    
+    playRustling(nullptr, numBarrotsClose > 0? closestBarrot/(numBarrotsClose):13, true);
 }
 
 void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& event){
-    _map->getFarmers().at(0)->grabCarrot();
+    _map->getFarmers().at(0)->grabCarrot(_map->getCarrotTypeForUUID(event->getUUID()));
     if(_map->isFarmer()){
         std::shared_ptr<Sound> source = _assets->get<Sound>(CAPTURE_EFFECT);
         AudioEngine::get()->play("capture", source);

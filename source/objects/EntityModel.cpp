@@ -706,10 +706,12 @@ void EntityModel::updateWheatNodes(float dt) {
 }
 
 void EntityModel::makeDashEffect() {
-    _shouldAnimateDash = true;
-    _dashEffectSprite->setVisible(true);
-    _dashEffectSprite->setPosition(getPosition() * _drawScale);
-    
+    if (!_shouldAnimateDash) {
+        _shouldAnimateDash = true;
+        _dashEffectSprite->setVisible(true);
+        _dashEffectSprite->setPosition(getPosition() * _drawScale);
+
+    }
     switch (calculateFacing(_dashVector)) {
         case SOUTH:
             CULog("dash south");

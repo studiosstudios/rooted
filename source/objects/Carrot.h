@@ -22,6 +22,7 @@ private:
     // Animation
     float walkAnimDuration = 1.0f;
     CarrotType _carrotType;
+    std::shared_ptr<scene2::SpriteNode> _rootedNode;
     
 public:
 #pragma mark -
@@ -81,9 +82,9 @@ public:
     
 #pragma mark -
 #pragma mark Getters and Setters
-    bool isRooted() { return _isRooted; };
+    bool isRooted() { return _state == ROOTED; };
     
-    bool isCaptured() { return _isCaptured; };
+    bool isCaptured() { return _state == CAUGHT; };
     
     int getNumBabyCarrots() { return  _numBabyCarrots; };
     
@@ -92,6 +93,8 @@ public:
     void setCarrotType(CarrotType ct) { _carrotType = ct; }
     
     CarrotType getCarrotType() { return _carrotType; }
+    
+    void setRootedSprite(const std::shared_ptr<scene2::SpriteNode>& rootedNode) { _rootedNode = rootedNode; }
     
 #pragma mark -
 #pragma mark Interactions

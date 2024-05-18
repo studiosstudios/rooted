@@ -847,7 +847,7 @@ void TutorialScene::postUpdate(float remain) {
                 _character->setPosition(plantingspot->getPosition());
                 changeCharacter(_farmerUUID);
                 _character->setPosition(plantingspot->getPosition());
-                auto e = RootEvent::allocRootEvent(_carrot2UUID, plantingspot->getPlantingID());
+                auto e = RootEvent::allocRootEvent(_carrot2UUID, plantingspot->getPlantingID(), _character->getPosition());
                 _action.processRootEvent(std::dynamic_pointer_cast<RootEvent>(e));
                 
                 //capture the player carrot

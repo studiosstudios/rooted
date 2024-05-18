@@ -127,7 +127,7 @@ void EntityModel::updateCurAnimDurationForState() {
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING || _state == STANDING;
+    return isMoving() || _state == DASHING || _state == ROOTING || (!_movement.isZero() && _state == CARRYING) || _state == STANDING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -214,6 +214,16 @@ EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(Entit
 }
 
 void EntityModel::updateSprite(float dt, bool useMovement) {
+    if (_state == CAUGHT) {
+        // Special case: CAUGHT state is just invisible, no other changes
+        _node->setVisible(false);
+        return;
+    }
+    else if (_state == ROOTED) {
+        // Special case: ROOTED node is set in Carrot class when the state happens, no need to change sprite, so we do nothing here
+        return;
+    }
+    
     EntityFacing face;
     if (_state != DASHING) {
         face = calculateFacing(useMovement ? _movement : getLinearVelocity());
@@ -422,6 +432,11 @@ void EntityModel::updateState(float dt) {
             }
             break;
         }
+        case CAUGHT:
+        case ROOTED: {
+            // Immobile states
+            break;
+        }
         default: {
             CULog("updateState: Not implemented yet");
         }
@@ -478,13 +493,15 @@ void EntityModel::applyForce() {
             setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(DUDE_DASH));
             break;
         }
+        case CAUGHT:
+        case ROOTED: {
+            // Immobile cases
+            break;
+        }
         default: {
             CULog("State not implemented yet");
         }
     }
-    
-    // Don't want to be moving. Damp out player motion
-    
 }
 
 bool EntityModel::isDashing() {
@@ -526,7 +543,12 @@ void EntityModel::update(float dt) {
     BoxObstacle::update(dt);
     
     if (_node != nullptr) {
-        _node->setPosition(getPosition()*_drawScale);
+        if (_state == ROOTED) {
+            _node->setPosition((getPosition()*_drawScale) - Vec2 {0, (getHeight()*_drawScale)/2});
+        }
+        else {
+            _node->setPosition(getPosition()*_drawScale);
+        }
         _node->setAngle(getAngle());
 //        if (isInWheat() && (int(_node->getPriority()) == 4)) {
 //            _node->setColor(Color4(255, 255, 255, 255.0/2));

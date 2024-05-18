@@ -78,16 +78,16 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _clientscene->doLayout(); // Repositions the HUD
     
     // FOR JOINING THE GAME
-    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_join"));
+    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_join"));
     _backoutclient = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_back"));
-    _gameid = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("client_lobbybuttons_idfield_textfield"));
+    _gameid = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("client_lobbyinfo_textbox_textfield"));
     
     std::string numbers[10]= { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
     for (std::string number : numbers) {
-        _numbers.push_back(std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_numpad_" + number)));
+        _numbers.push_back(std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_numpad_" + number)));
     }
     
-    _backspace = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbybuttons_idfield_backspace"));
+    _backspace = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_lobbyinfo_textbox_backspace"));
     
     for (int ii = 0; ii < _numbers.size(); ii++) {
         auto n = _numbers.at(ii);
@@ -107,25 +107,28 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _backoutclient->addListener([this](const std::string& name, bool down) {
         if (!down) {
             _backClicked = true;
+            _network->disconnect();
         }
     });
 
     _startgame->addListener([=](const std::string& name, bool down) {
         if (!down) {
             if (!_gameid->getText().empty()) {
-                switchScene();
+//                switchScene();
                 _network->connectAsClient(dec2hex(_gameid->getText()));
             }
         }
     });
 
     // FOR THE LOADING/WAITING SCREEN
+    // TODO: REMOVE THIS DEPENDING ON IF WE STILL HAVE THIS
     _loadingscene = _assets->get<scene2::SceneNode>("loadingscreen");
     _loadingscene->setContentSize(dimen);
     _loadingscene->doLayout();
     
     _backoutloading = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("loadingscreen_back"));
-    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("loadingscreen_playercount_players"));
+    // TODO: THIS IS CURRENTLY IN THE MAIN SCENE
+    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_lobbyinfo_textbox_2_textfield"));
     _loadingtext = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("loadingscreen_loadingtxt"));
     
     _backoutloading->addListener([this](const std::string& name, bool down) {
@@ -218,7 +221,7 @@ void ClientScene::setActive(bool value) {
  * @return true if the network connection is still active.
  */
 void ClientScene::updateText(const std::shared_ptr<scene2::Button>& button, const std::string text) {
-    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("play"));
+    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("stats"));
     label->setText(text);
 }
 
@@ -234,7 +237,13 @@ void ClientScene::update(float timestep) {
     configureStartButton();
     if(_network->getStatus() == NetEventController::Status::CONNECTED || _network->getStatus() == NetEventController::Status::HANDSHAKE){
         _loadingtext->setText("WAITING");
-        _player->setText(std::to_string(_network->getNumPlayers()));
+        int numPlayers = _network->getNumPlayers();
+        if (numPlayers == 1) {
+            _player->setText(std::to_string(_network->getNumPlayers()) + " player");
+        }
+        else {
+            _player->setText(std::to_string(_network->getNumPlayers()) + " players");
+        }
     }
     else if (_network->getStatus() == NetEventController::Status::NETERROR) {
         _loadingtext->setText("ERROR :(");
@@ -265,7 +274,7 @@ void ClientScene::configureStartButton() {
     else if (_network->getStatus() == NetEventController::Status::CONNECTED) {
         _startgame->setDown(false);
         _startgame->deactivate();
-        updateText(_startgame, "wait");
+        updateText(_startgame, "wait...");
     }
 }
 

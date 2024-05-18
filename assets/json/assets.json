@@ -354,6 +354,9 @@
         "carrot-top": {
             "file":     "textures/carrot-top.png"
         },
+        "rooting": {
+            "file":     "textures/rooting.png"
+        },
         "barrot-south-walk": {
             "file":     "textures/barrot-south-walk.png"
         },

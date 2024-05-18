@@ -118,6 +118,9 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
 
 void EntityModel::updateCurAnimDurationForState() {
     curAnimTime = 0;
+    if (_state == ROOTING || _state == UNROOTING) {
+        curAnimDuration = 3.5;
+    }
 }
 
 /**
@@ -127,7 +130,7 @@ void EntityModel::updateCurAnimDurationForState() {
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING || (!_movement.isZero() && _state == CARRYING) || _state == STANDING;
+    return isMoving() || _state == DASHING || _state == ROOTING || (!_movement.isZero() && _state == CARRYING) || _state == STANDING || _state == ROOTING || _state == UNROOTING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -223,7 +226,11 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         // Special case: ROOTED node is set in Carrot class when the state happens, no need to change sprite, so we do nothing here
         return;
     }
-    
+    else if (_state == ROOTING || _state == UNROOTING) {
+        setSceneNode(_rootingSprite);
+        stepAnimation(dt);
+        return;
+    }
     
     EntityFacing face;
     if (_state != DASHING) {
@@ -375,7 +382,7 @@ void EntityModel::updateState(float dt, bool rootIsValid, bool unrootIsValid) {
         return;
     }
     
-    std::cout << "State called " << _state << " " << rootIsValid << " " << unrootIsValid << "\n";
+//    std::cout << "State called " << _state << " " << rootIsValid << " " << unrootIsValid << "\n";
     
     if (_dashCooldown > 0) {
         _dashCooldown -= dt;
@@ -463,7 +470,7 @@ void EntityModel::updateState(float dt, bool rootIsValid, bool unrootIsValid) {
             }
             else {
                 _rootTimer = 0;
-                _state = STANDING;
+                _state = CARRYING;
                 stateChanged = true;
             }
             break;

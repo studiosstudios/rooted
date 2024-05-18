@@ -752,6 +752,14 @@ void Map::spawnFarmers() {
         dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
         dashEffectNode->setPriority(float(Map::DrawOrder::CLOUDS));
         
+        auto rootingNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("rooting"), 4, 4, 15);
+        rootingNode->setScale(0.25f * _scale/DEFAULT_DRAWSCALE);
+        rootingNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        rootingNode->setVisible(false);
+        _entitiesNode->addChild(rootingNode);
+        farmer->setRootingSprite(rootingNode);
+        
+        
         _worldnode->addChild(dashEffectNode);
         
         farmer->setSceneNode(idleDS.southSprite);
@@ -901,6 +909,13 @@ void Map::spawnCarrots() {
         rootedNode->setVisible(false);
         _entitiesNode->addChild(rootedNode);
         carrot->setRootedSprite(rootedNode);
+        
+        auto rootingNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("rooting"), 4, 4, 15);
+        rootingNode->setScale(0.25f * _scale/DEFAULT_DRAWSCALE);
+        rootingNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        rootingNode->setVisible(false);
+        _entitiesNode->addChild(rootingNode);
+        carrot->setRootingSprite(rootingNode);
         
         carrot->setDashEffectSpriteNode(dashEffectNode);
         

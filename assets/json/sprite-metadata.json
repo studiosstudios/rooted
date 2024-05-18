@@ -416,6 +416,11 @@
         "rows": 1,
         "cols": 1
     },
+    "rooting": {
+        "rows": 4,
+        "cols": 4,
+        "size": 15
+    },
     "barrot-south-walk": {
         "rows": 2,
         "cols": 5

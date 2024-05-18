@@ -201,6 +201,7 @@ protected:
     DirectionalSprites _runSprites;
     DirectionalSprites _dashSprites;
     DirectionalSprites _idleSprites;
+    std::shared_ptr<cugl::scene2::SpriteNode> _rootingSprite;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
     bool _shouldAnimateDash = false;
@@ -732,6 +733,8 @@ public:
     
     
     void resetStateCooldowns();
+    
+    void setRootingSprite(const std::shared_ptr<cugl::scene2::SpriteNode> rs) { _rootingSprite = rs; }
     
     /**
      *  Steps the state machine of this EntityModel.

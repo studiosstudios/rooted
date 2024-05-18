@@ -4,6 +4,10 @@
 //
 //  Created by Choong Jae Lee on 2/27/24.
 //
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "UIController.h"
 #include "../RootedConstants.h"
@@ -29,23 +33,55 @@ void UIController::setLoseVisible(bool visible) {
 
 void UIController::setEndVisible(bool visible) {
     _postroundscene->setVisible(visible);
+    _nextRound = 0;
     if (visible) {
         _nextbutton->activate();
     } else {
         _nextbutton->deactivate();
         _nextbutton->setDown(false);
+        _exitbutton->deactivate();
+        _exitbutton->setDown(false);
+        _nextroundbutton->deactivate();
+        _nextroundbutton->setDown(false);
     }
 }
 
-void UIController::setEndVariables(int roundNum, int length, int babies, int carrots) {
+void UIController::setEndVariables(int roundNum, int length, int babies, std::vector<int> carrots, std::vector<int> pointsVec, int playerNum) {
     _roundNumber->setText("ROUND " + std::to_string(roundNum));
+    
     int seconds = length / 1000;
     int minutes = seconds / 60;
     seconds %= 60;
-    _time->setText(std::to_string(minutes) + ":" + std::to_string(seconds));
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << minutes << ":" << std::setw(2) << std::setfill('0') << seconds;
+    std::string result = oss.str();
+    _time->setText(result);
+    
     _babyCarrots->setText(std::to_string(babies));
+    
+    _notRootedLabel->setVisible(carrots.size() == 0);
+    
     for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
-        _carrotsRooted.at(ii)->setVisible(ii < carrots);
+        _carrotsRooted.at(ii)->setVisible(std::find(carrots.begin(), carrots.end(), ii) != carrots.end());
+    }
+    
+    _rootedLabel->setVisible(std::find(carrots.begin(), carrots.end(), playerNum) != carrots.end());
+    
+    auto temp =_uinode->getChildByName("playerpoints")->getChildByName("playerpoints");
+    // set all to not be visible first
+    for (int ii = 0; ii < _points.size(); ii++) {
+        temp->getChildByName("playerpointinfo_" + std::to_string(ii))->setVisible(false);
+    }
+    for (int ii = 0; ii < pointsVec.size(); ii++) {
+        auto temp2 = temp->getChildByName("playerpointinfo_" + std::to_string(ii));
+        temp2->setVisible(true);
+        
+        for (int jj = 0; jj < pointsVec.at(ii); jj++) {
+            if (jj < 10) {
+                _points.at(temp2).at(jj * 2)->setVisible(false);
+                _points.at(temp2).at(jj * 2 + 1)->setVisible(true);
+            }
+        }
     }
 }
 
@@ -172,19 +208,22 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _postroundscene->setVisible(false);
     _uinode->addChild(_postroundscene);
     
-    _roundNumber = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_roundnum"));
+    _roundNumber = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_ROUNDNUM"));
     _time = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_gamelength_gametime"));
     _babyCarrots = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_babycarrotscount_numbabycarrots"));
     _carrotsRooted = {
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot"),
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_1"),
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_2"),
-        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carrot_3"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_1"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_2"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_3"),
+        _assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_carroticons_Big_Icon_4"),
     };
+    _rootedLabel = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_rootedcarrots"));
+    _notRootedLabel = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("postround_stats_rootedcarrots_nonerooted"));
     
     _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
     _nextbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
+            CULog("this button was pressed");
             _postroundscene->setVisible(false);
             _playerpointinfo->setVisible(true);
             _nextroundbutton->activate();
@@ -198,34 +237,38 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _playerpointinfo->setVisible(false);
     _uinode->addChild(_playerpointinfo);
     
-    // there are 5 (1-5) rows with 9 (0-8)
+    // there are 4 (0-3) rows with 10 (0-9)
     // playerpoints_playerpoints_playerpointinfo_x
-    // playerpoints_playerpoints_playerpointinfo_x_points_pointx
-    for (int ii = 1; ii <= 5; ii++) {
+    // playerpoints_playerpoints_playerpointinfo_x_emptypoints_emptypoint_x
+    // playerpoints_playerpoints_playerpointinfo_x_fullpoints_fullpoint_x
+    _points.clear();
+    for (int ii = 0; ii < 4; ii++) {
         std::shared_ptr<scene2::SceneNode> wholenode = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii));
         std::vector<std::shared_ptr<scene2::SceneNode>> elements;
-        for (int jj = 0; jj < 9; jj++) {
-            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_points_point" + std::to_string(jj));
+        for (int jj = 9; jj >= 0; jj--) {
+            std::shared_ptr<scene2::SceneNode> temp = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_emptypoints_emptypoint_" + std::to_string(jj));
             elements.push_back(temp);
+            std::shared_ptr<scene2::SceneNode> temp2 = _assets->get<scene2::SceneNode>("playerpoints_playerpoints_playerpointinfo_" + std::to_string(ii) + "_fullpoints_fullpoint_" + std::to_string(jj));
+            elements.push_back(temp2);
         }
         _points.insert({wholenode, elements});
     }
     
     _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
-    _exitbutton->addListener([this](const std::string& name, bool down) {
-        if (!down) {
-            // TODO: disconnect to the main menu
-        }
-    });
+    _exitbutton->setVisible(false);
+//    _exitbutton->addListener([this](const std::string& name, bool down) {
+//        if (!down) {
+//            // TODO: disconnect to the main menu
+//        }
+//    });
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            // TODO: set a flag so that you can send an event that you are ready from GameScene
-            _nextRound = true;
+            _nextRound = 1;
         }
     });
     
-    _nextRound = false;
+    _nextRound = 0;
     
     return true;
 }
@@ -335,6 +378,12 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
     } else {
         _joymain->setVisible(false);
         _joyback->setVisible(false);
+    }
+    auto label = std::dynamic_pointer_cast<scene2::Label>(_nextroundbutton->getChildByName("NEXT"));
+    if (_nextRound == 2) {
+        label->setText("...");
+    } else {
+        label->setText("NEXT");
     }
     _carrotsRemainingBoard->setVisible(debugActive);
     _barrotsRemainingBoard->setVisible(debugActive);

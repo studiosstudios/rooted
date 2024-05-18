@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.1" name="maps" tilewidth="640" tileheight="360" tilecount="28" columns="0">
+<tileset version="1.10" tiledversion="1.10.1" name="maps" tilewidth="640" tileheight="360" tilecount="35" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="Map">
   <properties>
@@ -195,5 +195,54 @@
    <property name="name" value="tutorial_bottom"/>
   </properties>
   <image width="640" height="360" source="../textures/maps/tutorial_bottom.png"/>
+ </tile>
+ <tile id="32" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_o_1"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_o_1.png"/>
+ </tile>
+ <tile id="33" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_o_2"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_o_2.png"/>
+ </tile>
+ <tile id="34" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_o_3"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_o_3.png"/>
+ </tile>
+ <tile id="35" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_o_4"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_o_4.png"/>
+ </tile>
+ <tile id="36" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_o_5"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_o_5.png"/>
+ </tile>
+ <tile id="37" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_o_6"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_o_6.png"/>
+ </tile>
+ <tile id="38" type="Map">
+  <properties>
+   <property name="blade_color_scale" type="float" value="10"/>
+   <property name="name" value="unit_o_7"/>
+  </properties>
+  <image width="640" height="360" source="../textures/maps/unit_o_7.png"/>
  </tile>
 </tileset>

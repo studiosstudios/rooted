@@ -93,6 +93,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     dashTimer = 0;
     _stunTime = 0;
     _dashCooldown = 0;
+    _swipe = true;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
         setMass(1.0);
@@ -103,6 +104,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         _facing = SOUTH;
         _state = STANDING;
         _prevState = STANDING;
+        updateSprite(0);
         updateCurAnimDurationForState();
         
         return true;
@@ -113,6 +115,11 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
 #pragma mark -
 #pragma mark Animation
 
+
+void EntityModel::updateCurAnimDurationForState() {
+    curAnimTime = 0;
+}
+
 /**
     Whether this EntityModel should step in its animation for this frame.
  
@@ -120,7 +127,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING;
+    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING || _state == STANDING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -171,7 +178,6 @@ EntityModel::EntityFacing EntityModel::calculateFacing(cugl::Vec2 movement) {
             break;
         }
     }
-//    std::cout << "Ang: " << ang << " | Dir: " << dir << "\n";
     return dir;
 }
 
@@ -189,23 +195,21 @@ void EntityModel::setMovement(Vec2 movement) {
 EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(EntityState state) {
     switch (state) {
         case STANDING:
-        case SNEAKING:
-        case WALKING:
         case STUNNED:  // TBI
         case CARRYING: // This is handled in Farmer's method, but otherwise we will use the walk sprites
+            return _idleSprites;
+        case SNEAKING:
+        case WALKING:
         case ROOTING:  // TBI
         case CAUGHT:   // TBI
         case ROOTED:   // TBI
         case UNROOTING:// TBI
             return _walkSprites;
-            break;
         case RUNNING:
             return _runSprites;
-            break;
         case DASHING:
             makeDashEffect();
             return _dashSprites;
-            break;
     }
 }
 
@@ -344,6 +348,11 @@ void EntityModel::dispose() {
     _dashEffectSprite = nullptr;
 }
 
+void EntityModel::resetStateCooldowns() {
+    dashTimer = 0;
+    curAnimTime = 0;
+}
+
 /**
  *  Steps the state machine of this EntityModel.
  *
@@ -357,6 +366,7 @@ void EntityModel::updateState(float dt) {
     if (_dashCooldown > 0) {
         _dashCooldown = std::max(0.0f, _dashCooldown - dt);
     }
+    
     
     _prevState = _state;
     bool stateChanged = false;
@@ -388,9 +398,11 @@ void EntityModel::updateState(float dt) {
                 _state = DASHING;
                 dashTimer = 8;
                 _dashCooldown = DASH_COOLDOWN_SECS;
+                if (!_swipe) {
+                    _dashVector = facingToVec(_facing);
+                }
                 stateChanged = true;
-                _makeDashTrail = true;
-//                makeDashEffect();
+//                _makeDashTrail = true;
 //                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
 //                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
@@ -425,6 +437,7 @@ void EntityModel::updateState(float dt) {
 void EntityModel::stun() {
     _state = STUNNED;
     _stunTime = STUN_SECS;
+    resetStateCooldowns();
     // TODO: updateSprite would need to be called here if we get a sprite
 }
 
@@ -524,7 +537,7 @@ void EntityModel::update(float dt) {
     }
     
     if (_wheatHeightNode != nullptr) {
-//        updateWheatHeightNode();
+        updateWheatHeightNode();
 //        updateWheatNodes(dt);
     }
 }
@@ -617,7 +630,7 @@ void EntityModel::updateWheatHeightNode() {
     
     if (_state == DASHING) {
         _wheatSizeTarget = 1.5;
-        _wheatHeightTarget = -100;
+//        _wheatHeightTarget = -100;
     } else {
         _wheatSizeTarget = 0.75;
         _wheatHeightTarget = round(velocity.length());
@@ -727,44 +740,63 @@ void EntityModel::makeDashEffect() {
         _shouldAnimateDash = true;
         _dashEffectSprite->setVisible(true);
         _dashEffectSprite->setPosition(getPosition() * _drawScale);
-
-    }
-    switch (calculateFacing(_dashVector)) {
-        case SOUTH:
-            CULog("dash south");
-            _dashEffectSprite->setAngle(0);
-            break;
-        case NORTH:
-            CULog("dash north");
-            _dashEffectSprite->setAngle(180 * DEGREE_TO_RADIAN);
-            break;
-        case EAST:
-            CULog("dash north");
-            _dashEffectSprite->setAngle(90 * DEGREE_TO_RADIAN);
-            break;
-        case WEST:
-            CULog("dash north");
-            _dashEffectSprite->setAngle(270 * DEGREE_TO_RADIAN);
-            break;
-        case SOUTHEAST:
-            CULog("dash north");
-            _dashEffectSprite->setAngle(45 * DEGREE_TO_RADIAN);
-            break;
-        case SOUTHWEST:
-            CULog("dash north");
-            _dashEffectSprite->setAngle(315 * DEGREE_TO_RADIAN);
-            break;
-        case NORTHEAST:
-            CULog("dash north");
-            _dashEffectSprite->setAngle(135 * DEGREE_TO_RADIAN);
-            break;
-        case NORTHWEST:
-            CULog("dash north");
-            _dashEffectSprite->setAngle(225 * DEGREE_TO_RADIAN);
-            break;
-        default:
-            _dashEffectSprite->setAngle(0);
-            break;
+        
+//        float angle;
+//        if (_dashVector.x == 0) // special cases
+//            angle = (_dashVector.y > 0)? 90
+//                : (_dashVector.y == 0)? 0
+//                : 270;
+//        else if (_dashVector.y == 0) // special cases
+//            angle = (_dashVector.x >= 0)? 0
+//                : 180;
+//        int ret = atanf((float)_dashVector.y/_dashVector.x) * RADIAN_TO_DEGREE;
+//        if (_dashVector.x < 0 && _dashVector.y < 0) // quadrant Ⅲ
+//            ret = 180 + ret;
+//        else if (_dashVector.x < 0) // quadrant Ⅱ
+//            ret = 180 + ret; // it actually substracts
+//        else if (_dashVector.y < 0) // quadrant Ⅳ
+//            ret = 270 + (90 + ret); // it actually substracts
+//        angle = (ret+90) * DEGREE_TO_RADIAN;
+//        
+//        _dashEffectSprite->setAngle(angle);
+        
+        switch (calculateFacing(_dashVector)) {
+            case SOUTH:
+                CULog("dash south");
+                _dashEffectSprite->setAngle(0);
+                break;
+            case NORTH:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(180 * DEGREE_TO_RADIAN);
+                break;
+            case EAST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(90 * DEGREE_TO_RADIAN);
+                break;
+            case WEST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(270 * DEGREE_TO_RADIAN);
+                break;
+            case SOUTHEAST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(45 * DEGREE_TO_RADIAN);
+                break;
+            case SOUTHWEST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(315 * DEGREE_TO_RADIAN);
+                break;
+            case NORTHEAST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(135 * DEGREE_TO_RADIAN);
+                break;
+            case NORTHWEST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(225 * DEGREE_TO_RADIAN);
+                break;
+            default:
+                _dashEffectSprite->setAngle(0);
+                break;
+        }
     }
 }
 

@@ -34,6 +34,11 @@ public:
         STATS,
         SETTINGS
     };
+    
+    bool hapticsTrue();
+    bool swipeTrue();
+    float musicSliderVal();
+    float soundSliderVal();
 
 protected:
     /** The asset manager for this scene. */
@@ -61,6 +66,17 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _optionsbutton;
     /** The menu button to back out into title screen from the prelobby */
     std::shared_ptr<cugl::scene2::Button> _backoutprelobby;
+    
+    std::shared_ptr<cugl::scene2::Button> _backoutoptions;
+    std::shared_ptr<cugl::scene2::Button> _joystickdirbutton;
+    std::shared_ptr<cugl::scene2::Button> _swipedirbutton;
+    std::shared_ptr<cugl::scene2::Button> _dashinfobutton;
+    std::shared_ptr<cugl::scene2::Button> _hapticsbutton;
+    std::shared_ptr<cugl::scene2::Slider> _soundslider;
+    std::shared_ptr<cugl::scene2::Slider> _musicslider;
+    std::shared_ptr<cugl::scene2::SceneNode> _popup;
+    std::shared_ptr<cugl::scene2::Button> _popupclose;
+    
     /** The player menu choice (for the external scene manager, i.e. the main app) */
     Choice _choice;
     /** The player choice when changing menus within this scene */
@@ -131,6 +147,8 @@ public:
     Choice getChoice() const { return _choice; }
     
     void switchScene(MenuScene::Choice sceneType);
+    
+    void togglePopup(bool active);
     
 };
 

@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="188">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="201">
  <editorsettings>
-  <export target="unit_outer_1.json" format="json"/>
+  <export target="unit_outer_2.json" format="json"/>
  </editorsettings>
  <properties>
   <property name="map-type" propertytype="MapType" value="middle-middle"/>
  </properties>
  <tileset firstgid="1" source="entities.tsx"/>
  <tileset firstgid="4" source="maps.tsx"/>
- <tileset firstgid="35" source="environment.tsx"/>
- <objectgroup id="9" name="wheat"/>
- <objectgroup id="8" name="environment"/>
+ <tileset firstgid="43" source="environment.tsx"/>
+ <objectgroup id="9" name="wheat">
+  <object id="188" gid="37" x="74" y="288" width="512" height="288"/>
+ </objectgroup>
+ <objectgroup id="8" name="environment">
+  <object id="189" type="Decoration" gid="46" x="46" y="176" width="107.565" height="91.1026">
+   <properties>
+    <property name="frame_cols" type="int" value="4"/>
+    <property name="frame_rows" type="int" value="4"/>
+    <property name="name" value="tractor"/>
+   </properties>
+  </object>
+  <object id="190" gid="51" x="46" y="208" width="32" height="32"/>
+  <object id="191" gid="51" x="78" y="208" width="32" height="32"/>
+  <object id="192" gid="51" x="110" y="208" width="32" height="32"/>
+  <object id="194" gid="52" x="14" y="208" width="32" height="32"/>
+  <object id="195" gid="54" x="14" y="176" width="32" height="32"/>
+  <object id="196" gid="54" x="14" y="144" width="32" height="32"/>
+  <object id="198" gid="54" x="14" y="112" width="32" height="32"/>
+  <object id="199" gid="54" x="14" y="80" width="32" height="32"/>
+  <object id="200" gid="47" x="480" y="192" width="22.9155" height="45.9523"/>
+ </objectgroup>
  <objectgroup id="7" name="entities"/>
 </map>

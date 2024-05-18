@@ -6,7 +6,30 @@
          "draworder":"topdown",
          "id":9,
          "name":"wheat",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":40,
+                 "height":448,
+                 "id":190,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"blade_color_scale",
+                         "type":"float",
+                         "value":10
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"unit_o_5"
+                        }],
+                 "rotation":0,
+                 "type":"Map",
+                 "visible":true,
+                 "width":1056,
+                 "x":-431,
+                 "y":320
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -17,63 +40,7 @@
          "draworder":"topdown",
          "id":8,
          "name":"environment",
-         "objects":[
-                {
-                 "gid":37,
-                 "height":160,
-                 "id":188,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"frame_cols",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"frame_rows",
-                         "type":"int",
-                         "value":1
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"barn"
-                        }],
-                 "rotation":0,
-                 "type":"Decoration",
-                 "visible":true,
-                 "width":205.621,
-                 "x":64,
-                 "y":224
-                }, 
-                {
-                 "gid":38,
-                 "height":91.1026,
-                 "id":189,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"frame_cols",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"frame_rows",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"tractor"
-                        }],
-                 "rotation":0,
-                 "type":"Decoration",
-                 "visible":true,
-                 "width":107.565,
-                 "x":320,
-                 "y":224
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -92,7 +59,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":190,
+ "nextobjectid":191,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -114,7 +81,7 @@
          "source":"maps.tsx"
         }, 
         {
-         "firstgid":35,
+         "firstgid":43,
          "source":"environment.tsx"
         }],
  "tilewidth":32,

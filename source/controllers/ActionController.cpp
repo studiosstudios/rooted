@@ -164,9 +164,9 @@ void ActionController::preUpdate(float dt) {
     if(!_map->isFarmer()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());
         if(_input->didShakeDevice() && carrotEntity->isCaptured()){
-            _freeMeter+=1;
+            _freeMeter+=2;
             std::cout<<"free meter" << _freeMeter << "\n";
-            if(_freeMeter >= 50){
+            if(_freeMeter >= 75){
                 _freeMeter = 0;
                 _network->pushOutEvent(FreeEvent::allocFreeEvent(carrotEntity->getUUID()));
                 if(_haptics)

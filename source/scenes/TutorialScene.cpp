@@ -288,7 +288,7 @@ void TutorialScene::preUpdate(float dt) {
     // Process the toggled key commands
     if (_input->didDebug()) { setDebug(!isDebug()); }
     if (_input->didReset()) {
-        _network->pushOutEvent(ResetEvent::allocResetEvent());
+        _network->pushOutEvent(ResetEvent::allocResetEvent(0));
         return;
     }
     // to exit to menu/quit out of tutorial

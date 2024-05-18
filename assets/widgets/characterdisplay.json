@@ -49,7 +49,7 @@
                     "y_offset": 0
                 }
             },
-            "Big_Icon_4": {
+            "Big_Icon_1": {
                 "type": "Image",
                 "data": {
                     "texture": "Big_Icon_4",
@@ -76,7 +76,7 @@
                     "y_offset": -0.1
                 }
             },
-            "Big_Icon_3": {
+            "Big_Icon_0": {
                 "type": "Image",
                 "data": {
                     "texture": "Big_Icon_3",
@@ -103,7 +103,7 @@
                     "y_offset": -0.09
                 }
             },
-            "Big_Icon_2": {
+            "Big_Icon_3": {
                 "type": "Image",
                 "data": {
                     "texture": "Big_Icon_2",
@@ -130,7 +130,7 @@
                     "y_offset": -0.1
                 }
             },
-            "Big_Icon_1": {
+            "Big_Icon_2": {
                 "type": "Image",
                 "data": {
                     "texture": "Big_Icon_1",

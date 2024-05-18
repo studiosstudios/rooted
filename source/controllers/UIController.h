@@ -100,7 +100,6 @@ private:
     
     std::shared_ptr<cugl::scene2::Button> _nextbutton;
     std::shared_ptr<cugl::scene2::SceneNode> _playerpointinfo;
-    std::shared_ptr<cugl::scene2::Button> _exitbutton;
     std::shared_ptr<cugl::scene2::Button> _nextroundbutton;
     // a map from the little icon of the player to an array of the number of points you have
     std::map<std::shared_ptr<cugl::scene2::SceneNode>, std::vector<std::shared_ptr<cugl::scene2::SceneNode>>> _points;
@@ -108,6 +107,22 @@ private:
     // 0 = not pressed, 1 = pressed, 2 = waiting
     int _nextRound;
     
+    std::shared_ptr<cugl::scene2::SceneNode> _characterdisplay;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _characterdisplayNodes;
+
+    std::shared_ptr<cugl::scene2::SceneNode> _rabbitpreview;
+
+    std::shared_ptr<cugl::scene2::SceneNode> _carrotpreview;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _carrotpreviewNodes;
+
+    std::shared_ptr<cugl::scene2::SceneNode> _winner;
+    std::vector<std::shared_ptr<cugl::scene2::SceneNode>> _winnerNodes;
+    std::shared_ptr<cugl::scene2::Button> _exitbutton;
+    std::shared_ptr<cugl::scene2::Button> _winnernextbutton;
+    
+    // 0 = not pressed, 1 = pressed, 2 = waiting
+    int _nextGame;
+
 public:
 #pragma mark Constructor/Destructor/Dispose
 #pragma mark -
@@ -167,6 +182,18 @@ public:
     int getNextRound() { return _nextRound; }
     
     void setNextRound(int n) { _nextRound = n; }
+    
+    int getNextGame() { return _nextGame; }
+    
+    void setNextGame(int n) { _nextGame = n; }
+    
+    void setCharacterDisplay(bool active, int carrot);
+    
+    void setRabbitPreview(bool active);
+    
+    void setCarrotPreview(bool active, int carrot);
+    
+    void setWinnerDisplay(bool active, int carrot);
 };
 
 #endif /* UIController_h */

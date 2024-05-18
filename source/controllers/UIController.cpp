@@ -85,6 +85,43 @@ void UIController::setEndVariables(int roundNum, int length, int babies, std::ve
     }
 }
 
+void UIController::setCharacterDisplay(bool active, int carrot) {
+    _characterdisplay->setVisible(active);
+    for (auto it = _characterdisplayNodes.begin(); it != _characterdisplayNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _characterdisplayNodes.at(carrot)->setVisible(true);
+}
+
+void UIController::setRabbitPreview(bool active) {
+    _rabbitpreview->setVisible(active);
+}
+
+void UIController::setCarrotPreview(bool active, int carrot) {
+    _carrotpreview->setVisible(active);
+    for (auto it = _carrotpreviewNodes.begin(); it != _carrotpreviewNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _carrotpreviewNodes.at(carrot)->setVisible(true);
+}
+
+void UIController::setWinnerDisplay(bool active, int carrot) {
+    _winner->setVisible(active);
+    for (auto it = _winnerNodes.begin(); it != _winnerNodes.end(); ++it) {
+        (*it)->setVisible(false);
+    }
+    _winnerNodes.at(carrot)->setVisible(true);
+    if (active) {
+        _exitbutton->activate();
+        _winnernextbutton->activate();
+    } else {
+        _exitbutton->deactivate();
+        _exitbutton->setDown(false);
+        _winnernextbutton->deactivate();
+        _winnernextbutton->setDown(false);
+    }
+}
+
 void UIController::setSpeechBubbleVisible(bool visible) {
     _speechBubble->setVisible(visible);
 }
@@ -223,7 +260,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("postround_next"));
     _nextbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            CULog("this button was pressed");
             _postroundscene->setVisible(false);
             _playerpointinfo->setVisible(true);
             _nextroundbutton->activate();
@@ -254,13 +290,6 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
         _points.insert({wholenode, elements});
     }
     
-    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_exit"));
-    _exitbutton->setVisible(false);
-//    _exitbutton->addListener([this](const std::string& name, bool down) {
-//        if (!down) {
-//            // TODO: disconnect to the main menu
-//        }
-//    });
     _nextroundbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("playerpoints_next"));
     _nextroundbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
@@ -269,6 +298,56 @@ bool UIController::init(const std::shared_ptr<cugl::AssetManager>& assets,
     });
     
     _nextRound = 0;
+    
+    _characterdisplay = _assets->get<scene2::SceneNode>("characterdisplay");
+    _characterdisplay->setScale(1 / _cameraZoom);
+    _characterdisplay->doLayout(); // Repositions the HUD
+    _characterdisplay->setVisible(true);
+    _uinode->addChild(_characterdisplay);
+    
+    _rabbitpreview = _assets->get<scene2::SceneNode>("rabbitpreview");
+    _rabbitpreview->setScale(1 / _cameraZoom);
+    _rabbitpreview->doLayout(); // Repositions the HUD
+    _rabbitpreview->setVisible(false);
+    _uinode->addChild(_rabbitpreview);
+    
+    _carrotpreview = _assets->get<scene2::SceneNode>("carrotpreview");
+    _carrotpreview->setScale(1 / _cameraZoom);
+    _carrotpreview->doLayout(); // Repositions the HUD
+    _carrotpreview->setVisible(false);
+    _uinode->addChild(_carrotpreview);
+    
+    _winner = _assets->get<scene2::SceneNode>("winner");
+    _winner->setScale(1 / _cameraZoom);
+    _winner->doLayout(); // Repositions the HUD
+    _winner->setVisible(false);
+    _uinode->addChild(_winner);
+    
+    // winner specific buttons
+    _exitbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_exit"));
+    _exitbutton->setVisible(false);
+    //    _exitbutton->addListener([this](const std::string& name, bool down) {
+//        if (!down) {
+//            // TODO: disconnect to the main menu
+//        }
+//    });
+    _winnernextbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("winner_next"));
+    _winnernextbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            // TODO: send the next game event
+            _nextGame = 1;
+        }
+    });
+    _nextGame = 0;
+    
+    _characterdisplayNodes.clear();
+    _carrotpreviewNodes.clear();
+    _winnerNodes.clear();
+    for (int i = 0; i < 4; i++) {
+        _characterdisplayNodes.push_back(_assets->get<scene2::SceneNode>("characterdisplay_Big_Icon_" + std::to_string(i)));
+        _carrotpreviewNodes.push_back(_assets->get<scene2::SceneNode>("carrotpreview_Big_Icon_" + std::to_string(i)));
+        _winnerNodes.push_back(_assets->get<scene2::SceneNode>("winner_characterdisplay_Big_Icon_" + std::to_string(i)));
+    }
     
     return true;
 }
@@ -384,6 +463,12 @@ void UIController::update(float step, std::shared_ptr<OrthographicCamera> camera
         label->setText("...");
     } else {
         label->setText("NEXT");
+    }
+    auto label2 = std::dynamic_pointer_cast<scene2::Label>(_winnernextbutton->getChildByName("rematch"));
+    if (_nextGame == 2) {
+        label2->setText("...");
+    } else {
+        label2->setText("rematch");
     }
     _carrotsRemainingBoard->setVisible(debugActive);
     _barrotsRemainingBoard->setVisible(debugActive);

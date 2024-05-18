@@ -166,7 +166,7 @@
                         16.95,
                         15.05
                     ],
-                    "visible": true,
+                    "visible": false,
                     "upnode": "woodsmall"
                 },
                 "children": {

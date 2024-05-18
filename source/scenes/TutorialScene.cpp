@@ -152,6 +152,11 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _soundScale = 1.0f;
     
     carrotAItarget = Vec2();
+    _ui.setCarrotPreview(false, 0);
+    _ui.setRabbitPreview(false);
+    _ui.setEndVisible(false);
+    _ui.setCharacterDisplay(false, 0);
+    _ui.setWinnerDisplay(false, 0);
 
     return true;
 }

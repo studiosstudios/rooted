@@ -587,6 +587,7 @@ void GameScene::pauseNonEssentialAudio(){
     for(auto carrot:_map->getCarrots()){
         AudioEngine::get()->clear(carrot->getUUID());
     }
+    AudioEngine::get()->clear("barrot");
 }
 
 /**

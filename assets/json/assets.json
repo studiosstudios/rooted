@@ -216,6 +216,66 @@
         "carrot-southeast-dash": {
             "file":     "textures/carrot-southeast-dash.png"
         },
+        "carrot-south-cloak": {
+            "file":     "textures/carrot-south-cloak.png"
+        },
+        "carrot-north-cloak": {
+            "file":     "textures/carrot-north-cloak.png"
+        },
+        "carrot-east-cloak": {
+            "file":     "textures/carrot-east-cloak.png"
+        },
+        "carrot-northeast-cloak": {
+            "file":     "textures/carrot-northeast-cloak.png"
+        },
+        "carrot-southeast-cloak": {
+            "file":     "textures/carrot-southeast-cloak.png"
+        },
+        "carrot-south-flower": {
+            "file":     "textures/carrot-south-flower.png"
+        },
+        "carrot-north-flower": {
+            "file":     "textures/carrot-north-flower.png"
+        },
+        "carrot-east-flower": {
+            "file":     "textures/carrot-east-flower.png"
+        },
+        "carrot-northeast-flower": {
+            "file":     "textures/carrot-northeast-flower.png"
+        },
+        "carrot-southeast-flower": {
+            "file":     "textures/carrot-southeast-flower.png"
+        },
+        "carrot-south-headphones": {
+            "file":     "textures/carrot-south-headphones.png"
+        },
+        "carrot-north-headphones": {
+            "file":     "textures/carrot-north-headphones.png"
+        },
+        "carrot-east-headphones": {
+            "file":     "textures/carrot-east-headphones.png"
+        },
+        "carrot-northeast-headphones": {
+            "file":     "textures/carrot-northeast-headphones.png"
+        },
+        "carrot-southeast-headphones": {
+            "file":     "textures/carrot-southeast-headphones.png"
+        },
+        "carrot-south-scarf": {
+            "file":     "textures/carrot-south-scarf.png"
+        },
+        "carrot-north-scarf": {
+            "file":     "textures/carrot-north-scarf.png"
+        },
+        "carrot-east-scarf": {
+            "file":     "textures/carrot-east-scarf.png"
+        },
+        "carrot-northeast-scarf": {
+            "file":     "textures/carrot-northeast-scarf.png"
+        },
+        "carrot-southeast-scarf": {
+            "file":     "textures/carrot-southeast-scarf.png"
+        },
         "barrot-south-walk": {
             "file":     "textures/barrot-south-walk.png"
         },

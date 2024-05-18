@@ -304,7 +304,7 @@ void Map::generate(int randSeed, int numFarmers, int numCarrots, int numBabyCarr
     std::shuffle(_decorationSpawns.begin(), _decorationSpawns.end(), _rand32);
     
     //take just first num{object} elements of each vector
-    _carrotSpawns = std::vector(_carrotSpawns.begin(), _carrotSpawns.begin() + std::min(numCarrots, int(_carrotSpawns.size())));
+    _carrotSpawns = std::vector(_carrotSpawns.begin(), _carrotSpawns.begin() + std::min(numCarrots + 1, int(_carrotSpawns.size()))); // I add by +1 here because it's convenient for loading carrot sprites. The extra carrot is erased in loadPlayerEntities
     _farmerSpawns = std::vector(_farmerSpawns.begin(), _farmerSpawns.begin() + std::min(numFarmers, int(_farmerSpawns.size())));
     _babyCarrotSpawns = std::vector(_babyCarrotSpawns.begin(), _babyCarrotSpawns.begin() + std::min(numBabyCarrots, int(_babyCarrotSpawns.size())));
     _plantingSpawns = std::vector(_plantingSpawns.begin(), _plantingSpawns.begin() + std::min(numPlantingSpots, int(_plantingSpawns.size())));
@@ -548,7 +548,10 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
                 getWorld()->getOwnedObstacles().insert({*carrot, 0});
             }
             _farmers.at(0)->appendCarrySprite(ct, initEntityDirectionalSprites("farmer-", EntityModel::getCarrotTypeSuffix(ct)));
-            carrot++;
+            ++carrot;
+        }
+        else {
+            carrot = _carrots.erase(carrot);
         }
     }
     
@@ -832,6 +835,7 @@ bool Map::readProperties(const std::shared_ptr<cugl::JsonValue> &json, int tileS
 }
 
 void Map::spawnCarrots() {
+    int carrotTypeCount = 0;
     for (Rect rect : _carrotSpawns) {
         std::shared_ptr<Carrot> carrot = Carrot::alloc(rect.origin, Size(CARROT_WIDTH, CARROT_HEIGHT), _scale.x);
         carrot->setDebugColor(DEBUG_COLOR);
@@ -841,7 +845,7 @@ void Map::spawnCarrots() {
         _players.push_back(carrot);
         
 
-        auto walkDS = initEntityDirectionalSprites("carrot-", "-walk", 0.125f);
+        auto walkDS = initEntityDirectionalSprites("carrot-", EntityModel::getCarrotTypeSuffix(static_cast<EntityModel::CarrotType>(carrotTypeCount++)), 0.125f);
         carrot->setSceneNode(walkDS.southSprite);
         carrot->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         

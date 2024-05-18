@@ -210,6 +210,106 @@
         "rows": 1,
         "cols": 5
     },
+    "carrot-south-cloak": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-north-cloak": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-east-cloak": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-northeast-cloak": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-southeast-cloak": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-south-flower": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-north-flower": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-east-flower": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-northeast-flower": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-southeast-flower": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-south-headphones": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-north-headphones": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-east-headphones": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-northeast-headphones": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-southeast-headphones": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-south-scarf": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-north-scarf": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-east-scarf": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-northeast-scarf": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
+    "carrot-southeast-scarf": {
+        "rows": 3,
+        "cols": 4,
+        "size": 11
+    },
     "barrot-south-walk": {
         "rows": 2,
         "cols": 5

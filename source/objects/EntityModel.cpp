@@ -84,6 +84,8 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     // Obstacle dimensions and drawing initialization
     Size nsize = size;
     _collidersize = size;
+    _dashColliderSize = size;
+    _rockColliderSize = size;
 //    nsize.width  *= DUDE_HSHRINK;
 //    nsize.height *= DUDE_VSHRINK;
     _drawScale = scale;
@@ -118,7 +120,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     TODO: If we get idle animations, this will need to change
  */
 bool EntityModel::animationShouldStep() {
-    return isMoving() || _state == DASHING || _state == ROOTING;
+    return isMoving() || _state == DASHING || _state == ROOTING || _state == CARRYING;
 }
 
 void EntityModel::stepAnimation(float dt) {
@@ -184,6 +186,29 @@ void EntityModel::setMovement(Vec2 movement) {
     _movement = movement;
 }
 
+EntityModel::DirectionalSprites EntityModel::getDirectionalSpritesForState(EntityState state) {
+    switch (state) {
+        case STANDING:
+        case SNEAKING:
+        case WALKING:
+        case STUNNED:  // TBI
+        case CARRYING: // This is handled in Farmer's method, but otherwise we will use the walk sprites
+        case ROOTING:  // TBI
+        case CAUGHT:   // TBI
+        case ROOTED:   // TBI
+        case UNROOTING:// TBI
+            return _walkSprites;
+            break;
+        case RUNNING:
+            return _runSprites;
+            break;
+        case DASHING:
+            makeDashEffect();
+            return _dashSprites;
+            break;
+    }
+}
+
 void EntityModel::updateSprite(float dt, bool useMovement) {
     EntityFacing face;
     if (_state != DASHING) {
@@ -193,82 +218,31 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         face = calculateFacing(_dashVector);
     }
     if (!((_prevState == _state) && (_facing == face))) {
+        // Get correct DirectionalSprites
+        DirectionalSprites ds = getDirectionalSpritesForState(_state);
         
-        auto sprite = _southWalkSprite;
-        switch (_state) {
-            case STUNNED:
-                //TODO: stunned animation?
-            case STANDING:
-                // TODO: Idle animations here
-            case SNEAKING:
-            case WALKING:
-                if (face == SOUTH) {
-                    sprite = _southWalkSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northWalkSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastWalkSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastWalkSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastWalkSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            case RUNNING:
-                if (face == SOUTH) {
-                    sprite = _southRunSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northRunSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastRunSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastRunSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastRunSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            case DASHING:
-                makeDashEffect();
-                if (face == SOUTH) {
-                    sprite = _southDashSprite;
-                }
-                else if (face == NORTH) {
-                    sprite = _northDashSprite;
-                }
-                else if (face == EAST || face == WEST) {
-                    sprite = _eastDashSprite;
-                }
-                else if (face == NORTHEAST || face == NORTHWEST) {
-                    sprite = _northEastDashSprite;
-                }
-                else if (face == SOUTHEAST || face == SOUTHWEST) {
-                    sprite = _southEastDashSprite;
-                }
-                if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
-                    sprite->flipHorizontal(!sprite->isFlipHorizontal());
-                }
-                break;
-            case CARRYING:
-            case CAUGHT:
-            case ROOTING:
-            case UNROOTING:
-            case ROOTED:
-                break;
+        std::shared_ptr<cugl::scene2::SpriteNode> sprite;
+        
+        // Get correct directionality
+        if (face == SOUTH) {
+            sprite = ds.southSprite;
         }
+        else if (face == NORTH) {
+            sprite = ds.northSprite;
+        }
+        else if (face == EAST || face == WEST) {
+            sprite = ds.eastSprite;
+        }
+        else if (face == NORTHEAST || face == NORTHWEST) {
+            sprite = ds.northEastSprite;
+        }
+        else if (face == SOUTHEAST || face == SOUTHWEST) {
+            sprite = ds.southEastSprite;
+        }
+        if (sprite->isFlipHorizontal() == (face == EAST || face == NORTHEAST || face == SOUTHEAST)) {
+            sprite->flipHorizontal(!sprite->isFlipHorizontal());
+        }
+        
         setSceneNode(sprite);
         _facing = face;
     }
@@ -310,13 +284,26 @@ void EntityModel::createFixtures() {
         return;
     }
     BoxObstacle::createFixtures();
-    _collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
+    b2PolygonShape collidershape;
+    collidershape.SetAsBox(_collidersize.width/2, _collidersize.height/2, b2Vec2(0, -(getHeight() - _collidersize.height)/2), 0);
     
     b2FixtureDef fixturedef;
-    fixturedef.shape = &_collidershape;
+    fixturedef.shape = &collidershape;
     _collidername = "collider";
     fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_collidername);
     _colliderfixture = _body->CreateFixture(&fixturedef);
+    
+    collidershape.SetAsBox(_dashColliderSize.width/2, _dashColliderSize.height/2, b2Vec2(0, -(getHeight() - _dashColliderSize.height)/2), 0);
+    fixturedef.shape = &collidershape;
+    _dashColliderName = "dash";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_dashColliderName);
+    _dashColliderFixture = _body->CreateFixture(&fixturedef);
+    
+    collidershape.SetAsBox(_rockColliderSize.width/2, _rockColliderSize.height/2, b2Vec2(0, -(getHeight() - _rockColliderSize.height)/2), 0);
+    fixturedef.shape = &collidershape;
+    _rockColliderName = "rock";
+    fixturedef.userData.pointer = reinterpret_cast<uintptr_t>(&_rockColliderName);
+    _rockColliderFixture = _body->CreateFixture(&fixturedef);
 }
 
 /**
@@ -334,6 +321,14 @@ void EntityModel::releaseFixtures() {
         _body->DestroyFixture(_colliderfixture);
         _colliderfixture = nullptr;
     }
+    if (_dashColliderFixture != nullptr) {
+        _body->DestroyFixture(_dashColliderFixture);
+        _dashColliderFixture = nullptr;
+    }
+    if (_rockColliderFixture != nullptr) {
+        _body->DestroyFixture(_rockColliderFixture);
+        _rockColliderFixture = nullptr;
+    }
 }
 
 /**
@@ -346,12 +341,6 @@ void EntityModel::dispose() {
     _node = nullptr;
     _wheatHeightNode = nullptr;
     _geometry = nullptr;
-    
-    _northWalkSprite = nullptr;
-    _northEastWalkSprite = nullptr;
-    _eastWalkSprite = nullptr;
-    _southEastWalkSprite = nullptr;
-    _southWalkSprite = nullptr;
     _dashEffectSprite = nullptr;
 }
 
@@ -436,6 +425,7 @@ void EntityModel::updateState(float dt) {
 void EntityModel::stun() {
     _state = STUNNED;
     _stunTime = STUN_SECS;
+    // TODO: updateSprite would need to be called here if we get a sprite
 }
 
 /**
@@ -461,6 +451,7 @@ void EntityModel::applyForce() {
             speed.set(normMovement).scale(SNEAK_SPEED);
             setLinearVelocity(speed);
             break;
+        case CARRYING:
         case WALKING:
             speed.set(normMovement).scale(WALK_SPEED);
             setLinearVelocity(speed);
@@ -562,6 +553,32 @@ void EntityModel::resetDebug() {
     }
     _colliderdebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
     _colliderdebug->setPosition(Vec2(getWidth()/2, 0));
+    
+    if (_dashColliderDebug == nullptr) {
+        _dashColliderDebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_dashColliderSize));
+        _dashColliderDebug->setRelativeColor(false);
+        _dashColliderDebug->setColor(Color4::ORANGE);
+        if (_scene != nullptr) {
+            _debug->addChild(_dashColliderDebug);
+        }
+    } else {
+        _dashColliderDebug->setPath(Rect(Vec2::ZERO,_dashColliderSize));
+    }
+    _dashColliderDebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _dashColliderDebug->setPosition(Vec2(getWidth()/2, 0));
+    
+    if (_rockColliderDebug == nullptr) {
+        _rockColliderDebug = scene2::WireNode::allocWithPath(Rect(Vec2::ANCHOR_CENTER,_rockColliderSize));
+        _rockColliderDebug->setRelativeColor(false);
+        _rockColliderDebug->setColor(Color4::BLACK);
+        if (_scene != nullptr) {
+            _debug->addChild(_rockColliderDebug);
+        }
+    } else {
+        _rockColliderDebug->setPath(Rect(Vec2::ZERO,_rockColliderSize));
+    }
+    _rockColliderDebug->setAnchor(Vec2::ANCHOR_BOTTOM_CENTER);
+    _rockColliderDebug->setPosition(Vec2(getWidth()/2, 0));
 }
 
 std::shared_ptr<cugl::scene2::SceneNode> EntityModel::allocWheatHeightNode() {

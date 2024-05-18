@@ -159,10 +159,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     setFailure(false);
     _isGameOverScreen = false;
     
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, 
+              Rect(_map->getMapBounds().origin/_map->getWorldBounds().size, _map->getMapBounds().size/_map->getWorldBounds().size));
     
-    float mapX = _map->getMapBounds().getMaxX()*_scale;
-    float mapY = _map->getMapBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().size.width*_scale;
+    float mapY = _map->getMapBounds().size.height*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -287,11 +288,12 @@ void GameScene::reset() {
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
              dimen.height / world->getBounds().getMaxY();
     _offset = Vec2((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, _map->getMapBounds().size/_map->getWorldBounds().size);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale,
+              Rect(_map->getMapBounds().origin/_map->getWorldBounds().size, _map->getMapBounds().size/_map->getWorldBounds().size));
     
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale;
-    float mapX = _map->getMapBounds().getMaxX()*_scale;
-    float mapY = _map->getMapBounds().getMaxY()*_scale;
+    float mapX = _map->getMapBounds().size.width*_scale;
+    float mapY = _map->getMapBounds().size.height*_scale;
     
     float beginning_zoom = std::max(dimen.width/mapX, dimen.height/mapY);
     _cam.setZoom(beginning_zoom);
@@ -575,8 +577,11 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<physics2::Obstacle
     world->shouldCollide = [this](b2Fixture *f1, b2Fixture *f2) {
         return _collision.shouldCollide(f1, f2);
     };
+    world->beforeSolve = [this](b2Contact* contact, const b2Manifold* manifold) {
+        _collision.beforeSolve(contact, manifold);
+    };
     world->afterSolve = [this](b2Contact* contact, const b2ContactImpulse* impulse) {
-        return _collision.afterSolve(contact, impulse);
+        _collision.afterSolve(contact, impulse);
     };
 }
 
@@ -587,6 +592,7 @@ void GameScene::pauseNonEssentialAudio(){
     for(auto carrot:_map->getCarrots()){
         AudioEngine::get()->clear(carrot->getUUID());
     }
+    AudioEngine::get()->clear("barrot");
 }
 
 /**

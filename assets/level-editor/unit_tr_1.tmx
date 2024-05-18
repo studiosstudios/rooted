@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="175">
+ <editorsettings>
+  <export target="unit_tr_1.json" format="json"/>
+ </editorsettings>
+ <properties>
+  <property name="map-type" propertytype="MapType" value="middle-middle"/>
+ </properties>
+ <tileset firstgid="1" source="entities.tsx"/>
+ <tileset firstgid="4" source="maps.tsx"/>
+ <tileset firstgid="35" source="environment.tsx"/>
+ <objectgroup id="9" name="wheat">
+  <object id="137" gid="16" x="0" y="288" width="512" height="288"/>
+ </objectgroup>
+ <objectgroup id="8" name="environment">
+  <object id="110" gid="35" x="32" y="288" width="64" height="64"/>
+  <object id="138" gid="35" x="128" y="138" width="128" height="96"/>
+  <object id="136" gid="36" x="416" y="288" width="32" height="32"/>
+  <object id="139" gid="48" x="32" y="32" width="32" height="32"/>
+  <object id="140" gid="48" x="64" y="32" width="32" height="32"/>
+  <object id="141" gid="48" x="96" y="32" width="32" height="32"/>
+  <object id="142" gid="48" x="128" y="32" width="32" height="32"/>
+  <object id="143" gid="48" x="160" y="32" width="32" height="32"/>
+  <object id="144" gid="48" x="192" y="32" width="32" height="32"/>
+  <object id="145" gid="48" x="224" y="32" width="32" height="32"/>
+  <object id="146" gid="48" x="256" y="32" width="32" height="32"/>
+  <object id="147" gid="48" x="288" y="32" width="32" height="32"/>
+  <object id="148" gid="48" x="320" y="32" width="32" height="32"/>
+  <object id="149" gid="48" x="352" y="32" width="32" height="32"/>
+  <object id="150" gid="48" x="384" y="32" width="32" height="32"/>
+  <object id="151" gid="48" x="416" y="32" width="32" height="32"/>
+  <object id="152" gid="48" x="448" y="32" width="32" height="32"/>
+  <object id="154" type="EnvCollidable" x="0" y="12" width="512" height="15.6439"/>
+  <object id="155" gid="48" x="0" y="32" width="32" height="32"/>
+  <object id="156" gid="47" x="480" y="32" width="32" height="32"/>
+  <object id="157" gid="45" x="480" y="64" width="32" height="32"/>
+  <object id="158" gid="45" x="480" y="96" width="32" height="32"/>
+  <object id="159" gid="45" x="480" y="128" width="32" height="32"/>
+  <object id="160" gid="45" x="480" y="160" width="32" height="32"/>
+  <object id="161" gid="45" x="480" y="224" width="32" height="32"/>
+  <object id="162" gid="45" x="480" y="192" width="32" height="32"/>
+  <object id="163" gid="45" x="480" y="256" width="32" height="32"/>
+  <object id="164" gid="45" x="480" y="288" width="32" height="32"/>
+  <object id="165" type="EnvCollidable" x="492.144" y="0" width="19.8564" height="288"/>
+  <object id="167" gid="43" x="223" y="221" width="32" height="32"/>
+  <object id="168" gid="43" x="255" y="221" width="32" height="32"/>
+  <object id="169" gid="43" x="287" y="221" width="32" height="32"/>
+  <object id="170" gid="43" x="319" y="221" width="32" height="32"/>
+  <object id="171" type="EnvCollidable" x="227.434" y="206.554" width="215.625" height="11.3622"/>
+  <object id="172" gid="43" x="351" y="221" width="32" height="32"/>
+  <object id="173" gid="43" x="383" y="221" width="32" height="32"/>
+  <object id="174" gid="43" x="415" y="221" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="7" name="entities">
+  <object id="106" gid="2" x="64" y="192" width="32" height="32"/>
+  <object id="107" gid="1" x="320" y="256" width="32" height="32"/>
+  <object id="112" gid="3" x="64" y="256" width="32" height="32"/>
+  <object id="113" gid="3" x="416" y="96" width="32" height="32"/>
+  <object id="119" gid="3" x="448" y="224" width="32" height="32"/>
+  <object id="120" gid="3" x="352" y="288" width="32" height="32"/>
+  <object id="121" gid="3" x="256" y="256" width="32" height="32"/>
+  <object id="122" gid="3" x="192" y="96" width="32" height="32"/>
+  <object id="123" gid="3" x="32" y="96" width="32" height="32"/>
+  <object id="124" gid="3" x="64" y="128" width="32" height="32"/>
+  <object id="125" gid="3" x="128" y="192" width="32" height="32"/>
+  <object id="126" gid="3" x="224" y="160" width="32" height="32"/>
+  <object id="127" gid="3" x="160" y="128" width="32" height="32"/>
+  <object id="128" gid="3" x="288" y="96" width="32" height="32"/>
+  <object id="129" gid="3" x="128" y="96" width="32" height="32"/>
+  <object id="130" gid="3" x="288" y="192" width="32" height="32"/>
+  <object id="131" gid="3" x="384" y="256" width="32" height="32"/>
+  <object id="132" gid="3" x="416" y="128" width="32" height="32"/>
+  <object id="133" gid="3" x="352" y="128" width="32" height="32"/>
+ </objectgroup>
+</map>

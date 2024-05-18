@@ -1,5 +1,8 @@
 {
-    "variables": {},
+    "variables": {
+        "anchor" : ["data", "anchor"],
+        "texture" : ["children", "backbutton", "data", "texture"]
+    },
     "contents": {
         "type": "Button",
         "format": {

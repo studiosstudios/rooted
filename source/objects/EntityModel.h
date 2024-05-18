@@ -125,9 +125,9 @@ public:
     /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
     
     /** State that a rooted! player entity can be in. Some of these states are specific
-        to only a certain type of character (ex. only a bunny can be PLANTING), so
-        we need to enforce the corresponding invariants for which staztes an entity can
-        be in. */
+     to only a certain type of character (ex. only a bunny can be PLANTING), so
+     we need to enforce the corresponding invariants for which staztes an entity can
+     be in. */
     enum EntityState {
         STANDING,
         SNEAKING,
@@ -140,6 +140,25 @@ public:
         CAUGHT,     // carrot only
         ROOTED,      // carrot only
         UNROOTING   // carrot only
+    };
+    
+    enum CarrotType {
+        CLOAK,
+        FLOWER,
+        HEADPHONES,
+        SCARF
+    };
+    
+    /** Struct for directional sprites, currently in use in Farmer only but could extend */
+    struct DirectionalSprites {
+        std::shared_ptr<cugl::scene2::SpriteNode> northSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> northEastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> eastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> southEastSprite;
+        std::shared_ptr<cugl::scene2::SpriteNode> southSprite;
+        DirectionalSprites() {};
+        DirectionalSprites(const std::shared_ptr<cugl::scene2::SpriteNode>& ns, const std::shared_ptr<cugl::scene2::SpriteNode>& nes, const std::shared_ptr<cugl::scene2::SpriteNode>& es, const std::shared_ptr<cugl::scene2::SpriteNode>& ses, const std::shared_ptr<cugl::scene2::SpriteNode>& ss) :
+        northSprite(ns), northEastSprite(nes), eastSprite(es), southEastSprite(ses), southSprite(ss) {};
     };
     
 private:
@@ -175,23 +194,9 @@ protected:
 	/** The scene graph node for the Dude. */
 	std::shared_ptr<cugl::scene2::SpriteNode> _node;
     
-    std::shared_ptr<cugl::scene2::SpriteNode> _eastWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northEastWalkSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southEastWalkSprite;
-    
-    std::shared_ptr<cugl::scene2::SpriteNode> _eastRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northEastRunSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southEastRunSprite;
-    
-    std::shared_ptr<cugl::scene2::SpriteNode> _eastDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _northEastDashSprite;
-    std::shared_ptr<cugl::scene2::SpriteNode> _southEastDashSprite;
+    DirectionalSprites _walkSprites;
+    DirectionalSprites _runSprites;
+    DirectionalSprites _dashSprites;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
     bool _shouldAnimateDash = false;
@@ -287,10 +292,21 @@ protected:
     
     /** stuff to do with the actual collision hitbox */
     cugl::Size _collidersize;
-    b2PolygonShape _collidershape;
     b2Fixture* _colliderfixture;
     std::shared_ptr<cugl::scene2::WireNode> _colliderdebug;
     std::string _collidername;
+    
+    /** the hitbox for dash collisions - both when dashing into entities and when when an entity dashes into you*/
+    cugl::Size _dashColliderSize;
+    b2Fixture* _dashColliderFixture;
+    std::shared_ptr<cugl::scene2::WireNode> _dashColliderDebug;
+    std::string _dashColliderName;
+    
+    /** the hitbox for rock collisions */
+    cugl::Size _rockColliderSize;
+    b2Fixture* _rockColliderFixture;
+    std::shared_ptr<cugl::scene2::WireNode> _rockColliderDebug;
+    std::string _rockColliderName;
 
 
 public:
@@ -533,45 +549,66 @@ public:
      */
     bool animationShouldStep();
     
-    /**
-     * Sets all of the sprite nodes associated with this EntityModel
-     *
-     * This currently only includes the 5-directional movement sprites, but
-     * TODO: It should later include all action sprites.
-     */
-    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southWalkNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastDashNode,
-                        const std::shared_ptr<cugl::scene2::SpriteNode>& southDashNode) {
-        _northWalkSprite = northWalkNode;
-        _northEastWalkSprite = northEastWalkNode;
-        _eastWalkSprite = eastWalkNode;
-        _southEastWalkSprite = southEastWalkNode;
-        _southWalkSprite = southWalkNode;
-        
-        _northRunSprite = northRunNode;
-        _northEastRunSprite = northEastRunNode;
-        _eastRunSprite = eastRunNode;
-        _southEastRunSprite = southEastRunNode;
-        _southRunSprite = southRunNode;
-        
-        _northDashSprite = northDashNode;
-        _northEastDashSprite = northEastDashNode;
-        _eastDashSprite = eastDashNode;
-        _southEastDashSprite = southEastDashNode;
-        _southDashSprite = southDashNode;
+    virtual DirectionalSprites getSpritesForState() {return DirectionalSprites();};
+    
+    void setWalkSprites(DirectionalSprites ds) {_walkSprites = ds;}
+    
+    void setRunSprites(DirectionalSprites ds) {_runSprites = ds;}
+    
+    void setDashSprites(DirectionalSprites ds) {_dashSprites = ds;}
+    
+    static std::string getCarrotTypeSuffix(CarrotType ct) {
+        switch (ct) {
+            case CLOAK:
+                return "-cloak";
+            case FLOWER:
+                return "-flower";
+            case HEADPHONES:
+                return "-headphones";
+            case SCARF:
+                return "-scarf";
+        }
     }
+    
+//    /**
+//     * Sets all of the sprite nodes associated with this EntityModel
+//     *
+//     * This currently only includes the 5-directional movement sprites, but
+//     * TODO: It should later include all action sprites.
+//     */
+//    void setSpriteNodes(const std::shared_ptr<cugl::scene2::SpriteNode>& northWalkNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastWalkNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastWalkNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastWalkNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southWalkNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northRunNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastRunNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastRunNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastRunNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southRunNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northDashNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& northEastDashNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& eastDashNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southEastDashNode,
+//                        const std::shared_ptr<cugl::scene2::SpriteNode>& southDashNode) {
+//        _northWalkSprite = northWalkNode;
+//        _northEastWalkSprite = northEastWalkNode;
+//        _eastWalkSprite = eastWalkNode;
+//        _southEastWalkSprite = southEastWalkNode;
+//        _southWalkSprite = southWalkNode;
+//        
+//        _northRunSprite = northRunNode;
+//        _northEastRunSprite = northEastRunNode;
+//        _eastRunSprite = eastRunNode;
+//        _southEastRunSprite = southEastRunNode;
+//        _southRunSprite = southRunNode;
+//        
+//        _northDashSprite = northDashNode;
+//        _northEastDashSprite = northEastDashNode;
+//        _eastDashSprite = eastDashNode;
+//        _southEastDashSprite = southEastDashNode;
+//        _southDashSprite = southDashNode;
+//    }
     
     /**
      * Sets  the dash effect sprite nodes associated with this EntityModel
@@ -673,6 +710,8 @@ public:
     bool isStunned() { return _state == STUNNED; }
     
     void setColliderSize(const cugl::Size& size) { _collidersize = size; }
+    void setRockColliderSize(const cugl::Size& size) { _rockColliderSize = size; }
+    void setDashColliderSize(const cugl::Size& size) { _dashColliderSize = size; }
 
     
 #pragma mark -
@@ -749,6 +788,8 @@ public:
     }
     
     void stun();
+    
+    virtual DirectionalSprites getDirectionalSpritesForState(EntityState state);
     
     /** If useMovement is true, use the current EntityModel's \_movement argument. If false, use \_velocity. */
     void updateSprite(float dt, bool useMovement);

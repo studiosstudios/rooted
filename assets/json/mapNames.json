@@ -1,3 +1,13 @@
 {
-  "names" : ["gridUnit1", "gridUnit2", "gridUnit3", "gridUnit4", "gridUnit5", "gridUnit6"]
+  "names" : ["gridUnit1", "gridUnit2", "gridUnit3", "gridUnit4", "gridUnit5", "gridUnit6"],
+  "top_left" : ["unit_tl_1", "unit_tl_2"],
+  "top" : ["unit_t_1", "unit_t_2"],
+  "top_right" : ["unit_tr_1", "unit_tr_2"],
+  "left" : ["unit_l_1", "unit_l_2"],
+  "middle" : ["unit_m_1", "unit_m_2"],
+  "right" : ["unit_r_1", "unit_r_2"],
+  "bottom_left" : ["unit_bl_1", "unit_bl_2"],
+  "bottom" : ["unit_b_1", "unit_b_2"],
+  "bottom_right" : ["unit_br_1", "unit_br_2"],
+  "outer" : ["unit_outer_1", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_2", "unit_outer_3", "unit_outer_4", "unit_outer_5"]
 }

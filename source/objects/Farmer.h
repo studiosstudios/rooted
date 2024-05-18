@@ -16,13 +16,14 @@ private:
     bool _isHoldingCarrot;
     bool _canPlant;
     bool _dashWindow;
-    std::shared_ptr<cugl::scene2::SpriteNode> _normalNode;
-    std::shared_ptr<cugl::scene2::SpriteNode> _captureNode;
     
     // Animation timers
     float sneakAnimDuration = 2.0f;
     float walkAnimDuration = 1.0f;
     float runAnimDuration = 0.5f;
+    
+    std::map<CarrotType, DirectionalSprites> _carryingSprites;
+    CarrotType _carriedCarrotType;
 
 public:
     int captureTime;
@@ -42,21 +43,26 @@ public:
         return (result->init(pos, size, scale) ? result : nullptr);
     }
     
+    
     bool isHoldingCarrot(){ return _isHoldingCarrot; }
 
-    void grabCarrot();
+    void grabCarrot(CarrotType carrotType);
     void rootCarrot();
     void carrotEscaped();
 
     bool canPlant() { return _canPlant; };
     
-    void setCanPlant(bool plant) { _canPlant = plant; };
-    
-    void setNormalNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _normalNode = n; }
-    void setCaptureNode(std::shared_ptr<cugl::scene2::SpriteNode> n) { _captureNode = n; }
+    void setCanPlant(bool plant) { _canPlant = plant; };    
     
     void setMovement(cugl::Vec2 movement) override;
     
+    void appendCarrySprite(CarrotType ct, DirectionalSprites ds) {
+        _carryingSprites.insert({ct, ds});
+    }
+    
+    DirectionalSprites getDirectionalSpritesForState(EntityState state) override;
+    
+
     void updateCurAnimDurationForState() override;
 
     void resetFarmer();

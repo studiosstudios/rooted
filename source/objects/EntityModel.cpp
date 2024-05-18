@@ -90,6 +90,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     _hasRock = false;
     dashTimer = 0;
     _stunTime = 0;
+    _dashCooldown = 0;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
         setMass(1.0);

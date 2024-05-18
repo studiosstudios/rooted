@@ -895,7 +895,9 @@ void AudioEngine::setVolume(const std::string key, float volume) {
     if (_actives.find(key) != _actives.end()) {
         Uint32 tag = _actives.at(key)->getTag();
         std::shared_ptr<AudioNode> node = _slots[tag]->getCurrent();
-        node->setGain(volume);
+        if(node != nullptr){
+            node->setGain(volume);
+        }
     }
 }
 

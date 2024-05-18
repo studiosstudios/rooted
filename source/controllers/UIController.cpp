@@ -137,7 +137,7 @@ void UIController::initGameUINodes() {
     _dialogBox->setVisible(false);
     _uinode->addChild(_dialogBox);
     
-    _dialogBoxText = scene2::Label::allocWithText("Drag left side of screen to move. Swipe up to dash. \n Capture all of the baby carrots!", _assets->get<Font>("gaeguBold75"));
+    _dialogBoxText = scene2::Label::allocWithText("Drag left side of screen to move. Swipe in a direction to dash. \n Capture all of the baby carrots!", _assets->get<Font>("gaeguBold75"));
     _dialogBoxText->setHorizontalAlignment(HorizontalAlign::CENTER);
     _dialogBoxText->setVerticalAlignment(VerticalAlign::TOP);
     _dialogBoxText->setPadding(200, 0, 200, 0);

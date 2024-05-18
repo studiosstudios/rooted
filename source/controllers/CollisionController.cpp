@@ -58,12 +58,6 @@ void CollisionController::beginContact(b2Contact* contact) {
             if(_map->getCharacter()->getUUID() == carrot->getUUID() && (name2 == "farmer" || name2 == "baby")){
                 Haptics::get()->playTransient(0.8, 0.1);
             }
-            if (name2 == "baby") {
-                BabyCarrot* b2babycarrot = dynamic_cast<BabyCarrot*>(bd2);
-                if(_map->getCharacter()->getUUID() == carrot->getUUID()){
-                    _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), b2babycarrot->getID()));
-                }
-            }
             if(name2 == "planting spot" && _map->getCharacter()->getUUID() == carrot->getUUID()) {
                 PlantingSpot* plantingSpot = dynamic_cast<PlantingSpot*>(bd2);
                 plantingSpot->setBelowAvatar(true);
@@ -318,8 +312,19 @@ void CollisionController::afterSolve(b2Contact* contact, const b2ContactImpulse*
             Farmer* farmer = dynamic_cast<Farmer*>(bd1);
             if(name2 == "carrot") {
                 Carrot* carrot = dynamic_cast<Carrot*>(bd2);
-                if(farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
+                if(_map->getCharacter()->getUUID() == farmer->getUUID() && farmer->isDashing() && !carrot->isCaptured() && !carrot->isRooted()){
                     _network->pushOutEvent(CaptureEvent::allocCaptureEvent(carrot->getUUID()));
+                }
+            }
+        }
+        
+        if (name1 == "carrot") {
+            Carrot* carrot = dynamic_cast<Carrot*>(bd1);
+            if(name2 == "baby") {
+                BabyCarrot* babycarrot = dynamic_cast<BabyCarrot*>(bd2);
+                std::cout << "baby carrot and carrot collision \n";
+                if(_map->getCharacter()->getUUID() == carrot->getUUID() && carrot->isDashing()){
+                    _network->pushOutEvent(CaptureBarrotEvent::allocCaptureBarrotEvent(carrot->getUUID(), babycarrot->getID()));
                 }
             }
         }

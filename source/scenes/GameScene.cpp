@@ -192,7 +192,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
 //    Application::get()->setClearColor(Color4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
     
-    _charDisplayTimer = 100;
+    _charDisplayTimer = 200;
     
     _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
     
@@ -227,6 +227,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const std::sha
  */
 void GameScene::dispose() {
     if (_active) {
+        _input->dispose();
         _input = nullptr;
         Haptics::stop();
         _rootnode = nullptr;
@@ -340,7 +341,7 @@ void GameScene::reset() {
     _readyNewGame = 0;
     _readyStart = 0;
     
-    _charDisplayTimer = 100;
+    _charDisplayTimer = 95;
         
     _ui.setCharacterDisplay(false, 0);
     
@@ -356,6 +357,7 @@ void GameScene::reset() {
 void GameScene::gameReset() {
     reset();
     // reset round and points
+    _charDisplayTimer = 200;
     _round = 1;
     _ui.setCharacterDisplay(true, _map->getCarrotTypeForUUID(_character->getUUID()));
     _ui.setRabbitPreview(false);
@@ -549,6 +551,23 @@ void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
     
     _ui.update(remain, _cam.getCamera(), getCarrotsLeft(), _map->getBabyCarrots().size(), _debug, _character->canDash());
+    
+    if (_charDisplayTimer > 0) {
+        _charDisplayTimer--;
+    }
+    if (_charDisplayTimer == 100) {
+        _ui.setCharacterDisplay(false, 0);
+        if(_character->getUUID() == _farmerUUID){
+            _ui.setRabbitPreview(true);
+        } else {
+            _ui.setCarrotPreview(true, _map->getCarrotTypeForUUID(_character->getUUID()));
+        }
+    }
+    else if (_charDisplayTimer == 0) {
+        // now set the camera zoom
+        _network->pushOutEvent(ReadyEvent::alloc(2));
+        _charDisplayTimer = -1;
+    }
         
     if (_countdown > 0) {
         _countdown--;
@@ -596,14 +615,6 @@ void GameScene::postUpdate(float remain) {
         else{
             //do nothing and wait for host to reset
         }
-    }
-    else if (_charDisplayTimer > 0) {
-        _charDisplayTimer--;
-    }
-    else if (_charDisplayTimer == 0) {
-        // now set the camera zoom
-        _network->pushOutEvent(ReadyEvent::alloc(2));
-        _charDisplayTimer = -1;
     }
     else{
         if (_readyStart == _network->getNumPlayers()) {

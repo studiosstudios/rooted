@@ -15,7 +15,6 @@ class Farmer : public EntityModel {
 private:
     bool _isHoldingCarrot;
     bool _canPlant;
-    bool _dashWindow;
     
     // Animation timers
     float standAnimDuration = 3.0f;

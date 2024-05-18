@@ -347,6 +347,11 @@ void EntityModel::dispose() {
     _dashEffectSprite = nullptr;
 }
 
+void EntityModel::resetStateCooldowns() {
+    dashTimer = 0;
+    curAnimTime = 0;
+}
+
 /**
  *  Steps the state machine of this EntityModel.
  *
@@ -360,6 +365,7 @@ void EntityModel::updateState(float dt) {
     if (_dashCooldown > 0) {
         _dashCooldown = std::max(0.0f, _dashCooldown - dt);
     }
+    
     
     _prevState = _state;
     bool stateChanged = false;
@@ -428,6 +434,7 @@ void EntityModel::updateState(float dt) {
 void EntityModel::stun() {
     _state = STUNNED;
     _stunTime = STUN_SECS;
+    resetStateCooldowns();
     // TODO: updateSprite would need to be called here if we get a sprite
 }
 

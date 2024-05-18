@@ -17,7 +17,8 @@
     },
     "farmer-southeast-walk": {
         "rows": 3,
-        "cols": 4
+        "cols": 4,
+        "size": 9
     },
     "farmer-south-run": {
         "rows": 2,

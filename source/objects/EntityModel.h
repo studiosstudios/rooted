@@ -715,6 +715,8 @@ public:
     void update(float dt) override;
     
     
+    void resetStateCooldowns();
+    
     /**
      *  Steps the state machine of this EntityModel.
      *

@@ -17,7 +17,8 @@
     },
     "farmer-southeast-walk": {
         "rows": 3,
-        "cols": 4
+        "cols": 4,
+        "size": 9
     },
     "farmer-south-run": {
         "rows": 2,
@@ -165,6 +166,27 @@
         "cols": 4,
         "size": 10
     },
+    "farmer-south-idle": {
+        "rows": 2,
+        "cols": 4,
+        "size": 6
+    },
+    "farmer-north-idle": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-east-idle": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-northeast-idle": {
+        "rows": 2,
+        "cols": 4
+    },
+    "farmer-southeast-idle": {
+        "rows": 2,
+        "cols": 4
+    },
     "carrot-south-walk": {
         "rows": 3,
         "cols": 4,
@@ -309,6 +331,86 @@
         "rows": 3,
         "cols": 4,
         "size": 11
+    },
+    "carrot-idle-south-cloak": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-north-cloak": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-east-cloak": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-northeast-cloak": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-southeast-cloak": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-south-flower": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-north-flower": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-east-flower": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-northeast-flower": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-southeast-flower": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-south-headphones": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-north-headphones": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-east-headphones": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-northeast-headphones": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-southeast-headphones": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-south-scarf": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-north-scarf": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-east-scarf": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-northeast-scarf": {
+        "rows": 2,
+        "cols": 5
+    },
+    "carrot-idle-southeast-scarf": {
+        "rows": 2,
+        "cols": 5
     },
     "barrot-south-walk": {
         "rows": 2,

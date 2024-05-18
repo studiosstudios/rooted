@@ -5,6 +5,8 @@
 #include "Farmer.h"
 
 bool Farmer::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
+    _isHoldingCarrot = false;
+    bool _canPlant = true;
     return EntityModel::init(pos, size, scale);
 }
 
@@ -17,19 +19,21 @@ void Farmer::grabCarrot(CarrotType carrotType){
     _isHoldingCarrot = true;
     _state = CARRYING;
     _carriedCarrotType = carrotType;
+    resetStateCooldowns();
     updateSprite(0);
-    std::cout << "Carrying " << carrotType << "\n";
 }
 
 void Farmer::rootCarrot(){
     _isHoldingCarrot = false;
     _state = STANDING;
+    resetStateCooldowns();
     updateSprite(0);
 }
 
 void Farmer::carrotEscaped(){
     _isHoldingCarrot = false;
     _state = STANDING;
+    resetStateCooldowns();
     updateSprite(0);
 }
 
@@ -53,8 +57,12 @@ EntityModel::DirectionalSprites Farmer::getDirectionalSpritesForState(EntityMode
 
 
 void Farmer::updateCurAnimDurationForState() {
+    EntityModel::updateCurAnimDurationForState();
     switch (_state) {
             // TODO: This needs to be split up into the correct animDurations for each type of movement states
+        case STANDING:
+            curAnimDuration = standAnimDuration;
+            break;
         case SNEAKING:
             curAnimDuration = sneakAnimDuration;
             break;

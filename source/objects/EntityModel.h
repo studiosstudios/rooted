@@ -197,6 +197,7 @@ protected:
     DirectionalSprites _walkSprites;
     DirectionalSprites _runSprites;
     DirectionalSprites _dashSprites;
+    DirectionalSprites _idleSprites;
     
     std::shared_ptr<cugl::scene2::SpriteNode> _dashEffectSprite;
     bool _shouldAnimateDash = false;
@@ -540,7 +541,7 @@ public:
      *
      * Virtual, should be implemented by all derived classes with respect to their specific animation durations.
      */
-    virtual void updateCurAnimDurationForState() {};
+    virtual void updateCurAnimDurationForState();
     
     /**
      * Returns whether the current EntityModel's state is one where the animation should be cycling
@@ -556,6 +557,8 @@ public:
     void setRunSprites(DirectionalSprites ds) {_runSprites = ds;}
     
     void setDashSprites(DirectionalSprites ds) {_dashSprites = ds;}
+    
+    void setIdleSprites(DirectionalSprites ds) {_idleSprites = ds;}
     
     static std::string getCarrotTypeSuffix(CarrotType ct) {
         switch (ct) {
@@ -711,6 +714,8 @@ public:
      */
     void update(float dt) override;
     
+    
+    void resetStateCooldowns();
     
     /**
      *  Steps the state machine of this EntityModel.

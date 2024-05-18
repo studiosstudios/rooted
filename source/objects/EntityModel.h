@@ -541,7 +541,7 @@ public:
      *
      * Virtual, should be implemented by all derived classes with respect to their specific animation durations.
      */
-    virtual void updateCurAnimDurationForState() {};
+    virtual void updateCurAnimDurationForState();
     
     /**
      * Returns whether the current EntityModel's state is one where the animation should be cycling

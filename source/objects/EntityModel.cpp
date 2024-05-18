@@ -103,6 +103,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
         _facing = SOUTH;
         _state = STANDING;
         _prevState = STANDING;
+        updateSprite(0);
         updateCurAnimDurationForState();
         
         return true;
@@ -112,6 +113,11 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
 
 #pragma mark -
 #pragma mark Animation
+
+
+void EntityModel::updateCurAnimDurationForState() {
+    curAnimTime = 0;
+}
 
 /**
     Whether this EntityModel should step in its animation for this frame.

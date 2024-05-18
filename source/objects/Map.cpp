@@ -611,7 +611,7 @@ void Map::acquireMapOwnership() {
 //    _entitiesNode->addChild(node);
 //}
 
-EntityModel::DirectionalSprites Map::initEntityDirectionalSprites(std::string prefix, std::string suffix, float scale) {
+EntityModel::DirectionalSprites Map::initEntityDirectionalSprites(std::string prefix, std::string suffix, float scale, bool anchorDown) {
     std::vector<std::string> keys {"north", "northeast", "east", "southeast", "south"};
     std::vector<std::shared_ptr<scene2::SpriteNode>> nodes;
     for (auto keyit = keys.begin(); keyit != keys.end(); ++keyit) {
@@ -628,6 +628,9 @@ EntityModel::DirectionalSprites Map::initEntityDirectionalSprites(std::string pr
         node->setPriority(float(Map::DrawOrder::ENTITIES));
         node->setVisible(false);
         node->setFrame(0);
+        if (anchorDown) {
+            node->setAnchor(Vec2 {0.5, 0.75});
+        }
         _entitiesNode->addChild(node);
         nodes.push_back(node);
     }
@@ -733,11 +736,11 @@ void Map::spawnFarmers() {
         farmer->setColliderSize(Size(FARMER_HITBOX_WIDTH, FARMER_HITBOX_HEIGHT));
                                 
         // Set farmer's walk/run/dash sprite nodes
-        auto walkDS = initEntityDirectionalSprites("farmer-", "-walk");
-        farmer->setWalkSprites(walkDS);
+        auto idleDS = initEntityDirectionalSprites("farmer-", "-idle");
+        farmer->setIdleSprites(idleDS);
+        farmer->setWalkSprites(initEntityDirectionalSprites("farmer-", "-walk"));
         farmer->setRunSprites(initEntityDirectionalSprites("farmer-", "-run"));
         farmer->setDashSprites(initEntityDirectionalSprites("farmer-", "-dash"));
-        farmer->setIdleSprites(initEntityDirectionalSprites("farmer-", "-idle"));
         farmer->setDashColliderSize(Size(FARMER_DASH_HITBOX_WIDTH, FARMER_DASH_HITBOX_HEIGHT));
         farmer->setRockColliderSize(Size(FARMER_ROCK_HITBOX_WIDTH, FARMER_ROCK_HITBOX_HEIGHT));
         
@@ -748,7 +751,7 @@ void Map::spawnFarmers() {
         
         _worldnode->addChild(dashEffectNode);
         
-        farmer->setSceneNode(walkDS.southSprite);
+        farmer->setSceneNode(idleDS.southSprite);
         farmer->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
 
         farmer->setDashEffectSpriteNode(dashEffectNode);
@@ -871,9 +874,10 @@ void Map::spawnCarrots() {
         _carrots.push_back(carrot);
         _players.push_back(carrot);
         
-
-        auto walkDS = initEntityDirectionalSprites("carrot-", EntityModel::getCarrotTypeSuffix(static_cast<EntityModel::CarrotType>(carrotTypeCount++)), 0.125f);
-        carrot->setSceneNode(walkDS.southSprite);
+        std::string carrotTypeStr = EntityModel::getCarrotTypeSuffix(static_cast<EntityModel::CarrotType>(carrotTypeCount++));
+        auto walkDS = initEntityDirectionalSprites("carrot-", carrotTypeStr, 0.125f);
+        auto idleDS = initEntityDirectionalSprites("carrot-idle-", carrotTypeStr, 0.125f, true);
+        carrot->setSceneNode(idleDS.southSprite);
         carrot->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
         
         auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
@@ -885,6 +889,7 @@ void Map::spawnCarrots() {
         carrot->setWalkSprites(walkDS);
         carrot->setRunSprites(walkDS);
         carrot->setDashSprites(initEntityDirectionalSprites("carrot-", "-dash", 0.125f));
+        carrot->setIdleSprites(idleDS);
         
         carrot->setDashEffectSpriteNode(dashEffectNode);
         

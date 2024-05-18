@@ -50,6 +50,7 @@
 #define EXIT_COUNT      240
 /** The conversion from degrees to radians */
 #define DEGREE_TO_RADIAN  0.0174533
+#define RADIAN_TO_DEGREE  57.2958
 
 #pragma mark -
 #pragma mark Game Logic Constants

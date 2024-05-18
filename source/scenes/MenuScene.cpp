@@ -99,15 +99,35 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
         }
     });
     
-    // TODO: SET UP OPTIONS SCENE HERE
-    // only temp until we have another way to access the tutorial again
+    // SET UP OPTIONS SCENE
+    _optionsscene = _assets->get<scene2::SceneNode>("optionsmenu");
+    _optionsscene->setContentSize(dimen);
+    _optionsscene->doLayout();
+    
+    _backoutoptions = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_back"));
+    _backoutoptions->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _choice = Choice::MAIN;
+            _currmenuchoice = Choice::MAIN;
+        }
+    });
+    
+    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions};
+    _screenButtonMap.insert({Choice::SETTINGS, optionsbuttons});
+    
     _optionsbutton->addListener([this](const std::string& name, bool down) {
         if (!down) {
-            _choice = Choice::TUTORIAL;
+            _choice = Choice::SETTINGS;
         }
     });
     
     // TODO: SET UP STATS SCENE HERE
+    // only temp until we have another way to access the tutorial again
+    _statsbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+            _choice = Choice::TUTORIAL;
+        }
+    });
     
     // set choices
     _choice = NONE;
@@ -182,6 +202,9 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
                 break;
             case LOBBY:
                 addChild(_lobbyscene);
+                break;
+            case SETTINGS:
+                addChild(_optionsscene);
                 break;
             default:
                 break;

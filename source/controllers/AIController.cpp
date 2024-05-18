@@ -50,10 +50,12 @@ void AIController::updateBabyCarrotState(const std::shared_ptr<BabyCarrot> &baby
 }
 
 void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarrot) {
-    if (nearTarget(babyCarrot->getPosition(), babyCarrot->getTarget())) {
+    if (nearTarget(babyCarrot->getPosition(), babyCarrot->getTarget()) || babyCarrot->getNeedNewTarget()) {
         babyCarrot->setTarget(Vec2::ZERO);
         updateBabyCarrotState(babyCarrot);
+        babyCarrot->resetStuckBarrot();
     }
+    babyCarrot->handleMaybeStuckBarrot();
     switch (babyCarrot->getState()) {
         case State::EVADE:
             // run away from farmer when can see farmer (like when not in wheat)

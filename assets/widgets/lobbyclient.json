@@ -1084,11 +1084,15 @@
             "back" : {
                 "type" : "Widget",
                 "data" : {
-                    "key" : "backbuttonwidget"
+                    "key" : "backbuttonwidget",
+                    "variables" : {
+                        "anchor" : [0, 1],
+                        "texture" : "topback"
+                    }
                 },
                 "layout": {
                     "x_anchor": "left",
-                    "y_anchor": "bottom",
+                    "y_anchor": "top",
                     "absolute": false,
                     "x_offset": 0,
                     "y_offset": 0

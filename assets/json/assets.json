@@ -96,6 +96,72 @@
         "farmer-east-dash": {
             "file":     "textures/farmer-east-dash.png"
         },
+        "farmer-southeast-dash": {
+            "file":     "textures/farmer-southeast-dash.png"
+        },
+        "farmer-northeast-dash": {
+            "file":     "textures/farmer-northeast-dash.png"
+        },
+        "farmer-south-cloak": {
+            "file":     "textures/farmer-south-cloak.png"
+        },
+        "farmer-north-cloak": {
+            "file":     "textures/farmer-north-cloak.png"
+        },
+        "farmer-east-cloak": {
+            "file":     "textures/farmer-east-cloak.png"
+        },
+        "farmer-southeast-cloak": {
+            "file":     "textures/farmer-southeast-cloak.png"
+        },
+        "farmer-northeast-cloak": {
+            "file":     "textures/farmer-northeast-cloak.png"
+        },
+        "farmer-south-flower": {
+            "file":     "textures/farmer-south-flower.png"
+        },
+        "farmer-north-flower": {
+            "file":     "textures/farmer-north-flower.png"
+        },
+        "farmer-east-flower": {
+            "file":     "textures/farmer-east-flower.png"
+        },
+        "farmer-southeast-flower": {
+            "file":     "textures/farmer-southeast-flower.png"
+        },
+        "farmer-northeast-flower": {
+            "file":     "textures/farmer-northeast-flower.png"
+        },
+        "farmer-south-headphones": {
+            "file":     "textures/farmer-south-headphones.png"
+        },
+        "farmer-north-headphones": {
+            "file":     "textures/farmer-north-headphones.png"
+        },
+        "farmer-east-headphones": {
+            "file":     "textures/farmer-east-headphones.png"
+        },
+        "farmer-southeast-headphones": {
+            "file":     "textures/farmer-southeast-headphones.png"
+        },
+        "farmer-northeast-headphones": {
+            "file":     "textures/farmer-northeast-headphones.png"
+        },
+        "farmer-south-scarf": {
+            "file":     "textures/farmer-south-scarf.png"
+        },
+        "farmer-north-scarf": {
+            "file":     "textures/farmer-north-scarf.png"
+        },
+        "farmer-east-scarf": {
+            "file":     "textures/farmer-east-scarf.png"
+        },
+        "farmer-southeast-scarf": {
+            "file":     "textures/farmer-southeast-scarf.png"
+        },
+        "farmer-northeast-scarf": {
+            "file":     "textures/farmer-northeast-scarf.png"
+        },
         "fence0": {
             "file":     "textures/fence0.png"
         },
@@ -149,6 +215,66 @@
         },
         "carrot-southeast-dash": {
             "file":     "textures/carrot-southeast-dash.png"
+        },
+        "carrot-south-cloak": {
+            "file":     "textures/carrot-south-cloak.png"
+        },
+        "carrot-north-cloak": {
+            "file":     "textures/carrot-north-cloak.png"
+        },
+        "carrot-east-cloak": {
+            "file":     "textures/carrot-east-cloak.png"
+        },
+        "carrot-northeast-cloak": {
+            "file":     "textures/carrot-northeast-cloak.png"
+        },
+        "carrot-southeast-cloak": {
+            "file":     "textures/carrot-southeast-cloak.png"
+        },
+        "carrot-south-flower": {
+            "file":     "textures/carrot-south-flower.png"
+        },
+        "carrot-north-flower": {
+            "file":     "textures/carrot-north-flower.png"
+        },
+        "carrot-east-flower": {
+            "file":     "textures/carrot-east-flower.png"
+        },
+        "carrot-northeast-flower": {
+            "file":     "textures/carrot-northeast-flower.png"
+        },
+        "carrot-southeast-flower": {
+            "file":     "textures/carrot-southeast-flower.png"
+        },
+        "carrot-south-headphones": {
+            "file":     "textures/carrot-south-headphones.png"
+        },
+        "carrot-north-headphones": {
+            "file":     "textures/carrot-north-headphones.png"
+        },
+        "carrot-east-headphones": {
+            "file":     "textures/carrot-east-headphones.png"
+        },
+        "carrot-northeast-headphones": {
+            "file":     "textures/carrot-northeast-headphones.png"
+        },
+        "carrot-southeast-headphones": {
+            "file":     "textures/carrot-southeast-headphones.png"
+        },
+        "carrot-south-scarf": {
+            "file":     "textures/carrot-south-scarf.png"
+        },
+        "carrot-north-scarf": {
+            "file":     "textures/carrot-north-scarf.png"
+        },
+        "carrot-east-scarf": {
+            "file":     "textures/carrot-east-scarf.png"
+        },
+        "carrot-northeast-scarf": {
+            "file":     "textures/carrot-northeast-scarf.png"
+        },
+        "carrot-southeast-scarf": {
+            "file":     "textures/carrot-southeast-scarf.png"
         },
         "barrot-south-walk": {
             "file":     "textures/barrot-south-walk.png"
@@ -411,6 +537,9 @@
         },
         "carrotbutton1": {
             "file": "textures/carrotbutton1.png"
+        },
+        "topback": {
+            "file": "textures/topback.png"
         }
     },
     "jsons": {
@@ -453,7 +582,8 @@
         "tutorialMid": "level-editor/tutorialMid.json",
         "tutorialBottom": "level-editor/tutorialBottom.json",
         "line-gesture": "json/line-gesture.json",
-        "circle-gesture": "json/circle-gesture.json"
+        "circle-gesture": "json/circle-gesture.json",
+        "sprite-metadata": "json/sprite-metadata.json"
     },
     "sounds": {
         "menu": {
@@ -474,37 +604,34 @@
             "stream":   true,
             "volume":   0.5
         },
-        "win": {
+        "carrotsWin": {
             "type":     "sample",
-            "file":     "sounds/victory.ogg",
+            "file":     "sounds/carrot-victory.ogg",
             "stream":   true,
             "volume":   1
         },
-        "lose": {
+        "carrotsLose": {
             "type":     "sample",
-            "file":     "sounds/lose.ogg",
+            "file":     "sounds/carrot-lose.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerWin": {
+            "type":     "sample",
+            "file":     "sounds/farmer-victory.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerLose": {
+            "type":     "sample",
+            "file":     "sounds/farmer-lose.ogg",
             "stream":   true,
             "volume":   1
         },
         "rustle": {
             "type":     "sample",
-            "file":     "sounds/rustlingAlt.ogg",
+            "file":     "sounds/rustling-alt.ogg",
             "stream":   true,
-            "volume":   0.5
-        },
-        "jump": {
-            "type":     "sample",
-            "file":     "sounds/jump.wav",
-            "volume":   0.5
-        },
-        "pew": {
-            "type":     "sample",
-            "file":     "sounds/pew.wav",
-            "volume":   0.5
-        },
-        "pop": {
-            "type":     "sample",
-            "file":     "sounds/plop.wav",
             "volume":   0.5
         },
         "bunny-root": {
@@ -525,7 +652,12 @@
         "dash": {
             "type":     "sample",
             "file":     "sounds/dash.wav",
-            "volume":   0.5
+            "volume":   0.2
+        },
+        "capture": {
+            "type":     "sample",
+            "file":     "sounds/pop.ogg",
+            "volume":   1
         }
     },
     "fonts": {

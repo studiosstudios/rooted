@@ -43,6 +43,8 @@ bool LoadingScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _assets = assets;
     _assets->loadDirectory("json/loading.json");
     auto layer = assets->get<scene2::SceneNode>("load");
+    _logo = layer->getChildByName("logo");
+    _time = 0;
     layer->setContentSize(dimen);
     layer->doLayout(); // This rearranges the children to fit the screen
     
@@ -85,6 +87,8 @@ void LoadingScene::dispose() {
  */
 void LoadingScene::update(float progress) {
     if (_progress < 1) {
+        _time += 1/60.0f;
+        _logo->setScale(0.3f * EasingFunction::elasticOut(std::max(0.0f, _time*0.8f-0.5f), 0.9f));
         _progress = _assets->progress();
         if (_progress >= 1) {
             _progress = 1.0f;

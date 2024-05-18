@@ -202,9 +202,11 @@ void RootedApp::preUpdate(float dt) {
     }
     else if (_status == HOST){
         updateHostScene(dt);
+        _hostgame.setSoundScale(_mainmenu.soundSliderVal()/100.0f);
     }
     else if (_status == CLIENT){
         updateClientScene(dt);
+        _joingame.setSoundScale(_mainmenu.soundSliderVal()/100.0f);
     }
     else if (_status == GAME){
         _gameplay.preUpdate(dt);

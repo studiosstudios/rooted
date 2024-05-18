@@ -44,7 +44,7 @@ public:
     }
     
     
-    bool isHoldingCarrot(){ return _isHoldingCarrot; }
+    bool isHoldingCarrot(){ return _state == CARRYING; }
 
     void grabCarrot(CarrotType carrotType);
     void rootCarrot();

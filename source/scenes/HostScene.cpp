@@ -93,14 +93,22 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
         
     // Program the buttons
     _backout->addListener([this](const std::string& name, bool down) {
-        if (!down) {
+        if(down){
+            std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
+            AudioEngine::get()->play("button", source, false, _soundScale);
+        }
+        else {
             _network->disconnect();
             _backClicked = true;
         }
     });
 
     _startgame->addListener([this](const std::string& name, bool down) {
-        if (!down) {
+        if(down){
+            std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
+            AudioEngine::get()->play("button", source, false, _soundScale);
+        }
+        else {
             startGame();
         }
     });

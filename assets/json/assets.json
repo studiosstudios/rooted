@@ -351,6 +351,9 @@
         "carrot-idle-southeast-scarf": {
             "file":     "textures/carrot-idle-southeast-scarf.png"
         },
+        "carrot-top": {
+            "file":     "textures/carrot-top.png"
+        },
         "barrot-south-walk": {
             "file":     "textures/barrot-south-walk.png"
         },
@@ -706,6 +709,12 @@
         "topback": {
             "file": "textures/topback.png"
         },
+        "lefthand": {
+            "file": "textures/handjoystick.png"
+        },
+        "righthand": {
+            "file": "textures/righthand.png"
+        },
         "rabbit" : {
             "file" : "textures/rabbit.png"
         },
@@ -876,6 +885,11 @@
             "type":     "sample",
             "file":     "sounds/pop.ogg",
             "volume":   1
+        },
+        "button": {
+            "type":     "sample",
+            "file":     "sounds/button-click.ogg",
+            "volume":   0.5
         }
     },
     "fonts": {

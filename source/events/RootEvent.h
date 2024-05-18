@@ -21,6 +21,8 @@ protected:
     
     std::string _uuid;
     int _plantingspotid;
+    float _farmerX;
+    float _farmerY;
     
 public:
     /**
@@ -32,7 +34,7 @@ public:
     */
    std::shared_ptr<NetEvent> newEvent() override;
     
-    static std::shared_ptr<NetEvent> allocRootEvent(std::string uuid, int plantingspotid);
+    static std::shared_ptr<NetEvent> allocRootEvent(std::string uuid, int plantingspotid, Vec2 farmerPos);
     
     /**
      * Serialize any parameter that the event contains to a vector of bytes.
@@ -54,6 +56,8 @@ public:
     
     /** Gets the uuid of planting spot associated with the event */
     int getPlantingSpotID() { return _plantingspotid; }
+    
+    Vec2 getFarmerPos() { return Vec2(_farmerX, _farmerY); }
 };
 
 #endif /* RootEvent_h */

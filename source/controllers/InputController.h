@@ -170,6 +170,8 @@ protected:
     
     std::shared_ptr<cugl::GestureRecognizer> _lineGesturer;
     std::shared_ptr<cugl::GestureRecognizer> _circleGesturer;
+    
+    float _time;
 
 
     /**

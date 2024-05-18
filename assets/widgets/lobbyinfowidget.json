@@ -89,7 +89,7 @@
                             "visible": true,
                             "font": "gaeguBold100",
                             "text": "",
-                            "cursor": true,
+                            "cursor": false,
                             "cursorwidth": 10,
                             "cursorcolor": "#000000ff",
                             "foreground": "#000000ff",
@@ -110,6 +110,19 @@
                             "absolute": false,
                             "x_offset": 0,
                             "y_offset": 0
+                        }
+                    },
+                    "backspace": {
+                        "type"   : "Button",
+                        "data": {
+                            "anchor"   : [0.5, 0.5]
+                        },
+                        "layout" : {
+                            "x_anchor" : "fill",
+                            "y_anchor" : "fill",
+                            "x_offset" : 2,
+                            "y_offset" : 2,
+                            "absolute" : true
                         }
                     }
                 },

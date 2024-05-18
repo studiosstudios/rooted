@@ -489,7 +489,7 @@
         "redbuttonsmallwidget" : "widgets/redbuttonsmallwidget.json",
         "numbuttonwidget" : "widgets/numbuttonwidget.json",
         "numpadwidget" : "widgets/numpadwidget.json",
-        "lobbyclient" : "widgets/lobbyclientold.json",
+        "lobbyclient" : "widgets/lobbyclient.json",
         "lobbyhost" : "widgets/lobbyhost.json",
         "lobbyinfowidget" : "widgets/lobbyinfowidget.json",
         "prelobby": "widgets/prelobby.json",

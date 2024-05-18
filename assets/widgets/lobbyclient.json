@@ -22,16 +22,16 @@
             "visible": true
         },
         "children": {
-            "wheatbkg": {
+            "lobbybkg": {
                 "type": "Image",
                 "data": {
-                    "texture": "wheatbkg",
+                    "texture": "lobbybkg",
                     "anchor": [
                         0.5,
                         0.5
                     ],
                     "size": [
-                        1024,
+                        1033,
                         576
                     ],
                     "angle": 0,
@@ -49,7 +49,28 @@
                     "y_offset": 0
                 }
             },
-            "lobbybuttons": {
+            "join": {
+                "type": "Widget",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "key" : "redbuttonsmallwidget",
+                    "variables" : {
+                        "text" : "JOIN",
+                        "fontsize" : "gaeguBold60",
+                        "anchor" : [0.5, 1]
+                    }
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.01,
+                    "y_offset": -0.55
+                }
+            },
+            "numpad": {
                 "type": "Node",
                 "format": {
                     "type": "Anchored"
@@ -57,95 +78,1022 @@
                 "data": {
                     "anchor": [
                         0.5,
-                        0.5
+                        1
                     ],
                     "size": [
-                        560,
-                        576
+                        854,
+                        159
                     ],
                     "angle": 0,
                     "position": [
-                        218,
-                        0
+                        85,
+                        -42
                     ],
                     "visible": true
                 },
                 "children": {
-                    "join": {
-                        "type": "Widget",
+                    "nine": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
                         "data": {
-                            "key" : "redbuttonbigwidget",
-                            "variables" : {
-                            "text" : "join",
                             "anchor": [
-                                0.5,
-                                0
-                            ]
+                                0,
+                                1
+                            ],
+                            "size": [
+                                84,
+                                148
+                            ],
+                            "angle": 0,
+                            "position": [
+                                768,
+                                2
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton2"
+                        },
+                        "children": {
+                            "carrotbutton2": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton2",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        83.97,
+                                        147.42
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0.28
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        16,
+                                        48.79999923706055
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "9",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.19,
+                                    "y_offset": -0.32
+                                }
                             }
                         },
                         "layout": {
-                            "x_anchor": "center",
-                            "y_anchor": "bottom",
+                            "x_anchor": "left",
+                            "y_anchor": "top",
                             "absolute": false,
-                            "x_offset": 0,
-                            "y_offset": 0.01
+                            "x_offset": 0.9,
+                            "y_offset": -0.06
                         }
                     },
-                    "numpad": {
-                        "type": "Widget",
+                    "eight": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
                         "data": {
-                            "key" : "numpadwidget"
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                81.54,
+                                153.63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                684,
+                                0.37
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton1"
+                        },
+                        "children": {
+                            "carrotbutton1": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton1",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        81.54,
+                                        153.63
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        15,
+                                        48.43000411987305
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "8",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.18,
+                                    "y_offset": -0.35
+                                }
+                            }
                         },
                         "layout": {
-                            "x_anchor": "center",
-                            "y_anchor": "middle",
+                            "x_anchor": "left",
+                            "y_anchor": "top",
                             "absolute": false,
-                            "x_offset": 0,
-                            "y_offset": 0
+                            "x_offset": 0.8,
+                            "y_offset": -0.03
                         }
                     },
-                    "idfield": {
-                        "type": "Widget",
+                    "seven": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
                         "data": {
-                            "key" : "lobbyidwidget"
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                84,
+                                148
+                            ],
+                            "angle": 0,
+                            "position": [
+                                597,
+                                2
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton2"
+                        },
+                        "children": {
+                            "carrotbutton2": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton2",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        83.97,
+                                        147.42
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0.28
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        16,
+                                        48.79999923706055
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "7",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.19,
+                                    "y_offset": -0.32
+                                }
+                            }
                         },
                         "layout": {
-                            "x_anchor": "center",
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.7,
+                            "y_offset": -0.06
+                        }
+                    },
+                    "six": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                81.54,
+                                153.63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                513,
+                                0.37
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton1"
+                        },
+                        "children": {
+                            "carrotbutton1": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton1",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        81.54,
+                                        153.63
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        15,
+                                        44.43000411987305
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "6",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.18,
+                                    "y_offset": -0.38
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.6,
+                            "y_offset": -0.03
+                        }
+                    },
+                    "five": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                84,
+                                148
+                            ],
+                            "angle": 0,
+                            "position": [
+                                426,
+                                2
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton2"
+                        },
+                        "children": {
+                            "carrotbutton2": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton2",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        83.97,
+                                        147.42
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0.28
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        16,
+                                        48.79999923706055
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "5",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.19,
+                                    "y_offset": -0.32
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.5,
+                            "y_offset": -0.06
+                        }
+                    },
+                    "four": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                81.54,
+                                153.63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                342,
+                                2.37
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton1"
+                        },
+                        "children": {
+                            "carrotbutton1": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton1",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        81.54,
+                                        153.63
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        15,
+                                        48.43000411987305
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "4",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.18,
+                                    "y_offset": -0.35
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.4,
+                            "y_offset": -0.02
+                        }
+                    },
+                    "three": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                84,
+                                148
+                            ],
+                            "angle": 0,
+                            "position": [
+                                255,
+                                3
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton2"
+                        },
+                        "children": {
+                            "carrotbutton2": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton2",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        83.97,
+                                        147.42
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0.28
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        16,
+                                        48.79999923706055
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "3",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.19,
+                                    "y_offset": -0.32
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.3,
+                            "y_offset": -0.05
+                        }
+                    },
+                    "two": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                81.54,
+                                153.63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                171,
+                                2.37
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton1"
+                        },
+                        "children": {
+                            "carrotbutton1": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton1",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        81.54,
+                                        153.63
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        15,
+                                        48.43000411987305
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "2",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.18,
+                                    "y_offset": -0.35
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.2,
+                            "y_offset": -0.02
+                        }
+                    },
+                    "one": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                84,
+                                148
+                            ],
+                            "angle": 0,
+                            "position": [
+                                84,
+                                5
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton2"
+                        },
+                        "children": {
+                            "carrotbutton2": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton2",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        83.97,
+                                        147.42
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0.28
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        16,
+                                        48.79999923706055
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "1",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.19,
+                                    "y_offset": -0.32
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.1,
+                            "y_offset": -0.04
+                        }
+                    },
+                    "zero": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                81.54,
+                                153.63
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                5.37
+                            ],
+                            "visible": true,
+                            "upnode": "carrotbutton1"
+                        },
+                        "children": {
+                            "carrotbutton1": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "carrotbutton1",
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        81.54,
+                                        153.63
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "num": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [
+                                        0,
+                                        1
+                                    ],
+                                    "size": [
+                                        51.20000076293945,
+                                        51.20000076293945
+                                    ],
+                                    "position": [
+                                        15,
+                                        48.43000411987305
+                                    ],
+                                    "angle": 0,
+                                    "visible": true,
+                                    "font": "gaeguBold72",
+                                    "text": "0",
+                                    "foreground": "#000000ff",
+                                    "background": "#00000000",
+                                    "padding": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                    ],
+                                    "valign": "middle",
+                                    "halign": "center"
+                                },
+                                "children": {},
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.18,
+                                    "y_offset": -0.35
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "left",
                             "y_anchor": "top",
                             "absolute": false,
                             "x_offset": 0,
-                            "y_offset": -0.02
+                            "y_offset": 0
                         }
                     }
                 },
                 "layout": {
                     "x_anchor": "center",
-                    "y_anchor": "fill",
+                    "y_anchor": "top",
                     "absolute": false,
-                    "x_offset": -0.01,
-                    "y_offset": 0
+                    "x_offset": 0,
+                    "y_offset": -0.8
                 }
             },
-            "back": {
+            "lobbyinfo": {
                 "type": "Widget",
                 "data": {
-                    "key" : "backbuttonwidget"
+                    "key" : "lobbyinfowidget"
                 },
                 "layout": {
-                    "x_anchor": "left",
-                    "y_anchor": "bottom",
+                    "x_anchor": "center",
+                    "y_anchor": "top",
                     "absolute": false,
-                    "x_offset": 0.03,
+                    "x_offset": 0,
                     "y_offset": 0
                 }
             }
-        },
-        "layout": {
-            "x_anchor": "center",
-            "y_anchor": "fill",
-            "absolute": false,
-            "x_offset": -0.01,
-            "y_offset": 0
         }
     }
 }

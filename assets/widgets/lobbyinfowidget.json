@@ -1,0 +1,225 @@
+{
+    "variables": {},
+    "contents": {
+        "type": "Node",
+        "format": {
+            "type": "Anchored"
+        },
+        "data": {
+            "anchor": [
+                0.5,
+                1
+            ],
+            "size": [
+                584,
+                333
+            ],
+            "angle": 0,
+            "position": [
+                220,
+                243
+            ],
+            "visible": true
+        },
+        "children": {
+            "lobbyid": {
+                "type": "Image",
+                "data": {
+                    "texture": "lobbyid",
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        583.2,
+                        333
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        6
+                    ],
+                    "visible": true
+                },
+                "layout": {
+                    "x_anchor": "fill",
+                    "y_anchor": "fill",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
+            },
+            "textbox": {
+                "type": "Node",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "anchor": [
+                        0,
+                        1
+                    ],
+                    "size": [
+                        311,
+                        95
+                    ],
+                    "angle": 0,
+                    "position": [
+                        136,
+                        85
+                    ],
+                    "visible": true
+                },
+                "children": {
+                    "textfield": {
+                        "type": "TextField",
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                311,
+                                95
+                            ],
+                            "position": [
+                                0,
+                                0
+                            ],
+                            "visible": true,
+                            "font": "gaeguBold100",
+                            "text": "",
+                            "cursor": true,
+                            "cursorwidth": 10,
+                            "cursorcolor": "#000000ff",
+                            "foreground": "#000000ff",
+                            "background": "#00000000",
+                            "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "valign": "middle",
+                            "halign": "center"
+                        },
+                        "children": {},
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0,
+                            "y_offset": 0
+                        }
+                    }
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0.23,
+                    "y_offset": -0.46
+                }
+            },
+            "textbox_2": {
+                "type": "Node",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "anchor": [
+                        0.5,
+                        1
+                    ],
+                    "size": [
+                        246,
+                        30
+                    ],
+                    "angle": 0,
+                    "position": [
+                        169,
+                        246
+                    ],
+                    "visible": true
+                },
+                "children": {
+                    "playercount": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "playercount",
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                339.6,
+                                55.2
+                            ],
+                            "angle": 0,
+                            "position": [
+                                -47,
+                                -16.2
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": -0.19,
+                            "y_offset": 0.3
+                        }
+                    },
+                    "textfield": {
+                        "type": "TextField",
+                        "data": {
+                            "anchor": [
+                                0,
+                                1
+                            ],
+                            "size": [
+                                178,
+                                56
+                            ],
+                            "position": [
+                                34,
+                                -13
+                            ],
+                            "visible": true,
+                            "font": "gaeguBold45",
+                            "text": "0 players",
+                            "cursor": true,
+                            "cursorwidth": 5,
+                            "cursorcolor": "#000000ff",
+                            "foreground": "#000000ff",
+                            "background": "#00000000",
+                            "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "valign": "middle",
+                            "halign": "center"
+                        },
+                        "children": {},
+                        "layout": {
+                            "x_anchor": "left",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": 0.14,
+                            "y_offset": 0.43
+                        }
+                    }
+                },
+                "layout": {
+                    "x_anchor": "center",
+                    "y_anchor": "top",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": -0.17
+                }
+            }
+        }
+    }
+}

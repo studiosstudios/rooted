@@ -1,0 +1,15 @@
+        "lobbybkg": {
+            "file": "lobbybkg.png"
+        },
+        "lobbyid": {
+            "file": "lobbyidbkg.png"
+        },
+        "playercount": {
+            "file": "playercountbkg.png"
+        },
+        "carrotbutton2": {
+            "file": "carrotbutton2.png"
+            },
+        "carrotbutton1": {
+            "file": "carrotbutton1.png"
+        },

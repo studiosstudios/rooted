@@ -149,6 +149,8 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _righthandNode->setVisible(false);
     _fakejoyBack->setVisible(false);
     _soundScale = 1.0f;
+    
+    carrotAItarget = Vec2();
 
     return true;
 }
@@ -644,7 +646,12 @@ void TutorialScene::preUpdate(float dt) {
             }
             
             auto carrot = _map->getCarrots().at(0);
-            carrot->setMovement((_character->getPosition() - carrot->getPosition()).getNormalization() * 0.2);
+            if (carrotAItarget.isZero() || (abs(carrotAItarget.x - carrot->getPosition().x) < 0.2f && abs(carrotAItarget.y - carrot->getPosition().y) < 0.2f)) {
+//                carrotAItarget = Vec2(((float) std::rand()/ RAND_MAX)*(_map->getMapBounds().size.width - 1.0 * 2), (((float) std::rand()/ RAND_MAX)*(_map->getMapBounds().size.height - 1.0 * 2)/3)+_map->getMapBounds().size.height*2/3);
+                carrotAItarget = Vec2(((float) std::rand()/ RAND_MAX)*(_map->getMapBounds().size.width - 4.0) + 2.0f, ((float) std::rand()/ RAND_MAX)*(_map->getMapBounds().size.height - 3.0 * 2)/3 + 2.0f);
+
+            }
+            carrot->setMovement((carrotAItarget - carrot->getPosition()).getNormalization() * 0.3);
             carrot->updateState(dt);
             carrot->applyForce();
             carrot->stepAnimation(dt);

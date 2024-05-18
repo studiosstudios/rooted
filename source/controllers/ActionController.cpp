@@ -349,8 +349,8 @@ void ActionController::updateRustlingNoise(){
         numBarrotsClose *= 0.75;
     }
     
-    std::cout<<"closestBarrot: " << closestBarrot << "\n";
-    std::cout<<"num nearby barrots: " << numBarrotsClose << "\n";
+//    std::cout<<"closestBarrot: " << closestBarrot << "\n";
+//    std::cout<<"num nearby barrots: " << numBarrotsClose << "\n";
     
     playRustling(nullptr, numBarrotsClose > 0? closestBarrot/(numBarrotsClose):13, true);
 }

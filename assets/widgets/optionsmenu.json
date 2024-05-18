@@ -1233,6 +1233,543 @@
                     "x_offset": 0.18,
                     "y_offset": -0.2
                 }
+            },
+            "popup": {
+                "type": "Node",
+                "format": {
+                    "type": "Anchored"
+                },
+                "data": {
+                    "anchor": [
+                        0.5,
+                        0.5
+                    ],
+                    "size": [
+                        1024,
+                        576
+                    ],
+                    "angle": 0,
+                    "position": [
+                        0,
+                        0
+                    ],
+                    "visible": false
+                },
+                "children": {
+                    "popup": {
+                        "type": "Image",
+                        "data": {
+                            "texture": "popup",
+                            "anchor": [
+                                0.5,
+                                0.5
+                            ],
+                            "size": [
+                                1024,
+                                576
+                            ],
+                            "angle": 0,
+                            "position": [
+                                0,
+                                0
+                            ],
+                            "visible": true
+                        },
+                        "layout": {
+                            "x_anchor": "fill",
+                            "y_anchor": "fill",
+                            "absolute": false,
+                            "x_offset": -0.05,
+                            "y_offset": -0.05
+                        }
+                    },
+                    "exitpopup": {
+                        "type": "Button",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                1,
+                                1
+                            ],
+                            "size": [
+                                59.4,
+                                59.4
+                            ],
+                            "angle": 0,
+                            "position": [
+                                646,
+                                425.6
+                            ],
+                            "visible": true,
+                            "upnode": "xbutton"
+                        },
+                        "children": {
+                            "xbutton": {
+                                "type": "Image",
+                                "data": {
+                                    "texture": "xbutton",
+                                    "anchor": [
+                                        0.5,
+                                        0.5
+                                    ],
+                                    "size": [
+                                        42,
+                                        42
+                                    ],
+                                    "angle": -45,
+                                    "position": [
+                                        29.7,
+                                        17.4
+                                    ],
+                                    "visible": true
+                                },
+                                "layout": {
+                                    "x_anchor": "left",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0.5,
+                                    "y_offset": -0.5
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "right",
+                            "y_anchor": "top",
+                            "absolute": false,
+                            "x_offset": -0.31,
+                            "y_offset": -0.16
+                        }
+                    },
+                    "info": {
+                        "type": "Node",
+                        "format": {
+                            "type": "Anchored"
+                        },
+                        "data": {
+                            "anchor": [
+                                0.5,
+                                0.5
+                            ],
+                            "size": [
+                                400,
+                                400
+                            ],
+                            "angle": 0,
+                            "position": [
+                                312,
+                                88
+                            ],
+                            "visible": true
+                        },
+                        "children": {
+                            "swipedir": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0.5,
+                                        1
+                                    ],
+                                    "size": [
+                                        200,
+                                        170
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        100,
+                                        230
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "swipe1": {
+                                        "type": "Label",
+                                        "data": {
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                200,
+                                                25
+                                            ],
+                                            "position": [
+                                                0,
+                                                14
+                                            ],
+                                            "angle": 0,
+                                            "visible": true,
+                                            "font": "gaeguBold20",
+                                            "text": "dash in the direction of",
+                                            "foreground": "#000000ff",
+                                            "background": "#00000000",
+                                            "padding": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            ],
+                                            "valign": "bottom",
+                                            "halign": "center"
+                                        },
+                                        "children": {},
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.77
+                                        }
+                                    },
+                                    "swipe2": {
+                                        "type": "Label",
+                                        "data": {
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                90,
+                                                25
+                                            ],
+                                            "position": [
+                                                54,
+                                                0
+                                            ],
+                                            "angle": 0,
+                                            "visible": true,
+                                            "font": "gaeguBold20",
+                                            "text": "your swipe",
+                                            "foreground": "#000000ff",
+                                            "background": "#00000000",
+                                            "padding": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            ],
+                                            "valign": "bottom",
+                                            "halign": "center"
+                                        },
+                                        "children": {},
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.27,
+                                            "y_offset": -0.85
+                                        }
+                                    },
+                                    "dashicon1select": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "dashicon1select",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                173,
+                                                92.07
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                14,
+                                                40.93
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.07,
+                                            "y_offset": -0.22
+                                        }
+                                    },
+                                    "swipedirection": {
+                                        "type": "Label",
+                                        "data": {
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                191,
+                                                38
+                                            ],
+                                            "position": [
+                                                4,
+                                                132
+                                            ],
+                                            "angle": 0,
+                                            "visible": true,
+                                            "font": "gaeguBold30",
+                                            "text": "swipe direction",
+                                            "foreground": "#000000ff",
+                                            "background": "#00000000",
+                                            "padding": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            ],
+                                            "valign": "bottom",
+                                            "halign": "center"
+                                        },
+                                        "children": {},
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.02,
+                                            "y_offset": 0
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "center",
+                                    "y_anchor": "top",
+                                    "absolute": false,
+                                    "x_offset": 0,
+                                    "y_offset": 0
+                                }
+                            },
+                            "facingdir": {
+                                "type": "Node",
+                                "format": {
+                                    "type": "Anchored"
+                                },
+                                "data": {
+                                    "anchor": [
+                                        0.5,
+                                        0
+                                    ],
+                                    "size": [
+                                        205,
+                                        194
+                                    ],
+                                    "angle": 0,
+                                    "position": [
+                                        94,
+                                        6
+                                    ],
+                                    "visible": true
+                                },
+                                "children": {
+                                    "dashicon2select": {
+                                        "type": "Image",
+                                        "data": {
+                                            "texture": "dashicon2select",
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                173,
+                                                93
+                                            ],
+                                            "angle": 0,
+                                            "position": [
+                                                18,
+                                                63
+                                            ],
+                                            "visible": true
+                                        },
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.09,
+                                            "y_offset": -0.2
+                                        }
+                                    },
+                                    "facing1": {
+                                        "type": "Label",
+                                        "data": {
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                176,
+                                                25
+                                            ],
+                                            "position": [
+                                                16,
+                                                32
+                                            ],
+                                            "angle": 0,
+                                            "visible": true,
+                                            "font": "gaeguBold20",
+                                            "text": "dash in the direction",
+                                            "foreground": "#000000ff",
+                                            "background": "#00000000",
+                                            "padding": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            ],
+                                            "valign": "bottom",
+                                            "halign": "center"
+                                        },
+                                        "children": {},
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.08,
+                                            "y_offset": -0.71
+                                        }
+                                    },
+                                    "facing2": {
+                                        "type": "Label",
+                                        "data": {
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                122,
+                                                25
+                                            ],
+                                            "position": [
+                                                42,
+                                                18
+                                            ],
+                                            "angle": 0,
+                                            "visible": true,
+                                            "font": "gaeguBold20",
+                                            "text": "you are facing",
+                                            "foreground": "#000000ff",
+                                            "background": "#00000000",
+                                            "padding": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            ],
+                                            "valign": "bottom",
+                                            "halign": "center"
+                                        },
+                                        "children": {},
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.2,
+                                            "y_offset": -0.78
+                                        }
+                                    },
+                                    "facing3": {
+                                        "type": "Label",
+                                        "data": {
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                205,
+                                                25
+                                            ],
+                                            "position": [
+                                                0,
+                                                0
+                                            ],
+                                            "angle": 0,
+                                            "visible": true,
+                                            "font": "gaeguBold20",
+                                            "text": "(swipe in any direction)",
+                                            "foreground": "#000000ff",
+                                            "background": "#00000000",
+                                            "padding": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            ],
+                                            "valign": "bottom",
+                                            "halign": "center"
+                                        },
+                                        "children": {},
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0,
+                                            "y_offset": -0.87
+                                        }
+                                    },
+                                    "facingdirection": {
+                                        "type": "Label",
+                                        "data": {
+                                            "anchor": [
+                                                0,
+                                                1
+                                            ],
+                                            "size": [
+                                                198,
+                                                38
+                                            ],
+                                            "position": [
+                                                7,
+                                                156
+                                            ],
+                                            "angle": 0,
+                                            "visible": true,
+                                            "font": "gaeguBold30",
+                                            "text": "facing direction",
+                                            "foreground": "#000000ff",
+                                            "background": "#00000000",
+                                            "padding": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                            ],
+                                            "valign": "bottom",
+                                            "halign": "center"
+                                        },
+                                        "children": {},
+                                        "layout": {
+                                            "x_anchor": "left",
+                                            "y_anchor": "top",
+                                            "absolute": false,
+                                            "x_offset": 0.03,
+                                            "y_offset": 0
+                                        }
+                                    }
+                                },
+                                "layout": {
+                                    "x_anchor": "center",
+                                    "y_anchor": "bottom",
+                                    "absolute": false,
+                                    "x_offset": -0.01,
+                                    "y_offset": 0.02
+                                }
+                            }
+                        },
+                        "layout": {
+                            "x_anchor": "fill",
+                            "y_anchor": "fill",
+                            "absolute": false,
+                            "x_offset": 0.3,
+                            "y_offset": 0.15
+                        }
+                    }
+                },
+                "layout": {
+                    "x_anchor": "fill",
+                    "y_anchor": "fill",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
             }
         }
     }

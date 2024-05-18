@@ -112,13 +112,23 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
         }
     });
     _joystickdirbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_joystick_joystickdirection"));
+    _joystickdirbutton->setToggle(true);
+    _joystickdirbutton->setDown(false);
     _joystickdirbutton->addListener([this](const std::string& name, bool down) {
-        if (!down) {
+        if (down) {
+            _swipedirbutton->setDown(false);
+        } else {
+            _swipedirbutton->setDown(true);
         }
     });
     _swipedirbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_swipe_swipedirection"));
+    _swipedirbutton->setToggle(true);
+    _swipedirbutton->setDown(true);
     _swipedirbutton->addListener([this](const std::string& name, bool down) {
-        if (!down) {
+        if (down) {
+            _joystickdirbutton->setDown(false);
+        } else {
+            _joystickdirbutton->setDown(true);
         }
     });
     _dashinfobutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_dashinfo"));
@@ -156,7 +166,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     
     Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::DRAG);
     
-    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _joystickdirbutton, _swipedirbutton, _dashinfobutton};
+    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _dashinfobutton};
     _screenButtonMap.insert({Choice::SETTINGS, optionsbuttons});
     
     _optionsbutton->addListener([this](const std::string& name, bool down) {
@@ -242,12 +252,16 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
         }
         switch (sceneType) {
             case MAIN:
+                _swipedirbutton->deactivate();
+                _joystickdirbutton->deactivate();
                 _soundslider->deactivate();
                 _musicslider->deactivate();
                 _hapticsbutton->deactivate();
                 addChild(_menuscene);
                 break;
             case LOBBY:
+                _swipedirbutton->deactivate();
+                _joystickdirbutton->deactivate();
                 _soundslider->deactivate();
                 _musicslider->deactivate();
                 _hapticsbutton->deactivate();
@@ -255,6 +269,8 @@ void MenuScene::switchScene(MenuScene::Choice sceneType) {
                 break;
             case SETTINGS:
                 // activate stuff for settings specific things
+                _swipedirbutton->activate();
+                _joystickdirbutton->activate();
                 _soundslider->activate();
                 _musicslider->activate();
                 _hapticsbutton->activate();

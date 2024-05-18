@@ -282,7 +282,8 @@
                                                         0
                                                     ],
                                                     "visible": true,
-                                                    "upnode": "dashicon2select"
+                                                    "upnode": "dashicon2unselect",
+                                                    "downnode": "dashicon2select"
                                                 },
                                                 "children": {
                                                     "dashicon2select": {
@@ -438,7 +439,8 @@
                                                         0
                                                     ],
                                                     "visible": true,
-                                                    "upnode": "dashicon1unselect"
+                                                    "upnode": "dashicon1unselect",
+                                                    "downnode": "dashicon1select"
                                                 },
                                                 "children": {
                                                     "dashicon1unselect": {

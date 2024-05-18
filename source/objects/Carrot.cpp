@@ -24,6 +24,10 @@ bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     _isCaptured = false;
     _isRooted = false;
     _numBabyCarrots = 0;
+    dashMag = CARROT_DASH_MAG;
+    dashTimerLength = CARROT_DASH_TIMER;
+    dashCooldownLength = CARROT_DASH_COOLDOWN;
+    runSpeed = CARROT_RUN_SPEED;
     return EntityModel::init(pos, size, scale);
 }
 
@@ -31,17 +35,18 @@ bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
  * Sets carrot state after being captured
  */
 void Carrot::gotCaptured(){
-    _isCaptured = true;
-    getSceneNode()->setVisible(false);
+    _state = CAUGHT;
+    resetStateCooldowns();
+    updateSprite(0);
 }
 
 /**
  * Sets carrot state after getting rooted
  */
 void Carrot::gotRooted(){
-    _isCaptured = false;
-    _isRooted = true;
-    getSceneNode()->setVisible(true);
+    _state = ROOTED;
+    setSceneNode(_rootedNode);
+    resetStateCooldowns();
     setBodyType(b2BodyType::b2_staticBody);
 }
 
@@ -49,13 +54,16 @@ void Carrot::gotRooted(){
  * Sets carrot state after getting unrooted
  */
 void Carrot::gotUnrooted(){
+    _state = STANDING;
+    resetStateCooldowns();
     setBodyType(b2BodyType::b2_dynamicBody);
-    _isRooted = false;
+    updateSprite(0);
 }
 
 void Carrot::escaped(){
-    _isCaptured = false;
-    getSceneNode()->setVisible(true);
+    _state = STANDING;
+    resetStateCooldowns();
+    updateSprite(0);
 }
 
 void Carrot::updateCurAnimDurationForState() {

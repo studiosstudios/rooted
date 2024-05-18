@@ -776,31 +776,29 @@ void Map::spawnBabyCarrots() {
     int barrotModifierThreshold = (int) _babyCarrotSpawns.size() / 4;
     std::vector<std::string> barrotModifiers {"-walk", "-blanket", "-bow", "-diaper"};
     for (Rect rect : _babyCarrotSpawns) {
-        if (_babies.empty()) {
-            std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, Size(BARROT_WIDTH, BARROT_HEIGHT), _scale.x);
-            baby->setEntityState(EntityModel::EntityState::WALKING);
-            baby->setDebugColor(DEBUG_COLOR);
-            baby->setName("baby");
-            baby->setID((unsigned)_babies.size());
-            baby->setColliderSize(Size(BARROT_HITBOX_WIDTH, BARROT_HITBOX_HEIGHT));
-            baby->setDashColliderSize(Size(BARROT_DASH_HITBOX_WIDTH, BARROT_DASH_HITBOX_HEIGHT));
-            baby->setRockColliderSize(Size(BARROT_ROCK_HITBOX_WIDTH, BARROT_ROCK_HITBOX_HEIGHT));
-            _babies.push_back(baby);
-            
-            int barrotModifierSelector = std::min((barrotModifierCount++ % barrotModifierThreshold), ((int) barrotModifiers.size()) - 1);
-            auto walkDS = initEntityDirectionalSprites("barrot-", barrotModifiers.at(barrotModifierSelector), 0.125f);
-            baby->setWalkSprites(walkDS);
-            baby->setAnimationFrame(barrotModifierCount); //reusing the modifier count to be set as the frame for this barrot
-            
-            baby->setSceneNode(walkDS.southSprite);
-            baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-            baby->setDebugScene(_debugnode);
-            
-            auto wheatnode = baby->allocWheatHeightNode();
-            _wheatscene->getRoot()->addChild(wheatnode);
-            
-            _world->initObstacle(baby);
-        }
+        std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, Size(BARROT_WIDTH, BARROT_HEIGHT), _scale.x);
+        baby->setEntityState(EntityModel::EntityState::WALKING);
+        baby->setDebugColor(DEBUG_COLOR);
+        baby->setName("baby");
+        baby->setID((unsigned)_babies.size());
+        baby->setColliderSize(Size(BARROT_HITBOX_WIDTH, BARROT_HITBOX_HEIGHT));
+        baby->setDashColliderSize(Size(BARROT_DASH_HITBOX_WIDTH, BARROT_DASH_HITBOX_HEIGHT));
+        baby->setRockColliderSize(Size(BARROT_ROCK_HITBOX_WIDTH, BARROT_ROCK_HITBOX_HEIGHT));
+        _babies.push_back(baby);
+        
+        int barrotModifierSelector = std::min((barrotModifierCount++ % barrotModifierThreshold), ((int) barrotModifiers.size()) - 1);
+        auto walkDS = initEntityDirectionalSprites("barrot-", barrotModifiers.at(barrotModifierSelector), 0.125f);
+        baby->setWalkSprites(walkDS);
+        baby->setAnimationFrame(barrotModifierCount); //reusing the modifier count to be set as the frame for this barrot
+        
+        baby->setSceneNode(walkDS.southSprite);
+        baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+        baby->setDebugScene(_debugnode);
+        
+        auto wheatnode = baby->allocWheatHeightNode();
+        _wheatscene->getRoot()->addChild(wheatnode);
+        
+        _world->initObstacle(baby);
     }
 }
 
@@ -896,6 +894,14 @@ void Map::spawnCarrots() {
         carrot->setDashSprites(initEntityDirectionalSprites("carrot-", "-dash", 0.125f));
         carrot->setIdleSprites(idleDS);
         
+        // Just for the singular rooted node
+        auto rootedNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("carrot-top"), 1, 1);
+        rootedNode->setScale(0.125f * _scale/DEFAULT_DRAWSCALE);
+        rootedNode->setPriority(float(Map::DrawOrder::ENTITIES));
+        rootedNode->setVisible(false);
+        _entitiesNode->addChild(rootedNode);
+        carrot->setRootedSprite(rootedNode);
+        
         carrot->setDashEffectSpriteNode(dashEffectNode);
         
         carrot->setDebugScene(_debugnode);
@@ -913,25 +919,31 @@ void Map::updateShaders(float step, Mat4 perspective) {
     float velocities[size];
     float ratio = _shaderrenderer->getAspectRatio();
     float scale = _root->getContentSize().width/_scale.x;
+    int adjustedCarrotsSize = (int) _carrots.size(); // Because a carrot may be CAUGHT/ROOTED and we want to omit its shadow, we use this variable to adjust the later computations
     for (int i = 0; i < _carrots.size(); i++) {
-        positions[2 * i] = _carrots.at(i)->getX() / scale;
-        positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / scale * ratio;
-        velocities[i] = _carrots.at(i)->getLinearVelocity().length();
+        if (_carrots.at(i)->getEntityState() == EntityModel::EntityState::CAUGHT || _carrots.at(i)->getEntityState() == EntityModel::EntityState::ROOTED) {
+            --adjustedCarrotsSize;
+        }
+        else {
+            positions[2 * i] = _carrots.at(i)->getX() / scale;
+            positions[2 * i + 1] = 1 - (_carrots.at(i)->getY() - _carrots.at(i)->getHeight()/2) / scale * ratio;
+            velocities[i] = _carrots.at(i)->getLinearVelocity().length();
+        }
     }
     for (int i = 0; i < _farmers.size(); i++) {
-        positions[2 * i + 2* _carrots.size()] = _farmers.at(i)->getX() / scale;
-        positions[2 * i + 1 + 2 * _carrots.size()] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / scale * ratio;
-        velocities[i + _carrots.size()] = _farmers.at(i)->getLinearVelocity().length();
+        positions[2 * i + 2* adjustedCarrotsSize] = _farmers.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * adjustedCarrotsSize] = 1 - (_farmers.at(i)->getY() - _farmers.at(i)->getHeight()/2) / scale * ratio;
+        velocities[i + adjustedCarrotsSize] = _farmers.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < _babies.size(); i++) {
-        positions[2 * i + 2* (_carrots.size() + _farmers.size())] = _babies.at(i)->getX() / scale;
-        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / scale * ratio;
-        velocities[i + _carrots.size() + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
+        positions[2 * i + 2* (adjustedCarrotsSize + _farmers.size())] = _babies.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * (adjustedCarrotsSize + _farmers.size())] = 1 - (_babies.at(i)->getY() - _babies.at(i)->getHeight()/2) / scale * ratio;
+        velocities[i + adjustedCarrotsSize + _farmers.size()] = _babies.at(i)->getLinearVelocity().length();
     }
     for (int i = 0; i < _rocks.size(); i++) {
-        positions[2 * i + 2* (_carrots.size() + _farmers.size() + _babies.size())] = _rocks.at(i)->getX() / scale;
-        positions[2 * i + 1 + 2 * (_carrots.size() + _farmers.size() + _babies.size())] = 1 - (_rocks.at(i)->getY() - _rocks.at(i)->getHeight()/2) / scale * ratio;
-        velocities[i + _carrots.size() + _farmers.size() + _rocks.size()] = _rocks.at(i)->getLinearVelocity().length();
+        positions[2 * i + 2* (adjustedCarrotsSize + _farmers.size() + _babies.size())] = _rocks.at(i)->getX() / scale;
+        positions[2 * i + 1 + 2 * (adjustedCarrotsSize + _farmers.size() + _babies.size())] = 1 - (_rocks.at(i)->getY() - _rocks.at(i)->getHeight()/2) / scale * ratio;
+        velocities[i + adjustedCarrotsSize + _farmers.size() + _rocks.size()] = _rocks.at(i)->getLinearVelocity().length();
     }
     _shaderrenderer->update(step, perspective, size, positions, velocities, _character->getPosition() / scale * Vec2(1.0, ratio));
     _shaderedEntitiesNode->update(step);

@@ -54,12 +54,26 @@
 
 #pragma mark -
 #pragma mark Game Logic Constants
-/** Time in seconds that must elapse before being able to perform another dash */
-#define DASH_COOLDOWN_SECS 3
+/** Farmer dash magnitude */
+#define FARMER_DASH_MAG 10
+/** Carrot dash magnitude */
+#define CARROT_DASH_MAG 8
+/** Time in seconds of the length of a farmer's dash */
+#define FARMER_DASH_TIMER 0.3
+/** Time in seconds of the length of a carrot''s dash */
+#define CARROT_DASH_TIMER 0.3
+/** Time in seconds that must elapse before farmer's able to perform another dash */
+#define FARMER_DASH_COOLDOWN 1.6
+/** Time in seconds that must elapse before carrot's able to perform another dash */
+#define CARROT_DASH_COOLDOWN 1.6
 /** Time in seconds that being hit by a rock stuns a player */
 #define STUN_SECS 1
 /** Max camera coordinate units that the camera can shake when player is stunned */
 #define STUN_SCREEN_SHAKE 5
+/** Speed of the farmer when running */
+#define FARMER_RUN_SPEED 4.0f
+/** Speed of the carrot when running */
+#define CARROT_RUN_SPEED 3.6f
 
 #pragma mark -
 #pragma mark Asset Constants
@@ -77,6 +91,8 @@
 #define RESET_MESSAGE    "RESETTING"
 /** The color of the reset message */
 #define RESET_COLOR      Color4::YELLOW
+/** The effect for button click */
+#define BUTTON_EFFECT       "button"
 /** The key the carrot victory game music */
 #define C_WIN_MUSIC       "carrotsWin"
 /** The key the carrot failure game music */

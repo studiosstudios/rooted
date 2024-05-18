@@ -74,6 +74,7 @@
 #define FARMER_RUN_SPEED 4.0f
 /** Speed of the carrot when running */
 #define CARROT_RUN_SPEED 3.6f
+#define ROOT_TIMER 3
 
 #pragma mark -
 #pragma mark Asset Constants

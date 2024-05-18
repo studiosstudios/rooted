@@ -224,6 +224,7 @@ void EntityModel::updateSprite(float dt, bool useMovement) {
         return;
     }
     
+    
     EntityFacing face;
     if (_state != DASHING) {
         face = calculateFacing(useMovement ? _movement : getLinearVelocity());
@@ -361,6 +362,7 @@ void EntityModel::dispose() {
 void EntityModel::resetStateCooldowns() {
     dashTimer = 0;
     curAnimTime = 0;
+    _rootTimer = 0;
 }
 
 /**
@@ -368,10 +370,12 @@ void EntityModel::resetStateCooldowns() {
  *
  *  This method should be called after all relevant input attributes are set.
  */
-void EntityModel::updateState(float dt) {
+void EntityModel::updateState(float dt, bool rootIsValid, bool unrootIsValid) {
     if (!isEnabled()) {
         return;
     }
+    
+    std::cout << "State called " << _state << " " << rootIsValid << " " << unrootIsValid << "\n";
     
     if (_dashCooldown > 0) {
         _dashCooldown -= dt;
@@ -395,8 +399,15 @@ void EntityModel::updateState(float dt) {
         case STANDING: {
             // Standing -> Moving
             nextState = getMovementState();
-            stateChanged = (nextState != _state);
-            _state = nextState;
+            if (nextState != _state) {
+                stateChanged = true;
+                _state = nextState;
+            }
+            else if ((_unrootInput && unrootIsValid)) {
+                _state = UNROOTING;
+                _rootTimer = ROOT_TIMER;
+                stateChanged = true;
+            }
             break;
         }
         case SNEAKING:
@@ -411,14 +422,23 @@ void EntityModel::updateState(float dt) {
                     _dashVector = facingToVec(_facing);
                 }
                 stateChanged = true;
-//                _makeDashTrail = true;
-//                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
-//                _wheatHeightNode->setColor(Color4(0,0,0,0));
+                //                _makeDashTrail = true;
+                //                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
+                //                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
             else {
                 nextState = getMovementState();
                 stateChanged = (nextState != _state);
                 _state = nextState;
+            }
+            break;
+        }
+        case CARRYING: {
+            // CARRYING -> Rooting
+            if ((_rootInput && rootIsValid)) {
+                _state = ROOTING;
+                _rootTimer = ROOT_TIMER;
+                stateChanged = true;
             }
             break;
         }
@@ -428,6 +448,38 @@ void EntityModel::updateState(float dt) {
             std::cout << dashTimer << "\n";
             if (dashTimer <= 0) {
                 _state = getMovementState();
+                stateChanged = true;
+            }
+            break;
+        }
+        case ROOTING: {
+            if (_rootInput && rootIsValid) {
+                _rootTimer -= dt;
+                if (_rootTimer <= 0) {
+                    rootHappened = true;
+                    _state = STANDING;
+                    stateChanged = true;
+                }
+            }
+            else {
+                _rootTimer = 0;
+                _state = STANDING;
+                stateChanged = true;
+            }
+            break;
+        }
+        case UNROOTING: {
+            if (_unrootInput && unrootIsValid) {
+                _rootTimer -= dt;
+                if (_rootTimer <= 0) {
+                    unrootHappened = true;
+                    _state = STANDING;
+                    stateChanged = true;
+                }
+            }
+            else {
+                _rootTimer = 0;
+                _state = STANDING;
                 stateChanged = true;
             }
             break;
@@ -447,6 +499,10 @@ void EntityModel::updateState(float dt) {
     }
     updateSprite(dt);
 //    std::cout << _state << "\n";
+}
+
+void EntityModel::updateState(float dt) {
+    updateState(dt, true, true);
 }
 
 void EntityModel::stun() {

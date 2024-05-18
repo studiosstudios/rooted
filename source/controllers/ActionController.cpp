@@ -66,7 +66,44 @@ void ActionController::preUpdate(float dt) {
     playerEntity->setRootInput(_input->didRoot());
     playerEntity->setUnrootInput(_input->didUnroot());
     EntityModel::EntityState oldState = playerEntity->getEntityState();
-    playerEntity->updateState(dt);
+    
+    bool rootIsValid = false;
+    bool unrootIsValid = false;
+    // Find current character's planting spot
+    // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
+    std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
+    for(auto ps : _map->getPlantingSpots()){
+        if(ps->getBelowAvatar()){
+            plantingSpot = ps;
+            break;
+        }
+    }
+    std::shared_ptr<Carrot> closestCarrot = nullptr;
+    if (_map->isFarmer()) { // Farmer (host) specific actions
+        auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
+        std::cout << _map->getFarmers().at(0)->canPlant() << " " << (plantingSpot != nullptr) << " " << _map->getFarmers().at(0)->isHoldingCarrot() << "\n";
+        if(_map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && ((_map->getFarmers().at(0)->isHoldingCarrot()) || farmerEntity->getEntityState() == EntityModel::EntityState::ROOTING)){
+            rootIsValid = true;
+        }
+    }
+    else { // Carrot specific actions
+        auto carrotEntity = std::dynamic_pointer_cast<Carrot>(playerEntity);
+        
+        if(plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){
+            auto currPos = carrotEntity->getPosition();
+            for (auto carrot : _map->getCarrots()){
+                if(carrot->getUUID() != carrotEntity->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
+                    closestCarrot = carrot;
+                }
+            }
+            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
+                unrootIsValid = true;
+            }
+        }
+    }
+    
+    playerEntity->updateState(dt, rootIsValid, unrootIsValid);
+    
     if(didDash && playerEntity->getEntityState() == EntityModel::EntityState::DASHING){
 //        std::cout<<"getting player swipe status: "<<playerEntity->getSwipe()<<"\n";
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
@@ -101,16 +138,6 @@ void ActionController::preUpdate(float dt) {
     for (auto it = decs.begin(); it != decs.end(); ++it) {
         (*it)->stepAnimation(dt);
     }
-    
-    // Find current character's planting spot
-    // TODO: Can the current planting spot be stored with the EntityModel instead? -CJ
-    std::shared_ptr<PlantingSpot> plantingSpot = nullptr;
-    for(auto ps : _map->getPlantingSpots()){
-        if(ps->getBelowAvatar()){
-            plantingSpot = ps;
-            break;
-        }
-    }
 
     if (_input->didThrowRock() && playerEntity->hasRock()) {
         _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition()-Vec2(0, playerEntity->getHeight()/2), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
@@ -125,41 +152,56 @@ void ActionController::preUpdate(float dt) {
             _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(spawn.first, spawn.second, Vec2::ZERO, ""));
         }
     }
+    if (rootIsValid && playerEntity->rootHappened) {
+        if (_haptics) {
+            Haptics::get()->playContinuous(1.0, 0.3, 0.2);
+        }
+        std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_BUNNY_EFFECT);
+        AudioEngine::get()->play("root-bunny", source, false, _soundScale);
+        for (auto carrot : _map->getCarrots()) {
+            if (carrot->isCaptured()) {
+                _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID(), playerEntity->getPosition()));
+            }
+        }
+    }
+    if (unrootIsValid && playerEntity->unrootHappened) {
+        _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
+    }
     
-    if (_map->isFarmer()) { // Farmer (host) specific actions
-        auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
-        if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
-            //        std::cout<<"farmer did the rooting\n";
-            if(_haptics)
-                Haptics::get()->playContinuous(1.0, 0.3, 0.2);
-            std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_BUNNY_EFFECT);
-            AudioEngine::get()->play("root-bunny", source, false, _soundScale);
-            
-            // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
-            for (auto carrot : _map->getCarrots()) {
-                if (carrot->isCaptured()) {
-                    _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID(), farmerEntity->getPosition()));
-                }
-            }
-        }
-        
-    }
-    else { // Carrot specific actions
-        auto carrotEntity = std::dynamic_pointer_cast<Carrot>(playerEntity);
-        
-        if(_input->didUnroot() && plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){
-            auto currPos = carrotEntity->getPosition();
-            std::shared_ptr<Carrot> closestCarrot = nullptr;
-            for (auto carrot : _map->getCarrots()){
-                if(carrot->getUUID() != carrotEntity->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
-                    closestCarrot = carrot;
-                }
-            }
-            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
-                _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
-            }
-        }
-    }
+//    if (_map->isFarmer()) { // Farmer (host) specific actions
+//        auto farmerEntity = std::dynamic_pointer_cast<Farmer>(playerEntity);
+//        if(_input->didRoot() && _map->getFarmers().at(0)->canPlant() && plantingSpot != nullptr && !plantingSpot->getCarrotPlanted() && _map->getFarmers().at(0)->isHoldingCarrot()){
+//            //        std::cout<<"farmer did the rooting\n";
+//            if(_haptics)
+//                Haptics::get()->playContinuous(1.0, 0.3, 0.2);
+//            std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_BUNNY_EFFECT);
+//            AudioEngine::get()->play("root-bunny", source, false, _soundScale);
+//            
+//            // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
+//            for (auto carrot : _map->getCarrots()) {
+//                if (carrot->isCaptured()) {
+//                    _network->pushOutEvent(RootEvent::allocRootEvent(carrot->getUUID(), plantingSpot->getPlantingID(), farmerEntity->getPosition()));
+//                }
+//            }
+//        }
+//        
+//    }
+//    else { // Carrot specific actions
+//        auto carrotEntity = std::dynamic_pointer_cast<Carrot>(playerEntity);
+//        
+//        if(_input->didUnroot() && plantingSpot != nullptr && plantingSpot->getCarrotPlanted()){
+//            auto currPos = carrotEntity->getPosition();
+//            std::shared_ptr<Carrot> closestCarrot = nullptr;
+//            for (auto carrot : _map->getCarrots()){
+//                if(carrot->getUUID() != carrotEntity->getUUID() && (closestCarrot == nullptr || currPos.distance(carrot->getPosition()) < currPos.distance(closestCarrot->getPosition()))){
+//                    closestCarrot = carrot;
+//                }
+//            }
+//            if(closestCarrot != nullptr && currPos.distance(closestCarrot->getPosition()) < 1.0){
+//                _network->pushOutEvent(UnrootEvent::allocUnrootEvent(closestCarrot->getUUID(), plantingSpot->getPlantingID()));
+//            }
+//        }
+//    }
 
     if(!_map->isFarmer()){
         auto carrotEntity = std::dynamic_pointer_cast<Carrot>(_map->getCharacter());

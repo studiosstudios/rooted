@@ -122,6 +122,9 @@ class EntityModel : public cugl::physics2::BoxObstacle {
 public:
     float dashTimer;
     
+    bool rootHappened = false;
+    bool unrootHappened = false;
+    
     /* VELOCITY-BASED, STATE-MACHINE MOVEMENT SYSTEM*/
     
     /** State that a rooted! player entity can be in. Some of these states are specific
@@ -251,6 +254,8 @@ protected:
     cugl::Vec2 _dashVector;
     
     float _dashCooldown;
+    
+    float _rootTimer;
     
     float _stunTime;
     
@@ -734,6 +739,8 @@ public:
      *  This method should be called after all relevant input attributes are set.
      */
     virtual void updateState(float dt);
+    
+    virtual void updateState(float dt, bool rootIsValid, bool unrootIsValid);
     
     /**
      * Applies the force to the body of this dude

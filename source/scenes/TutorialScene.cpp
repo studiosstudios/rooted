@@ -94,7 +94,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _input = InputController::alloc(getBounds(), _assets->get<cugl::JsonValue>("line-gesture"), _assets->get<cugl::JsonValue>("circle-gesture"));
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network, _assets, _haptics);
     setDebug(false);
 
     _map->acquireMapOwnership();
@@ -132,6 +132,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _pausePhysics = false;
     
     _step = 0;
+    _soundScale = 1.0f;
 
     return true;
 }
@@ -197,7 +198,7 @@ void TutorialScene::reset() {
     _character = _map->loadPlayerEntities(std::vector<std::string>{_farmerUUID, _carrotUUID, _carrot2UUID}, _farmerUUID, _carrotUUID);
     
     _collision.init(_map, _network);
-    _action.init(_map, _input, _network, _assets);
+    _action.init(_map, _input, _network, _assets, _haptics);
 
     Size dimen = computeActiveSize();
     _scale = dimen.width == SCENE_WIDTH ? dimen.width / world->getBounds().getMaxX() :
@@ -831,7 +832,7 @@ void TutorialScene::postUpdate(float remain) {
                 
                 pauseNonEssentialAudio();
                 std::shared_ptr<Sound> source = _assets->get<Sound>(C_WIN_MUSIC);
-                AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
+                AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME*_soundScale);
                 _ui.setWinVisible(true);
             }
             break;

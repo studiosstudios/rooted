@@ -661,7 +661,7 @@
         "emptypoint" : {
             "file" : "textures/emptypoint.png"
         },
-        "filledpoint" : {
+        "fullpoint" : {
             "file" : "textures/filledpoint.png"
         },
         "speechbubble": {
@@ -685,8 +685,71 @@
         "carrotbutton1": {
             "file": "textures/carrotbutton1.png"
         },
+        "Big_Icon_1" : {
+            "file" : "textures/Big_Icon_1.png"
+        },
+        "Big_Icon_2" : {
+            "file" : "textures/Big_Icon_2.png"
+        },
+        "Big_Icon_3" : {
+            "file" : "textures/Big_Icon_3.png"
+        },
+        "Big_Icon_4" : {
+            "file" : "textures/Big_Icon_4.png"
+        },
+        "statsboard": {
+            "file": "textures/statsboard.png"
+        },
         "topback": {
             "file": "textures/topback.png"
+        },
+        "rabbit" : {
+            "file" : "textures/rabbit.png"
+        },
+        "optionsinfobkg": {
+            "file": "textures/optionsinfobkg.png"
+        },
+        "dashicon2select": {
+            "file": "textures/dashicon2select.png"
+        },
+        "dashicon2unselect": {
+            "file": "textures/dashicon2unselect.png"
+        },
+        "dashicon1unselect": {
+            "file": "textures/dashicon1unselect.png"
+        },
+        "dashicon1select": {
+            "file": "textures/dashicon1select.png"
+        },
+        "infoicon": {
+            "file": "textures/infoicon.png"
+        },
+        "checkboxunselect": {
+            "file": "textures/optionunselected.png"
+        },
+        "checkboxselect": {
+            "file": "textures/optionselected.png"
+        },
+        "hapticsicon": {
+            "file": "textures/hapticsicon.png"
+        },
+        "soundicon": {
+            "file": "textures/soundfxicon.png"
+        },
+        "slot": {
+            "file": "textures/audioslider.png"
+        },
+        "knob": {
+            "file": "textures/audioknob.png"
+        },
+        "musicicon": {
+            "file": "textures/musicicon.png"
+        },
+        "popup": {
+            "file": "textures/popup.png"
+        },
+        "xbutton": {
+            "file": "textures/x_black.png"
         }
     },
     "jsons": {
@@ -823,6 +886,10 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 16
         },
+        "gaeguBold20": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 20
+        },
         "gaeguBold30": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 30
@@ -838,6 +905,10 @@
         "gaeguBold45": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 45
+        },
+        "gaeguBold48": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 48
         },
         "gaeguBold50": {
             "file": "fonts/Gaegu-Bold.ttf",
@@ -862,6 +933,10 @@
         "gaeguBold75": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 75
+        },
+        "gaeguBold80": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 80
         },
         "gaeguBold90": {
             "file": "fonts/Gaegu-Bold.ttf",
@@ -896,7 +971,12 @@
         "playercountwidget" : "widgets/playercountwidget.json",
         "postround": "widgets/postround.json",
         "playerpoints" : "widgets/playerpoints.json",
-        "playerpointinfo" : "widgets/playerpointinfowidget.json"
+        "playerpointinfo" : "widgets/playerpointinfowidget.json",
+        "characterdisplay" : "widgets/characterdisplay.json",
+        "rabbitpreview" : "widgets/rabbitpreview.json",
+        "carrotpreview" : "widgets/carrotpreview.json",
+        "winner" : "widgets/winner.json",
+        "optionsmenu": "widgets/optionsmenu.json"
     },
     "scene2s" : {
         "host": {
@@ -945,6 +1025,36 @@
             "type"   : "Widget",
             "data"   : {
                 "key"     : "loadingscreen"
+            }
+        },
+        "characterdisplay" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "characterdisplay"
+            }
+        },
+        "rabbitpreview" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "rabbitpreview"
+            }
+        },
+        "carrotpreview" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "carrotpreview"
+            }
+        },
+        "winner" : {
+            "type"   : "Widget",
+            "data"   : {
+                "key"     : "carrotpreview"
+            }
+        },
+        "optionsmenu": {
+            "type": "Widget",
+            "data": {
+                "key": "optionsmenu"
             }
         }
     }

@@ -627,7 +627,8 @@ void Map::spawnFarmers() {
         auto dashEffectNode = scene2::SpriteNode::allocWithSheet(_assets->get<Texture>("dash-effect-sheet"), 2, 6);
         dashEffectNode->setVisible(false);
         dashEffectNode->setScale(0.2f * _scale/DEFAULT_DRAWSCALE);
-        
+        dashEffectNode->setPriority(float(Map::DrawOrder::CLOUDS));
+
         _entitiesNode->addChild(farmerSouthWalkNode);
         _entitiesNode->addChild(farmerNorthWalkNode);
         _entitiesNode->addChild(farmerEastWalkNode);
@@ -643,7 +644,7 @@ void Map::spawnFarmers() {
         _entitiesNode->addChild(farmerEastDashNode);
         _entitiesNode->addChild(carrotfarmerNode);
         
-        _entitiesNode->addChild(dashEffectNode);
+        _worldnode->addChild(dashEffectNode);
         
         farmer->setSpriteNodes(farmerNorthWalkNode,
                                farmerNorthEastWalkNode,

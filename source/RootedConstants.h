@@ -168,7 +168,7 @@ const float WIND_DIRECTION[2] = {1.0, 1.0};
 #define DEFAULT_WHEAT_TEX_HEIGHT 270
 #define MAX_WHEAT_HEIGHT 25.0
 #define STEP_SIZE 1.0
-#define DASH_TRAIL_HOLD 0.8f
+#define DASH_TRAIL_HOLD 0.5f
 
 #pragma mark COLLECTIBLE
 #define SPAWN_RATE 0.005

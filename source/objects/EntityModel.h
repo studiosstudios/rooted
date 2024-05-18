@@ -211,7 +211,7 @@ protected:
     float curAnimTime = 0.0f;
     
     /** The time it takes for the currently active animation to complete 1 cycle (in seconds) */
-    float curDashAnimDuration = 1.5f;
+    float curDashAnimDuration = 1.2f;
     
     /** The amount of time that has elapsed in the current animation cycle
         For example, if the player is in a walking animation cycle that is 1.5 seconds long, and this field is 0.7 seconds, then the animation is roughly at its middle frame */

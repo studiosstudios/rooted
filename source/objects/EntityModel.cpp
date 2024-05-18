@@ -532,7 +532,7 @@ void EntityModel::update(float dt) {
     
     if (_wheatHeightNode != nullptr) {
 //        updateWheatHeightNode();
-        updateWheatNodes(dt);
+//        updateWheatNodes(dt);
     }
 }
 
@@ -751,15 +751,15 @@ void EntityModel::animateDashEffect(float dt) {
     if (_dashEffectSprite != nullptr) {
         if (_shouldAnimateDash) {
             curDashAnimTime += dt;
-            if (curDashAnimTime > curDashAnimDuration) {
+            int frame = lround(_dashEffectSprite->getSpan() * curDashAnimTime / curDashAnimDuration) % _dashEffectSprite->getSpan();
+            if (curDashAnimTime > curDashAnimDuration || frame >= 11) {
                 curDashAnimTime = 0;
                 _shouldAnimateDash = false;
+                _dashEffectSprite->setVisible(false);
+                _dashEffectSprite->setFrame(0);
             } else {
-                _dashEffectSprite->setFrame(lround(_dashEffectSprite->getSpan() * curDashAnimTime / curDashAnimDuration) % _dashEffectSprite->getSpan());
+                _dashEffectSprite->setFrame(frame);
             }
-        } else {
-            _dashEffectSprite->setVisible(false);
-            _dashEffectSprite->setFrame(0);
         }
     }
 }

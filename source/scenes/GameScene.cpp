@@ -264,7 +264,23 @@ void GameScene::unload() {
  * This method disposes of the world and creates a new one.
  */
 void GameScene::reset() {
-//    if (!_mapGen) { _mapGen = true; }
+    if (!_mapGen) {
+        _mapGen = true;
+        _genTimes.push_back(0.1);
+        _genTimes.push_back(0.2);
+        _genTimes.push_back(0.3);
+        _genTimes.push_back(0.4);
+        _genTimes.push_back(0.5);
+        _genTimes.push_back(0.6);
+        _genTimes.push_back(0.7);
+        _genTimes.push_back(0.8);
+        _genTimes.push_back(1.0);
+        _genTimes.push_back(1.4);
+        _genTimes.push_back(1.8);
+        _genTimes.push_back(2.2);
+        _genTimes.push_back(2.8);
+        _round += 1;
+    }
     // Load a new level
     _seed++;
     _map->clearRootNode();
@@ -334,12 +350,13 @@ void GameScene::reset() {
     
     _isGameOverScreen = false;
     
-    _round += 1;
     _startTime = Timestamp();
     
     _ready = 0;
     
     _ui.setEndVisible(false);
+    
+    CULog("round: %d", _round);
 }
 
 void GameScene::gameReset() {
@@ -553,7 +570,7 @@ void GameScene::postUpdate(float remain) {
         if (_genTimes.size() == 0 && _time > 3.0f) {
             _justGenerated = false;
             _mapGen = false;
-            _time = 0.0;
+            _time = 0.0f;
         }
         _map->getWorld()->garbageCollect();
     }

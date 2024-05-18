@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"logo": {
-			"file":      "textures/cugl-logo.png",
+			"file":      "textures/orangelogo.png",
             "wrapS":     "clamp",
             "wrapT":     "clamp",
             "minfilter": "linear",
@@ -42,7 +42,7 @@
                 "type" : "Anchored"
             },
             "data" : {
-                "color": [239,61,49,255]
+                "color": [255,255,255,255]
             },
             "children"  : {
                 "logo"  : {
@@ -53,29 +53,12 @@
                     "data"   : {
                         "texture"  : "logo",
                         "anchor"   : [0.5,0.5],
-                        "scale"    : 0.75
+                        "scale"    : 0.3
                     },
                     "layout" : {
                         "x_anchor" : "center",
                         "y_anchor" : "middle",
-                        "y_offset" : 115,
-                        "absolute" : true
-                    }
-                },
-                "name"  : {
-                    "type"   : "Image",
-                    "format"    : {
-                        "type" : "Anchored"
-                    },
-                    "data"   : {
-                        "texture"  : "name",
-                        "anchor"   : [0.5,0.5],
-                        "scale"    : 0.75
-                    },
-                    "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "middle",
-                        "y_offset" : -55,
+                        "y_offset" : 80,
                         "absolute" : true
                     }
                 },

@@ -37,7 +37,7 @@ protected:
     // MODEL
     /** The progress displayed on the screen */
     float _progress;
-    /** Whether or not the player has pressed play to continue */
+    /** Whether or not the loading has finished */
     bool  _completed;
 
     /**
@@ -103,6 +103,8 @@ public:
      * @return true if loading is complete, but the player has not pressed play
      */
     bool isPending( ) const;
+    
+    bool isCompleted() { return _completed; };
 };
 
 #endif /* RootedLoadingScene_h */

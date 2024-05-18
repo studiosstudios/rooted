@@ -47,11 +47,11 @@ bool LoadingScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     layer->doLayout(); // This rearranges the children to fit the screen
     
     _bar = std::dynamic_pointer_cast<scene2::ProgressBar>(assets->get<scene2::SceneNode>("load_bar"));
-    _brand = assets->get<scene2::SceneNode>("load_name");
-    _button = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("load_play"));
-    _button->addListener([=](const std::string& name, bool down) {
-        this->_active = down;
-    });
+//    _brand = assets->get<scene2::SceneNode>("load_name");
+//    _button = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("load_play"));
+//    _button->addListener([=](const std::string& name, bool down) {
+//        this->_active = down;
+//    });
     
     Application::get()->setClearColor(Color4(192,192,192,255));
     addChild(layer);
@@ -88,10 +88,11 @@ void LoadingScene::update(float progress) {
         _progress = _assets->progress();
         if (_progress >= 1) {
             _progress = 1.0f;
-            _bar->setVisible(false);
-            _brand->setVisible(false);
-            _button->setVisible(true);
-            _button->activate();
+            this->_active = false;
+//            _bar->setVisible(false);
+//            _brand->setVisible(false);
+//            _button->setVisible(true);
+//            _button->activate();
         }
         _bar->setProgress(_progress);
     }

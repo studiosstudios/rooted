@@ -23,6 +23,9 @@
 bool BabyCarrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     _state = State::ROAM;
     _target = pos;
+    _numFramesStuck = 0;
+    _distanceAwayFromTarget = 0;
+    _needNewTarget = false;
     return EntityModel::init(pos, size, scale);
 }
 
@@ -30,4 +33,24 @@ void BabyCarrot::gotCaptured() {
     _isCaptured = true;
 //    this->~BabyCarrot();
     this->markRemoved(true);
+}
+
+void BabyCarrot::handleMaybeStuckBarrot() {
+//    std::cout<<_numFramesStuck<<"\n";
+    float newDistAway = (getPosition()-_target).lengthSquared();
+    if(_state != State::SIT && (_distanceAwayFromTarget-newDistAway) < 0.5F){
+        _numFramesStuck++;
+    }
+    else{
+        resetStuckBarrot();
+    }
+    if(_numFramesStuck >= MAX_NUM_FRAMES_STUCK){
+        _needNewTarget = true; //indicate to AIController a new target is necessary
+    }
+    _distanceAwayFromTarget = newDistAway;
+}
+
+void BabyCarrot::resetStuckBarrot() {
+    _numFramesStuck = 0;
+    _needNewTarget = false;
 }

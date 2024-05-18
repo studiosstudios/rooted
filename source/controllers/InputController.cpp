@@ -189,7 +189,7 @@ void InputController::update(float dt) {
         float currAcceleration = acc->getAcceleration().lengthSquared();
         float delta = currAcceleration - _lastAcceleration;
         _acceleration = _acceleration * 0.9 + delta;
-        _deviceShaking = _acceleration > 4;
+        _deviceShaking = _acceleration > 0.5;
         _lastAcceleration = currAcceleration;
 //        std::cout << "acceleration: " << _acceleration << "\n";
     }

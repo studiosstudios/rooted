@@ -318,6 +318,8 @@ void GameScene::reset() {
     _startTime = Timestamp();
     
     _ready = 0;
+    
+    _ui.setEndVisible(false);
 }
 
 void GameScene::gameReset() {
@@ -506,7 +508,7 @@ void GameScene::postUpdate(float remain) {
     // Reset the game if we win or lose.
     
     _ui.update(remain, _cam.getCamera(), getCarrotsLeft(), _map->getBabyCarrots().size(), _debug, _character->canDash());
-    
+        
     if (_countdown > 0) {
         _countdown--;
     } else if (_countdown == 0 && _network->getNumPlayers() > 1) {
@@ -520,15 +522,16 @@ void GameScene::postUpdate(float remain) {
             // display end scene
             _ui.setEndVisible(true);
         }
-                
+
         if (_ready == _network->getNumPlayers() && _network->isHost()) {
             _network->pushOutEvent(ResetEvent::allocResetEvent());
             _ready = 0; // need this otherwise it will send out two of these events
         }
         
-        if (_ui.isNextRound()){
+        if (_ui.getNextRound() == 1){
+            CULog("hello pushing out event");
+            _ui.setNextRound(2);
             _network->pushOutEvent(ReadyEvent::alloc());
-            _ui.setNextRound(false);
         }
         else{
             //do nothing and wait for host to reset
@@ -548,6 +551,7 @@ void GameScene::postUpdate(float remain) {
         }
         if(farmerWin){
             // add points for farmer
+            // TODO: GENERALIZED BASED ON WHO IT IS
             _points[0] += 3;
             if(_character->getUUID() == _farmerUUID){
                 setComplete(true);

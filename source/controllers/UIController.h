@@ -99,8 +99,8 @@ private:
     std::map<std::shared_ptr<cugl::scene2::SceneNode>, std::vector<std::shared_ptr<cugl::scene2::SceneNode>>> _points;
     
     std::shared_ptr<cugl::Texture> _filledpoint;
-    
-    bool _nextRound;
+    // 0 = not pressed, 1 = pressed, 2 = waiting
+    int _nextRound;
     
 public:
 #pragma mark Constructor/Destructor/Dispose
@@ -155,9 +155,9 @@ public:
     
     void update(float step, std::shared_ptr<cugl::OrthographicCamera> camera, int numCarrots, int numBarrots, bool debugActive, bool canDash);
     
-    bool isNextRound() { return _nextRound; }
+    int getNextRound() { return _nextRound; }
     
-    void setNextRound(bool n) { _nextRound = n; }
+    void setNextRound(int n) { _nextRound = n; }
 };
 
 #endif /* UIController_h */

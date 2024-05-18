@@ -370,6 +370,18 @@
             "stream":   true,
             "volume":   1
         },
+        "farmerWin": {
+            "type":     "sample",
+            "file":     "sounds/farmer-victory.ogg",
+            "stream":   true,
+            "volume":   1
+        },
+        "farmerLose": {
+            "type":     "sample",
+            "file":     "sounds/farmer-lose.ogg",
+            "stream":   true,
+            "volume":   1
+        },
         "rustle": {
             "type":     "sample",
             "file":     "sounds/rustlingAlt.ogg",

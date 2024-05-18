@@ -75,9 +75,9 @@
 /** The key the carrot failure game music */
 #define C_LOSE_MUSIC      "carrotsLose"
 /** The key the farmer victory game music */
-#define F_WIN_MUSIC       "carrotsWin"
+#define F_WIN_MUSIC       "farmerWin"
 /** The key the farmer failure game music */
-#define F_LOSE_MUSIC      "carrotsLose"
+#define F_LOSE_MUSIC      "farmerLose"
 /** The sound effect for firing a bullet */
 #define PEW_EFFECT      "pew"
 /** The sound effect for a bullet collision */

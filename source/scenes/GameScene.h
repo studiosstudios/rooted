@@ -103,8 +103,12 @@ protected:
     int _numBabies;
     
     int _numPlanting;
-
     
+    bool _haptics;
+
+    bool _swipe;
+    
+    float _soundScale;
 //    std::map<std::shared_ptr<EntityModel>
 
 
@@ -342,6 +346,19 @@ public:
     void render(const std::shared_ptr<SpriteBatch> &batch);
     
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
+    
+    void setHaptics(bool b) {
+        _haptics = b;
+        _collision.setHaptics(b);
+    };
+    void setSwipe(bool b) {
+        _swipe = b;
+        _map->setSwipe(b);
+    };
+    void setSoundScale(float f) {
+        _soundScale = f;
+        _action.setSoundScale(f);
+    }
 };
 
 #endif /* RootedGameScene_h */

@@ -572,7 +572,7 @@ std::shared_ptr<EntityModel> Map::loadPlayerEntities(std::vector<std::string> pl
     _character = ret;
 
     _character->getSceneNode()->setPriority(float(Map::DrawOrder::PLAYER));
-    
+
     return ret;
 }
 

@@ -93,6 +93,7 @@ bool EntityModel::init(const cugl::Vec2& pos, const cugl::Size& size, float scal
     dashTimer = 0;
     _stunTime = 0;
     _dashCooldown = 0;
+    _swipe = true;
     if (BoxObstacle::init(pos,nsize)) {
         setDensity(DUDE_DENSITY);
         setMass(1.0);
@@ -397,6 +398,9 @@ void EntityModel::updateState(float dt) {
                 _state = DASHING;
                 dashTimer = 8;
                 _dashCooldown = DASH_COOLDOWN_SECS;
+                if (!_swipe) {
+                    _dashVector = facingToVec(_facing);
+                }
                 stateChanged = true;
                 _makeDashTrail = true;
 //                makeDashEffect();

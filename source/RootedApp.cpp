@@ -52,6 +52,8 @@ void RootedApp::onStartup() {
     _loaded = false;
     _loading.init(_assets);
     _status = LOAD;
+    _haptics = true;
+    _swipe = true;
     
     // Que up the other assets
     AudioEngine::start();
@@ -192,6 +194,11 @@ void RootedApp::preUpdate(float dt) {
         if(AudioEngine::get()->getState("menu") != AudioEngine::State::PLAYING){
             AudioEngine::get()->play("menu", source, true);
         }
+        else if(AudioEngine::get()->getState("menu") == AudioEngine::State::PLAYING){
+            AudioEngine::get()->setVolume("menu", _mainmenu.musicSliderVal()/100.0f);
+        }
+        _haptics = _mainmenu.hapticsTrue();
+        _swipe = _mainmenu.swipeTrue();
     }
     else if (_status == HOST){
         updateHostScene(dt);
@@ -201,6 +208,9 @@ void RootedApp::preUpdate(float dt) {
     }
     else if (_status == GAME){
         _gameplay.preUpdate(dt);
+        _gameplay.setHaptics(_haptics);
+        _gameplay.setSwipe(_swipe);
+        _gameplay.setSoundScale(_mainmenu.soundSliderVal()/100.0f);
         AudioEngine::get()->pause("menu");
         AudioEngine::get()->pause("tutorial");
         std::shared_ptr<Sound> source = _assets->get<Sound>(LEVEL_MUSIC);
@@ -210,9 +220,13 @@ void RootedApp::preUpdate(float dt) {
         else if(AudioEngine::get()->getState("game") != AudioEngine::State::PLAYING){
             AudioEngine::get()->play("game", source, true);
         }
+        else if(AudioEngine::get()->getState("game") == AudioEngine::State::PLAYING){
+            AudioEngine::get()->setVolume("game", _mainmenu.musicSliderVal()/100.0f);
+        }
     }
     else if (_status == TUTORIAL){
         _tutorial.preUpdate(dt);
+        _tutorial.setHaptics(_mainmenu.hapticsTrue());
         if (_tutorial.returnToMenu()){
             _tutorial.setActive(false);
             _mainmenu.setActive(true);
@@ -222,6 +236,9 @@ void RootedApp::preUpdate(float dt) {
         std::shared_ptr<Sound> source = _assets->get<Sound>(TUTORIAL_MUSIC);
         if(AudioEngine::get()->getState("tutorial") != AudioEngine::State::PLAYING){
             AudioEngine::get()->play("tutorial", source, true);
+        }
+        else if(AudioEngine::get()->getState("tutorial") == AudioEngine::State::PLAYING){
+            AudioEngine::get()->setVolume("tutorial", _mainmenu.musicSliderVal()/100.0f);
         }
     }
     if(_network){

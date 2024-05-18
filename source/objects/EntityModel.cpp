@@ -374,9 +374,8 @@ void EntityModel::updateState(float dt) {
     }
     
     if (_dashCooldown > 0) {
-        _dashCooldown = std::max(0.0f, _dashCooldown - dt);
+        _dashCooldown -= dt;
     }
-    
     
     _prevState = _state;
     bool stateChanged = false;
@@ -404,10 +403,10 @@ void EntityModel::updateState(float dt) {
         case WALKING:
         case RUNNING: {
             // Moving -> Dashing
-            if (_dashCooldown == 0 && dashTimer == 0 && _dashInput) {
+            if (_dashCooldown <= 0 && dashTimer <= 0 && _dashInput) {
                 _state = DASHING;
-                dashTimer = 8;
-                _dashCooldown = DASH_COOLDOWN_SECS;
+                dashTimer = dashTimerLength;
+                _dashCooldown = dashCooldownLength;
                 if (!_swipe) {
                     _dashVector = facingToVec(_facing);
                 }
@@ -425,8 +424,9 @@ void EntityModel::updateState(float dt) {
         }
         case DASHING: {
             // Dashing -> Moving
-            dashTimer--;
-            if (dashTimer == 0) {
+            dashTimer -= dt;
+            std::cout << dashTimer << "\n";
+            if (dashTimer <= 0) {
                 _state = getMovementState();
                 stateChanged = true;
             }
@@ -490,7 +490,7 @@ void EntityModel::applyForce() {
             break;
         }
         case DASHING: {
-            setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(DUDE_DASH));
+            setLinearVelocity(Vec2::normalize(_dashVector, &speed)->scale(dashMag));
             break;
         }
         case CAUGHT:

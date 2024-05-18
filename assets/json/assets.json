@@ -318,6 +318,9 @@
         },
         "carrotbutton1": {
             "file": "textures/carrotbutton1.png"
+        },
+        "topback": {
+            "file": "textures/topback.png"
         }
     },
     "jsons": {

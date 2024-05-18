@@ -44,6 +44,8 @@ protected:
     ClientScene _joingame;
     TutorialScene _tutorial;
     bool _haptics;
+    /** Swipe direction vs joystick direction */
+    bool _swipe;
     
     /** Whether or not we have finished loading all assets */
     bool _loaded;

@@ -254,6 +254,8 @@ protected:
     
     bool _unrootInput;
     
+    bool _swipe; // true if user chose swipe to dash in direction, false for dash in joystick
+    
     cugl::Vec2 _dashCache;
     /** Polygon factory for the wheat node. */
     cugl::PolyFactory pf;
@@ -796,6 +798,8 @@ public:
     bool isInWheat() { return _inWheat; }
 
     void setInWheat(bool inWheat) { _inWheat = inWheat; }
+    
+    void setSwipe(bool b) { _swipe = b; }
 };
 
 #endif /* __PF_DUDE_MODEL_H__ */

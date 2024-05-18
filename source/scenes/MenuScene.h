@@ -36,6 +36,7 @@ public:
     };
     
     bool hapticsTrue();
+    bool swipeTrue();
 
 protected:
     /** The asset manager for this scene. */

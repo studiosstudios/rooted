@@ -106,7 +106,7 @@ protected:
     
     bool _haptics;
 
-    
+    bool _swipe;
 //    std::map<std::shared_ptr<EntityModel>
 
 
@@ -348,6 +348,10 @@ public:
     void setHaptics(bool b) {
         _haptics = b;
         _collision.setHaptics(b);
+    };
+    void setSwipe(bool b) {
+        _swipe = b;
+        _map->setSwipe(b);
     };
 };
 

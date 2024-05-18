@@ -294,3 +294,7 @@ void MenuScene::togglePopup(bool active) {
 bool MenuScene::hapticsTrue(){
     return _hapticsbutton->isDown();
 }
+
+bool MenuScene::swipeTrue(){
+    return _swipedirbutton->isDown();
+}

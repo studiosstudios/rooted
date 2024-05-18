@@ -186,6 +186,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
         
     _ready = 0;
     _readyNewGame = 0;
+    _readyStart = 0;
     
     // XNA nostalgia
 //    Application::get()->setClearColor(Color4(142,114,78,255));
@@ -337,6 +338,7 @@ void GameScene::reset() {
     
     _ready = 0;
     _readyNewGame = 0;
+    _readyStart = 0;
     
     _charDisplayTimer = 100;
         
@@ -471,6 +473,8 @@ void GameScene::fixedUpdate(float step) {
                 _ready += 1;
             } else if (readyEvent->type == 1) {
                 _readyNewGame += 1;
+            } else if (readyEvent->type == 2) {
+                _readyStart += 1;
             }
         }
     }
@@ -598,15 +602,20 @@ void GameScene::postUpdate(float remain) {
     }
     else if (_charDisplayTimer == 0) {
         // now set the camera zoom
-        _ui.setCharacterDisplay(false, 0);
-        _ui.setRabbitPreview(false);
-        _ui.setCarrotPreview(false, 0);
-        _cam.setZoom(_beginningZoom);
-        _cam.setNoZoom(false);
-        _startTime = Timestamp();
+        _network->pushOutEvent(ReadyEvent::alloc(2));
         _charDisplayTimer = -1;
     }
     else{
+        if (_readyStart == _network->getNumPlayers()) {
+            _ui.setCharacterDisplay(false, 0);
+            _ui.setRabbitPreview(false);
+            _ui.setCarrotPreview(false, 0);
+            _cam.setZoom(_beginningZoom);
+            _cam.setNoZoom(false);
+            _startTime = Timestamp();
+            _readyStart = 0;
+        }
+        
         _action.postUpdate(remain);
 
         // Since items may be deleted, garbage collect

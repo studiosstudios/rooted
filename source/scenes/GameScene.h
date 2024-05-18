@@ -109,6 +109,8 @@ protected:
     int _ready;
     
     int _readyNewGame;
+    
+    int _readyStart;
 
     bool _haptics;
 

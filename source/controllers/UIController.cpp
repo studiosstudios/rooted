@@ -44,7 +44,7 @@ void UIController::setEndVisible(bool visible) {
     }
 }
 
-void UIController::setEndVariables(int roundNum, int length, int babies, int carrots, std::vector<int> pointsVec) {
+void UIController::setEndVariables(int roundNum, int length, int babies, std::vector<int> carrots, std::vector<int> pointsVec, int playerNum) {
     _roundNumber->setText("ROUND " + std::to_string(roundNum));
     
     int seconds = length / 1000;
@@ -57,23 +57,19 @@ void UIController::setEndVariables(int roundNum, int length, int babies, int car
     
     _babyCarrots->setText(std::to_string(babies));
     
-    if (_carrotsRooted.size() == 0) {
-        _notRootedLabel->setVisible(true);
-    } else {
-        _notRootedLabel->setVisible(false);
+    _notRootedLabel->setVisible(_carrotsRooted.size() == 0);
+    
+    for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
+        _carrotsRooted.at(ii)->setVisible(std::find(carrots.begin(), carrots.end(), ii) != carrots.end());
     }
     
-    // TODO: add map here that shows who got rooted
-    for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
-        _carrotsRooted.at(ii)->setVisible(ii < carrots);
-    }
+    _rootedLabel->setVisible(std::find(carrots.begin(), carrots.end(), playerNum) != carrots.end());
     
     auto temp =_uinode->getChildByName("playerpoints")->getChildByName("playerpoints");
     // set all to not be visible first
     for (int ii = 0; ii < _points.size(); ii++) {
         temp->getChildByName("playerpointinfo_" + std::to_string(ii))->setVisible(false);
     }
-    // TODO: CHANGE THIS SO THAT IT REFLECTS UUID AND STUFF
     for (int ii = 0; ii < pointsVec.size(); ii++) {
         auto temp2 = temp->getChildByName("playerpointinfo_" + std::to_string(ii));
         temp2->setVisible(true);

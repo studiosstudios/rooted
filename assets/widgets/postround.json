@@ -145,7 +145,7 @@
                                     "Big_Icon_4": {
                                         "type": "Image",
                                         "data": {
-                                            "texture": "Big_Icon_4",
+                                            "texture": "Big_Icon_2",
                                             "anchor": [
                                                 0,
                                                 1
@@ -172,7 +172,7 @@
                                     "Big_Icon_3": {
                                         "type": "Image",
                                         "data": {
-                                            "texture": "Big_Icon_3",
+                                            "texture": "Big_Icon_1",
                                             "anchor": [
                                                 0,
                                                 1
@@ -199,7 +199,7 @@
                                     "Big_Icon_2": {
                                         "type": "Image",
                                         "data": {
-                                            "texture": "Big_Icon_2",
+                                            "texture": "Big_Icon_4",
                                             "anchor": [
                                                 0,
                                                 1
@@ -226,7 +226,7 @@
                                     "Big_Icon_1": {
                                         "type": "Image",
                                         "data": {
-                                            "texture": "Big_Icon_1",
+                                            "texture": "Big_Icon_3",
                                             "anchor": [
                                                 0,
                                                 1

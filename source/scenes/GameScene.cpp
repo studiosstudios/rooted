@@ -175,10 +175,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     
     // using a vector because the positions should be the same each time
     // i.e. bunny, then each of the carrots
-    for (int i = 0; i < _map->getPlayers().size(); i++) {
+    for (int i = 0; i < _map->getPlayers().size() - 1; i++) {
         _points.push_back(0);
     }
-    
+        
     _ready = 0;
     
     // XNA nostalgia
@@ -518,8 +518,16 @@ void GameScene::postUpdate(float remain) {
         if (!_isGameOverScreen) {
             _isGameOverScreen = true;
             
+            // get the vector of carrots that have been rooted
+            vector<int> carrots;
+            for (auto it = _map->getCarrots().begin(); it != _map->getCarrots().end(); it++) {
+                if ((*it)->isRooted()) {
+                    carrots.push_back(_map->getCarrotTypeForUUID((*it)->getUUID()));
+                }
+            }
+            
             // set how the end screen should display
-            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), _network->getNumPlayers() - 1 - getCarrotsLeft(), _points);
+            _ui.setEndVariables(_round, (Timestamp()).ellapsedMillis(_startTime), _map->getBabyCarrots().size(), carrots, _points, _map->getCarrotTypeForUUID(_character->getUUID()));
             
             // display end scene
             _ui.setEndVisible(true);
@@ -553,8 +561,8 @@ void GameScene::postUpdate(float remain) {
         }
         if(farmerWin){
             // add points for farmer
-            // TODO: GENERALIZED BASED ON WHO IT IS
-            _points[0] += 3;
+            _points[_map->getCarrotTypeForUUID(_farmerUUID)] += 3;
+
             if(_character->getUUID() == _farmerUUID){
                 setComplete(true);
             }
@@ -570,8 +578,10 @@ void GameScene::postUpdate(float remain) {
         }
         if(carrotWin){
             // add points for carrot
-            for (int ii = 1; ii < _points.size(); ii++) {
-                _points[ii] += 1;
+            for (int ii = 0; ii < _points.size(); ii++) {
+                if (ii != _map->getCarrotTypeForUUID(_farmerUUID)) {
+                    _points[ii] += 1;
+                }
             }
             if(_character->getUUID() == _farmerUUID){
                 setFailure(true);

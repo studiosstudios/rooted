@@ -468,6 +468,7 @@ void ActionController::processMoveEvent(const std::shared_ptr<MoveEvent>& event)
 void ActionController::processFreeEvent(const std::shared_ptr<FreeEvent>& event){
     _map->getFarmers().at(0)->carrotEscaped();
     if(_map->isFarmer()){
+        _map->getCharacter()->stun();
         if(_haptics)
             Haptics::get()->playContinuous(1.0, 0.8, 0.3);
     }

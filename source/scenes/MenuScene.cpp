@@ -65,7 +65,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _playbutton->addListener([this](const std::string& name, bool down) {
         if(down){
             std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
-            AudioEngine::get()->play("button", source, false, 0.5*(soundSliderVal()/100));
+            AudioEngine::get()->play("button", source, false, (soundSliderVal()/100));
         }
         else{
             _choice = Choice::LOBBY;
@@ -89,7 +89,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _hostbutton->addListener([this](const std::string& name, bool down) {
         if(down){
             std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
-            AudioEngine::get()->play("button", source, false, 0.5*(soundSliderVal()/100));
+            AudioEngine::get()->play("button", source, false, (soundSliderVal()/100));
         }
         else{
             _choice = Choice::HOST;
@@ -98,7 +98,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _joinbutton->addListener([this](const std::string& name, bool down) {
         if(down){
             std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
-            AudioEngine::get()->play("button", source, false, 0.5*(soundSliderVal()/100));
+            AudioEngine::get()->play("button", source, false, (soundSliderVal()/100));
         }
         else{
             _choice = Choice::JOIN;
@@ -107,7 +107,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _backoutprelobby->addListener([this](const std::string& name, bool down) {
         if(down){
             std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
-            AudioEngine::get()->play("button", source, false, 0.5*(soundSliderVal()/100));
+            AudioEngine::get()->play("button", source, false, (soundSliderVal()/100));
         }
         else{
             _choice = Choice::MAIN;
@@ -124,7 +124,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _backoutoptions->addListener([this](const std::string& name, bool down) {
         if(down){
             std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
-            AudioEngine::get()->play("button", source, false, 0.5*(soundSliderVal()/100));
+            AudioEngine::get()->play("button", source, false, (soundSliderVal()/100));
         }
         else {
             _choice = Choice::MAIN;
@@ -194,7 +194,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _optionsbutton->addListener([this](const std::string& name, bool down) {
         if(down){
             std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
-            AudioEngine::get()->play("button", source, false, 0.5*(soundSliderVal()/100));
+            AudioEngine::get()->play("button", source, false, (soundSliderVal()/100));
         }
         else {
             _choice = Choice::SETTINGS;
@@ -206,7 +206,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     _statsbutton->addListener([this](const std::string& name, bool down) {
         if(down){
             std::shared_ptr<Sound> source = _assets->get<Sound>(BUTTON_EFFECT);
-            AudioEngine::get()->play("button", source, false, 0.5*(soundSliderVal()/100));
+            AudioEngine::get()->play("button", source, false, (soundSliderVal()/100));
         }
         else {
             _choice = Choice::TUTORIAL;

@@ -85,11 +85,11 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
 
-    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_lobbybuttons_host"));
+    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_start"));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_back"));
-    _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_lobbybuttons_idfield_textfield"));
+    _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_lobbyinfo_textbox_textfield"));
     // currently no way to display the number of players
-    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_lobbybuttons_playercount_players"));
+    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_lobbyinfo_textbox_2_textfield"));
         
     // Program the buttons
     _backout->addListener([this](const std::string& name, bool down) {
@@ -175,7 +175,7 @@ void HostScene::setActive(bool value) {
  * @param text      The new text value
  */
 void HostScene::updateText(const std::shared_ptr<scene2::Button>& button, const std::string text) {
-    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("play"));
+    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("stats"));
     label->setText(text);
 }
 
@@ -197,7 +197,13 @@ void HostScene::update(float timestep) {
             _startgame->deactivate();
         }
         _gameid->setText(hex2dec(_network->getRoomID()));
-        _player->setText(std::to_string(_network->getNumPlayers()));
+        int numPlayers = _network->getNumPlayers();
+        if (numPlayers == 1) {
+            _player->setText(std::to_string(_network->getNumPlayers()) + " player");
+        }
+        else {
+            _player->setText(std::to_string(_network->getNumPlayers()) + " players");
+        }
     }
     else if (_network->getStatus() == NetEventController::Status::CONNECTING) {
         _gameid->setText("...");

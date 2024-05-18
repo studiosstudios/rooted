@@ -303,6 +303,21 @@
         },
         "dialoguebox": {
             "file": "textures/dialoguebox.png"
+        },
+        "lobbybkg": {
+            "file": "textures/lobbybkg.png"
+        },
+        "lobbyid": {
+            "file": "textures/lobbyidbkg.png"
+        },
+        "playercount": {
+            "file": "textures/playercountbkg.png"
+        },
+        "carrotbutton2": {
+            "file": "textures/carrotbutton2.png"
+        },
+        "carrotbutton1": {
+            "file": "textures/carrotbutton1.png"
         }
     },
     "jsons": {
@@ -415,9 +430,21 @@
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 16
         },
+        "gaeguBold30": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 30
+        },
+        "gaeguBold35": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 35
+        },
         "gaeguBold40": {
             "file": "fonts/Gaegu-Bold.ttf",
             "size": 40
+        },
+        "gaeguBold45": {
+            "file": "fonts/Gaegu-Bold.ttf",
+            "size": 45
         },
         "gaeguBold50": {
             "file": "fonts/Gaegu-Bold.ttf",
@@ -469,6 +496,7 @@
         "numpadwidget" : "widgets/numpadwidget.json",
         "lobbyclient" : "widgets/lobbyclient.json",
         "lobbyhost" : "widgets/lobbyhost.json",
+        "lobbyinfowidget" : "widgets/lobbyinfowidget.json",
         "prelobby": "widgets/prelobby.json",
         "backbuttonwidget" : "widgets/backbuttonwidget.json",
         "lobbyidwidget" : "widgets/lobbyidwidget.json",
@@ -488,6 +516,12 @@
             "type"   : "Widget",
             "data"   : {
                 "key"     : "lobbyclient"
+            }
+        },
+        "lobbyinfowidget": {
+            "type": "Widget",
+            "data": {
+                "key": "lobbyinfowidget"
             }
         },
         "mainmenu": {

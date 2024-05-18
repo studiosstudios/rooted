@@ -405,13 +405,14 @@ void RootedApp::updateClientScene(float timestep) {
         _gameplay.setActive(true);
         _status = GAME;
     }
-//    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
-//        _network->disconnect();
-//        _joingame.setActive(false);
-//        _mainmenu.setActive(true);
-//        _gameplay.dispose();
-//        _status = MENU;
-//    }
+    // TODO: REMOVE THIS IF WE DON'T NEED IT ANYMORE
+    else if (_network->getStatus() == NetEventController::Status::NETERROR) {
+        _network->disconnect();
+        _joingame.setActive(false);
+        _mainmenu.setActive(true);
+        _gameplay.dispose();
+        _status = MENU;
+    }
 }
 
 /**

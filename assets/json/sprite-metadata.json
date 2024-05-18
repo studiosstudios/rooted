@@ -329,5 +329,65 @@
     "barrot-southeast-walk": {
         "rows": 2,
         "cols": 5
+    },
+    "barrot-south-bow": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-north-bow": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-east-bow": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-northeast-bow": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-southeast-bow": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-south-blanket": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-north-blanket": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-east-blanket": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-northeast-blanket": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-southeast-blanket": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-south-diaper": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-north-diaper": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-east-diaper": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-northeast-diaper": {
+        "rows": 2,
+        "cols": 5
+    },
+    "barrot-southeast-diaper": {
+        "rows": 2,
+        "cols": 5
     }
 }

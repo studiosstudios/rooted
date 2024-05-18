@@ -114,6 +114,10 @@ protected:
     
     bool _pausePhysics;
     
+    std::shared_ptr<cugl::scene2::PolygonNode> _lefthandNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> _righthandNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> _fakejoyBack;
+    
     
 
 #pragma mark Internal Object Management

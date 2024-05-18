@@ -91,6 +91,8 @@
 #define RESET_MESSAGE    "RESETTING"
 /** The color of the reset message */
 #define RESET_COLOR      Color4::YELLOW
+/** The effect for button click */
+#define BUTTON_EFFECT       "button"
 /** The key the carrot victory game music */
 #define C_WIN_MUSIC       "carrotsWin"
 /** The key the carrot failure game music */

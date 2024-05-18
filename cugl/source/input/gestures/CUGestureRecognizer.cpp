@@ -622,8 +622,10 @@ const std::string GestureRecognizer::match(const Vec2* points,  size_t psize,
     std::vector<float> vectorized;
     if (_algorithm == Algorithm::ONEDOLLAR) {
         normalized = normalize(points,psize);
+        if (normalized.size() != _normlength) return "";
     } else {
         vectorized = vectorize(points,psize);
+        if (vectorized.size() != _normlength) return "";
     }
 
     float bestdist = std::numeric_limits<float>::max();

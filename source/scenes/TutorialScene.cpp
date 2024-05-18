@@ -68,7 +68,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
 
     _map = Map::alloc(_assets, true); // Obtains ownership of root.
 
-    _map->generate(0, 1, 2, 10, 2);
+    _map->generate(0, 1, 3, 2, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -110,8 +110,9 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     // set the camera after all of the network is loaded
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
 
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
-    _cam.setZoom(zoom);
+    _camera->setZoom(zoom);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale,
+              Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size), true);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
@@ -127,11 +128,26 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
     addChild(_black);
-    _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
+    _map->getBabyCarrots().at(_map->getBabyCarrots().size()-1)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
     
     _step = 0;
+    
+    _lefthandNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("lefthand"));
+    _righthandNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("righthand"));
+    _lefthandNode->setScale(0.12);
+    _lefthandNode->setAnchor(Vec2::ANCHOR_MIDDLE_RIGHT);
+    _righthandNode->setScale(0.3);
+    _fakejoyBack = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("joystick-back"));
+    _fakejoyBack->setScale(0.5f / zoom);
+    _fakejoyBack->setPosition(Vec2(SCENE_WIDTH/10, SCENE_HEIGHT/2)/zoom);
+    _uinode->addChild(_fakejoyBack);
+    _uinode->addChild(_lefthandNode);
+    _uinode->addChild(_righthandNode);
+    _lefthandNode->setVisible(false);
+    _righthandNode->setVisible(false);
+    _fakejoyBack->setVisible(false);
     _soundScale = 1.0f;
 
     return true;
@@ -176,7 +192,7 @@ void TutorialScene::reset() {
     // Load a new level
     _map->clearRootNode();
     _map->dispose();
-    _map->generate(0, 1, 2, 10, 2);
+    _map->generate(0, 1, 3, 2, 2);
     _map->setRootNode(_rootnode);
     _map->populate();
 
@@ -209,14 +225,15 @@ void TutorialScene::reset() {
     float zoom = DEFAULT_CAMERA_ZOOM * DEFAULT_DRAWSCALE / _scale * std::max(dimen.width/SCENE_WIDTH, dimen.height/SCENE_HEIGHT);
 
     _ui.init(_assets, _input, _uinode, _offset, zoom, _scale);
-    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale, Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size));
-    _cam.setZoom(zoom);
+    _camera->setZoom(zoom);
+    _cam.init(_rootnode, CAMERA_GLIDE_RATE, _camera, _uinode, 32.0f, _scale,
+              Rect(Vec2::ZERO, _map->getMapBounds().size/_map->getWorldBounds().size), true);
     _cam.setPosition(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _cam.setTarget(Vec2(_map->getMapBounds().size/2.0) * _scale);
     _initCamera = _cam.getCamera()->getPosition();
 
     // XNA nostalgia
-//    Application::get()->setClearColor(Color4(142,114,78,255));
+//    Application::get()->setClearColor(C   olor4(142,114,78,255));
     Application::get()->setClearColor(Color4::CLEAR);
     _cam.setFrac(Rect(Vec2::ZERO, Vec2(1.0/3.0, 2.0/3.0)));
     _action.getAIController()->setBabyBounds(Rect(0,0,MAP_UNIT_WIDTH, MAP_UNIT_HEIGHT));
@@ -231,7 +248,7 @@ void TutorialScene::reset() {
     _black = scene2::PolygonNode::allocWithPoly(Rect(0,0,SCENE_WIDTH,SCENE_HEIGHT));
     _black->setColor(Color4::CLEAR);
     addChild(_black);
-    _map->getBabyCarrots().at(9)->setBodyType(b2BodyType::b2_staticBody);
+    _map->getBabyCarrots().at(_map->getBabyCarrots().size()-1)->setBodyType(b2BodyType::b2_staticBody);
     
     _pausePhysics = false;
     
@@ -312,7 +329,6 @@ void TutorialScene::preUpdate(float dt) {
                 }
                 _character->updateState(dt);
                 _character->applyForce();
-                _character->stepAnimation(dt);
                 
             }
             break;
@@ -322,26 +338,70 @@ void TutorialScene::preUpdate(float dt) {
             // show dialog boxes one by one
             if (_step == 0) {
                 _input->pause();
-                _ui.setSpeechBubbleVisible(true);
-                _step = 1;
-            }
-            if (_step == 1 && _input->didContinue()) {
-                _ui.setSpeechBubbleVisible(false);
                 _ui.setDialogBoxVisible(true);
-                _step = 2;
-                _input->showDisplayJoystick();
+                _step = 1;
+                _lefthandNode->setPosition(Vec2(SCENE_WIDTH*0.1, SCENE_HEIGHT/2)/_cam.getCamera()->getZoom());
+                _lefthandNode->setColor(Color4::CLEAR);
+                _fakejoyBack->setColor(Color4::CLEAR);
+                _fakejoyBack->setVisible(true);
+                _lefthandNode->setVisible(true);
             }
-            else if (_step == 2 && _input->didContinue()) {
-                _ui.setDialogBoxVisible(false);
-                _step = 3;
-                _input->unpause();
-                _input->resetJoystick();
+            else if (_step == 1) {
+                if (_input->didContinue()) {
+                    _ui.setDialogBoxVisible(false);
+                    _step = 2;
+                    _input->unpause();
+                } else {
+                    _lefthandNode->setPosition(Vec2(SCENE_WIDTH*(0.165 + std::sin(_time * 1.3) * 0.06), SCENE_HEIGHT/2)/_cam.getCamera()->getZoom());
+                    _lefthandNode->setColor(Color4(255, 255, 255, 255 * std::clamp(_time - 1.0f, 0.0f, 1.0f)));
+                    _fakejoyBack->setColor(Color4(255, 255, 255, 255 * std::clamp(_time - 1.0f, 0.0f, 1.0f)));
+                }
+            } else {
+                float alpha = _fakejoyBack->getColor().a;
+                _fakejoyBack->setColor(Color4(255, 255, 255, 0.7*alpha));
+                _lefthandNode->setColor(Color4(255, 255, 255, 0.7*alpha));
             }
             break;
-        case CATCHBABIES:
-            _action.preUpdate(dt);
-            _cam.setTarget(_character->getPosition()*_scale);
-            break;
+        case CATCHBABIES: {
+                _action.preUpdate(dt);
+                _cam.setTarget(_character->getPosition()*_scale);
+                
+                if (_step == 2) {
+                    _input->pause();
+                    _ui.setDialogBoxText("Swipe on the right side of the screen to dash!\nDash into baby carrots to catch them!");
+                    _ui.setDialogBoxVisible(true);
+                    _righthandNode->setVisible(true);
+                    _righthandNode->setColor(Color4::CLEAR);
+                    _step = 1;
+                }
+                else if (_step == 1) {
+                    if (_input->didContinue()) {
+                        _step = 3;
+                        _ui.setDialogBoxVisible(false);
+                        _input->unpause();
+                    } else {
+                        float mtime = fmod(_time, 3);
+                        if (mtime < 0.2 || mtime > 2) {
+                            _righthandNode->setColor(Color4::CLEAR);
+                        }
+                        else if (mtime < 0.8) {
+                            _righthandNode->setColor(Color4(255, 255, 255, 255 * (mtime-0.2) / 0.6));
+                            _righthandNode->setPosition(Vec2(SCENE_WIDTH*0.85,
+                                                             SCENE_HEIGHT*0.25)/_cam.getCamera()->getZoom());
+                        } else if (mtime < 1.7) {
+                            float y = clamp(EasingFunction::quartIn((mtime-0.6) * 3), 0.0f, 1.0f) * 0.5 + 0.25;
+                            _righthandNode->setColor(Color4::WHITE);
+                            _righthandNode->setPosition(Vec2(SCENE_WIDTH*0.85, y * SCENE_HEIGHT)/_cam.getCamera()->getZoom());
+                        } else {
+                            _righthandNode->setPosition(Vec2(SCENE_WIDTH*0.85, 0.75 * SCENE_HEIGHT)/_cam.getCamera()->getZoom());
+                            _righthandNode->setColor(Color4(255, 255, 255, 255 * (1 - (mtime - 1.7) / 0.3)));
+                        }
+                    }
+                } else {
+                    _righthandNode->setColor(Color4(255, 255, 255, 0.7f * _righthandNode->getColor().a));
+                }
+                break;
+            }
         case SHOWFARMER:
             {
             if (_character->getName() == "carrot") { //wait until carrot animation finishes
@@ -367,7 +427,6 @@ void TutorialScene::preUpdate(float dt) {
                 }
                 _character->updateState(dt);
                 _character->applyForce();
-                _character->stepAnimation(dt);
                 
                 //fade to black
                 if (_time > 2.5) {
@@ -402,11 +461,10 @@ void TutorialScene::preUpdate(float dt) {
             farmer->setMovement(Vec2(x, 0));
             farmer->updateState(dt);
             farmer->applyForce();
-            farmer->stepAnimation(dt);
             
             if (_step == 3) {
                 _input->pause();
-                _ui.setDialogBoxText("Shake to escape the farmer!");
+                _ui.setDialogBoxText("You've been caught by the farmer! Shake to escape!");
                 _ui.setDialogBoxVisible(true);
                 _step = 4;
             }
@@ -421,7 +479,7 @@ void TutorialScene::preUpdate(float dt) {
         case ROCK:
             break;
         case UNROOT: {
-            if (_time > 0.25 && _time < 2.5) {
+            if (_time > 0.25 && _step < 7) {
                 _character = _map->changeCharacter(_carrot2UUID);
                 _cam.setTarget(_character->getPosition()*_scale);
                 _character = _map->changeCharacter(_carrotUUID);
@@ -447,7 +505,7 @@ void TutorialScene::preUpdate(float dt) {
                     
                     //move farmer
                     auto farmer = _map->getFarmers().at(0);
-                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
                     farmer->updateState(dt);
                     farmer->applyForce();
                     farmer->stepAnimation(dt);
@@ -455,15 +513,29 @@ void TutorialScene::preUpdate(float dt) {
                     
                 if (_step == 5) {
                     _input->pause();
-                    _ui.setDialogBoxText("Unroot the other carrot by going near it and swiping in a circle!");
+                    _ui.setDialogBoxText("It looks like someone else got caught too... \nunroot your friend by going next to them and swiping in a circle!");
                     _ui.setDialogBoxVisible(true);
+                    _righthandNode->setVisible(true);
+                    _righthandNode->setColor(Color4::CLEAR);
                     _step = 6;
                 }
-                else if (_step == 6 && _input->didContinue()) {
-                    _ui.setDialogBoxVisible(false);
-                    _step = 7;
-                    _input->unpause();
-                    _pausePhysics = false;
+                else if (_step == 6) {
+                    if (_input->didContinue()) {
+                        _ui.setDialogBoxVisible(false);
+                        _step = 7;
+                        _input->unpause();
+                        _pausePhysics = false;
+                    } else {
+                        float alpha = (255 - _righthandNode->getColor().a) * 0.2 + _righthandNode->getColor().a;
+                        _righthandNode->setColor(Color4(255, 255, 255, alpha));
+                        _righthandNode->setPosition(Vec2(SCENE_WIDTH * 0.85 + 70 * std::sin(_time * 15),
+                                                    SCENE_HEIGHT*0.5 + 70 * std::cos(_time * 15))/_cam.getCamera()->getZoom());
+                           
+                    }
+                } else {
+                    _righthandNode->setColor(Color4(255, 255, 255, 0.7f * _righthandNode->getColor().a));
+                    _righthandNode->setPosition(Vec2(SCENE_WIDTH * 0.85 + 50 * std::sin(_time * 10),
+                                                SCENE_HEIGHT*0.5 + 50 * std::cos(_time * 10))/_cam.getCamera()->getZoom());
                 }
             }
         }
@@ -474,7 +546,7 @@ void TutorialScene::preUpdate(float dt) {
             
             //move farmer
             auto farmer = _map->getFarmers().at(0);
-            farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+            farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
             farmer->updateState(dt);
             farmer->applyForce();
             farmer->stepAnimation(dt);
@@ -507,7 +579,7 @@ void TutorialScene::preUpdate(float dt) {
                 
                 //move farmer
                 auto farmer = _map->getFarmers().at(0);
-                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
                 farmer->updateState(dt);
                 farmer->applyForce();
                 farmer->stepAnimation(dt);
@@ -527,7 +599,7 @@ void TutorialScene::preUpdate(float dt) {
                     }
                     //move farmer
                     auto farmer = _map->getFarmers().at(0);
-                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.2);
+                    farmer->setMovement((_character->getPosition() - farmer->getPosition()).getNormalization() * 0.175);
                     farmer->updateState(dt);
                     farmer->applyForce();
                     farmer->stepAnimation(dt);
@@ -536,7 +608,7 @@ void TutorialScene::preUpdate(float dt) {
                 
                 if (_step == 7) {
                     _input->pause();
-                    _ui.setDialogBoxText("Now just get the last baby carrot to win!");
+                    _ui.setDialogBoxText("Now just catch the last baby carrot to win!");
                     _ui.setDialogBoxVisible(true);
                     _step = 8;
                     _pausePhysics = true;
@@ -751,7 +823,7 @@ void TutorialScene::postUpdate(float remain) {
             }
             break;
         case MOVEMENT:
-            if (_character->getY() < 10) {
+            if (_character->getY() < 7) {
                 CULog("CATCH BABY CARROTS! SWIPE TO DASH IN THAT DIRECTION");
                 _state = CATCHBABIES;
                 _time = 0;
@@ -941,6 +1013,12 @@ void TutorialScene::activateWorldCollisions(const std::shared_ptr<physics2::Obst
     };
     world->shouldCollide = [this](b2Fixture *f1, b2Fixture *f2) {
         return _collision.shouldCollide(f1, f2);
+    };
+    world->beforeSolve = [this](b2Contact* contact, const b2Manifold* manifold) {
+        _collision.beforeSolve(contact, manifold);
+    };
+    world->afterSolve = [this](b2Contact* contact, const b2ContactImpulse* impulse) {
+        _collision.afterSolve(contact, impulse);
     };
 }
 

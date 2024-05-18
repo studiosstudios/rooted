@@ -57,7 +57,7 @@ void UIController::setEndVariables(int roundNum, int length, int babies, std::ve
     
     _babyCarrots->setText(std::to_string(babies));
     
-    _notRootedLabel->setVisible(_carrotsRooted.size() == 0);
+    _notRootedLabel->setVisible(carrots.size() == 0);
     
     for (int ii = 0; ii < _carrotsRooted.size(); ii++) {
         _carrotsRooted.at(ii)->setVisible(std::find(carrots.begin(), carrots.end(), ii) != carrots.end());

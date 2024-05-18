@@ -765,29 +765,31 @@ void Map::spawnBabyCarrots() {
     int barrotModifierThreshold = (int) _babyCarrotSpawns.size() / 4;
     std::vector<std::string> barrotModifiers {"-walk", "-blanket", "-bow", "-diaper"};
     for (Rect rect : _babyCarrotSpawns) {
-        std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, Size(BARROT_WIDTH, BARROT_HEIGHT), _scale.x);
-        baby->setEntityState(EntityModel::EntityState::WALKING);
-        baby->setDebugColor(DEBUG_COLOR);
-        baby->setName("baby");
-        baby->setID((unsigned)_babies.size());
-        baby->setColliderSize(Size(BARROT_HITBOX_WIDTH, BARROT_HITBOX_HEIGHT));
-        baby->setDashColliderSize(Size(BARROT_DASH_HITBOX_WIDTH, BARROT_DASH_HITBOX_HEIGHT));
-        baby->setRockColliderSize(Size(BARROT_ROCK_HITBOX_WIDTH, BARROT_ROCK_HITBOX_HEIGHT));
-        _babies.push_back(baby);
-        
-        int barrotModifierSelector = std::min((barrotModifierCount++ % barrotModifierThreshold), ((int) barrotModifiers.size()) - 1);
-        auto walkDS = initEntityDirectionalSprites("barrot-", barrotModifiers.at(barrotModifierSelector), 0.125f);
-        baby->setWalkSprites(walkDS);
-        baby->setAnimationFrame(barrotModifierCount); //reusing the modifier count to be set as the frame for this barrot
-        
-        baby->setSceneNode(walkDS.southSprite);
-        baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
-        baby->setDebugScene(_debugnode);
-        
-        auto wheatnode = baby->allocWheatHeightNode();
-        _wheatscene->getRoot()->addChild(wheatnode);
-        
-        _world->initObstacle(baby);
+        if (_babies.empty()) {
+            std::shared_ptr<BabyCarrot> baby = BabyCarrot::alloc(rect.origin, Size(BARROT_WIDTH, BARROT_HEIGHT), _scale.x);
+            baby->setEntityState(EntityModel::EntityState::WALKING);
+            baby->setDebugColor(DEBUG_COLOR);
+            baby->setName("baby");
+            baby->setID((unsigned)_babies.size());
+            baby->setColliderSize(Size(BARROT_HITBOX_WIDTH, BARROT_HITBOX_HEIGHT));
+            baby->setDashColliderSize(Size(BARROT_DASH_HITBOX_WIDTH, BARROT_DASH_HITBOX_HEIGHT));
+            baby->setRockColliderSize(Size(BARROT_ROCK_HITBOX_WIDTH, BARROT_ROCK_HITBOX_HEIGHT));
+            _babies.push_back(baby);
+            
+            int barrotModifierSelector = std::min((barrotModifierCount++ % barrotModifierThreshold), ((int) barrotModifiers.size()) - 1);
+            auto walkDS = initEntityDirectionalSprites("barrot-", barrotModifiers.at(barrotModifierSelector), 0.125f);
+            baby->setWalkSprites(walkDS);
+            baby->setAnimationFrame(barrotModifierCount); //reusing the modifier count to be set as the frame for this barrot
+            
+            baby->setSceneNode(walkDS.southSprite);
+            baby->setDrawScale(_scale.x);  //scale.x is used as opposed to scale since physics scaling MUST BE UNIFORM
+            baby->setDebugScene(_debugnode);
+            
+            auto wheatnode = baby->allocWheatHeightNode();
+            _wheatscene->getRoot()->addChild(wheatnode);
+            
+            _world->initObstacle(baby);
+        }
     }
 }
 

@@ -107,6 +107,8 @@ protected:
     bool _haptics;
 
     bool _swipe;
+    
+    float _soundScale;
 //    std::map<std::shared_ptr<EntityModel>
 
 
@@ -353,6 +355,10 @@ public:
         _swipe = b;
         _map->setSwipe(b);
     };
+    void setSoundScale(float f) {
+        _soundScale = f;
+        _action.setSoundScale(f);
+    }
 };
 
 #endif /* RootedGameScene_h */

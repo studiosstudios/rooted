@@ -210,6 +210,7 @@ void RootedApp::preUpdate(float dt) {
         _gameplay.preUpdate(dt);
         _gameplay.setHaptics(_haptics);
         _gameplay.setSwipe(_swipe);
+        _gameplay.setSoundScale(_mainmenu.soundSliderVal()/100.0f);
         AudioEngine::get()->pause("menu");
         AudioEngine::get()->pause("tutorial");
         std::shared_ptr<Sound> source = _assets->get<Sound>(LEVEL_MUSIC);

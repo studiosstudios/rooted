@@ -37,6 +37,7 @@ bool ActionController::init(std::shared_ptr<Map> &map, std::shared_ptr<InputCont
     _network = network;
     _assets = assets;
     _haptics = haptics;
+    _soundScale = 1.0f;
     _freeMeter = 0;
     if (_network->isHost()) {
         _ai = AIController::alloc(map);
@@ -68,7 +69,7 @@ void ActionController::preUpdate(float dt) {
     playerEntity->updateState(dt);
     if(didDash && playerEntity->getEntityState() == EntityModel::EntityState::DASHING){
         std::shared_ptr<Sound> source = _assets->get<Sound>(DASH_EFFECT);
-        AudioEngine::get()->play("dash", source);
+        AudioEngine::get()->play("dash", source, false, _soundScale);
     }
     if(playerEntity->getEntityState() != oldState){
         _network->pushOutEvent(MoveEvent::allocMoveEvent(playerEntity->getUUID(), playerEntity->getEntityState()));
@@ -131,7 +132,7 @@ void ActionController::preUpdate(float dt) {
             if(_haptics)
                 Haptics::get()->playContinuous(1.0, 0.3, 0.2);
             std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_BUNNY_EFFECT);
-            AudioEngine::get()->play("root-bunny", source);
+            AudioEngine::get()->play("root-bunny", source, false, _soundScale);
             
             // look through ever carrot to see if it's rooted (invariant is only one carrot has rooted to be true)
             for (auto carrot : _map->getCarrots()) {
@@ -293,27 +294,27 @@ void ActionController::playRustling(std::shared_ptr<EntityModel> player, float d
     }
     if(isBarrot){
         if(AudioEngine::get()->getState("barrot") != AudioEngine::State::PLAYING && newVolume != 0){
-            AudioEngine::get()->play("barrot", source, true, newVolume, false);
+            AudioEngine::get()->play("barrot", source, true, newVolume*_soundScale, false);
         }
         else{
             if(newVolume == 0){
                 AudioEngine::get()->clear("barrot", 0.5);
             }
             else if (AudioEngine::get()->getState("barrot") == AudioEngine::State::PLAYING){
-                AudioEngine::get()->setVolume("barrot", newVolume > 1 ? 1 : newVolume);
+                AudioEngine::get()->setVolume("barrot", newVolume > 1 ? 1 : newVolume*_soundScale);
             }
         }
     }
     else{
         if(AudioEngine::get()->getState(player->getUUID()) != AudioEngine::State::PLAYING && newVolume != 0){
-            AudioEngine::get()->play(player->getUUID(), source, true, newVolume, false);
+            AudioEngine::get()->play(player->getUUID(), source, true, newVolume*_soundScale, false);
         }
         else{
             if(newVolume == 0){
                 AudioEngine::get()->clear(player->getUUID(),0.5);
             }
             else if (AudioEngine::get()->getState(player->getUUID()) == AudioEngine::State::PLAYING){
-                AudioEngine::get()->setVolume(player->getUUID(), newVolume > 1 ? 1 : newVolume);
+                AudioEngine::get()->setVolume(player->getUUID(), (newVolume > 1 ? 1 : newVolume)*_soundScale);
             }
         }
     }
@@ -362,7 +363,7 @@ void ActionController::processCaptureEvent(const std::shared_ptr<CaptureEvent>& 
     _map->getFarmers().at(0)->grabCarrot(_map->getCarrotTypeForUUID(event->getUUID()));
     if(_map->isFarmer()){
         std::shared_ptr<Sound> source = _assets->get<Sound>(CAPTURE_EFFECT);
-        AudioEngine::get()->play("capture", source);
+        AudioEngine::get()->play("capture", source, false, _soundScale);
     }
     if(_map->getCharacter()->getUUID() == event->getUUID()){
         if(_haptics)
@@ -399,7 +400,7 @@ void ActionController::processRootEvent(const std::shared_ptr<RootEvent>& event)
                 if(_haptics)
                     Haptics::get()->playContinuous(1.0, 0.3, 0.1);
                 std::shared_ptr<Sound> source = _assets->get<Sound>(ROOTING_CARROT_EFFECT);
-                AudioEngine::get()->play("root-carrot", source);
+                AudioEngine::get()->play("root-carrot", source, false, _soundScale);
             }
         }
     }
@@ -420,7 +421,7 @@ void ActionController::processUnrootEvent(const std::shared_ptr<UnrootEvent>& ev
                 if(_haptics)
                     Haptics::get()->playContinuous(1.0, 0.3, 0.1);
                 std::shared_ptr<Sound> source = _assets->get<Sound>(UNROOTING_EFFECT);
-                AudioEngine::get()->play("unroot", source);
+                AudioEngine::get()->play("unroot", source, false, _soundScale);
             }
         }
     }

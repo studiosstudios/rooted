@@ -47,6 +47,7 @@ protected:
     CameraController _cam;
     
     bool _haptics;
+    float _soundScale;
 
     // VIEW
     /** Reference to the physics root of the scene graph */
@@ -312,6 +313,8 @@ public:
     void processResetEvent(const std::shared_ptr<ResetEvent>& event);
     
     void setHaptics(bool b) { _haptics = b; };
+    
+    void setSoundScale(float f) { _soundScale = f; }
 
 private:
     void changeCharacter(std::string UUID);

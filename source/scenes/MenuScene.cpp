@@ -302,3 +302,7 @@ bool MenuScene::swipeTrue(){
 float MenuScene::musicSliderVal(){
     return _musicslider->getValue();
 }
+
+float MenuScene::soundSliderVal(){
+    return _soundslider->getValue();
+}

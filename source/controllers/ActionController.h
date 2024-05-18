@@ -36,6 +36,7 @@ private:
     std::shared_ptr<cugl::AssetManager> _assets;
     int _freeMeter;
     bool _haptics;
+    float _soundScale;
     
     /**
      * Calls upon AudioEngine to play rustling sounds and adjusts volume as a function of character movement and distance from one's own character.
@@ -119,6 +120,8 @@ public:
     
     /** Someone has collected a rock*/
     void processCollectedRockEvent(const std::shared_ptr<CollectedRockEvent>& event);
+    
+    void setSoundScale(float f) { _soundScale = f; }
 };
 
 

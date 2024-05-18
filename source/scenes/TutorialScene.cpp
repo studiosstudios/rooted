@@ -132,6 +132,7 @@ bool TutorialScene::init(const std::shared_ptr<AssetManager> &assets) {
     _pausePhysics = false;
     
     _step = 0;
+    _soundScale = 1.0f;
 
     return true;
 }
@@ -831,7 +832,7 @@ void TutorialScene::postUpdate(float remain) {
                 
                 pauseNonEssentialAudio();
                 std::shared_ptr<Sound> source = _assets->get<Sound>(C_WIN_MUSIC);
-                AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
+                AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME*_soundScale);
                 _ui.setWinVisible(true);
             }
             break;

@@ -120,6 +120,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager> &assets) {
     _action.init(_map, _input, _network, _assets, _haptics);
     _active = true;
     _complete = false;
+    _soundScale = 1.0f;
     setDebug(false);
     
     // Network world synchronization
@@ -614,7 +615,7 @@ void GameScene::setComplete(bool value) {
         else{
             source = _assets->get<Sound>(C_WIN_MUSIC);
         }
-        AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
+        AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME*_soundScale);
         _ui.setWinVisible(true);
         _countdown = EXIT_COUNT;
     } else if (!value) {
@@ -641,7 +642,7 @@ void GameScene::setFailure(bool value) {
         else{
             source = _assets->get<Sound>(C_LOSE_MUSIC);
         }
-        AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME);
+        AudioEngine::get()->getMusicQueue()->play(source, false, MUSIC_VOLUME*_soundScale);
         _ui.setLoseVisible(true);
         _countdown = EXIT_COUNT;
     } else {

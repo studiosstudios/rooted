@@ -110,7 +110,7 @@ void ActionController::preUpdate(float dt) {
     }
 
     if (_input->didThrowRock() && playerEntity->hasRock()) {
-        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition(), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
+        _network->pushOutEvent(SpawnRockEvent::allocSpawnRockEvent(playerEntity->getPosition()-Vec2(0, playerEntity->getHeight()/2), 0, playerEntity->getFacing().normalize() * THROW_SPEED + playerEntity->getLinearVelocity(), playerEntity->getUUID()));
         playerEntity->setHasRock(false);
     }
     

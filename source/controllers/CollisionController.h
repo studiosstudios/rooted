@@ -74,6 +74,11 @@ public:
      * Callback for after solving collision.
      */
     void afterSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+    
+    /**
+     * Callback for before solvisng collision.
+     */
+    void beforeSolve(b2Contact* contact, const b2Manifold* manifold);
 
 };
 

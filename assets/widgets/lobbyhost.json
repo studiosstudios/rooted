@@ -97,6 +97,19 @@
                     "x_offset": 0,
                     "y_offset": 0
                 }
+            },
+            "back" : {
+                "type" : "Widget",
+                "data" : {
+                    "key" : "backbuttonwidget"
+                },
+                "layout": {
+                    "x_anchor": "left",
+                    "y_anchor": "bottom",
+                    "absolute": false,
+                    "x_offset": 0,
+                    "y_offset": 0
+                }
             }
         }
     }

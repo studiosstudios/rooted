@@ -402,8 +402,7 @@ void EntityModel::updateState(float dt) {
                     _dashVector = facingToVec(_facing);
                 }
                 stateChanged = true;
-                _makeDashTrail = true;
-//                makeDashEffect();
+//                _makeDashTrail = true;
 //                _wheatHeightNode->setPosition(getX(), getY()-getHeight());
 //                _wheatHeightNode->setColor(Color4(0,0,0,0));
             }
@@ -631,7 +630,7 @@ void EntityModel::updateWheatHeightNode() {
     
     if (_state == DASHING) {
         _wheatSizeTarget = 1.5;
-        _wheatHeightTarget = -100;
+//        _wheatHeightTarget = -100;
     } else {
         _wheatSizeTarget = 0.75;
         _wheatHeightTarget = round(velocity.length());
@@ -741,27 +740,64 @@ void EntityModel::makeDashEffect() {
         _shouldAnimateDash = true;
         _dashEffectSprite->setVisible(true);
         _dashEffectSprite->setPosition(getPosition() * _drawScale);
-
+        
+//        float angle;
+//        if (_dashVector.x == 0) // special cases
+//            angle = (_dashVector.y > 0)? 90
+//                : (_dashVector.y == 0)? 0
+//                : 270;
+//        else if (_dashVector.y == 0) // special cases
+//            angle = (_dashVector.x >= 0)? 0
+//                : 180;
+//        int ret = atanf((float)_dashVector.y/_dashVector.x) * RADIAN_TO_DEGREE;
+//        if (_dashVector.x < 0 && _dashVector.y < 0) // quadrant Ⅲ
+//            ret = 180 + ret;
+//        else if (_dashVector.x < 0) // quadrant Ⅱ
+//            ret = 180 + ret; // it actually substracts
+//        else if (_dashVector.y < 0) // quadrant Ⅳ
+//            ret = 270 + (90 + ret); // it actually substracts
+//        angle = (ret+90) * DEGREE_TO_RADIAN;
+//        
+//        _dashEffectSprite->setAngle(angle);
+        
+        switch (calculateFacing(_dashVector)) {
+            case SOUTH:
+                CULog("dash south");
+                _dashEffectSprite->setAngle(0);
+                break;
+            case NORTH:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(180 * DEGREE_TO_RADIAN);
+                break;
+            case EAST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(90 * DEGREE_TO_RADIAN);
+                break;
+            case WEST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(270 * DEGREE_TO_RADIAN);
+                break;
+            case SOUTHEAST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(45 * DEGREE_TO_RADIAN);
+                break;
+            case SOUTHWEST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(315 * DEGREE_TO_RADIAN);
+                break;
+            case NORTHEAST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(135 * DEGREE_TO_RADIAN);
+                break;
+            case NORTHWEST:
+                CULog("dash north");
+                _dashEffectSprite->setAngle(225 * DEGREE_TO_RADIAN);
+                break;
+            default:
+                _dashEffectSprite->setAngle(0);
+                break;
+        }
     }
-    
-    float angle;
-    if (_dashVector.x == 0) // special cases
-        angle = (_dashVector.y > 0)? 90
-            : (_dashVector.y == 0)? 0
-            : 270;
-    else if (_dashVector.y == 0) // special cases
-        angle = (_dashVector.x >= 0)? 0
-            : 180;
-    int ret = atanf((float)_dashVector.y/_dashVector.x) * RADIAN_TO_DEGREE;
-    if (_dashVector.x < 0 && _dashVector.y < 0) // quadrant Ⅲ
-        ret = 180 + ret;
-    else if (_dashVector.x < 0) // quadrant Ⅱ
-        ret = 180 + ret; // it actually substracts
-    else if (_dashVector.y < 0) // quadrant Ⅳ
-        ret = 270 + (90 + ret); // it actually substracts
-    angle = (ret+90) * DEGREE_TO_RADIAN;
-    
-    _dashEffectSprite->setAngle(angle);
 }
 
 void EntityModel::animateDashEffect(float dt) {

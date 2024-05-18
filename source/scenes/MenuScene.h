@@ -63,6 +63,11 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _backoutprelobby;
     
     std::shared_ptr<cugl::scene2::Button> _backoutoptions;
+    std::shared_ptr<cugl::scene2::Button> _joystickdirbutton;
+    std::shared_ptr<cugl::scene2::Button> _swipedirbutton;
+    std::shared_ptr<cugl::scene2::Button> _dashinfobutton;
+    std::shared_ptr<cugl::scene2::Button> _hapticsbutton;
+    
     /** The player menu choice (for the external scene manager, i.e. the main app) */
     Choice _choice;
     /** The player choice when changing menus within this scene */

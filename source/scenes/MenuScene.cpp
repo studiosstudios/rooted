@@ -111,8 +111,28 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
             _currmenuchoice = Choice::MAIN;
         }
     });
+    _joystickdirbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_joystick_joystickdirection"));
+    _joystickdirbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+        }
+    });
+    _swipedirbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_swipe_swipedirection"));
+    _swipedirbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+        }
+    });
+    _dashinfobutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_dashoption_dashinfo"));
+    _dashinfobutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+        }
+    });
+    _hapticsbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("optionsmenu_optionsinfo_optionselection_hapticsoption_boxselect"));
+    _hapticsbutton->addListener([this](const std::string& name, bool down) {
+        if (!down) {
+        }
+    });
     
-    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions};
+    std::vector<std::shared_ptr<scene2::Button>> optionsbuttons = {_backoutoptions, _joystickdirbutton, _swipedirbutton, _dashinfobutton, _hapticsbutton};
     _screenButtonMap.insert({Choice::SETTINGS, optionsbuttons});
     
     _optionsbutton->addListener([this](const std::string& name, bool down) {

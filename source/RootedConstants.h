@@ -70,6 +70,10 @@
 #define STUN_SECS 1
 /** Max camera coordinate units that the camera can shake when player is stunned */
 #define STUN_SCREEN_SHAKE 5
+/** Speed of the farmer when running */
+#define FARMER_RUN_SPEED 4.0f
+/** Speed of the carrot when running */
+#define CARROT_RUN_SPEED 3.6f
 
 #pragma mark -
 #pragma mark Asset Constants

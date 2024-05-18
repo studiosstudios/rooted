@@ -62,7 +62,7 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
             if (babyCarrot->hasTarget()) {
                 Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
 //                movement *= 2.5;
-                babyCarrot->setLinearVelocity((babyCarrot->getLinearVelocity() + movement * 0.2) * 0.96);
+                babyCarrot->setLinearVelocity((babyCarrot->getLinearVelocity() + movement * 0.2) * 0.93);
             }
             break;
         case State::ROAM:
@@ -71,7 +71,7 @@ void AIController::updateBabyCarrot(const std::shared_ptr<BabyCarrot> &babyCarro
                 Vec2 movement = Vec2(babyCarrot->getPosition(), babyCarrot->getTarget()).normalize();
 //                movement *= 2.5;
                 babyCarrot->setShared(false);
-                babyCarrot->setLinearVelocity((babyCarrot->getLinearVelocity() + movement * 0.25) * 0.93);
+                babyCarrot->setLinearVelocity((babyCarrot->getLinearVelocity() + movement * 0.25) * 0.9);
                 babyCarrot->setShared(true);
             }
             break;

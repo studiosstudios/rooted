@@ -224,8 +224,9 @@ protected:
     float curDashAnimTime = 0.0f;
     
     float dashMag = 10;
-    float dashTimerLength = 0.3;
-    float dashCooldownLength = 1.6;
+    float dashTimerLength = 0.3f;
+    float dashCooldownLength = 1.6f;
+    float runSpeed = 3.6f;
     
 	/**
 	* Redraws the outline of the physics fixtures to the debug node

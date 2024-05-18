@@ -27,6 +27,7 @@ bool Carrot::init(const cugl::Vec2& pos, const cugl::Size& size, float scale) {
     dashMag = CARROT_DASH_MAG;
     dashTimerLength = CARROT_DASH_TIMER;
     dashCooldownLength = CARROT_DASH_COOLDOWN;
+    runSpeed = CARROT_RUN_SPEED;
     return EntityModel::init(pos, size, scale);
 }
 

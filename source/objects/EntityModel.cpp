@@ -485,7 +485,7 @@ void EntityModel::applyForce() {
             setLinearVelocity(speed);
             break;
         case RUNNING: {
-            speed.set(normMovement).scale(RUN_SPEED);
+            speed.set(normMovement).scale(runSpeed);
             setLinearVelocity(speed);
             break;
         }
